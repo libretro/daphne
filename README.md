@@ -27,7 +27,8 @@ Game Compatibility at Initial Commit
 ------------------------------------
 - Generally mimics original Daphne compatibility - it was never compatible with every Laser Disc game.
 - "Test" type and Pioneer gear based cores were ignored.
-- Key for "S" column:  
+- Key for "S" column:
+  
 |S|Meaning                                     |
 |-|--------------------------------------------|
 |-|See notes                                   |
@@ -131,7 +132,8 @@ Initial path taken from RA during load, user points to a ROM zip file like lair.
    - Name: lair
    - Extension: zip
    - home_dir (where everything hangs off): /storage/emulated/0/Roms/Daphne/roms/..
-3. Directories given above:  
+3. Directories given above:
+  
 |Type       |Directory                                                   |
 |-----------|------------------------------------------------------------|
 |pics:      |[home_dir]/pics                                             |
