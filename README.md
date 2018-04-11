@@ -14,7 +14,7 @@ Later Source:     https://github.com/mirror/daphne-emu/tree/master/doc
   
 Quick Source History to Initial Commit
 --------------------------------------
-This core was based on the "Original Source" as above which was released under GPL.
+This core was based on the "Original Source" as above, which was released under GPL.
 - Android was the first target system, and was the only supported system in the Initial Commit.
 - Original source was ported from using Android incompatible SDL1 to SDL2.
 - Then the source was prepared to be a standalone Android APK.  A successful APK version was created but not released, as a Libretro core was thought to be the best mechanism for release.
@@ -28,9 +28,9 @@ Game Compatibility at Initial Commit
 - Generally mimics original Daphne compatibility - it was never compatible with every Laser Disc game.
 - "Test" type and Pioneer gear based cores were ignored.
 - Key for "S" column:
-  -  See notes
-  X  Not tested
-  *  Tested and working (as well as it ever did)
+  - \-  See notes
+  - X  Not tested
+  - \*  Tested and working (as well as it ever did)
   
 |Core          |Short Name      |S|Notes                                                                                            |
 |--------------|----------------|-|-------------------------------------------------------------------------------------------------|
