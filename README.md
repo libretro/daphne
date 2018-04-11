@@ -28,9 +28,12 @@ Game Compatibility at Initial Commit
 - Generally mimics original Daphne compatibility - it was never compatible with every Laser Disc game.
 - "Test" type and Pioneer gear based cores were ignored.
 - Key for "S" column:
-  - \[\-\] See notes
-  - \[X\] Not tested
-  - \[\*\] Tested and working (as well as it ever did)
+|S|Meaning                                     |
+|-|--------------------------------------------|
+|-|See notes                                   |
+|X|Not tested                                  |
+|*|Tested and working (as well as it ever did) |
+  
   
 |Core          |Short Name      |S|Notes                                                                                            |
 |--------------|----------------|-|-------------------------------------------------------------------------------------------------|
@@ -121,18 +124,20 @@ Development Notes
 Directory Setup
 ---------------
 Initial path taken from RA during load, user points to a ROM zip file like lair.zip.  
-
+  
 ### Example:
 1. Comes from RA:	/storage/emulated/0/Roms/Daphne/roms/lair.zip
 2. Then it's stripped down: 
    - Name: lair
    - Extension: zip
-   - Home Dir (where everything hangs off): /storage/emulated/0/Roms/Daphne/roms/..
+   - home_dir (where everything hangs off): /storage/emulated/0/Roms/Daphne/roms/..
 3. Directories given above:
-pics:      [home_dir]/pics
-ram:       [home_dir]/ram
-sound:     [home_dir]/sound
-framefile: [home_dir]/framefile
-CDROM:     [framefile_dir]/[first line in the framefile (IE lair.txt)]
+|Type       |Directory                                                   |
+|-----------|------------------------------------------------------------|
+|pics:      |[home_dir]/pics                                             |
+|ram:       |[home_dir]/ram                                              |
+|sound:     |[home_dir]/sound                                            |
+|framefile: |[home_dir]/framefile                                        |
+|CDROM:     |[framefile_dir]/[first line in the framefile (IE lair.txt)] |
   
 The only lair.txt that is considered is in framefile.
