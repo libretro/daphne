@@ -93,8 +93,6 @@ int sboverlay_characterset = 1;
 // (this is probably a good idea as a default option)
 bool g_bForceAspectRatio = true;
 
-bool g_bUseOpenGL = false;	// whether user has requested we use OpenGL
-
 // the # of degrees to rotate counter-clockwise in opengl mode
 float g_fRotateDegrees = 0.0;
 
@@ -220,7 +218,6 @@ bool init_display()
 		}
 
 #ifndef GP2X
-		if (!g_bUseOpenGL)
 		{
 			// RJS START
 			// g_screen = SDL_SetVideoMode(g_vid_width, g_vid_height, suggested_bpp, sdl_flags);
@@ -231,9 +228,6 @@ bool init_display()
 										g_vid_width, g_vid_height, sdl_flags);
 			*/
 			// RJS END
-		}
-		else
-		{
 		}
 #else
 		SDL_ShowCursor(SDL_DISABLE);	// always hide mouse for gp2x
@@ -323,18 +317,10 @@ void vid_flip()
 	// RJS NOTE - this is probably where we need to set flag or something
 	// for the LDP thread to pick up the surface . . . maybe (still early in the process)
 	// if we're not using OpenGL, then just use the regular SDL Flip ...
-	if (!g_bUseOpenGL)
 	{
 		// RJS CHANGE
 		// orig SDL_Flip(g_screen);
 		// new  SDL_RenderPresent(g_renderer);
-		printline("vid_flip not supported in this thread.");
-	}
-	else
-	{
-		// RJS CHANGE
-		// orig SDL_GL_SwapBuffers();
-		// new  SDL_GL_SwapWindow(g_screen);
 		printline("vid_flip not supported in this thread.");
 	}
 }
