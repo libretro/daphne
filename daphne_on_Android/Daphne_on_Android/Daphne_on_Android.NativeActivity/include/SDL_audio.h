@@ -460,25 +460,6 @@ extern DECLSPEC int SDLCALL SDL_BuildAudioCVT(SDL_AudioCVT * cvt,
 extern DECLSPEC int SDLCALL SDL_ConvertAudio(SDL_AudioCVT * cvt);
 
 #define SDL_MIX_MAXVOLUME 128
-/**
- *  This takes two audio buffers of the playing audio format and mixes
- *  them, performing addition, volume adjustment, and overflow clipping.
- *  The volume ranges from 0 - 128, and should be set to ::SDL_MIX_MAXVOLUME
- *  for full audio volume.  Note this does not change hardware volume.
- *  This is provided for convenience -- you can mix your own audio data.
- */
-extern DECLSPEC void SDLCALL SDL_MixAudio(Uint8 * dst, const Uint8 * src,
-                                          Uint32 len, int volume);
-
-/**
- *  This works like SDL_MixAudio(), but you specify the audio format instead of
- *  using the format of audio device 1. Thus it can be used when no audio
- *  device is open at all.
- */
-extern DECLSPEC void SDLCALL SDL_MixAudioFormat(Uint8 * dst,
-                                                const Uint8 * src,
-                                                SDL_AudioFormat format,
-                                                Uint32 len, int volume);
 
 /**
  *  Queue more audio on non-callback devices.

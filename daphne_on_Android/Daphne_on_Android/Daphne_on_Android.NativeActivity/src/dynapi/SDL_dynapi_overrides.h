@@ -93,8 +93,6 @@
 #define SDL_FreeWAV SDL_FreeWAV_REAL
 #define SDL_BuildAudioCVT SDL_BuildAudioCVT_REAL
 #define SDL_ConvertAudio SDL_ConvertAudio_REAL
-#define SDL_MixAudio SDL_MixAudio_REAL
-#define SDL_MixAudioFormat SDL_MixAudioFormat_REAL
 #define SDL_LockAudio SDL_LockAudio_REAL
 #define SDL_LockAudioDevice SDL_LockAudioDevice_REAL
 #define SDL_UnlockAudio SDL_UnlockAudio_REAL

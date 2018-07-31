@@ -122,8 +122,6 @@ SDL_DYNAPI_PROC(SDL_AudioSpec*,SDL_LoadWAV_RW,(SDL_RWops *a, int b, SDL_AudioSpe
 SDL_DYNAPI_PROC(void,SDL_FreeWAV,(Uint8 *a),(a),)
 SDL_DYNAPI_PROC(int,SDL_BuildAudioCVT,(SDL_AudioCVT *a, SDL_AudioFormat b, Uint8 c, int d, SDL_AudioFormat e, Uint8 f, int g),(a,b,c,d,e,f,g),return)
 SDL_DYNAPI_PROC(int,SDL_ConvertAudio,(SDL_AudioCVT *a),(a),return)
-SDL_DYNAPI_PROC(void,SDL_MixAudio,(Uint8 *a, const Uint8 *b, Uint32 c, int d),(a,b,c,d),)
-SDL_DYNAPI_PROC(void,SDL_MixAudioFormat,(Uint8 *a, const Uint8 *b, SDL_AudioFormat c, Uint32 d, int e),(a,b,c,d,e),)
 SDL_DYNAPI_PROC(void,SDL_LockAudio,(void),(),)
 SDL_DYNAPI_PROC(void,SDL_LockAudioDevice,(SDL_AudioDeviceID a),(a),)
 SDL_DYNAPI_PROC(void,SDL_UnlockAudio,(void),(),)

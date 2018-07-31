@@ -1681,25 +1681,4 @@ SDL_CalculateAudioSpec(SDL_AudioSpec * spec)
     spec->size *= spec->samples;
 }
 
-
-/*
- * Moved here from SDL_mixer.c, since it relies on internals of an opened
- *  audio device (and is deprecated, by the way!).
- */
-void
-SDL_MixAudio(Uint8 * dst, const Uint8 * src, Uint32 len, int volume)
-{
-    /* Mix the user-level audio format */
-    SDL_AudioDevice *device = get_audio_device(1);
-    if (device != NULL) {
-        SDL_AudioFormat format;
-        if (device->convert.needed) {
-            format = device->convert.src_format;
-        } else {
-            format = device->spec.format;
-        }
-        SDL_MixAudioFormat(dst, src, format, len, volume);
-    }
-}
-
 /* vi: set ts=4 sw=4 expandtab: */

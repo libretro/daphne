@@ -174,7 +174,6 @@ SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/dummy/SDL_dummyaudio.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audiocvt.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audiodev.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audiotypecvt.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_mixer.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_wave.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/core/android/SDL_android.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/cpuinfo/SDL_cpuinfo.c
