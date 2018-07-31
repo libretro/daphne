@@ -30,17 +30,10 @@
 #include <assert.h>
 #endif
 
-// if we aren't using the MMX version
-
-#ifndef USE_MMX
 struct mix_s *g_pMixBufs = NULL;
 Uint8 *g_pSampleDst = 0;
 unsigned int g_uBytesToMix = 0;
-#endif
 
-// A C version of mix_mmx
-// mix_mmx is 2.5 times as fast on Pentium 4
-// NOTE : we always want this defined, even when using MMX, for the purpose of testing (see releasetest)
 void mix_c()
 {
 	unsigned int uSamplesToMix = g_uBytesToMix >> 1;
@@ -71,17 +64,3 @@ void mix_c()
 		stream += 4;
 	}
 }
-
-#ifdef USE_MMX
-
-#ifdef DEBUG
-// debug version of mix MMX that does safety checking before the call.  This obviously won't be used
-//  during release builds.
-void debug_mix_mmx()
-{
-	assert(((g_uBytesToMix % 8) == 0) && (g_uBytesToMix >= 8));	// mix MMX does 8 bytes at a time
-	mix_mmx();
-}
-#endif // DEBUG
-
-#endif // NATIVE_CPU_X86

@@ -141,12 +141,6 @@ SDL_ChooseBlitFunc(Uint32 src_format, Uint32 dst_format, int flags,
         if (override) {
             SDL_sscanf(override, "%u", &features);
         } else {
-            if (SDL_HasMMX()) {
-                features |= SDL_CPU_MMX;
-            }
-            if (SDL_Has3DNow()) {
-                features |= SDL_CPU_3DNOW;
-            }
             if (SDL_HasSSE()) {
                 features |= SDL_CPU_SSE;
             }

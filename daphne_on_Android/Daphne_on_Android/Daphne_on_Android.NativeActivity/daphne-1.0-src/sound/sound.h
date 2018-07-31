@@ -77,8 +77,6 @@ struct sounddef
 {
 	// *** THIS SECTION IS DEFINED INTERNALLY
 	// IMPORTANT: buffer and next_soundchip MUST come first, because they must match
-	//  the structure mix_s defined in mix.h; this is so we can use our MMX optimized
-	//  audio mixing function.
 	Uint8* buffer; // pointer to buffer used by this sound chip
 	struct sounddef *next_soundchip;	// pointer to the next sound chip in this linked list
 

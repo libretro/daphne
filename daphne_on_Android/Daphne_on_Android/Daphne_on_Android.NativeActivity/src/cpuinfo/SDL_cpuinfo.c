@@ -302,9 +302,6 @@ CPU_haveAltiVec(void)
 static int
 CPU_haveMMX(void)
 {
-    if (CPU_haveCPUID()) {
-        return (CPU_getCPUIDFeatures() & 0x00800000);
-    }
     return 0;
 }
 
@@ -591,12 +588,6 @@ SDL_GetCPUFeatures(void)
         if (CPU_haveAltiVec()) {
             SDL_CPUFeatures |= CPU_HAS_ALTIVEC;
         }
-        if (CPU_haveMMX()) {
-            SDL_CPUFeatures |= CPU_HAS_MMX;
-        }
-        if (CPU_have3DNow()) {
-            SDL_CPUFeatures |= CPU_HAS_3DNOW;
-        }
         if (CPU_haveSSE()) {
             SDL_CPUFeatures |= CPU_HAS_SSE;
         }
@@ -643,9 +634,6 @@ SDL_HasAltiVec(void)
 SDL_bool
 SDL_HasMMX(void)
 {
-    if (SDL_GetCPUFeatures() & CPU_HAS_MMX) {
-        return SDL_TRUE;
-    }
     return SDL_FALSE;
 }
 

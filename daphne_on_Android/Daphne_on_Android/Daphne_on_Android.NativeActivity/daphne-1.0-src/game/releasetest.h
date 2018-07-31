@@ -90,25 +90,11 @@ private:
 	void test_vldp_render();
 	bool m_test_vldp_render;
 
-	// test blend MMX function
-	void test_blend();
-	bool m_test_blend;
-
-	// test mix MMX function
-	void test_mix();
-	bool m_test_mix;
-
 	void test_samples();
 	bool m_test_samples;
 
 	void test_sound_mixing();
 	bool m_test_sound_mixing;
-
-#ifdef GP2X
-	void test_gp2x_timer();
-	bool m_test_gp2x_timer;
-#endif // GP2X
-
 };
 
 #endif

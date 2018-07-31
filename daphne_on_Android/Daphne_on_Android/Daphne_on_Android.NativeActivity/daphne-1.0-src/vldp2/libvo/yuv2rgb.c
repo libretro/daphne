@@ -421,23 +421,8 @@ static void convert_internal (int order, int bpp, int width, int height,
 	result->start = convert_start;
 
 	result->copy = NULL;
-#ifdef ARCH_X86
-	if ((result->copy == NULL) && (accel & MPEG2_ACCEL_X86_MMXEXT)) {
-	    result->copy = yuv2rgb_init_mmxext (order, bpp);
-	}
-	if ((result->copy == NULL) && (accel & MPEG2_ACCEL_X86_MMX)) {
-	    result->copy = yuv2rgb_init_mmx (order, bpp);
-	}
-#endif
-#ifdef LIBVO_MLIB
-	if ((result->copy == NULL) && (accel & MPEG2_ACCEL_MLIB)) {
-	    result->copy = yuv2rgb_init_mlib (order, bpp);
-	}
-#endif
-	if (result->copy == NULL) {
 	    result->copy = convert_yuv2rgb_c;
 	    id->yuv2rgb = yuv2rgb_c_init (order, bpp);
-	}
     }
 }
 

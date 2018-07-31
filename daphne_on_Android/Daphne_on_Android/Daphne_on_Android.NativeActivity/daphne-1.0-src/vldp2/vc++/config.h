@@ -1,7 +1,6 @@
 /* vc++/config.h - manually adapted from include/config.h.in */
 
 /* autodetect accelerations */
-#define ACCEL_DETECT
 
 /* alpha architecture */
 /* #undef ARCH_ALPHA */

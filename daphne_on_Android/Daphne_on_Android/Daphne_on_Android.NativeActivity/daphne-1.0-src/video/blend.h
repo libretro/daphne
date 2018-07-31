@@ -43,49 +43,11 @@
 // we always want this function defined for the purpose of testing (releasetest.cpp)
 void blend_c();
 
-// Here we make some definitions so that the MMX/C code use identical syntax and variables
-#ifdef USE_MMX
-
-#if defined (MAC_OSX) || defined (WIN32)
-extern "C" void blend_mmx();
-extern "C" Uint8 *asm_line1;
-extern "C" Uint8 *asm_line2;
-extern "C" Uint8 *asm_dest;
-extern "C" Uint32 asm_iterations;
-#define g_blend_line1 asm_line1
-#define g_blend_line2 asm_line2
-#define g_blend_dest asm_dest
-#define g_blend_iterations asm_iterations
-#else
-extern "C" void _blend_mmx();
-extern "C" Uint8 *_asm_line1;
-extern "C" Uint8 *_asm_line2;
-extern "C" Uint8 *_asm_dest;
-extern "C" Uint32 _asm_iterations;
-#define g_blend_line1 _asm_line1
-#define g_blend_line2 _asm_line2
-#define g_blend_dest _asm_dest
-#define g_blend_iterations _asm_iterations
-#define blend_mmx _blend_mmx
-#endif // MAC_OSX
-
-// debug version gets some extra (slower) error checking
-#ifdef DEBUG
-#define g_blend_func debug_blend_mmx
-void debug_blend_mmx();
-#else
-// here is the fast release version
-#define g_blend_func blend_mmx
-#endif
-
-#else
-
 extern Uint8 *g_blend_line1;
 extern Uint8 *g_blend_line2;
 extern Uint8 *g_blend_dest;
 extern Uint32 g_blend_iterations;
 #define g_blend_func blend_c
-#endif // USE_MMX
 
 /////////////////////////////
 

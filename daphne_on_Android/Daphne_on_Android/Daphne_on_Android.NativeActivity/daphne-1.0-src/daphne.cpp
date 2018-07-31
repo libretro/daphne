@@ -542,24 +542,12 @@ void reset_logfile(int argc, char **argv)
 	printline("Not Compiled In");
 
 	outstr("--RGB2YUV Function: ");
-#ifdef USE_MMX
-	printline("MMX");
-#else
 	printline("C");
-#endif
 	outstr("--Line Blending Function: ");
-#ifdef USE_MMX
-	printline("MMX");
-#else
 	printline("C");
-#endif // blend MMX
 
 	outstr("--Audio Mixing Function: ");
-#ifdef USE_MMX
-	printline("MMX");
-#else
 	printline("C");
-#endif // blend MMX
 }
 
 // added by JFA for -idleexit

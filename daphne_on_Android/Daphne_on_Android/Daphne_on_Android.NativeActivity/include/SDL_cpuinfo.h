@@ -35,8 +35,6 @@
 #if defined(_MSC_VER) && (_MSC_VER >= 1500) && (defined(_M_IX86) || defined(_M_X64))
 #include <intrin.h>
 #ifndef _WIN64
-#define __MMX__
-#define __3dNOW__
 #endif
 #define __SSE__
 #define __SSE2__
@@ -48,12 +46,6 @@
 #include <altivec.h>
 #undef pixel
 #endif
-#endif
-#ifdef __MMX__
-#include <mmintrin.h>
-#endif
-#ifdef __3dNOW__
-#include <mm3dnow.h>
 #endif
 #ifdef __SSE__
 #include <xmmintrin.h>

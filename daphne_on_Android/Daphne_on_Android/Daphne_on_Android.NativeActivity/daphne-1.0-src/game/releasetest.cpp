@@ -86,7 +86,6 @@ m_test_blend(false),
 m_test_mix(false),
 m_test_samples(false),
 m_test_sound_mixing(false)
-//m_test_gp2x_timer(false)
 {
 	m_log_passed.clear();
 	m_log_failed.clear();
@@ -129,18 +128,6 @@ void releasetest::start()
 	if (dotest(m_test_line_parse)) test_line_parse();
 	if (dotest(m_test_framefile_parse)) test_framefile_parse();
 	if (dotest(m_test_samples)) test_samples();
-
-#ifdef GP2X
-	if (dotest(m_test_gp2x_timer)) test_gp2x_timer();
-#endif // GP2X
-
-	// Only test these functions if we've built with MMX code,
-	//  otherwise the test is useless
-#ifdef USE_MMX
-	if (dotest(m_test_rgb2yuv)) test_rgb2yuv();
-	if (dotest(m_test_blend)) test_blend();
-	if (dotest(m_test_mix)) test_mix();
-#endif // USE_MMX
 
 	if (dotest(m_test_think_delay)) test_think_delay();
 
@@ -381,47 +368,6 @@ void releasetest::test_framefile_parse()
 	
 	delete vldp;
 	g_ldp = new ldp();	// use generic LDP class ...
-}
-
-void releasetest::test_rgb2yuv()
-{
-	bool passed = true;	// easier to default to true on this one
-	const int PREC = 1;	// how much drift we allow our functions
-
-	printline("Beginning RGB2YUV exerciser (this may take a long time) ...");
-
-	for (unsigned int r = 0; (r <= 255) && passed && (!get_quitflag()); r++)
-	{
-		for (unsigned int g = 0; (g <= 255) && passed; g++)
-		{
-			for (unsigned int b = 0; (b <= 255) && passed; b++)
-			{
-				rgb2yuv_input[0] = r;
-				rgb2yuv_input[1] = g;
-				rgb2yuv_input[2] = b;
-				rgb2yuv();
-
-				// this is the reference C code which we consider to be the standard to judge against
-				unsigned char real_y = (unsigned char) (((9798*r) + (19235*g) + (3736*b)) >> 15);
-				unsigned char real_u = (unsigned char) ((((b-real_y)*18514) >> 15) + 128);
-				unsigned char real_v = (unsigned char) ((((r-real_y)*23364) >> 15) + 128);
-
-				if ((!i_close_enuf(rgb2yuv_result_y, real_y, PREC)) ||
-					(!i_close_enuf(rgb2yuv_result_v, real_v, PREC)) ||
-					(!i_close_enuf(rgb2yuv_result_u, real_u, PREC)))
-				{
-					string err = "ERROR : Y[" + numstr::ToStr(rgb2yuv_result_y) + "!=" + numstr::ToStr(real_y) + "] or V[" + numstr::ToStr(rgb2yuv_result_v) + "!=" + numstr::ToStr(real_v) + "] or " +
-						"U[" + numstr::ToStr(rgb2yuv_result_u) + "!=" + numstr::ToStr(real_u) + "]";
-					printline(err.c_str());
-					passed = false;
-				}
-			}
-		}
-		SDL_check_input();	// give user some breathing room
-	}
-
-	logtest(passed, "RGB2YUV Complete Exerciser");
-
 }
 
 // NOTE : this test might well be done at the very end since it messes with the video modes
@@ -792,92 +738,6 @@ void releasetest::test_vldp_render()
 		logtest(test_result, "VLDP Overlay w/ Vertical Offset Render");
 }
 
-void releasetest::test_blend()
-{
-	const int BUF_SIZE = 256;
-	unsigned char line1[BUF_SIZE];
-	unsigned char line2[BUF_SIZE];
-	unsigned char dst_C[BUF_SIZE];
-	unsigned char dst_MMX[BUF_SIZE];
-	int i = 0;
-	
-	printline("Beginning BLEND accuracy test...");
-	
-	// fill lines with values (that are the same each time test is run, to make reproducing bugs easier)
-	for (i = 0; i < BUF_SIZE; i++)
-	{
-		line1[i] = i;
-		line2[i] = 255-i;
-	}
-	
-	g_blend_line1 = line1;
-	g_blend_line2 = line2;
-	g_blend_dest = dst_C;
-	g_blend_iterations = BUF_SIZE;
-	
-	blend_c();	// do the reference test
-	
-	g_blend_dest = dst_MMX;
-	g_blend_func();	// now do the MMX version (unless we have no MMX in which case this test is meaningless)
-	
-	bool result = true;
-	for (i = 0; i < BUF_SIZE; i++)
-	{
-		if (dst_C[i] != dst_MMX[i])
-		{
-			result = false;
-			break;
-		}
-	}
-	
-	logtest(result, "BLEND accuracy test");
-}
-
-void releasetest::test_mix()
-{
-	const int BUF_SIZE = 256;
-	unsigned char line1[BUF_SIZE];
-	unsigned char line2[BUF_SIZE];
-	unsigned char dst_C[BUF_SIZE];
-	unsigned char dst_MMX[BUF_SIZE];
-	int i = 0;
-	
-	printline("Beginning AUDIO MIX accuracy test...");
-	
-	// fill lines with values (that are the same each time test is run, to make reproducing bugs easier)
-	for (i = 0; i < BUF_SIZE; i++)
-	{
-		line1[i] = i;
-		line2[i] = i;
-	}
-	
-	mix_s MixBufs1, MixBufs2;
-	MixBufs1.pMixBuf = line1;
-	MixBufs1.pNext = &MixBufs2;
-	MixBufs2.pMixBuf = line2;
-	MixBufs2.pNext = NULL;
-	g_pMixBufs = &MixBufs1;
-	g_uBytesToMix = BUF_SIZE;
-	g_pSampleDst = dst_C;
-	
-	mix_c();	// do the reference test
-	
-	g_pSampleDst = dst_MMX;
-	g_mix_func();	// now do the MMX version (unless we have no MMX in which case this test is meaningless)
-	
-	bool result = true;
-	for (i = 0; i < BUF_SIZE; i++)
-	{
-		if (dst_C[i] != dst_MMX[i])
-		{
-			result = false;
-			break;
-		}
-	}
-	
-	logtest(result, "AUDIO MIX accuracy test");
-}
-
 void releasetest::test_samples()
 {
 	const unsigned int WAIT_MS = 1000;
@@ -995,31 +855,3 @@ void releasetest::test_sound_mixing()
 
 	SDL_PauseAudio(0);	// start up other audio thread again
 }
-
-#ifdef GP2X
-void releasetest::test_gp2x_timer()
-{
-	unsigned int uTime[4];
-	uTime[0] = GP2X_GetTicks(~1);	// 2 before wraparound
-	uTime[1] = GP2X_GetTicks(~0);	// 1 before wraparound
-	uTime[2] = GP2X_GetTicks(0);	// wraparound
-	uTime[3] = GP2X_GetTicks(1);	// 1 after wraparound
-
-	bool bPassed = true;
-
-	for (unsigned int u = 0; u < 4; u++)
-	{
-		string s = "U " + numstr::ToStr(u) + " : " + numstr::ToStr(uTime[u]);
-		printline(s.c_str());
-	}
-
-	// make sure timer doesn't ever become less when it wraps around
-	for (unsigned int v = 1; v < 4; v++)
-	{
-		if (uTime[v] < uTime[v-1]) bPassed = false;
-	}
-
-	logtest(bPassed, "GP2X Timer Test");
-	
-}
-#endif // GP2X

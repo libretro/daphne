@@ -237,42 +237,6 @@ static void mpeg2_idct_add_c (const int last, int16_t * block,
 
 void mpeg2_idct_init (uint32_t accel)
 {
-#ifdef ARCH_X86
-    if (accel & MPEG2_ACCEL_X86_MMXEXT) {
-	mpeg2_idct_copy = mpeg2_idct_copy_mmxext;
-	mpeg2_idct_add = mpeg2_idct_add_mmxext;
-	mpeg2_idct_mmx_init ();
-    } else if (accel & MPEG2_ACCEL_X86_MMX) {
-	mpeg2_idct_copy = mpeg2_idct_copy_mmx;
-	mpeg2_idct_add = mpeg2_idct_add_mmx;
-	mpeg2_idct_mmx_init ();
-    } else
-#endif
-#ifdef ARCH_PPC
-    if (accel & MPEG2_ACCEL_PPC_ALTIVEC) {
-	mpeg2_idct_copy = mpeg2_idct_copy_altivec;
-	mpeg2_idct_add = mpeg2_idct_add_altivec;
-	mpeg2_idct_altivec_init ();
-    } else
-#endif
-#ifdef ARCH_ALPHA
-    if (accel & MPEG2_ACCEL_ALPHA_MVI) {
-	mpeg2_idct_copy = mpeg2_idct_copy_mvi;
-	mpeg2_idct_add = mpeg2_idct_add_mvi;
-	mpeg2_idct_alpha_init (0);
-    } else if (accel & MPEG2_ACCEL_ALPHA) {
-	mpeg2_idct_copy = mpeg2_idct_copy_alpha;
-	mpeg2_idct_add = mpeg2_idct_add_alpha;
-	mpeg2_idct_alpha_init (1);
-    } else
-#endif
-#ifdef LIBMPEG2_MLIB
-    if (accel & MPEG2_ACCEL_MLIB) {
-	mpeg2_idct_copy = mpeg2_idct_copy_mlib_non_ieee;
-	mpeg2_idct_add = (getenv ("MLIB_NON_IEEE") ?
-			  mpeg2_idct_add_mlib_non_ieee : mpeg2_idct_add_mlib);
-    } else
-#endif
     {
 	extern uint8_t mpeg2_scan_norm[64];
 	extern uint8_t mpeg2_scan_alt[64];

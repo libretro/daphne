@@ -158,9 +158,9 @@ SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/cpu_state.c
 SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/decode.c
 SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/header.c
 SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/idct.c
-SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/idct_mmx.c
+#SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/idct_mmx.c
 SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/motion_comp.c
-SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/motion_comp_mmx.c
+#SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/motion_comp_mmx.c
 SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/slice.c
 
 SOURCES_CXX += $(DAPHNE_MAIN_DIR)/libretro/libretro.cpp

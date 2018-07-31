@@ -23,7 +23,6 @@
 #include "rgb2yuv.h"
 
 // if we aren't using the assembly version, then use the C version instead
-#ifndef USE_MMX
 
 // these are int's so they are the optimal size for the CPU to work with
 unsigned int rgb2yuv_input[3] = { 0 };	// 8-bit values
@@ -298,5 +297,3 @@ void rgb2yuv()
 	rgb2yuv_result_v = (unsigned char) ((((R-rgb2yuv_result_y)*23364) >> 15) + 128);
 }
 */
-
-#endif	// not MMX_RGB2YUV
