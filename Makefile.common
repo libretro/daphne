@@ -1,0 +1,78 @@
+DEPS_DIR    := $(CORE_DIR)/deps
+DAPHNE_MAIN_DIR := $(CORE_DIR)/daphne_on_Android/Daphne_on_Android/Daphne_on_Android.NativeActivity
+DAPHNE_DIR  := $(DAPHNE_MAIN_DIR)/daphne-1.0-src
+
+INCFLAGS    := -I$(CORE_DIR) \
+					-I$(CORE_DIR)/deps/libogg/include \
+					-I$(CORE_DIR)/deps/libvorbis/include \
+					-I$(DAPHNE_MAIN_DIR)/include \
+					-I$(CORE_DIR)/deps/libvorbis/lib
+
+
+SOURCES_C   := $(DEPS_DIR)/libogg/src/bitwise.c \
+					$(DEPS_DIR)/libogg/src/framing.c \
+					$(DEPS_DIR)/libvorbis/lib/analysis.c \
+					$(DEPS_DIR)/libvorbis/lib/bitrate.c \
+					$(DEPS_DIR)/libvorbis/lib/block.c \
+					$(DEPS_DIR)/libvorbis/lib/codebook.c \
+					$(DEPS_DIR)/libvorbis/lib/envelope.c \
+					$(DEPS_DIR)/libvorbis/lib/floor0.c \
+					$(DEPS_DIR)/libvorbis/lib/floor1.c \
+					$(DEPS_DIR)/libvorbis/lib/info.c \
+					$(DEPS_DIR)/libvorbis/lib/lookup.c \
+					$(DEPS_DIR)/libvorbis/lib/lpc.c \
+					$(DEPS_DIR)/libvorbis/lib/lsp.c \
+					$(DEPS_DIR)/libvorbis/lib/mapping0.c \
+					$(DEPS_DIR)/libvorbis/lib/mdct.c \
+					$(DEPS_DIR)/libvorbis/lib/psy.c \
+					$(DEPS_DIR)/libvorbis/lib/registry.c \
+					$(DEPS_DIR)/libvorbis/lib/res0.c \
+					$(DEPS_DIR)/libvorbis/lib/sharedbook.c \
+					$(DEPS_DIR)/libvorbis/lib/smallft.c \
+					$(DEPS_DIR)/libvorbis/lib/synthesis.c \
+					$(DEPS_DIR)/libvorbis/lib/vorbisenc.c \
+					$(DEPS_DIR)/libvorbis/lib/vorbisfile.c \
+					$(DEPS_DIR)/libvorbis/lib/window.c \
+
+SOURCES_CXX := 
+
+SOURCES_CXX += $(DAPHNE_DIR)/cpu/6809infc.cpp
+SOURCES_CXX += $(DAPHNE_DIR)/cpu/6809infc_ORIG.cpp
+SOURCES_CXX += $(DAPHNE_DIR)/cpu/6809infc_v1.cpp
+SOURCES_CXX += $(DAPHNE_DIR)/cpu/cop.cpp
+SOURCES_CXX += $(DAPHNE_DIR)/cpu/copintf.cpp
+SOURCES_CXX += $(DAPHNE_DIR)/cpu/cpu.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/cpu/cpu-debug.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/cpu/m80.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/cpu/mamewrap.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/cpu/mc6809.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/cpu/mc6809_ORIG.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/cpu/mc6809_v1.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/cpu/nes_6502.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/cpu/nes6502.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/cpu/z80.cpp
+
+#SOURCES_CXX += $(CORE_DIR)/src/game/thayers.cpp
+
+#SOURCES_CXX += $(CORE_DIR)/src/io/cmdline.cpp
+#SOURCES_CXX  += $(CORE_DIR)/src/io/conin.cpp
+#SOURCES_CXX  += $(CORE_DIR)/src/io/conout.cpp
+#SOURCES_CXX  += $(CORE_DIR)/src/io/error.cpp
+#SOURCES_CXX  += $(CORE_DIR)/src/io/numstr.cpp
+#SOURCES_CXX  += $(CORE_DIR)/src/io/mpo_fileio.cpp
+#SOURCES_CXX  += $(CORE_DIR)/src/io/parallel.cpp
+#SOURCES_CXX  += $(CORE_DIR)/src/io/serial.cpp
+#SOURCES_CXX  += $(CORE_DIR)/src/io/sram.cpp
+#SOURCES_CXX  += $(CORE_DIR)/src/io/unzip.cpp
+
+#SOURCES_CXX += $(CORE_DIR)/src/sound/dac.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/sound/gisound.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/sound/mix.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/sound/pc_beeper.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/sound/samples.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/sound/sn_intf.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/sound/sound.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/sound/ssi263.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/sound/tms9919.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/sound/tonegen.cpp
+#SOURCES_CXX += $(CORE_DIR)/src/sound/tqsynth.cpp
