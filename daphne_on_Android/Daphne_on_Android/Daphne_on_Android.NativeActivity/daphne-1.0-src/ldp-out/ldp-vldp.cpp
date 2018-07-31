@@ -549,21 +549,6 @@ bool ldp_vldp::init_player()
 					g_local_info.blank_during_skips = m_blank_on_skips;
 					g_local_info.GetTicksFunc = GetTicksFunc;
 
-#ifdef USE_OPENGL
-					// if we're using openGL, then we have a different set of callbacks ...
-					if (get_use_opengl())
-					{
-						g_local_info.prepare_frame = prepare_frame_GL_callback;
-						g_local_info.display_frame = display_frame_GL_callback;
-						g_local_info.report_mpeg_dimensions = report_mpeg_dimensions_GL_callback;
-						g_local_info.render_blank_frame = render_blank_frame_GL_callback;
-						if (!init_vldp_opengl())
-						{
-							printerror("OpenGL v2.0 initialization failed.");
-							set_quitflag();
-						}
-					}
-#endif
 					LOGI("daphne-libretro: In ldp_vldp::init_player, before pvldp_init.");
 
 					g_vldp_info = pvldp_init(&g_local_info);
@@ -729,11 +714,6 @@ void ldp_vldp::shutdown_player()
 	free_vldp_lib();
 	audio_shutdown();
 	free_yuv_overlay();	// de-allocate overlay if we have one allocated ...
-	
-#ifdef USE_OPENGL
-	free_gl_resources();
-#endif
-
 }
 
 bool ldp_vldp::open_and_block(const string &strFilename)
@@ -1156,15 +1136,6 @@ bool ldp_vldp::change_speed(unsigned int uNumerator, unsigned int uDenominator)
 
 void ldp_vldp::think()
 {
-#ifdef USE_OPENGL
-	// IMPORTANT: this must come before we update VLDP's uMsTimer to ensure that OpenGL has a chance to draw any pending frames before
-	//  a new frame comes in.
-	if (get_use_opengl())
-	{
-		ldp_vldp_gl_think(m_uVblankCount);
-	}
-#endif
-
 	// VLDP relies on this number
 	// (m_uBlockedMsSincePlay is only non-zero when we've used blocking seeking)
 	g_local_info.uMsTimer = m_uElapsedMsSincePlay + m_uBlockedMsSincePlay;

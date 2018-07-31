@@ -108,16 +108,6 @@ void palette_set_transparency(unsigned int uColorIndex, bool transparent)
 	{
 		g_uRGBAPalette[uColorIndex] |= 0xFF000000;	// set alpha channel to FF
 	}
-
-#ifdef USE_OPENGL
-	// TODO : change this to 'g_palette_modified = true' once we're in a better position to test.
-	// if we're using OpenGL, we need to update the palette texture
-	if (get_use_opengl())
-	{
-		on_palette_change_gl();
-	}
-#endif
-
 }
 
 // call this function when a color has changed
@@ -183,15 +173,6 @@ void palette_finalize()
 			// SDL_SetColors(g_game->get_scaled_video_overlay(), g_rgb_palette, 0, g_palette_size);
 			SDL_SetPaletteColors(g_game->get_scaled_video_overlay()->format->palette, g_rgb_palette, 0, g_palette_size);
 		}
-
-#ifdef USE_OPENGL
-		// if we're using OpenGL, we need to update the palette texture
-		if (get_use_opengl())
-		{
-			on_palette_change_gl();
-		}
-#endif
-
 	}
 
 	g_palette_modified = false;

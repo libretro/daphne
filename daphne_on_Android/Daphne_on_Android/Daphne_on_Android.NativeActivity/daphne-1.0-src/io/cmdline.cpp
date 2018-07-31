@@ -965,13 +965,6 @@ bool parse_cmd_line(int argc, char **argv)
 			set_yuv_hwaccel(false);
 		}
 
-#ifdef USE_OPENGL
-		else if (strcasecmp(s, "-opengl")==0)
-		{
-			set_use_opengl(true);
-		}
-#endif // USE_OPENGL
-
 		else if (strcasecmp(s, "-pal_dl")==0)
 		{
 			set_frame_modifier(MOD_PAL_DL);

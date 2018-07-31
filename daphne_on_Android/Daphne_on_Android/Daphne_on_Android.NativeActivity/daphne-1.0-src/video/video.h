@@ -49,11 +49,6 @@ enum { FONT_SMALL, FONT_BIG };	// font enumeration, dependent on which order fon
 
 bool init_display();
 
-#ifdef USE_OPENGL
-bool init_opengl();
-void take_screenshot_GL();
-#endif // USE_OPENGL
-
 void shutdown_display();
 
 // flips the video buffers (if in double buffering mode)
@@ -114,13 +109,5 @@ bool get_yuv_hwaccel();
 void set_force_aspect_ratio(bool bEnabled);
 
 bool get_force_aspect_ratio();
-
-#ifdef USE_OPENGL
-// sets the value of g_bUseOpenGL
-void set_use_opengl(bool enabled);
-
-// returns value of g_bUseOpenGL
-bool get_use_opengl();
-#endif // USE_OPENGL
 
 #endif
