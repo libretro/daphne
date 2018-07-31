@@ -165,7 +165,7 @@ SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/slice.c
 
 SOURCES_CXX += $(DAPHNE_MAIN_DIR)/libretro/libretro.cpp
 
-SOURCES_C += $(DAPHNE_MAIN_DIR)/main.c
+#SOURCES_C += $(DAPHNE_MAIN_DIR)/main.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/atomic/SDL_atomic.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/atomic/SDL_spinlock.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/android/SDL_androidaudio.c
