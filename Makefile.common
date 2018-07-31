@@ -172,7 +172,7 @@ SOURCES_CXX += $(DAPHNE_MAIN_DIR)/libretro/libretro.cpp
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/dummy/SDL_dummyaudio.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audio.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audiocvt.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audiodev.c
+#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audiodev.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audiotypecvt.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_wave.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/core/android/SDL_android.c
@@ -233,7 +233,7 @@ SOURCES_C += $(DAPHNE_MAIN_DIR)/src/file/SDL_rwops.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/software/SDL_rotate.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/SDL.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/SDL_assert.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/SDL_error.c
+SOURCES_C += $(DAPHNE_MAIN_DIR)/src/SDL_error.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/SDL_hints.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/SDL_log.c
 
