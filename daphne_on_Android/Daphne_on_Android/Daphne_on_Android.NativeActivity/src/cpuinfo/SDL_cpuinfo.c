@@ -229,38 +229,6 @@ CPU_getCPUIDFeatures(void)
     return features;
 }
 
-static SDL_bool
-CPU_OSSavesYMM(void)
-{
-    int a, b, c, d;
-
-    /* Check to make sure we can call xgetbv */
-    cpuid(0, a, b, c, d);
-    if (a < 1) {
-        return SDL_FALSE;
-    }
-    cpuid(1, a, b, c, d);
-    if (!(c & 0x08000000)) {
-        return SDL_FALSE;
-    }
-
-    /* Call xgetbv to see if YMM register state is saved */
-    a = 0;
-#if defined(__GNUC__) && (defined(i386) || defined(__x86_64__))
-    asm(".byte 0x0f, 0x01, 0xd0" : "=a" (a) : "c" (0) : "%edx");
-#elif defined(_MSC_VER) && (defined(_M_IX86) || defined(_M_X64)) && (_MSC_FULL_VER >= 160040219) /* VS2010 SP1 */
-    a = (int)_xgetbv(0);
-#elif (defined(_MSC_VER) && defined(_M_IX86)) || defined(__WATCOMC__)
-    __asm
-    {
-        xor ecx, ecx
-        _asm _emit 0x0f _asm _emit 0x01 _asm _emit 0xd0
-        mov a, eax
-    }
-#endif
-    return ((a & 6) == 6) ? SDL_TRUE : SDL_FALSE;
-}
-
 static int
 CPU_haveRDTSC(void)
 {
@@ -378,36 +346,6 @@ CPU_haveSSE42(void)
         if (a >= 1) {
             cpuid(1, a, b, c, d);
             return (c & 0x00100000);
-        }
-    }
-    return 0;
-}
-
-static int
-CPU_haveAVX(void)
-{
-    if (CPU_haveCPUID() && CPU_OSSavesYMM()) {
-        int a, b, c, d;
-
-        cpuid(0, a, b, c, d);
-        if (a >= 1) {
-            cpuid(1, a, b, c, d);
-            return (c & 0x10000000);
-        }
-    }
-    return 0;
-}
-
-static int
-CPU_haveAVX2(void)
-{
-    if (CPU_haveCPUID() && CPU_OSSavesYMM()) {
-        int a, b, c, d;
-
-        cpuid(0, a, b, c, d);
-        if (a >= 7) {
-            cpuid(7, a, b, c, d);
-            return (b & 0x00000020);
         }
     }
     return 0;
@@ -602,12 +540,6 @@ SDL_GetCPUFeatures(void)
         }
         if (CPU_haveSSE42()) {
             SDL_CPUFeatures |= CPU_HAS_SSE42;
-        }
-        if (CPU_haveAVX()) {
-            SDL_CPUFeatures |= CPU_HAS_AVX;
-        }
-        if (CPU_haveAVX2()) {
-            SDL_CPUFeatures |= CPU_HAS_AVX2;
         }
     }
     return SDL_CPUFeatures;
