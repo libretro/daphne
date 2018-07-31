@@ -170,7 +170,7 @@ SOURCES_CXX += $(DAPHNE_MAIN_DIR)/libretro/libretro.cpp
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/atomic/SDL_spinlock.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/android/SDL_androidaudio.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/dummy/SDL_dummyaudio.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audio.c
+#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audio.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audiocvt.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audiodev.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audiotypecvt.c
@@ -280,5 +280,5 @@ SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_RLEaccel.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_shape.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_stretch.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_surface.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_video.c
+#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_video.c
 
