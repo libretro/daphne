@@ -89,11 +89,6 @@ Uint16 get_video_width();
 void set_video_width(Uint16);
 Uint16 get_video_height();
 void set_video_height(Uint16);
-// RJS START - Convert SDL_Overlay
-// void take_screenshot(SDL_Overlay *yuvimage);
-void take_screenshot(SDL_Texture *yuvimage);
-// RJS END
-void save_screenshot(SDL_Surface *shot);
 void yuv2rgb(SDL_Color *result, int y, int u, int v);
 void draw_string(const char*, int, int, SDL_Surface*);
 void vid_toggle_fullscreen();

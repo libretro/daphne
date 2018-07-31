@@ -84,7 +84,6 @@ Sint32 g_vertical_offset = 0;	// (used a lot, we only want to calc it once)
 
 double g_dPercentComplete01 = 0.0;	// send by child thread to indicate how far our parse is complete
 bool g_bGotParseUpdate = false;	// if true, it means we've received a parse update from VLDP
-bool g_take_screenshot = false;	// if true, a screenshot will be taken at the next available opportunity
 unsigned int g_vertical_stretch = 0;
 unsigned int g_filter_type = FILTER_NONE;	// what type of filter to use on our data (if any)
 
@@ -1235,7 +1234,6 @@ unsigned int ldp_vldp::get_current_frame()
 // takes a screenshot of the current frame + any video overlay
 void ldp_vldp::request_screenshot()
 {
-	g_take_screenshot = true;
 }
 
 void ldp_vldp::set_search_blanking(bool enabled)
@@ -2251,14 +2249,6 @@ int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 				Y += g_hw_overlay_rect.w;	// we've done 2 vertical Y pixels, so skip a row
 				Y2 += g_hw_overlay_rect.w;
 			}	
-			
-			// if we've been instructed to take a screenshot, do so now that the overlay is in place
-			if (g_take_screenshot)
-			{
-				g_take_screenshot = false;
-				// 2017.02.14 - RJS REMOVE - changes back from apk texutres to surfaces
-				// APK take_screenshot(g_hw_overlay);
-			}
 		} // end if sanity check passed
 		
 		// if sanity check failed
@@ -2322,14 +2312,6 @@ int prepare_frame_callback_without_overlay(struct yuv_buf *buf)
 		overlay_w = sw_overlay->w;
 
 		buf2overlay_YUY2((Uint8 *)g_hw_overlay_pixels, nPitch, overlay_h, overlay_w, buf);
-
-		// if we've been instructed to take a screenshot, do so now that the overlay is in place
-		if (g_take_screenshot)
-		{
-			g_take_screenshot = false;
-			// 2017.02.14 - RJS REMOVE - changes back from apk texutres to surfaces
-			// APK take_screenshot(g_hw_overlay);
-		}
 
 		result = VLDP_TRUE;
 	}
