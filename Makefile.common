@@ -42,15 +42,15 @@ SOURCES_CXX += $(DAPHNE_DIR)/cpu/6809infc_v1.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/cpu/cop.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/cpu/copintf.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/cpu/cpu.cpp
-#SOURCES_CXX += $(CORE_DIR)/src/cpu/cpu-debug.cpp
-#SOURCES_CXX += $(CORE_DIR)/src/cpu/m80.cpp
-#SOURCES_CXX += $(CORE_DIR)/src/cpu/mamewrap.cpp
-#SOURCES_CXX += $(CORE_DIR)/src/cpu/mc6809.cpp
-#SOURCES_CXX += $(CORE_DIR)/src/cpu/mc6809_ORIG.cpp
-#SOURCES_CXX += $(CORE_DIR)/src/cpu/mc6809_v1.cpp
-#SOURCES_CXX += $(CORE_DIR)/src/cpu/nes_6502.cpp
-#SOURCES_CXX += $(CORE_DIR)/src/cpu/nes6502.cpp
-#SOURCES_CXX += $(CORE_DIR)/src/cpu/z80.cpp
+SOURCES_CXX += $(DAPHNE_DIR)/cpu/cpu-debug.cpp
+SOURCES_CXX += $(DAPHNE_DIR)/cpu/m80.cpp
+SOURCES_CXX += $(DAPHNE_DIR)/cpu/mamewrap.cpp
+SOURCES_CXX += $(DAPHNE_DIR)/cpu/mc6809.cpp
+SOURCES_CXX += $(DAPHNE_DIR)/cpu/mc6809_ORIG.cpp
+SOURCES_CXX += $(DAPHNE_DIR)/cpu/mc6809_v1.cpp
+SOURCES_CXX += $(DAPHNE_DIR)/cpu/nes_6502.cpp
+SOURCES_CXX += $(DAPHNE_DIR)/cpu/nes6502.cpp
+SOURCES_CXX += $(DAPHNE_DIR)/cpu/z80.cpp
 
 #SOURCES_CXX += $(CORE_DIR)/src/game/thayers.cpp
 

@@ -119,7 +119,7 @@
 
 #pragma warning (push)
 #pragma warning (disable:4838)
-static UINT8 z80_reg_layout[] = {
+static INT8 z80_reg_layout[] = {
 	Z80_PC, Z80_SP, Z80_AF, Z80_BC, Z80_DE, Z80_HL, -1,
 	Z80_IX, Z80_IY, Z80_AF2,Z80_BC2,Z80_DE2,Z80_HL2,-1,
 	Z80_R,	Z80_I,	Z80_IM, Z80_IFF1,Z80_IFF2, -1,
