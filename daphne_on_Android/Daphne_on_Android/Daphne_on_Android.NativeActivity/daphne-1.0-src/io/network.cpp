@@ -172,8 +172,13 @@ void net_set_ldpname(char *ldpname)
 // some code I found to calculate cpu mhz
 _inline unsigned __int64 GetCycleCount(void)
 {
+#ifdef __GNUC__
+   /* TODO/FIXME - very nonportable these days - we need to check if we even need this and if not, just remove this along with querying the MHz of the CPU in general. */
+   return 0;
+#else
     _asm    _emit 0x0F
     _asm    _emit 0x31
+#endif
 }
 #endif
 
