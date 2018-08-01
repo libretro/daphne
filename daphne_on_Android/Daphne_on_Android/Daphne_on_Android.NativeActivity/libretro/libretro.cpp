@@ -14,7 +14,7 @@
 *
 ***************************************************************************************************
 **************************************************************************************************/
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
@@ -22,9 +22,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <memory>
-#ifdef WIN32
 #include <ctype.h>
-#endif
 
 #include "libretro.h"
 #include "libretro_daphne.h"
