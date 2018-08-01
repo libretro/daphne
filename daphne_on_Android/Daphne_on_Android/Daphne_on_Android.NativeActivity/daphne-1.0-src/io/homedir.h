@@ -37,11 +37,7 @@ private:
 	//Private members	
 	string m_appdir;				//Directory the app was launched from
 	string m_homedir;				//"Home" directory to search first (defaults to appdir)
-#ifdef __ANDROID__
 	char m_strhomedir[PATH_MAX];
-#else
-	char m_strhomedir[_MAX_PATH];
-#endif
 };
 
 extern homedir g_homedir;	// our global game class.  Instead of having every .cpp file define this, we put it here.
