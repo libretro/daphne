@@ -51,6 +51,8 @@ SOURCES_CXX += $(DAPHNE_DIR)/cpu/mc6809_v1.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/cpu/nes_6502.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/cpu/nes6502.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/cpu/z80.cpp
+SOURCES_CXX += $(DAPHNE_DIR)/cpu/x86/i86.cpp
+SOURCES_CXX += $(DAPHNE_DIR)/cpu/x86/i86dasm.cpp
 
 SOURCES_CXX += $(DAPHNE_DIR)/daphne.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/game/astron.cpp
