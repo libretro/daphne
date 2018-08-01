@@ -64,9 +64,7 @@ using namespace std;
 // win32 doesn't have regular chdir apparently
 #define chdir _chdir
 #include <direct.h>
-#endif
-
-#ifdef UNIX
+#else
 #include <unistd.h>	// for chdir
 #endif
 
