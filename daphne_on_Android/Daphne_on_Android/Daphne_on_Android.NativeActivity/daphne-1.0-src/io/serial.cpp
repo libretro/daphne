@@ -23,7 +23,7 @@
 // Serial routines for DAPHNE emulator
 // by Matt Ownby
 // started 16 August 1999
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
@@ -37,7 +37,7 @@
 
 // WIN32 Specific Stuff Below
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 	HANDLE h;
 	COMMTIMEOUTS cto = { 2, 1, 1, 0, 0 };
@@ -49,7 +49,7 @@
 
 // RJS CHANGE
 // #ifdef UNIX
-#if defined(UNIX) || defined(ANDROID)
+#ifndef _WIN32
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/stat.h>
@@ -64,13 +64,7 @@
 
 #endif
 
-
-
-
-
-
-
-#ifdef WIN32
+#ifdef _WIN32
 
 bool serial_init(int port, int baudrate)
 // initializes serial port for use
@@ -312,20 +306,7 @@ void serial_close()
 	CloseHandle(h);
 
 }
-
-
-
-#endif
-
-// end WIN32 code ...
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-// RJS CHANGE
-// #ifdef UNIX
-#if defined(UNIX) || defined(ANDROID)
-
+#else
 // Unix styled code here ...
 
 bool serial_init(int port, int baudrate)
@@ -486,7 +467,6 @@ void serial_close()
 }
 
 #endif
-// end Unix code ...
 
 // flush the receive buffer
 void serial_rxflush()
