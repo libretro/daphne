@@ -53,11 +53,7 @@
 
 // File and path of loaded rom.
 bool gf_isThayers = false;
-#ifdef __ANDROID__
-char gstr_rom_path[PATH_MAX];
-#else
-char gstr_rom_path[_MAX_PATH];
-#endif
+char gstr_rom_path[1024];
 
 char gstr_rom_name[DAPHNE_MAX_ROMNAME];
 char gstr_rom_extension[sizeof(DAPHNE_ROM_EXTENSION)];

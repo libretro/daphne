@@ -96,11 +96,7 @@ typedef enum DAPHNE_GAME_TYPE
 ***************************************************************************************************
 **************************************************************************************************/
 // File and path of loaded rom.
-#ifdef __ANDROID__
-extern char gstr_rom_path[PATH_MAX];
-#else
-extern char gstr_rom_path[_MAX_PATH];
-#endif // __ANDROID__
+extern char gstr_rom_path[1024];
 
 extern char gstr_rom_name[DAPHNE_MAX_ROMNAME];
 extern char gstr_rom_extension[sizeof(DAPHNE_ROM_EXTENSION)];

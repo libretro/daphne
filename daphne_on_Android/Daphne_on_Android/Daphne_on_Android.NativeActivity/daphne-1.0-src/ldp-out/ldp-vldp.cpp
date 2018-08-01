@@ -40,6 +40,7 @@
 #endif
 // 
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include <set>
 #include "../io/conout.h"
