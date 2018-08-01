@@ -229,11 +229,7 @@ SDL_sqrtf(float x)
 double
 SDL_tan(double x)
 {
-#if defined(HAVE_TAN)
     return tan(x);
-#else
-    return SDL_uclibc_tan(x);
-#endif
 }
 
 float

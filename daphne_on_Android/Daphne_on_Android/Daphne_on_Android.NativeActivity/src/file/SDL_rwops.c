@@ -144,7 +144,7 @@ windows_file_size(SDL_RWops * context)
     }
 
     if (!GetFileSizeEx(context->hidden.windowsio.h, &size)) {
-        return WIN_SetError("windows_file_size");
+        return SDL_SetError("windows_file_size");
     }
 
     return size.QuadPart;
@@ -182,7 +182,7 @@ windows_file_seek(SDL_RWops * context, Sint64 offset, int whence)
 
     windowsoffset.QuadPart = offset;
     if (!SetFilePointerEx(context->hidden.windowsio.h, windowsoffset, &windowsoffset, windowswhence)) {
-        return WIN_SetError("windows_file_seek");
+        return SDL_SetError("windows_file_seek");
     }
     return windowsoffset.QuadPart;
 }
