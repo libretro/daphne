@@ -195,6 +195,7 @@ void SDL_Delay(Uint32 ms)
 
 /* vi: set ts=4 sw=4 expandtab: */
 #else
+#define _POSIX_C_SOURCE 199309L
 
 #include <stdio.h>
 #include <sys/time.h>
