@@ -32,13 +32,7 @@
    saves a system-dependent thread id in thread->id, and returns 0
    on success.
 */
-#ifdef SDL_PASSED_BEGINTHREAD_ENDTHREAD
-extern int SDL_SYS_CreateThread(SDL_Thread * thread, void *args,
-								pfnSDL_CurrentBeginThread pfnBeginThread,
-								pfnSDL_CurrentEndThread pfnEndThread);
-#else
-extern int SDL_SYS_CreateThread(SDL_Thread * thread, void *args);
-#endif
+int SDL_SYS_CreateThread(void *data, void *args);
 
 /* This function does any necessary setup in the child thread */
 extern void SDL_SYS_SetupThread(const char *name);

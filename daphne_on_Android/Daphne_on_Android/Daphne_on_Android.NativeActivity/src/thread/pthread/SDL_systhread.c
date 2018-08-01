@@ -59,7 +59,7 @@
 
 #include "SDL_assert.h"
 
-#ifndef __NACL__
+#if !defined(__NACL__) && !defined(_WIN32)
 /* List of signals to mask in the subthreads */
 static const int sig_list[] = {
     SIGHUP, SIGINT, SIGQUIT, SIGPIPE, SIGALRM, SIGTERM, SIGCHLD, SIGWINCH,
@@ -85,10 +85,10 @@ static SDL_bool checked_setname = SDL_FALSE;
 static int (*ppthread_setname_np)(pthread_t, const char*) = NULL;
 #endif
 int
-SDL_SYS_CreateThread(SDL_Thread * thread, void *args)
-{
+SDL_SYS_CreateThread(void *data, void *args)
+{\
+    SDL_Thread * thread = (SDL_Thread*)data;
 	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_SYS_CreateThread, top of routine. thread: %d  args: %d", (int) thread, (int) args);
 
 	pthread_attr_t type;
 
@@ -119,12 +119,10 @@ SDL_SYS_CreateThread(SDL_Thread * thread, void *args)
     /* Create the thread and go! */
     if (pthread_create(&thread->handle, &type, RunThread, args) != 0) {
 		// 2017.02.07 - RJS ADD - Logging.
-		LOGI("daphne-libretro: In SDL_SYS_CreateThread, pthread create error, exiting.");
         return SDL_SetError("Not enough resources to create thread");
     }
 
 	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_SYS_CreateThread, bottom of routine.");
 
     return 0;
 }
@@ -132,7 +130,7 @@ SDL_SYS_CreateThread(SDL_Thread * thread, void *args)
 void
 SDL_SYS_SetupThread(const char *name)
 {
-#if !defined(__NACL__)
+#if !defined(__NACL__) && !defined(_WIN32)
     int i;
     sigset_t mask;
 #endif /* !__NACL__ */
@@ -165,7 +163,7 @@ SDL_SYS_SetupThread(const char *name)
     }
 
    /* NativeClient does not yet support signals.*/
-#if !defined(__NACL__)
+#if !defined(__NACL__) && !defined(_WIN32)
     /* Mask asynchronous signals for this thread */
     sigemptyset(&mask);
     for (i = 0; sig_list[i]; ++i) {
