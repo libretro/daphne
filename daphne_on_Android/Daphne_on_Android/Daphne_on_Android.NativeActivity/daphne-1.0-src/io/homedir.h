@@ -37,7 +37,7 @@ private:
 	//Private members	
 	string m_appdir;				//Directory the app was launched from
 	string m_homedir;				//"Home" directory to search first (defaults to appdir)
-	char m_strhomedir[1024]; /* TODO/FIXME - should be non-hardcoded later *//*
+	char m_strhomedir[1024]; // TODO/FIXME - should be non-hardcoded later
 };
 
 extern homedir g_homedir;	// our global game class.  Instead of having every .cpp file define this, we put it here.
