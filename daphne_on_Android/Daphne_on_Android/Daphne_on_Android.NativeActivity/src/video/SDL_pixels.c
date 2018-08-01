@@ -29,10 +29,6 @@
 #include "SDL_pixels_c.h"
 #include "SDL_RLEaccel_c.h"
 
-// 2017.03.20 - RJS - Don't want to debug why relative path not working.
-#include "..\..\main_android.h"
-
-
 /* Lookup tables to expand partial bytes to the full 0..255 range */
 
 static Uint8 lookup_0[] = {
@@ -139,17 +135,11 @@ SDL_PixelFormatEnumToMasks(Uint32 format, int *bpp, Uint32 * Rmask,
 {
     Uint32 masks[4];
 
-	// 2017.03.20 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_PixelFormatEnumToMasks, top of routine and before SDL_ISPIXELFORMAT_FOURCC.");
-
     /* This function doesn't work with FourCC pixel formats */
     if (SDL_ISPIXELFORMAT_FOURCC(format)) {
         SDL_SetError("FOURCC pixel formats are not supported");
         return SDL_FALSE;
     }
-
-	// 2017.03.20 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_PixelFormatEnumToMasks, after successful SDL_ISPIXELFORMAT_FOURCC.");
 
     /* Initialize the values here */
     if (SDL_BYTESPERPIXEL(format) <= 2) {
@@ -533,16 +523,10 @@ SDL_InitFormat(SDL_PixelFormat * format, Uint32 pixel_format)
     Uint32 Rmask, Gmask, Bmask, Amask;
     Uint32 mask;
 
-	// 2017.03.20 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_InitFormat, top of routine and before SDL_PixelFormatEnumToMasks.");
-
     if (!SDL_PixelFormatEnumToMasks(pixel_format, &bpp,
                                     &Rmask, &Gmask, &Bmask, &Amask)) {
         return -1;
     }
-
-	// 2017.03.20 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_InitFormat, after successful SDL_PixelFormatEnumToMasks.");
 
     /* Set up the format */
     SDL_zerop(format);
@@ -593,8 +577,6 @@ SDL_InitFormat(SDL_PixelFormat * format, Uint32 pixel_format)
     format->palette = NULL;
     format->refcount = 1;
     format->next = NULL;
-
-	LOGI("daphne-libretro: In SDL_InitFormat, bottom of routine.");
 
     return 0;
 }
