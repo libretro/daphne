@@ -242,21 +242,6 @@ struct SDL_VideoDevice
 
     /* * * */
     /*
-     * OpenGL support
-     */
-    int (*GL_LoadLibrary) (_THIS, const char *path);
-    void *(*GL_GetProcAddress) (_THIS, const char *proc);
-    void (*GL_UnloadLibrary) (_THIS);
-      SDL_GLContext(*GL_CreateContext) (_THIS, SDL_Window * window);
-    int (*GL_MakeCurrent) (_THIS, SDL_Window * window, SDL_GLContext context);
-    void (*GL_GetDrawableSize) (_THIS, SDL_Window * window, int *w, int *h);
-    int (*GL_SetSwapInterval) (_THIS, int interval);
-    int (*GL_GetSwapInterval) (_THIS);
-    void (*GL_SwapWindow) (_THIS, SDL_Window * window);
-    void (*GL_DeleteContext) (_THIS, SDL_GLContext context);
-
-    /* * * */
-    /*
      * Event manager functions
      */
     void (*PumpEvents) (_THIS);
@@ -298,61 +283,9 @@ struct SDL_VideoDevice
     char * clipboard_text;
 
     /* * * */
-    /* Data used by the GL drivers */
-    struct
-    {
-        int red_size;
-        int green_size;
-        int blue_size;
-        int alpha_size;
-        int depth_size;
-        int buffer_size;
-        int stencil_size;
-        int double_buffer;
-        int accum_red_size;
-        int accum_green_size;
-        int accum_blue_size;
-        int accum_alpha_size;
-        int stereo;
-        int multisamplebuffers;
-        int multisamplesamples;
-        int accelerated;
-        int major_version;
-        int minor_version;
-        int flags;
-        int profile_mask;
-        int share_with_current_context;
-        int release_behavior;
-        int framebuffer_srgb_capable;
-        int retained_backing;
-        int driver_loaded;
-        char driver_path[256];
-        void *dll_handle;
-    } gl_config;
-
-    /* * * */
-    /* Cache current GL context; don't call the OS when it hasn't changed. */
-    /* We have the global pointers here so Cocoa continues to work the way
-       it always has, and the thread-local storage for the general case.
-     */
-    SDL_Window *current_glwin;
-    SDL_GLContext current_glctx;
-    SDL_TLSID current_glwin_tls;
-    SDL_TLSID current_glctx_tls;
-
-    /* * * */
     /* Data private to this driver */
     void *driverdata;
-    struct SDL_GLDriverData *gl_data;
     
-#if SDL_VIDEO_OPENGL_EGL
-    struct SDL_EGL_VideoData *egl_data;
-#endif
-    
-#if SDL_VIDEO_OPENGL_ES || SDL_VIDEO_OPENGL_ES2
-    struct SDL_PrivateGLESData *gles_data;
-#endif
-
     /* * * */
     /* The function used to dispose of this structure */
     void (*free) (_THIS);

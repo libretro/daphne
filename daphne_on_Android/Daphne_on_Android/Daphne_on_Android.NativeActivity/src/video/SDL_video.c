@@ -463,11 +463,6 @@ SDL_VideoInit(const char *driver_name)
 	// 2017.02.07 - RJS ADD - Logging.
 	LOGI("daphne-libretro: In SDL_VideoInit, after SDL_GL_ResetAttributes.");
 
-    _this->current_glwin_tls = SDL_TLSCreate();
-    _this->current_glctx_tls = SDL_TLSCreate();
-	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_VideoInit, after SDL_TLSCreate.  glwin_tls: %d  glctx_tls: %d", _this->current_glwin_tls, _this->current_glctx_tls);
-
     /* Initialize the video subsystem */
     if (_this->VideoInit(_this) < 0) {
         SDL_VideoQuit();
