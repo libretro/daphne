@@ -10,6 +10,8 @@
 #include "mpo_fileio.h"
 #include "conout.h"
 
+#include <string.h>
+
 #ifdef WIN32
 // for CreateDirectory
 #include <windows.h>
