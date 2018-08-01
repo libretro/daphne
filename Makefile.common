@@ -86,7 +86,7 @@ SOURCES_CXX += $(DAPHNE_DIR)/game/thayers.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/game/timetrav.cpp
 
 SOURCES_CXX += $(DAPHNE_DIR)/io/cmdline.cpp
-SOURCES_CXX += $(DAPHNE_DIR)/io/conin.cpp
+#SOURCES_CXX += $(DAPHNE_DIR)/io/conin.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/io/conout.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/io/error.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/io/fileparse.cpp

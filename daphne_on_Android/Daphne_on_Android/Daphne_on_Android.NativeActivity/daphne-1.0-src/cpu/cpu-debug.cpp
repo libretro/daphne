@@ -69,7 +69,6 @@ void MAME_Debug(void)
 		{
 			// since we may be at the debug prompt for a long time, we pause the cpu timer here
 			cpu_pause();
-			debug_prompt();	// give them a prompt
 			cpu_unpause();
 		}
 	}
@@ -125,117 +124,6 @@ const char *set_ea_info( int what, unsigned address, int size, int acc )
 	}
 
 	return(addrstr);
-}
-
-void debug_prompt()
-{
-	char s[81] = { 0 };
-	UINT8 done = 0;
-	struct cpudef *cpu = get_cpu_struct(g_which_cpu);
-	unsigned int addr = cpu->getpc_callback();	// this function relies on addr being initialized to PC
-	
-	g_break = 0;	// once they get  here, don't break anymore
-	
-	// they have to issue a proper command to get out of the prompt
-	while (!done && !get_quitflag())
-	{
-		newline();
-		print_cpu_context();	// show registers and stuff
-		
-		sprintf(s, "[#%u][%04x Command,'?']-> ", g_which_cpu, cpu->getpc_callback());
-		outstr(s);
-		con_getline(s, 80);
-		switch(toupper(s[0]))
-		{
-		case 'S':
-			// this might help with debugging *shrug*
-			g_ldp->pre_step_forward();
-			printline("Stepping forward one frame...");
-			break;
-		case 'C':	// continue execution
-			g_cpu_trace = 0;
-			done = 1;
-			break;
-		case 'D':	// disassemble
-
-			// if they entered in an address to disassemble at ...
-			if (strlen(s) > 1)
-			{
-				addr = (unsigned int) strtol(&s[1], NULL, 16);	// convert base 16 text to a number
-			}
-			// else if they entered no parameters, disassemble from PC
-
-			debug_disassemble(addr);
-			break;
-		case 'F':	// display current laserdisc frame
-			g_ldp->print_frame_info();
-			print_ldv1000_info();
-			break;
-		case 'I':	// break at end of interrupt
-			printline("This feature not implemented yet =]");
-			break;
-		case '=':	// set a new breakpoint
-			// if they entered in an address to disassemble at ...
-			if (strlen(s) > 1)
-			{
-				g_breakpoint = (UINT32) strtol(&s[1], NULL, 16);	// convert base 16 text to a number
-				g_break = 1;
-				g_cpu_trace = 0;
-				done = 1;
-			}
-			// else if they entered no parameters, disassemble from PC
-			else
-			{
-				printline("You must specify an address to break at.");
-			}
-			break;
-		case 'M':	// memory dump
-			if (strlen(s) > 1)
-			{
-				addr = (unsigned int) strtol(&s[1], NULL, 16);
-			}
-			print_memory_dump(addr);
-			break;
-		case 'N':	// next CPU
-			g_which_cpu++;
-			
-			// if we've run out of CPU's to debug, wrap back around to the first cpu
-			if (get_cpu_struct(g_which_cpu) == NULL) g_which_cpu = 0;
-			break;
-		case 0:	// carriage return
-			g_cpu_trace = 1;
-			done = 1;
-			break;
-		case 'Q':	// quit emulator
-			set_quitflag();
-			break;
-		case 'W':	// write byte at address
-			if (strlen(s) > 1)
-			{
-				int i = 2;	// skip the W and the first whitespace
-				Uint32 addr = 0;
-				Uint8 val = 0;
-
-				// find next whitespace
-				while (s[i] != ' ')
-				{
-					i++;
-				}
-				s[i] = 0;	// terminate string so we can do a strtol
-				addr = (Uint32) strtol(&s[1], NULL, 16);	// convert base 16 text to a number
-				val = (Uint8) strtol(&s[i+1], NULL, 16);	// i+1 because we skip the NULL-terminator we added before
-
-				g_game->cpu_mem_write((Uint16) addr, val);	// assume 16-bit for now
-			}
-			break;
-		case '?':	// get menu
-			debug_menu();
-			break;
-		default:
-			printline("Unknown command, press ? to get a menu");
-			break;
-		}
-	} // end while
 }
 
 void debug_menu()

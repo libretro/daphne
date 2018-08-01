@@ -32,7 +32,6 @@
 #include <string.h>
 #include "../daphne.h"
 #include "conout.h"
-#include "conin.h"
 #include "input.h"
 #include "../game/game.h"
 #include "../sound/sound.h"
@@ -85,7 +84,7 @@ void printerror(const char *s)
 			sound_play_saveme();
 		}
 		
-		con_getkey();	// wait for keypress
+		//con_getkey();	// wait for keypress
 
 		vid_blank();
 		vid_flip();
@@ -121,7 +120,7 @@ void printnowookin(const char *s)
 		SDLDrawText(s, srfScreen, FONT_SMALL, ((srfScreen->w >> 1) -((strlen(s) >> 1)*6)), (srfScreen->h >> 1));
 		vid_blit(srfScreen, 0, 0);
 		vid_flip();
-		con_getkey();	// wait for keypress
+		//con_getkey();	// wait for keypress
 
 		// repaint the disrupted overlay (ie Dragon's Lair Scoreboard when using a real LDP)
 		display_repaint();
@@ -143,7 +142,7 @@ void printnotice(const char *s)
 		vid_blit(srfScreen, 0, 0);
 		vid_flip();
 
-		ch = con_getkey();	// wait for keypress
+		//ch = con_getkey();	// wait for keypress
 
 		// if they pressed escape, quit
 		if (ch == 27)

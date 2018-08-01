@@ -26,7 +26,6 @@
 void set_cpu_trace(unsigned char);
 void set_debug_cpu(unsigned int which_cpu);
 void MAME_Debug();
-void debug_prompt();
 void debug_menu();
 void debug_disassemble(unsigned int);
 void print_cpu_context();
