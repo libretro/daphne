@@ -532,41 +532,4 @@ SDL_RegisterEvents(int numevents)
     return event_base;
 }
 
-int
-SDL_SendAppEvent(SDL_EventType eventType)
-{
-    int posted;
-
-    posted = 0;
-    if (SDL_GetEventState(eventType) == SDL_ENABLE) {
-        SDL_Event event;
-        event.type = eventType;
-        posted = (SDL_PushEvent(&event) > 0);
-    }
-    return (posted);
-}
-
-int
-SDL_SendSysWMEvent(SDL_SysWMmsg * message)
-{
-    int posted;
-
-    posted = 0;
-    if (SDL_GetEventState(SDL_SYSWMEVENT) == SDL_ENABLE) {
-        SDL_Event event;
-        SDL_memset(&event, 0, sizeof(event));
-        event.type = SDL_SYSWMEVENT;
-        event.syswm.msg = message;
-        posted = (SDL_PushEvent(&event) > 0);
-    }
-    /* Update internal event state */
-    return (posted);
-}
-
-int
-SDL_SendKeymapChangedEvent(void)
-{
-    return SDL_SendAppEvent(SDL_KEYMAPCHANGED);
-}
-
 /* vi: set ts=4 sw=4 expandtab: */

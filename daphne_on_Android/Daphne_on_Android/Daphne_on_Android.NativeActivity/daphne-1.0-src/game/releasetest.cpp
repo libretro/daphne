@@ -796,7 +796,6 @@ void releasetest::test_samples()
 
 void releasetest::test_sound_mixing()
 {
-	SDL_PauseAudio(1);	// stop other audio thread so we can call the mixing callbacks directlry
 	MAKE_DELAY(1000);	// give time for the audio callbacks to finish up
 
 	bool bTestPassed = false;
@@ -852,6 +851,4 @@ void releasetest::test_sound_mixing()
 	}
 
 	logtest(bTestPassed, "Sample Mixing + Main Audio Mixer + Clipping");
-
-	SDL_PauseAudio(0);	// start up other audio thread again
 }

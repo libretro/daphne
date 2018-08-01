@@ -202,7 +202,6 @@ bool sound_init()
 						g_sound_initialized = true;
 
 						// enable the audio callback (this should come last to be safe)
-						SDL_PauseAudio(0);	// start mixing! :)
 					}
 					// else if loading waves failed
 					else
@@ -244,7 +243,6 @@ void sound_shutdown()
 	if (g_sound_initialized)
 	{
 		printline("Shutting down sound system...");
-		SDL_PauseAudio(1);
 		LOGI("daphne-libretro: In sound_shutdown, after SDL_PauseAudio.");
 		// 2018.02.06 - RJS - When Daphne core is paused like when core menu is brought up, the audio theard is also paused.  Thus
 		// when this is called a WaitThread just waits for a thread that is pause and nothing happens.  Fixing . . .
