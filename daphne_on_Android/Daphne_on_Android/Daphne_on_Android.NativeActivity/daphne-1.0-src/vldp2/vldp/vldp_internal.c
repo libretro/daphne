@@ -47,8 +47,6 @@
 #include <inttypes.h>
 #endif
 
-#include "..\..\..\main_android.h"
-
 // RJS START
 // #include "mpeg2.h"
 // #include "video_out.h"
@@ -143,13 +141,11 @@ int idle_handler(void *surface)
 	// and listen for orders from the parent thread
 	while (!done)
 	{		
-		LOGI("daphne-libretro: In idle_handler, top of outer while.");
 		// while we have received new commands to be processed
 		// (so we don't go to sleep on skips)
 		while (ivldp_got_new_command() && !done)
 		{
 			// 2017.02.13 - RJS ADD - Logging.
-			LOGI("daphne-libretro: In idle_handler, in command listener. g_req_cmdORcount: %d", g_req_cmdORcount & 0xF0);
 			// examine the actual command (strip off the count)
 			switch(g_req_cmdORcount & 0xF0)
 			{
@@ -174,7 +170,6 @@ int idle_handler(void *surface)
 			case VLDP_REQ_PAUSE:	// pause command while we're already idle?  this is an error
 			case VLDP_REQ_STOP:	// stop command while we're already idle? this is an error
 				// 2017.02.13 - RJS ADD - Logging.
-				LOGI("daphne-libretro: In idle_handler, in VLDP_REQ_STOP/PAUSE. g_out_info.status set to STAT_ERROR.");
 				g_out_info.status = STAT_ERROR;
 				ivldp_ack_command();
 				break;
@@ -188,20 +183,16 @@ int idle_handler(void *surface)
 			SDL_Delay(0);	// give other threads some breathing room (but not much hehe)
 		} // end if we got a new command
 
-		LOGI("daphne-libretro: In idle_handler, before render_blank_frame.  g_in_info: %d", (int) g_in_info);
 		g_in_info->render_blank_frame();	// This makes sure that the video overlay gets drawn even if there is no video being played
-		LOGI("daphne-libretro: In idle_handler, after render_blank_frame.  Doing SDL_Delay(16).");
 
 		// we need to delay here because otherwise, this idle loop will execute at 100% cpu speed and really slow things down
 		// It shouldn't hurt us when we get a command that requires immediate attention (such as skip) because of the
 		// inner while loop above (while ivldp_got_new_command)
 		// NOTE : we want to delay for about 1 frame (or field) here
 		SDL_Delay(16);	// 1 field is 16.666ms assuming 60 hz
-		LOGI("daphne-libretro: In idle_handler, after SDL_Delay(16).");
 
 	} // end while we have not received a quit command
 
-	LOGI("daphne-libretro: In idle_handler, before io_close.");
 	io_close();
 	/*
 	// if we have a file open, close it
@@ -213,7 +204,6 @@ int idle_handler(void *surface)
 	*/
 
 	// 2017.02.13 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In idle_handler, after !done.  We're closing down.  g_out_info.status set to STAT_ERROR.");
 	g_out_info.status = STAT_ERROR;
 	mpeg2_close(g_mpeg_data);	// shutdown libmpeg2
 	s_video_output->close(s_video_output);		// shutdown null driver
@@ -226,11 +216,6 @@ int idle_handler(void *surface)
 	}
 
 	ivldp_ack_command();	// acknowledge quit command
-
-	// 2017.02.06- RJS ADD - Logging.
-	LOGI("daphne-libretro: In idle_handler, bottom of routine.");
-	LOGI("In idle_handler: PRIVATE thread should be EXITing!");
-
 	return 0;
 }
 
@@ -384,7 +369,6 @@ void play_handler()
 void ivldp_set_framerate(Uint8 frame_rate_code)
 {
 	// now to compute the framerate
-	// LOGI("In vldp_internal, ivldp_set_framerate.  Framerate Code: %d", frame_rate_code);
 
 	switch (frame_rate_code)
 	{
@@ -440,8 +424,6 @@ static void decode_mpeg2 (uint8_t * current, uint8_t * end)
 	for (;;)
     {
 		state = mpeg2_parse (g_mpeg_data);
-		// LOGI("In vldp_internal, decode_mpeg2, for loop until eof, state: %d", state);
-
 		switch (state)
 		{
 		case -1:
@@ -491,7 +473,6 @@ static void decode_mpeg2 (uint8_t * current, uint8_t * end)
 			// if the init hasn't been called yet, this may fail so we have to put the conditional
 		    if (info->display_fbuf)
 		    {
-				// LOGI("In vldp_internal, decode_mpeg2, before draw call.");
 				s_video_output->draw (s_video_output, info->display_fbuf->buf,
 				      info->display_fbuf->id);
 		    }
@@ -536,7 +517,6 @@ void vldp_cache_sequence_header()
 // In other words, this is ONLY used when we are seeking to an arbitrary frame
 void vldp_process_sequence_header()
 {
-	// LOGI("In vldp_internal, in vldp_process_sequence_header, routine only runs decode_mpeg2.");
 	decode_mpeg2 (g_header_buf, g_header_buf + g_header_buf_size);	// decode the pre-cached sequence header
 }
 
@@ -548,9 +528,6 @@ void idle_handler_open()
 	unsigned int req_idx = g_req_idx;
 	VLDP_BOOL req_precache = g_req_precache;
 	VLDP_BOOL bSuccess = VLDP_FALSE;
-
-	// 2017.02.13 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In idle_handler_open, top of routine.");
 
 	SAFE_STRCPY(req_file, g_req_file, sizeof(req_file));	// after we ack the command, this string could become clobbered at any time
 
@@ -626,8 +603,6 @@ void idle_handler_open()
 				io_close();
 				fprintf(stderr, "VLDP PARSE ERROR : Is the video stream damaged?\n");
 				g_out_info.status = STAT_ERROR;	// change from BUSY to ERROR
-				// 2017.02.13 - RJS ADD - Logging.
-				LOGI("daphne-libretro: In idle_handler_open, bad frame locations in file.  g_out_info.status set to STAT_ERROR.");
 			}
 		} // end if a proper mpeg header was found
 		
@@ -637,22 +612,16 @@ void idle_handler_open()
 			io_close();
 			fprintf(stderr, "VLDP ERROR : Did not find expected header.  Is this mpeg stream demultiplexed??\n");
 			g_out_info.status = STAT_ERROR;
-			// 2017.02.13 - RJS ADD - Logging.
-			LOGI("daphne-libretro: In idle_handler_open, in improper mpeg header.  g_out_info.status set to STAT_ERROR.");
 		}
 	} // end if file exists
 	else
 	{
 		fprintf(stderr, "VLDP ERROR : Could not open file!\n");
 		g_out_info.status = STAT_ERROR;
-		// 2017.02.13 - RJS ADD - Logging.
-		LOGI("daphne-libretro: In idle_handler_open, could not open file.  g_out_info.status set to STAT_ERROR.");
 	}
 #ifdef VLDP_DEBUG
 	printf("idle_handler_open returning ...\n");
 #endif
-	// 2017.02.13 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In idle_handler_open, bottom of routine.");
 }
 
 // gets called when the user wants to precache a file ...
@@ -729,8 +698,6 @@ void idle_handler_precache()
 			// else malloc failed
 			else
 			{
-				// 2017.02.13 - RJS ADD - Logging.
-				LOGI("daphne-libretro: In idle_handler_precache, malloc failed.  g_out_info.status set to STAT_ERROR.");
 				g_out_info.status = STAT_ERROR;
 			}
 			fclose(F);
@@ -738,16 +705,12 @@ void idle_handler_precache()
 		// else we couldn't open the file
 		else
 		{
-			// 2017.02.13 - RJS ADD - Logging.
-			LOGI("daphne-libretro: In idle_handler_precache, can't open file.  g_out_info.status set to STAT_ERROR.");
 			g_out_info.status = STAT_ERROR;
 		}
 	}
 	// else we're out of room, so return an error
 	else
 	{
-		// 2017.02.13 - RJS ADD - Logging.
-		LOGI("daphne-libretro: In idle_handler_precache, precahe file list too short.  g_out_info.status set to STAT_ERROR.");
 		g_out_info.status = STAT_ERROR;
 	}
 }
@@ -761,7 +724,6 @@ void idle_handler_play()
 {
 	ivldp_respond_req_play();
 	// when the frame is actually blitted is when we set the status to STAT_PLAYING
-	// LOGI("In vldp_internal, idle_handler_play, before ivldp_render.");
 	ivldp_render();
 }
 
@@ -835,15 +797,12 @@ void ivldp_render()
 	{
 		render_finished = 1;
 		fprintf(stderr, "VLDP RENDER ERROR : we tried to render an mpeg but none was open!\n");
-		// 2017.02.13 - RJS ADD - Logging.
-		LOGI("daphne-libretro: In ivldp_render, file is not open.  g_out_info.status set to STAT_ERROR.");
 		g_out_info.status = STAT_ERROR;
 	}
 
 	// while we're not finished playing and pausing		
     while (!render_finished)
     {
-		// LOGI("In vldp_internal, in ivldp_render, loop until render_finished.  g_buffer: %d  end: %d", (int) g_buffer, (int) end);
 		//		end = g_buffer + fread (g_buffer, 1, BUFFER_SIZE, g_mpeg_handle);
 		end = g_buffer + io_read(g_buffer, BUFFER_SIZE);
 		
@@ -851,7 +810,6 @@ void ivldp_render()
 		if (g_buffer != end)
 		{
 			// read chunk of video stream
-			// LOGI("In vldp_internal, ivldp_render, before decode_mpeg2.");
 			decode_mpeg2 (g_buffer, end);	// display it to the screen
 		}
 		
@@ -1076,15 +1034,12 @@ void idle_handler_search(int skip)
 
 		s_blanked = 0;	// we want to see the frame
 
-		// LOGI("In vldp_internal, idle_handler_search, before ivldp_render.");
 		ivldp_render();
 	} // end if the bounds check passed
 	else
 	{
 		fprintf(stderr, "SEARCH ERROR : frame %u was requested, but it is out of bounds\n", req_frame);
 		g_out_info.status = STAT_ERROR;
-		// 2017.02.13 - RJS ADD - Logging.
-		// LOGI("daphne-libretro: In idle_handler_search, frame is out of bounds.  g_out_info.status set to STAT_ERROR.");
 	}
 }
 
