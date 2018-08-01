@@ -91,10 +91,7 @@ using namespace std;
 #include "globals.h"
 // some global data is stored in this file
 
-#include "video\SDL_DrawText.h"
-
-#include "..\main_android.h"
-
+#include "video/SDL_DrawText.h"
 
 // -------------------------------------------------------------------------------------------------
 
@@ -189,9 +186,6 @@ void set_cur_dir(const char *exe_loc)
 // int main(int argc, char **argv)
 int main_daphne(int argc, char **argv)
 {
-	// RJS LOG
-	LOGI("daphne-libretro: In main_daphne, top of routine.");
-
 	int result_code = 1;	// assume an error unless we find otherwise
 
 	set_cur_dir(argv[0]);	// set active directory
@@ -203,20 +197,11 @@ int main_daphne(int argc, char **argv)
 
 	reset_logfile(argc, argv);
 
-	// initialize SDL without any subsystems but with the no parachute option so
-	// 1 - we can initialize either audio or video first
-	// 2 - we can trace segfaults using a debugger
-	LOGI("daphne-libretro: In main_daphne, before SDL_Init.");
-
-	LOGI("daphne-libretro: In main_daphne, after SDL_Init.");
-
 	// parse the command line (which allocates game and ldp) and continue if no errors
 	// this is important!  if game_type or ldp_type fails to allocate g_game and g_ldp,
 	// then the program will segfault and daphne must NEVER segfault!  hehe
 	if (parse_cmd_line(argc, argv))
 	{
-		LOGI("daphne-libretro: In main_daphne, after parse_cmd_line.");
-	
 		// MATT : we have to wait until after the command line is parsed before we do anything with the LEDs in case the
 		// user does not enable them
 		remember_leds(); // memorizes the status of keyboard leds
@@ -228,12 +213,9 @@ int main_daphne(int argc, char **argv)
 		// RJS RENDER - need to load bmps, change to surfaces, quitflag checked added here since starting ldp early
 		// if (init_display() && load_bmps()) took this out for a hack to check moving rendering to another thread
 		
-		LOGI("daphne-libretro: In main_daphne, before init_display.");
-
 		if ((get_quitflag() == 0) && (init_display()))
 		{
 			// RJS RENDER ADD - try to start the ldp first so we can draw, ldp features are not needed yet
-			LOGI("daphne-libretro: In main_daphne, before LDP pre_init and load_bmps.");
 			if (g_ldp->pre_init() && load_bmps())
 			{
 				// RJS ADD START - loading the only font we have, not sure where it is ever loaded in the first place, maybe latent code,
@@ -241,23 +223,17 @@ int main_daphne(int argc, char **argv)
 				//			if (ConsoleInit("pics/ConsoleFont.bmp", g_screen_blitter, 100)==0)
 				LoadFont("pics/ConsoleFont.bmp", TRANS_FONT, get_screen_blitter()->format);
 
-				LOGI("daphne-libretro: In main_daphne, before sound_init.");
-				LOGI("sound_bringup: In main_daphne, calling sound_init.");
 				if (sound_init())
 				{
-					LOGI("daphne-libretro: In main_daphne, before SDL_input_init.");
 					if (SDL_input_init())
 					{
 						// if the roms were loaded successfully
-						LOGI("daphne-libretro: In main_daphne, before load_roms.");
 						if (g_game->load_roms())
 						{
 							// if the video was initialized successfully
-							LOGI("daphne-libretro: In main_daphne, before video_init.");
 							if (g_game->video_init())
 							{
 								// if the game has some problems, notify the user before the user plays the game
-								LOGI("daphne-libretro: In main_daphne, before get_issues.");
 								if (g_game->get_issues())
 								{
 									printnowookin(g_game->get_issues());
@@ -270,15 +246,12 @@ int main_daphne(int argc, char **argv)
 								// RJS RENDER REMOVE - if and else
 								// if (g_ldp->pre_init())
 								{
-									LOGI("daphne-libretro: In main_daphne, most SDL subsystems initialized, before game pre_init.");
 									if (g_game->pre_init())     // initialize all cpu's
 									{
 										// 2017.08.18 - RJS - See main_daphne_* routines below.
 										// printline("Booting ROM ...");
-										// LOGI("daphne-libretro: In main_daphne, firing up cpus and therfore the main loop, before game start.");
 										// RJS HERE - main loop start function called here
 										g_game->start();	// HERE IS THE MAIN LOOP RIGHT HERE
-										// LOGI("daphne-libretro: In main_daphne, game is over for some reason, before game pre_shutdown.");
 										// g_game->pre_shutdown();
 
 										// Send our game/ldp type to server to create stats.
@@ -379,7 +352,6 @@ int main_daphne(int argc, char **argv)
 	// RJS CHANGE - no need to force exit here, let's be nice
 	// exit(result_code);
 	*/
-	LOGI("daphne-libretro: In main_daphne, bottom of routine.  Returning: %d", result_code);
 	return(result_code);
 }
 
@@ -389,34 +361,25 @@ int main_daphne(int argc, char **argv)
 // and surrounded by #if statements for cross platform use.
 int main_daphne_mainloop()
 {
-	LOGI("daphne-libretro: In main_daphne_mainloop, firing up cpus and therfore the main loop.");
 	g_game->start();
 	return 0;
 }
 
 int main_daphne_shutdown()
 {
-	LOGI("daphne-libretro: In main_daphne_shutdown, top of routine.");
 	g_game->pre_shutdown();
 
-	LOGI("daphne-libretro: In main_daphne_shutdown, after g_game->pre_shutdown.");
 	net_send_data_to_server();
 
 	int result_code = 0;	// daphne will exit without any errors
 
-	LOGI("daphne-libretro: In main_daphne_shutdown, after net_send_data_to_server.");
 	g_ldp->pre_shutdown();
-	LOGI("daphne-libretro: In main_daphne_shutdown, after g_ldp->pre_shutdown.");
 	g_game->video_shutdown();
-	LOGI("daphne-libretro: In main_daphne_shutdown, after g_game->video_shutdown.");
 
 	SDL_input_shutdown();
-	LOGI("daphne-libretro: In main_daphne_shutdown, after SDL_input_shutdown.");
 
 	sound_shutdown();
-	LOGI("daphne-libretro: In main_daphne_shutdown, after sound_shutdown.");
 	shutdown_display();
-	LOGI("daphne-libretro: In main_daphne_shutdown, after shutdown_display. g_game: %d  g_ldp: %d", (int) g_game, (int) g_ldp);
 
 	if (g_game)
 	{
@@ -430,15 +393,9 @@ int main_daphne_shutdown()
 		g_ldp = NULL;
 	}
 	// 2018.02.06 - RJS - g_game had better have existed.
-	LOGI("daphne-libretro: In main_daphne_shutdown, after delete of g_game and g_ldp.");
 
 	free_bmps();
-	LOGI("daphne-libretro: In main_daphne_shutdown, after free_bmps.");
 	restore_leds();
-	LOGI("daphne-libretro: In main_daphne_shutdown, after restore_leds.");
-	LOGI("daphne-libretro: In main_daphne_shutdown, after atexit.");
-
-	LOGI("daphne-libretro: In main_daphne_shutdown, bottom of routine. Result: %d", result_code);
 	return(result_code);
 }
 
