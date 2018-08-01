@@ -13,15 +13,11 @@
 #ifdef WIN32
 // for CreateDirectory
 #include <windows.h>
-#endif
-
-#ifdef UNIX
+#else
 // for mkdir
 #include <sys/stat.h>
 #include <sys/types.h>
 #endif
-
-#include "../../main_android.h"
 
 using namespace std;
 
@@ -40,7 +36,6 @@ homedir::homedir()
 	m_homedir = ".";
 #endif
 	strcpy(m_strhomedir, this->get_homedir().c_str());
-	LOGI("In homedir constructor, homedir: %s", m_homedir.c_str());
 }
 
 string homedir::get_homedir()
@@ -69,7 +64,6 @@ void homedir::set_homedir(const string &s)
 {
 	m_homedir = s;
 	strcpy(m_strhomedir, this->get_homedir().c_str());
-	LOGI("In set_homedir, homedir: %s", m_homedir.c_str());
 
 	// create writable directories if they don't exist
 	make_dir(m_homedir);
@@ -92,16 +86,9 @@ string homedir::get_framefile(const string &s)
 {
 	//Framefiles may be passed as a fully-qualified path.  If so, see if it exists first before trying the directories.
 	if (mpo_file_exists(s.c_str()))
-	{
-		LOGI("In get_framefile, input: %s", s.c_str());
 		return s;
-	}
-	else
-	{
-		string ret = find_file("framefile/" + s, true);
-		LOGI("In get_framefile, find_file: %s  returned: %s", s.c_str(), ret.c_str());
-		return ret;
-	}
+   string ret = find_file("framefile/" + s, true);
+   return ret;
 }
 
 string homedir::find_file(string fileName, bool bFallback)
@@ -119,7 +106,6 @@ string homedir::find_file(string fileName, bool bFallback)
 	}
 	// else file either exists or we cannot fall back
 	
-	LOGI("In find_file, returning: %s", result.c_str());
 	return result;
 }
 
