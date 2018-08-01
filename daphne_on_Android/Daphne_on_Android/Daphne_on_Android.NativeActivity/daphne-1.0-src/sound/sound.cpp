@@ -84,16 +84,6 @@ unsigned int g_uVolumeNonVLDP = AUDIO_MAX_VOLUME;
 int cur_wave = 0;	// the current wave being played (0 to NUM_DL_BEEPS-1)
 bool g_sound_initialized = false;	// whether the sound will work if we try to play it
 
-// Macros to help automatically verify that our locks and unlocks are correct
-#ifdef DEBUG
-bool g_bAudioLocked = false;
-#define LOCK_AUDIO assert (!g_bAudioLocked); g_bAudioLocked = true; SDL_LockAudio
-#define UNLOCK_AUDIO assert (g_bAudioLocked); g_bAudioLocked = false; SDL_UnlockAudio
-#else
-#define LOCK_AUDIO SDL_LockAudio
-#define UNLOCK_AUDIO SDL_UnlockAudio
-#endif // lock audio macros
-
 // added by JFA for -startsilent
 void set_sound_mute(bool bMuted)
 {
@@ -102,10 +92,8 @@ void set_sound_mute(bool bMuted)
 	// only proceed if sound has been initialized
 	if (g_sound_initialized)
 	{
-		LOCK_AUDIO();
 		// this should set the mixing callback back to something that isn't muted
 		update_soundchip_volumes();
-		UNLOCK_AUDIO();
 	}
 }
 // end edit
@@ -128,8 +116,6 @@ void set_soundbuf_size(Uint16 newbufsize)
 	}
 }
 
-static SDL_AudioSpec specDesired, specObtained;
-
 bool sound_init()
 // returns a true on success, false on failure
 {
@@ -146,28 +132,11 @@ bool sound_init()
 	if (is_sound_enabled())
 	{
 		// if SDL audio initialization was successful
-		if (SDL_InitSubSystem(SDL_INIT_AUDIO) >= 0)
 		{
-			specDesired.callback = audio_callback;
-			specDesired.channels = audio_channels;
-			specDesired.format = audio_format;
-			specDesired.freq = audio_rate;
-			specDesired.samples = g_u16SoundBufSamples;
-			specDesired.userdata = NULL;
-
 			// this stuff doesn't need to be filled in supposedly ...
-			specDesired.padding = 0;
-			specDesired.size = 0;
-
 			// if we can open the audio device
 			LOGI("sound_bringup: In sound_init, calling SDL_OpenAudio.");
-			if (SDL_OpenAudio(&specDesired, &specObtained) >= 0)
-			{
 				// make sure we got what we asked for
-				if ((specObtained.channels == audio_channels) &&
-					(specObtained.format == audio_format) &&
-					(specObtained.freq == audio_rate) &&
-					(specObtained.callback == audio_callback))
 				{
 					// if we can load all our waves, we're set
 					if (load_waves())
@@ -188,16 +157,6 @@ bool sound_init()
 						// initialize sound chips
 						init_soundchip();
 
-						if (specObtained.samples != g_u16SoundBufSamples)
-						{
-							string strWarning = "WARNING : requested " + numstr::ToStr(g_u16SoundBufSamples) +
-								" samples for sound buffer, but got " + numstr::ToStr(specObtained.samples) + " samples";
-							printline(strWarning.c_str());
-
-							// reset memory allocations
-							set_soundbuf_size(specObtained.samples);
-						}
-
 						result = true;
 						g_sound_initialized = true;
 
@@ -208,20 +167,7 @@ bool sound_init()
 					{
 						printline("ERROR: one or more required sound sample files could not be loaded!");
 					}
-				} // end if audio specs are correct
-				else
-				{
-					printline("ERROR: unable to obtain desired audio configuration");
 				}
-			} // end if audio device could be opened ...
-			
-			// if audio device could not be opened (ie no sound card)
-			else
-			{
-				outstr("WARNING: Audio device could not be opened: ");
-				printline(SDL_GetError());
-				g_sound_enabled = false;
-			}
 		} // end if sound initializtion worked	  
 	} // end if sound is enabled
 	
@@ -247,14 +193,12 @@ void sound_shutdown()
 		// 2018.02.06 - RJS - When Daphne core is paused like when core menu is brought up, the audio theard is also paused.  Thus
 		// when this is called a WaitThread just waits for a thread that is pause and nothing happens.  Fixing . . .
 		// input_pause(false); Relies on cpu thread existing which is may not.
-		SDL_CloseAudio();
 		LOGI("daphne-libretro: In sound_shutdown, after SDL_CloseAudio.");
 		free_waves();
 		LOGI("daphne-libretro: In sound_shutdown, after free_waves.");
 		shutdown_soundchip();
 		LOGI("daphne-libretro: In sound_shutdown, after shutdown_soundchip.");
 		g_sound_initialized = 0;
-		SDL_QuitSubSystem(SDL_INIT_AUDIO);
 		LOGI("daphne-libretro: In sound_shutdown, after SDL_QuitSubSystem.");
 	}
 	LOGI("daphne-libretro: In sound_shutdown, bottom of routine.");
@@ -396,8 +340,6 @@ bool is_sound_enabled()
 // NOTE : this is called by the game driver, so it can be called even if sound is disabled
 unsigned int add_soundchip(struct sounddef *candidate)
 {
-	LOCK_AUDIO();	// safety precaution, we don't want callback running during this function
-
 	struct sounddef *cur = NULL;
 	
 	// if this is the first sound chip to be added to the list
@@ -502,8 +444,6 @@ unsigned int add_soundchip(struct sounddef *candidate)
 	// NOTE : this should come last in this function
 	update_soundchip_volumes();
 
-	UNLOCK_AUDIO();
-
 	return cur->id;
 }
 
@@ -513,7 +453,6 @@ bool delete_soundchip(unsigned int id)
 	struct sounddef *cur = g_soundchip_head;
 	struct sounddef *prev = NULL;
 
-	LOCK_AUDIO();
 	// if 1 or more sound chips exists ...
 	while (cur)
 	{
@@ -550,7 +489,6 @@ bool delete_soundchip(unsigned int id)
 		prev = cur;
 		cur = cur->next_soundchip;
 	}
-	UNLOCK_AUDIO();
 	
 	return bSuccess;
 }
@@ -560,7 +498,6 @@ void init_soundchip()
 #ifdef DEBUG
 	assert(is_sound_enabled());
 #endif
-	LOCK_AUDIO();	// safety precaution, we don't want callback running during this function
 	if (g_soundchip_head)
 	{
 		struct sounddef *cur = g_soundchip_head;
@@ -581,7 +518,6 @@ void init_soundchip()
 			cur = cur->next_soundchip;
 		}
 	}
-	UNLOCK_AUDIO();
 }
 
 // Mixing callback
@@ -701,7 +637,6 @@ void audio_writedata(Uint8 id, Uint8 data)
 	// if sound isn't initialized, then the soundchips aren't initialized either
 	if (g_sound_initialized)
 	{
-		LOCK_AUDIO();	// safety precaution, we don't want callback running during this function
 		struct sounddef *cur = g_soundchip_head;
 		while (cur)
 		{
@@ -711,7 +646,6 @@ void audio_writedata(Uint8 id, Uint8 data)
 			}      
 			cur = cur->next_soundchip;
 		}
-		UNLOCK_AUDIO();
 	}
 }
 
@@ -721,7 +655,6 @@ void audio_write_ctrl_data(unsigned int uCtrl, unsigned int uData, Uint8 id)
 	// if sound isn't initialized, then the soundchips aren't initialized either
 	if (g_sound_initialized)
 	{
-		LOCK_AUDIO();
 		struct sounddef *cur = g_soundchip_head;
 		while (cur)
 		{
@@ -731,7 +664,6 @@ void audio_write_ctrl_data(unsigned int uCtrl, unsigned int uData, Uint8 id)
 			}
 			cur = cur->next_soundchip;
 		}
-		UNLOCK_AUDIO();
 	}
 }
 
@@ -758,9 +690,7 @@ void set_soundchip_volume(struct sounddef *cur, unsigned int uChannel, unsigned 
 		if (uVolume <= AUDIO_MAX_VOLUME)
 		{
 			cur->uDriverVolume[uChannel] = uVolume;
-			LOCK_AUDIO();
 			update_soundchip_volumes();
-			UNLOCK_AUDIO();
 		}
 		else
 		{
@@ -782,9 +712,7 @@ void set_soundchip_vldp_volume(unsigned int uVolume)
 	if (uVolume <= AUDIO_MAX_VOLUME)
 	{
 		g_uVolumeVLDP = uVolume;
-		LOCK_AUDIO();
 		update_soundchip_volumes();
-		UNLOCK_AUDIO();
 	}
 	else
 	{
@@ -797,9 +725,7 @@ void set_soundchip_nonvldp_volume(unsigned int uVolume)
 	if (uVolume <= AUDIO_MAX_VOLUME)
 	{
 		g_uVolumeNonVLDP = uVolume;
-		LOCK_AUDIO();
 		update_soundchip_volumes();
-		UNLOCK_AUDIO();
 	}
 	else
 	{
@@ -807,15 +733,10 @@ void set_soundchip_nonvldp_volume(unsigned int uVolume)
 	}
 }
 
-// IMPORTANT : assumes LOCK_AUDIO has already been called!!!!
 void update_soundchip_volumes()
 {	
 	bool bNonMaxVolume = false;
 	unsigned int uSoundchipCount = 0;
-
-#ifdef DEBUG
-	assert (g_bAudioLocked == true);
-#endif
 
 	// If sound is not muted then do some calculations
 	if (!g_bSoundMuted)
@@ -882,7 +803,6 @@ void shutdown_soundchip()
 #ifdef DEBUG
 	assert(g_sound_initialized);
 #endif
-	LOCK_AUDIO();	// safety precaution, we don't want callback running during this function
 	struct sounddef *cur = g_soundchip_head;
 	while (cur)
 	{
@@ -896,7 +816,6 @@ void shutdown_soundchip()
 		delete [] temp->buffer;
 		delete temp;
 	}
-	UNLOCK_AUDIO();	
 
 	// RJS ADD START
 	g_soundchip_head = NULL;
@@ -910,7 +829,6 @@ void update_soundbuffer()
 	if (g_sound_initialized)
 	{
 		// to ensure that the audio callback doesn't get called while we're in this function
-		LOCK_AUDIO();
 		struct sounddef *cur = g_soundchip_head;
 		while (cur)
 		{
@@ -929,6 +847,5 @@ void update_soundbuffer()
 			// else doesn't need to be updated so often, so don't do it ...
 			cur = cur->next_soundchip;
 		}
-		UNLOCK_AUDIO();
 	}
 }
