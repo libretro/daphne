@@ -39,6 +39,7 @@
 #include "fileparse.h"
 
 #ifndef _WIN32
+#include <strings.h>
 #include <fcntl.h>	// for non-blocking i/o
 #endif
 
