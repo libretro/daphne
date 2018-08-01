@@ -32,7 +32,7 @@
 #include "SDL_thread.h"
 #include "SDL_timer.h"
 
-#include "..\..\..\main_android.h"
+#include "../../../main_android.h"
 
 /* Wrapper around POSIX 1003.1b semaphores */
 
