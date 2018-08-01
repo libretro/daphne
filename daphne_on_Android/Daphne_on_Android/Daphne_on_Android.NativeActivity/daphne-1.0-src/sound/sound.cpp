@@ -49,8 +49,6 @@
 #include "../daphne.h"
 #include "../ldp-out/ldp-vldp.h" // added by JFA for -startsilent
 
-#include "..\..\main_android.h"
-
 sample_s g_samples[MAX_NUM_SOUNDS] = { { 0 } };
 sample_s g_sample_saveme;	// the special saveme wav which is loaded independently of any game
 
@@ -135,7 +133,6 @@ bool sound_init()
 		{
 			// this stuff doesn't need to be filled in supposedly ...
 			// if we can open the audio device
-			LOGI("sound_bringup: In sound_init, calling SDL_OpenAudio.");
 				// make sure we got what we asked for
 				{
 					// if we can load all our waves, we're set
@@ -184,24 +181,17 @@ bool sound_init()
 // shuts down the sound subsystem
 void sound_shutdown()
 {
-	LOGI("daphne-libretro: In sound_shutdown, top of routine.  g_sound_initialized: %d", g_sound_initialized);
 	// shutdown sound only if we previously initialized it
 	if (g_sound_initialized)
 	{
 		printline("Shutting down sound system...");
-		LOGI("daphne-libretro: In sound_shutdown, after SDL_PauseAudio.");
 		// 2018.02.06 - RJS - When Daphne core is paused like when core menu is brought up, the audio theard is also paused.  Thus
 		// when this is called a WaitThread just waits for a thread that is pause and nothing happens.  Fixing . . .
 		// input_pause(false); Relies on cpu thread existing which is may not.
-		LOGI("daphne-libretro: In sound_shutdown, after SDL_CloseAudio.");
 		free_waves();
-		LOGI("daphne-libretro: In sound_shutdown, after free_waves.");
 		shutdown_soundchip();
-		LOGI("daphne-libretro: In sound_shutdown, after shutdown_soundchip.");
 		g_sound_initialized = 0;
-		LOGI("daphne-libretro: In sound_shutdown, after SDL_QuitSubSystem.");
 	}
-	LOGI("daphne-libretro: In sound_shutdown, bottom of routine.");
 }
 
 // plays a sample, returns true on success
