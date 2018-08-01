@@ -29,6 +29,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "serial.h"
 #include "conout.h"
 #include "../timer/timer.h"
