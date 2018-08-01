@@ -47,14 +47,8 @@
 #include "../sound/mix.h"
 
 // RJS START - Convert SDL_Overlay
-// extern SDL_Overlay *g_hw_overlay;	// to do overlay tests
 // 2017.02.14 - RJS CHANGE - changed from apk version using textures to surfaces for RA
-// extern SDL_Texture *g_hw_overlay;
-#ifndef __ANDROID__
-SDL_Surface *g_hw_overlay;
-#else
 extern SDL_Surface *g_hw_overlay;
-#endif
 // RJS END
 extern struct yuv_buf g_blank_yuv_buf;	// to do overlay tests
 extern Sint32 g_vertical_offset;	// to do overlay tests
@@ -82,8 +76,6 @@ m_test_yuv_hwaccel(false),
 m_test_think_delay(false),
 m_test_vldp(false),
 m_test_vldp_render(false),
-m_test_blend(false),
-m_test_mix(false),
 m_test_samples(false),
 m_test_sound_mixing(false)
 {
@@ -109,8 +101,6 @@ m_test_sound_mixing(false)
 
 	// RJS START - added to get rid of warnings
 	m_test_rgb2yuv	= false;
-	m_test_blend	= false;
-	m_test_mix		= false;
 	// RJS END
 }
 

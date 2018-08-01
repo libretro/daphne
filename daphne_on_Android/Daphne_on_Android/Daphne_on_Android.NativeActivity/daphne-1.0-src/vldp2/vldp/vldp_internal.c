@@ -128,7 +128,6 @@ static unsigned int g_header_buf_size = 0;	// size of the header buffer
 int idle_handler(void *surface)
 {
 	// 2017.02.06 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In idle_handler, top of routine.  surface: %d", (int) surface);
 
 	int done = 0;
 
