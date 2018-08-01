@@ -2286,7 +2286,6 @@ int prepare_frame_callback_without_overlay(struct yuv_buf *buf)
 extern "C" {
 	extern DECLSPEC int SDLCALL SDL_RJS_SW_CopyYUVToRGB(SDL_SW_YUVTexture * swdata, const SDL_Rect * srcrect, Uint32 target_format, int w, int h, void *pixels, int pitch);
 }
-// extern retro_video_refresh_t cb_videorefresh;
 // extern jboolean retro_run_once;
 
 void display_frame_callback(struct yuv_buf *buf)
@@ -2332,17 +2331,6 @@ void display_frame_callback(struct yuv_buf *buf)
 
 	// LOGI("daphne-libretro: In display_frame_callback, done FILLING.");
 	set_vb_filling_done(vb_ndx);
-
-	// RJS HERE - vidbuffer
-	/*
-	if ((cb_videorefresh) && (retro_run_once))
-	{
-		// LOGI("daphne-libretro: In display_frame_callback, before cb_videorefresh.  g_hw_overlay: %d  w: %d  h: %d  pixels: %d", (int)g_hw_overlay, g_hw_overlay->w, g_hw_overlay->h, (int) g_hw_overlay->pixels);
-		LOGI("daphne-libretro: In %s, writing VIDEO buffer.", __func__);
-		cb_videorefresh(g_hw_overlay->pixels, g_hw_overlay->w, g_hw_overlay->h, g_hw_overlay->w * DAPHNE_VIDEO_ByPP);
-		// LOGI("daphne-libretro: In display_frame_callback, after cb_videorefresh.");
-	}
-	*/
 }
 
 //*********************************************************************************************************************************

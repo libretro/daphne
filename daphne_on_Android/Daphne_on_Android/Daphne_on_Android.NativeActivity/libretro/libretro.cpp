@@ -70,12 +70,12 @@ char gstr_rom_extension[sizeof(DAPHNE_ROM_EXTENSION)];
 * retro_audio_sample_batch_t	multiple audio frames.  Use only one of these.
 **************************************************************************************************/
 static	retro_log_printf_t			cb_logprint			= NULL;
-		retro_video_refresh_t		cb_videorefresh		= NULL;
-static	retro_input_poll_t			cb_inputpoll		= NULL;
+		retro_video_refresh_t		video_cb       		= NULL;
+static	retro_input_poll_t			poll_cb     		= NULL;
 static	retro_input_state_t			cb_inputstate		= NULL;
 static	retro_environment_t			cb_environment		= NULL;
-static	retro_audio_sample_t		cb_audiosample		= NULL;
-		retro_audio_sample_batch_t	cb_audiosamplebatch	= NULL;
+static	retro_audio_sample_t		cb_audiosample		   = NULL;
+retro_audio_sample_batch_t	audio_batch_cb	            = NULL;
 
 
 /**************************************************************************************************
@@ -135,7 +135,7 @@ int retro_get_variable(char * strVariable)
 void retro_set_video_refresh(retro_video_refresh_t in_videorefresh)
 {
 	if (! in_videorefresh) return;
-	cb_videorefresh = in_videorefresh;
+	video_cb = in_videorefresh;
 }
 
 /**************************************************************************************************
@@ -151,7 +151,7 @@ void retro_set_audio_sample(retro_audio_sample_t in_audiosample)
 void retro_set_audio_sample_batch(retro_audio_sample_batch_t in_audiosamplebatch)
 {
 	if (! in_audiosamplebatch) return;
-	cb_audiosamplebatch = in_audiosamplebatch;
+	audio_batch_cb = in_audiosamplebatch;
 }
 
 /**************************************************************************************************
@@ -160,7 +160,7 @@ void retro_set_audio_sample_batch(retro_audio_sample_batch_t in_audiosamplebatch
 void retro_set_input_poll(retro_input_poll_t in_inputpoll)
 {
 	if (! in_inputpoll) return;
-	cb_inputpoll = in_inputpoll;
+	poll_cb = in_inputpoll;
 }
 
 /**************************************************************************************************
@@ -251,11 +251,6 @@ void retro_init(void)
 void retro_deinit(void)
 {
 	if (cb_logprint) cb_logprint(RETRO_LOG_INFO, "daphne-libretro: In retro_deinit.");
-
-#ifdef __ANDROID__
-	// 2017.09.20 - RJS - this might be overkill, was just mimicing APK version
-	Android_nativeQuit();
-#endif
 
 	main_daphne_shutdown();
 }
@@ -741,13 +736,7 @@ struct VIDEO_BUFFER tVB[4] = { { -1, NULL },{ -1, NULL },{ -1, NULL },{ -1, NULL
 
 int retro_run_frames	= 0;
 
-#ifdef __ANDROID__
-jboolean retro_run_once	= JNI_FALSE;
-#else
-#define JNI_FALSE false
-#define JNI_TRUE true
-bool retro_run_once = JNI_FALSE;
-#endif
+bool retro_run_once = false;
 
 void retro_run(void)
 {
@@ -760,10 +749,10 @@ void retro_run(void)
 
 	// Some of the back end needs to know when certain systems have been init'd.  When
 	// retro_run has run once, all relavent system have been initialized.
-	retro_run_once = JNI_TRUE;
+	retro_run_once = true;
 
 	// Poll input.
-	cb_inputpoll();
+	poll_cb();
 
 	// Notice numplayers starts at 1.  The playercontrollerid_list points to the player ordinal
 	// to the actual device id (port).  Hardcoded here for later proper updating.
@@ -812,13 +801,15 @@ void retro_run(void)
 		// float analogX = (float)cb_inputstate(n_port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_X) / 32768.0f;
 	}
 
+#if 0
 	int ab_ndx = -1;
 	int ab_frames = 0;
 	int16_t * ab_buffer	= NULL;
-
-	ab_buffer = get_ab_waiting(&ab_ndx, &ab_frames);
-	if (cb_audiosamplebatch) cb_audiosamplebatch(ab_buffer, ab_frames);
-	set_ab_streaming_done(ab_ndx);
+   ab_buffer = get_ab_waiting(&ab_ndx, &ab_frames);
+   if (audio_batch_cb)
+      audio_batch_cb(ab_buffer, ab_frames);
+   set_ab_streaming_done(ab_ndx);
+#endif
 
 	// Total hack for clearing some buffers.
 	/*
@@ -846,7 +837,8 @@ void retro_run(void)
 	SDL_SW_YUVTexture * sw_overlay	= NULL;
 
 	sw_overlay = get_vb_waiting(&vb_ndx);
-	if (sw_overlay && cb_videorefresh) cb_videorefresh(sw_overlay->pixels, sw_overlay->w, sw_overlay->h, sw_overlay->w * DAPHNE_VIDEO_ByPP);
+	if (sw_overlay && video_cb)
+      video_cb(sw_overlay->pixels, sw_overlay->w, sw_overlay->h, sw_overlay->w * DAPHNE_VIDEO_ByPP);
 	set_vb_rendering_done(vb_ndx);
 }
 
