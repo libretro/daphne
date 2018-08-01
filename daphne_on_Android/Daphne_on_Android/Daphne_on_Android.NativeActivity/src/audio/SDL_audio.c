@@ -27,7 +27,6 @@
 #include "SDL_audio_c.h"
 #include "SDL_sysaudio.h"
 #include "../thread/SDL_systhread.h"
-#include "..\..\main_android.h"
 
 #define _THIS SDL_AudioDevice *_this
 
@@ -298,13 +297,11 @@ SDL_RunAudio(void *devicep)
 
     /* Loop, filling the audio buffers */
     while (!SDL_AtomicGet(&device->shutdown)) {
-		// LOGI("*** RUNAUDIO BEAT ***");
 		/* Fill the current buffer with sound */
         if (device->convert.needed) {
             stream = device->convert.buf;
         } else if (SDL_AtomicGet(&device->enabled)) {
 			// Calls: Android_JNI_GetAudioBuffer
-			LOGI("In SDL_RunAudio, get audio pinned buffer. device: %d", (int)device);
 			stream = current_audio.impl.GetDeviceBuf(device);
 		} else {
             /* if the device isn't enabled, we still write to the
@@ -326,7 +323,6 @@ SDL_RunAudio(void *devicep)
             if (SDL_AtomicGet(&device->paused)) {
 				SDL_memset(stream, silence, stream_len);
             } else {
-				LOGI("In SDL_RunAudio, fill audio pinned buffer. device: %d", (int)device);
 				// SDL_BufferQueueDrainCallback
                 (*callback) (udata, stream, stream_len);
             }
@@ -347,7 +343,6 @@ SDL_RunAudio(void *devicep)
 
 		/* Ready current buffer for play and change current buffer */
         if (stream == device->fake_stream) {
-			LOGI("In SDL_RunAudio, before SDL_Delay for fake_stream. delay: %d", (int)delay);
 			SDL_Delay(delay);
         } else {
 			// 2017.08.17 - RJS - PlayDevice eventually sets the audio buffer flag as ready.
@@ -355,20 +350,17 @@ SDL_RunAudio(void *devicep)
 			// Which does this: ANDROIDAUDIO_PlayDevice calls Android_JNI_WriteAudioBuffer();
 			// Which does this: Android_JNI_WriteAudioBuffer calls cb_audiosamplebatch(audioBufferToUse, audioBufferSize / 2);
 			// When core is paused, the audio thread pauses inside PlayDevice == ANDROIDAUDIO_PlayDevice == Android_JNI_WriteAudioBuffer.
-			LOGI("In SDL_RunAudio, hand stream to device.");
 			current_audio.impl.PlayDevice(device);
 			// WaitDevice on Android is a stub (nop).
 			current_audio.impl.WaitDevice(device);
         }
 	}
 
-	LOGI("In SDL_RunAudio, main audio loop exitied.");
 	current_audio.impl.PrepareToClose(device);
 
     /* Wait for the audio to drain. */
     SDL_Delay(((device->spec.samples * 1000) / device->spec.freq) * 2);
 
-	LOGI("In SDL_RunAudio, audioThread should be EXITing!");
 
     return 0;
 }
@@ -560,12 +552,10 @@ SDL_GetAudioDeviceName(int index, int iscapture)
 static void
 close_audio_device(SDL_AudioDevice * device)
 {
-	LOGI("daphne-libretro: In close_audio_device, top of routine.  device: %d", (int) device);
 	if (!device) {
         return;
     }
 
-	LOGI("daphne-libretro: In close_audio_device, before device->id check.  device->id: %d", (int)device->id);
 	if (device->id > 0) {
         SDL_AudioDevice *opendev = open_devices[device->id - 1];
         SDL_assert((opendev == device) || (opendev == NULL));
@@ -574,40 +564,30 @@ close_audio_device(SDL_AudioDevice * device)
         }
     }
 
-	LOGI("daphne-libretro: In close_audio_device, before SDL_AtomicSet.  device: %d", (int)device);
 	SDL_AtomicSet(&device->shutdown, 1);
-	LOGI("daphne-libretro: In close_audio_device, after SDL_AtomicSet, device->shutdown.  device: %d", (int)device);
 	SDL_AtomicSet(&device->enabled, 0);
-	LOGI("daphne-libretro: In close_audio_device, after SDL_AtomicSet, device->enabled.  device->thread: %d", (int)device->thread);
 	if (device->thread != NULL) {
 		// RJS HERE COMPLETE HACK
 		// extern void Android_JNI_WriteAudioBuffer();
 		// Android_JNI_WriteAudioBuffer();
         SDL_WaitThread(device->thread, NULL);
     }
-	LOGI("daphne-libretro: In close_audio_device, after device->thread check.  device->mixer_lock: %d", (int)device->mixer_lock);
 	if (device->mixer_lock != NULL) {
         SDL_DestroyMutex(device->mixer_lock);
     }
-	LOGI("daphne-libretro: In close_audio_device, after device->mixer_lock check.  device->fake_stream: %d", (int)device->fake_stream);
 	SDL_free(device->fake_stream);
-	LOGI("daphne-libretro: In close_audio_device, after device->fake_stream free.  device->convert.needed: %d", (int)device->convert.needed);
 	if (device->convert.needed) {
         SDL_free(device->convert.buf);
     }
-	LOGI("daphne-libretro: In close_audio_device, after device->convert.needed check.  device->hidden: %d", (int)device->hidden);
 	if (device->hidden != NULL) {
         current_audio.impl.CloseDevice(device);
     }
 
-	LOGI("daphne-libretro: In close_audio_device, after device->hidden check.  device->buffer_queue_head: %d  device->buffer_queue_pool: %d", (int)device->buffer_queue_head, (int)device->buffer_queue_pool);
 	free_audio_queue(device->buffer_queue_head);
     free_audio_queue(device->buffer_queue_pool);
 
-	LOGI("daphne-libretro: In close_audio_device, after device->buffer_queue_head and device->buffer_queue_pool queue frees.");
 	SDL_free(device);
 
-	LOGI("daphne-libretro: In close_audio_device, bottom of routine.");
 }
 
 
@@ -802,7 +782,6 @@ open_audio_device(const char *devname, int iscapture,
         }
     }
 
-	LOGI("sound_bringup: In open_audio_device, calling OpenDevice which is ANDROIDAUDIO_OpenDevice.  device: %d  handle: %d  devname: %s  iscapture: %d", (int) device, (int) handle, devname, iscapture);
 	if (current_audio.impl.OpenDevice(device, handle, devname, iscapture) < 0) {
         close_audio_device(device);
         return 0;
@@ -940,7 +919,6 @@ SDL_OpenAudio(SDL_AudioSpec * desired, SDL_AudioSpec * obtained)
         return -1;
     }
 
-	LOGI("sound_bringup: In SDL_OpenAudio, calling open_audio_device.  obtained: %d", (int) obtained);
 	if (obtained) {
         id = open_audio_device(NULL, 0, desired, obtained,
                                SDL_AUDIO_ALLOW_ANY_CHANGE, 1);
