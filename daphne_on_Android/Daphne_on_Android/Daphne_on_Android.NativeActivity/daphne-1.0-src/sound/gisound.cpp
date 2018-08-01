@@ -23,7 +23,7 @@
 // by Mark Broadhead
 // an attempt at a portable AY-3-8910 emulator
 // We assume that there are 4 bytes per sample
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
@@ -31,9 +31,7 @@
 #include "gisound.h"
 #include "../io/conout.h"
 #include <memory.h>
-#ifdef WIN32
 #include <stdio.h>
-#endif
 
 #define MAX_GISOUND_CHIPS 4
 int g_gisoundchip_count = -1;
