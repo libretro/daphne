@@ -34,9 +34,7 @@
 
 #include "mpo_fileio.h"
 
-#ifndef WIN32
 #include <stdlib.h>	// for malloc
-#endif
 
 // if this doesn't crash, you're good to go!
 // if anyone knows how to do this check at compile time, let me know!!!

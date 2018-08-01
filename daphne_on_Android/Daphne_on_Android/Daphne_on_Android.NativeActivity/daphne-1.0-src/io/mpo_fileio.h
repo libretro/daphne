@@ -20,6 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+/* TODO/FIXME - ideally we start using libretro-common's filestream here */
+
 // MPO's NOTE:
 //  I may wish to use MPOLIB in a proprietary product some day.  Therefore,
 //   the only way I can accept other people's changes to my code is if they
@@ -31,7 +33,7 @@
 #ifndef MPO_FILEIO_H
 #define MPO_FILEIO_H
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 #else
 #include <stdio.h>
@@ -40,7 +42,7 @@
 
 #include "numstr.h"	// for MPO_UINT64 definition
 
-#ifdef WIN32
+#ifdef _WIN32
 #define MPO_HANDLE HANDLE
 #define MPO_BYTES_READ DWORD
 #else
@@ -53,13 +55,9 @@
 #define MPO_FTELL ftello64
 #endif
 
-// RJS START
-#ifdef __ANDROID__
 #define MPO_FOPEN fopen
 #define MPO_FSEEK fseeko
 #define MPO_FTELL ftello
-#endif
-// RJS END
 
 #ifdef MAC_OSX
 #define MPO_FOPEN fopen
@@ -93,7 +91,7 @@ enum
 
 typedef enum
 {
-#ifdef WIN32
+#ifdef _WIN32
 		MPO_SEEK_SET = FILE_BEGIN,
 		MPO_SEEK_CUR = FILE_CURRENT,
 		MPO_SEEK_END = FILE_END
