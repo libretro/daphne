@@ -59,14 +59,6 @@
 
 #include "SDL_assert.h"
 
-#if !defined(__NACL__) && !defined(_WIN32)
-/* List of signals to mask in the subthreads */
-static const int sig_list[] = {
-    SIGHUP, SIGINT, SIGQUIT, SIGPIPE, SIGALRM, SIGTERM, SIGCHLD, SIGWINCH,
-    SIGVTALRM, SIGPROF, 0
-};
-#endif
-
 static void *
 RunThread(void *data)
 {
@@ -129,11 +121,6 @@ SDL_SYS_CreateThread(SDL_Thread *thread, void *args)
 void
 SDL_SYS_SetupThread(const char *name)
 {
-#if !defined(__NACL__) && !defined(_WIN32)
-    int i;
-    sigset_t mask;
-#endif /* !__NACL__ */
-
     if (name != NULL) {
         #if defined(__MACOSX__) || defined(__IPHONEOS__) || defined(__LINUX__)
         SDL_assert(checked_setname);
@@ -160,17 +147,6 @@ SDL_SYS_SetupThread(const char *name)
             rename_thread(find_thread(NULL), namebuf);
         #endif
     }
-
-   /* NativeClient does not yet support signals.*/
-#if !defined(__NACL__) && !defined(_WIN32)
-    /* Mask asynchronous signals for this thread */
-    sigemptyset(&mask);
-    for (i = 0; sig_list[i]; ++i) {
-        sigaddset(&mask, sig_list[i]);
-    }
-    pthread_sigmask(SIG_BLOCK, &mask, 0);
-#endif /* !__NACL__ */
-
 
 #ifdef PTHREAD_CANCEL_ASYNCHRONOUS
     /* Allow ourselves to be asynchronously cancelled */
