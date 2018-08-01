@@ -985,11 +985,7 @@ bool retro_load_game_get_path(const struct retro_game_info *in_game)
 	if (cb_logprint) cb_logprint(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, extension. Extension: %s", pstr_fileextension);
 
 	// Load globals with path, filename, and extension.  Assumption is everything is OK.
-#ifdef __ANDROID__
-	strncpy(gstr_rom_extension, pstr_fileextension, sizeof(gstr_rom_extension));
-#else
-	strncpy_s(gstr_rom_extension, pstr_fileextension, sizeof(gstr_rom_extension));
-#endif
+	strcpy(gstr_rom_extension, pstr_fileextension);
 
 	if ((pstr_fileextension - pstr_filename - 1) > sizeof(gstr_rom_name))
 	{
@@ -1494,11 +1490,7 @@ bool retro_load_game(const struct retro_game_info *in_game)
 	num_args++;
 
 	// 2017.11.28 - RJS - Can be removed.  Printing the commandline.
-#ifdef __ANDROID__
-	char strCommandline[PATH_MAX] = "";
-#else
-	char strCommandline[_MAX_PATH] = "";
-#endif
+	char strCommandline[1024] = "";
 
 	for (int i = 0; i < num_args; i++)
 	{
