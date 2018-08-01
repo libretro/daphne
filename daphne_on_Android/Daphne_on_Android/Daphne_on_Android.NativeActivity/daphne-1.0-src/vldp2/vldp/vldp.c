@@ -21,7 +21,7 @@
  */
 
 // see vldp.h for documentation on how to use the API
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #pragma warning (disable:4996)
 #endif
@@ -30,8 +30,6 @@
 #include <string.h>
 #include "vldp.h"
 #include "vldp_common.h"
-
-#include "..\..\..\main_android.h"
 
 #define API_VERSION 11
 
@@ -107,7 +105,6 @@ int vldp_wait_for_status(int stat)
 {
 	int result = 0;	// assume error unless we explicitly
 	int done = 0;
-	LOGI("In vldp_wait_for_status, top of routine, g_in_info: %d  GetTicksFunc: %d", (int)g_in_info, (int)g_in_info->GetTicksFunc);
 	Uint32 cur_time = g_in_info->GetTicksFunc();
 	while (!done && ((g_in_info->GetTicksFunc() - cur_time) < VLDP_TIMEOUT))
 	{
@@ -136,7 +133,6 @@ int vldp_wait_for_status(int stat)
 		fprintf(stderr, "VLDP ERROR!!!!  Timed out with getting our expected response!\n");
 	}
 
-	LOGI("In vldp_wait_for_status, bottom of routine.");
 	return result;
 }
 
@@ -369,9 +365,6 @@ VLDP_BOOL vldp_unlock(unsigned int uTimeoutMs)
 // I want to keep these functions hidden and force the user to use the callbacks
 const struct vldp_out_info *vldp_init(const struct vldp_in_info *in_info)
 {
-	// 2017.02.02 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In vldp_out_info , top of routine.");
-
 	const struct vldp_out_info *result = NULL;
 	p_initialized = 0;
 
@@ -397,25 +390,16 @@ const struct vldp_out_info *vldp_init(const struct vldp_in_info *in_info)
 	g_out_info.lock = vldp_lock;
 	g_out_info.unlock = vldp_unlock;
 
-	// 2017.02.02 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In vldp_out_info, before SDL_CreateThread.  idle_handler: %d", (int) idle_handler);
-
 	// RJS CHANGE - new parm for SDL2
 	// private_thread = SDL_CreateThread(idle_handler, NULL);	// start our internal thread
 	private_thread = SDL_CreateThread(idle_handler, "PRIVATE", NULL);	// start our internal thread
 	
-	// 2017.02.02 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In vldp_out_info, after SDL_CreateThread.");
-
 	// if private thread was created successfully
 	if (private_thread)
 	{
 		p_initialized = 1;
 		result = &g_out_info;
 	}
-
-	// 2017.02.02 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In vldp_out_info ,bottom of routine.");
 
 	return result;
 }

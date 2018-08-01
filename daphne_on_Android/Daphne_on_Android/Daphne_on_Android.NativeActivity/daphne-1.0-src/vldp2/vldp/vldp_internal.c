@@ -27,9 +27,6 @@
 #pragma warning (disable:4996)
 #endif
 
-// RJS ADD - we aren't precompiling any headers but still need what would have been compiled
-#include "..\pch.h"
-
 #include <stdio.h>
 #include <stdlib.h>	// for malloc/free
 #include <string.h>
