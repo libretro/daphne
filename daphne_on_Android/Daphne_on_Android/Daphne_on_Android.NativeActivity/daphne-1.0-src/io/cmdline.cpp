@@ -82,11 +82,11 @@
 #include "../ldp-out/ldp-vldp.h"
 #include "../ldp-out/framemod.h"
 
-// RJS ADD
-#include "../../main_android.h"
 extern int retro_get_variable(char * strVariable);
 
-#ifdef UNIX
+#ifdef _WIN32
+#include <direct.h>
+#else
 #include <unistd.h>     // for unlink
 #endif
 
@@ -104,8 +104,6 @@ int g_arg_index = 0;
 // (this must be done first because the the game and ldp classes may rely on the homedir being set to its proper place)
 bool parse_homedir()
 {
-	LOGI("daphne-libretro: In parse_homedir, top of function.");
-
 	bool result = true;
 	char s[81] = { 0 };
 	bool bHomeDirSet = false;	// whether set_homedir was called
@@ -114,7 +112,6 @@ bool parse_homedir()
 	{
 		get_next_word(s, sizeof(s));
 		// if there is nothing left for us to parse, break out of the while loop
-		LOGI("daphne-libretro: In parse_homedir, parsing word: %s", s);
 		if (s[0] == 0)
 		{
 			break;
@@ -126,7 +123,6 @@ bool parse_homedir()
 		{
 			//Ignore this one, already handled
 			get_next_word(s, sizeof(s));
-			LOGI("daphne-libretro: In parse_homedir, found homedir, parsing next word: %s", s);
 			if (s[0] == 0)
 			{
 				printline("Homedir switch used but no homedir specified!");
@@ -187,7 +183,6 @@ bool parse_homedir()
 
 	//Reset arg index and return
 	g_arg_index = 1;
-	LOGI("daphne-libretro: In parse_homedir, bottom of function.  homedir: %s", g_homedir.get_homedir().c_str());
 	return result;
 }
 
@@ -762,10 +757,7 @@ bool parse_cmd_line(int argc, char **argv)
 
 			char stVar[] = "daphne_emulate_seek";
 			if (retro_get_variable(stVar) == 1)
-			{
-				LOGI("daphne-libretro: In parse_cmd_line, seek_frame_per_ms set to 0.");
 				d = 0.0;
-			}
 
 			// WARNING : VLDP will timeout if it hasn't received a response after
 			// a certain period of time (7.5 seconds at this moment) so you will
@@ -783,10 +775,7 @@ bool parse_cmd_line(int argc, char **argv)
 
 			char stVar[] = "daphne_emulate_seek";
 			if (retro_get_variable(stVar) == 1)
-			{
-				LOGI("daphne-libretro: In parse_cmd_line, min_seek_delay set to 0.");
 				i = 0;
-			}
 
 			if ((i > 0) && (i < 5000)) g_ldp->set_min_seek_delay((unsigned int) i);
 			else printline("NOTE : Min seek delay disabled");
