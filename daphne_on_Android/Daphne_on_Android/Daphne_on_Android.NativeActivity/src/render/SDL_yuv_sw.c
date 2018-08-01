@@ -89,17 +89,6 @@
 
 /* The colorspace conversion functions */
 
-#if (__GNUC__ > 2) && defined(__i386__) && __OPTIMIZE__ && SDL_ASSEMBLY_ROUTINES
-extern void Color565DitherYV12MMX1X(int *colortab, Uint32 * rgb_2_pix,
-                                    unsigned char *lum, unsigned char *cr,
-                                    unsigned char *cb, unsigned char *out,
-                                    int rows, int cols, int mod);
-extern void ColorRGBDitherYV12MMX1X(int *colortab, Uint32 * rgb_2_pix,
-                                    unsigned char *lum, unsigned char *cr,
-                                    unsigned char *cb, unsigned char *out,
-                                    int rows, int cols, int mod);
-#endif
-
 static void
 Color16DitherYV12Mod1X(int *colortab, Uint32 * rgb_2_pix,
                        unsigned char *lum, unsigned char *cr,
@@ -952,20 +941,7 @@ SDL_SW_SetupYUVDisplay(SDL_SW_YUVTexture * swdata, Uint32 target_format)
     case SDL_PIXELFORMAT_YV12:
     case SDL_PIXELFORMAT_IYUV:
         if (SDL_BYTESPERPIXEL(target_format) == 2) {
-#if (__GNUC__ > 2) && defined(__i386__) && __OPTIMIZE__ && SDL_ASSEMBLY_ROUTINES
-            /* inline assembly functions */
-            if (SDL_HasMMX() && (Rmask == 0xF800) &&
-                (Gmask == 0x07E0) && (Bmask == 0x001F)
-                && (swdata->w & 15) == 0) {
-/* printf("Using MMX 16-bit 565 dither\n"); */
-                swdata->Display1X = Color565DitherYV12MMX1X;
-            } else {
-/* printf("Using C 16-bit dither\n"); */
-                swdata->Display1X = Color16DitherYV12Mod1X;
-            }
-#else
             swdata->Display1X = Color16DitherYV12Mod1X;
-#endif
             swdata->Display2X = Color16DitherYV12Mod2X;
         }
         if (SDL_BYTESPERPIXEL(target_format) == 3) {
@@ -973,20 +949,7 @@ SDL_SW_SetupYUVDisplay(SDL_SW_YUVTexture * swdata, Uint32 target_format)
             swdata->Display2X = Color24DitherYV12Mod2X;
         }
         if (SDL_BYTESPERPIXEL(target_format) == 4) {
-#if (__GNUC__ > 2) && defined(__i386__) && __OPTIMIZE__ && SDL_ASSEMBLY_ROUTINES
-            /* inline assembly functions */
-            if (SDL_HasMMX() && (Rmask == 0x00FF0000) &&
-                (Gmask == 0x0000FF00) &&
-                (Bmask == 0x000000FF) && (swdata->w & 15) == 0) {
-/* printf("Using MMX 32-bit dither\n"); */
-                swdata->Display1X = ColorRGBDitherYV12MMX1X;
-            } else {
-/* printf("Using C 32-bit dither\n"); */
-                swdata->Display1X = Color32DitherYV12Mod1X;
-            }
-#else
             swdata->Display1X = Color32DitherYV12Mod1X;
-#endif
             swdata->Display2X = Color32DitherYV12Mod2X;
         }
         break;
