@@ -54,7 +54,6 @@ using namespace std;
 
 const int JOY_AXIS_MID = (int) (32768 * (0.75));		// how far they have to move the joystick before it 'grabs'
 
-SDL_Joystick *G_joystick = NULL;	// pointer to joystick object
 bool g_use_joystick = true;	// use a joystick by default
 // RJS ADD - invert controls
 bool g_invert_joystick = false;
@@ -812,50 +811,21 @@ int SDL_input_init()
 	}
 	g_sticky_coin_cycles = (Uint32) (STICKY_COIN_SECONDS * get_cpu_hz(0));	// only needs to be calculated once
 
-	if (SDL_InitSubSystem(SDL_INIT_JOYSTICK) >= 0)
-	{
-		// if joystick usage is enabled
-		if (g_use_joystick)
-		{
-			// if there is at least 1 joystick and we are authorized to use the joystick for input
-			if (SDL_NumJoysticks() > 0)
-			{
-				// RJS NOTE - function helps choose joystick
-				G_joystick = SDL_JoystickOpen(0);	// FIXME: right now we automatically choose the first joystick
-				if (G_joystick != NULL)
-				{
-					printline("Joystick #0 was successfully opened");
-				}
-				else
-				{
-					printline("Error opening joystick!");
-				}
-			}
-			else
-			{
-				printline("No joysticks detected");
-			}
-		}
-		// notify user that their attempt to disable the joystick is successful
-		else
-		{
-			printline("Joystick usage disabled");
-		}
-		
-		CFG_Keys();	// NOTE : for some freak reason, this should not be done BEFORE the joystick is initialized, I don't know why!
-		result = 1;
-	}
-	else
-	{
-		printline("Input initialization failed!");
-	}
+   // if joystick usage is enabled
+   if (g_use_joystick)
+   {
+      printline("Joystick #0 was successfully opened");
+   }
+   // notify user that their attempt to disable the joystick is successful
+   else
+   {
+      printline("Joystick usage disabled");
+   }
+
+   CFG_Keys();	// NOTE : for some freak reason, this should not be done BEFORE the joystick is initialized, I don't know why!
+   result = 1;
 
 	idle_timer = refresh_ms_time(); // added by JFA for -idleexit
-
-#ifdef UNIX
-	// enable non-blocking stdin (see conin.cpp UNIX stdin stuff)
-	/*int iRes =*/ fcntl(fileno(stdin), F_SETFL, O_NONBLOCK);
-#endif
 
 	// if the mouse is disabled, then filter mouse events out ...
 	if (!g_game->getMouseEnabled())
@@ -885,7 +855,6 @@ void FilterMouseEvents(bool bFilteredOut)
 // 1 = success, 0 = failure
 int SDL_input_shutdown(void)
 {
-	SDL_QuitSubSystem(SDL_INIT_JOYSTICK);
 	return(1);
 }
 

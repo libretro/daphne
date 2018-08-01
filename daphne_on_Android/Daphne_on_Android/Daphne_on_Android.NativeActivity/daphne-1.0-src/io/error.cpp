@@ -39,9 +39,6 @@
 #include "../video/video.h"
 #include "../video/SDL_DrawText.h"
 
-// RJS ADD
-extern SDL_Renderer *g_renderer;
-
 #ifndef GP2X
 //const char *instr = "Please read the daphne_log.txt file for more information";
 const char *instr = "Read daphne_log.txt for help";

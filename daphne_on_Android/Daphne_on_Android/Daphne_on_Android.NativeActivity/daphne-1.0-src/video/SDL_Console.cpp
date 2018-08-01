@@ -43,9 +43,6 @@ static SDL_Surface		*Border = NULL;					/* Sides, bottom and corners of the cons
 static SDL_Surface		*BackgroundImage = NULL;		/* Background image for the console */
 static SDL_Surface		*InputBackground;				/* Dirty rectangle to draw over behind the users background */
 
-// RJS ADD
-extern SDL_Renderer *g_renderer;
-
 /* Takes keys from the keyboard and inputs them to the console */
 void ConsoleEvents(SDL_Event *event)
 {

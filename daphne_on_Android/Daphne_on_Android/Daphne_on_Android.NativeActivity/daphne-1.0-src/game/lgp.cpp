@@ -32,7 +32,7 @@
 // 0000 7fff Rom (a02_01.bin, a02_02.bin, a02_03.bin, a02_04.bin)
 // e000 e400 Ram (tile video ram)
 // f000 ffff Ram 
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
@@ -46,9 +46,6 @@
 #include "../sound/sound.h"
 #include "../cpu/cpu.h"
 #include "../cpu/generic_z80.h"
-
-// RJS ADD
-extern SDL_Renderer *g_renderer;
 
 lgp::lgp()
 {
@@ -381,12 +378,7 @@ void lgp::port_write(Uint16 port, Uint8 value)
 // updates lgp's video
 void lgp::video_repaint()
 {
-	//This should be much faster
-	// RJS START
-	// SDL_FillRect(m_video_overlay[m_active_video_overlay], NULL, m_transparent_color);
-	SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
-	SDL_RenderClear(g_renderer);
-	// RJS END
+	SDL_FillRect(m_video_overlay[m_active_video_overlay], NULL, m_transparent_color);
 
    for (int chary = 0; chary < 32; chary++)
    {

@@ -76,9 +76,6 @@ SDL_Surface *g_other_bmps[B_EMPTY] = { 0 };
 SDL_Surface *g_screen = NULL;	// our primary display
 SDL_Surface *g_screen_blitter = NULL;	// the surface we blit to (we don't blit directly to g_screen because opengl doesn't like that)
 
-// RJS ADD - this renderer isn't needed anymore
-SDL_Renderer *g_renderer = NULL;
-
 bool g_console_initialized = false;	// 1 once console is initialized
 bool g_fullscreen = false;	// whether we should initialize video in fullscreen mode or not
 int sboverlay_characterset = 1;
@@ -135,7 +132,6 @@ bool init_display()
 	Uint32 x = 0;	// temporary index
 
 	// if we were able to initialize the video properly
-	if ( SDL_InitSubSystem(SDL_INIT_VIDEO) >=0 )
 	{
 		// RJS START - This is handled differently in SDL2, I think through textures.
 		/*
@@ -197,21 +193,6 @@ bool init_display()
 		}
 
 		// create a 32-bit surface
-		// RJS CHANGE
-		// ORIG g_screen_blitter = SDL_CreateRGBSurface(SDL_SWSURFACE,
-        //                                g_vid_width,
-        //                                g_vid_height,
-		//								32,
-		//								0xff, 0xFF00, 0xFF0000, 0xFF000000);
-
-		// RJS START - SDL2 now requires a renderer, this is an abstraction for what
-		// SDL2 might use D3D, OGL, OGLes, etc.  That's why it's needed.
-		// if (g_screen) g_renderer = SDL_CreateRenderer(g_screen, -1, 0);
-		// RJS END
-
-		// TEX g_screen_blitter = SDL_CreateTexture(g_renderer, SDL_BITSPERPIXEL(32), SDL_TEXTUREACCESS_STREAMING,
-		//	g_vid_width, g_vid_height);
-
 		g_screen_blitter = SDL_CreateRGBSurface(0, g_vid_width, g_vid_height, 32, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
 		result = true;
 
@@ -262,8 +243,6 @@ void shutdown_display()
 		ConsoleShutdown();
 		g_console_initialized = false;
 	}
-
-	SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
 void vid_flip()
@@ -274,18 +253,13 @@ void vid_flip()
 	{
 		// RJS CHANGE
 		// orig SDL_Flip(g_screen);
-		// new  SDL_RenderPresent(g_renderer);
 		printline("vid_flip not supported in this thread.");
 	}
 }
 
 void vid_blank()
 {
-   // RJS START - Render clear from SDL1 to 2
-   // SDL_FillRect(g_screen, NULL, 0);
-   SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 255);
-   SDL_RenderClear(g_renderer);
-   // RJS END
+   SDL_FillRect(g_screen, NULL, 0);
 }
 
 // RJS CHANGE - MAIN THREAD back to surface, we'll need to "blit" this to the overlay/UI surface (g_screen)
@@ -382,32 +356,6 @@ bool load_bmps()
 	return(result);
 }
 
-
-// RJS REMOVE - MAIN THREAD back to surface, keeping old routine in case need to go back again
-/*
-SDL_Texture *load_one_bmp(const char *filename)
-{
-	SDL_Surface *result = SDL_LoadBMP(filename);
-	if (!result)
-	{
-		string err = "Could not load bitmap : ";
-		err = err + filename;
-		printerror(err.c_str());
-		return(NULL);
-	}
-
-	SDL_Texture * sdlTexture = SDL_CreateTextureFromSurface(g_renderer, result);
-	SDL_FreeSurface(result);
-
-	Uint32 textFormat;
-	int textAccess;
-	int textW;
-	int textH;
-	SDL_QueryTexture(sdlTexture, &textFormat, &textAccess, &textW, &textH);
-
-	return(sdlTexture);
-}
-*/
 
 // 2017.06.22 - RJS ADD - Since files are saved into the .so which is a zip and therefore we don't have a
 // typical path to them we need to copy them out.  This routine does that.  A later consideration should

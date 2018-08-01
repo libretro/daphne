@@ -92,9 +92,6 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-// RJS ADD
-extern SDL_Renderer *g_renderer;
-
 // mach3 class constructor
 mach3::mach3()
 {
@@ -1151,11 +1148,7 @@ void mach3::video_repaint()
 {
 
 	//fast screen clear
-	// RJS START
 	SDL_FillRect(m_video_overlay[m_active_video_overlay], NULL, 0);
-	// 2018.01.02 - RJS - Not sure this is needed anymore, this and next line. SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
-	//                                                                         SDL_RenderClear(g_renderer);
-	// RJS END
 
 	// graphics are blanked when this bit is cleared
 	// FIXME:  LD video should be blanked as well (screen should be all black)

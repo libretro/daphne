@@ -225,8 +225,7 @@ SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/s_copysign.c
     #<ClCompile Include="src\power\SDL_power.c" />
 
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/SDL_render.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/SDL_yuv_mmx.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/SDL_yuv_sw.c
+SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/SDL_yuv_sw.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/software/SDL_blendfillrect.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/software/SDL_blendline.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/software/SDL_blendpoint.c

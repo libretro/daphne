@@ -87,9 +87,6 @@
 #include "SDL_cpuinfo.h"
 #include "SDL_yuv_sw_c.h"
 
-#include "../../main_android.h"
-
-
 /* The colorspace conversion functions */
 
 #if (__GNUC__ > 2) && defined(__i386__) && __OPTIMIZE__ && SDL_ASSEMBLY_ROUTINES
@@ -1291,8 +1288,6 @@ SDL_SW_CopyYUVToRGB(SDL_SW_YUVTexture * swdata, const SDL_Rect * srcrect,
                     Uint32 target_format, int w, int h, void *pixels,
                     int pitch)
 {
-	// LOGI("daphne-libretro: In SDL_SW_CopyYUVToRGB, top of routine.");
-	
 	const int targetbpp = SDL_BYTESPERPIXEL(target_format);
     int stretch;
     int scale_2x;
@@ -1300,20 +1295,15 @@ SDL_SW_CopyYUVToRGB(SDL_SW_YUVTexture * swdata, const SDL_Rect * srcrect,
     int mod;
 
     if (targetbpp == 0) {
-		// LOGI("daphne-libretro: In SDL_SW_CopyYUVToRGB, returning error: Invalid target pixel format: %d", (int) target_format);
 		return SDL_SetError("Invalid target pixel format");
     }
 
     /* Make sure we're set up to display in the desired format */
-	// if (swdata) LOGI("daphne-libretro: In SDL_SW_CopyYUVToRGB, before display setup. Target pixel format: %d  Buffer target format: %d", (int)target_format, (int)swdata->target_format);
-	// else LOGI("daphne-libretro: In SDL_SW_CopyYUVToRGB, before display setup. Target pixel format: %d  Buffer swdata: NULL", (int)target_format);
 	if (target_format != swdata->target_format) {
         if (SDL_SW_SetupYUVDisplay(swdata, target_format) < 0) {
-			// LOGI("daphne-libretro: In SDL_SW_CopyYUVToRGB, after SDL_SW_SetupYUVDisplay.  Failure, returning -1");
 			return -1;
         }
     }
-	// LOGI("daphne-libretro: In SDL_SW_CopyYUVToRGB, after display setup.  Success.");
 
     stretch = 0;
     scale_2x = 0;
@@ -1349,7 +1339,6 @@ SDL_SW_CopyYUVToRGB(SDL_SW_YUVTexture * swdata, const SDL_Rect * srcrect,
                 SDL_CreateRGBSurfaceFrom(pixels, w, h, bpp, pitch, Rmask,
                                          Gmask, Bmask, Amask);
             if (!swdata->display) {
-				// LOGI("daphne-libretro: In SDL_SW_CopyYUVToRGB, can't create surface.  Fail 1.");
 				return (-1);
             }
         }
@@ -1361,7 +1350,6 @@ SDL_SW_CopyYUVToRGB(SDL_SW_YUVTexture * swdata, const SDL_Rect * srcrect,
                 SDL_CreateRGBSurface(0, swdata->w, swdata->h, bpp, Rmask,
                                      Gmask, Bmask, Amask);
             if (!swdata->stretch) {
-				// LOGI("daphne-libretro: In SDL_SW_CopyYUVToRGB, can't create surface.  Fail 2.");
 				return (-1);
             }
         }
@@ -1395,7 +1383,6 @@ SDL_SW_CopyYUVToRGB(SDL_SW_YUVTexture * swdata, const SDL_Rect * srcrect,
         Cb = lum + 3;
         break;
     default:
-		// LOGI("daphne-libretro: In SDL_SW_CopyYUVToRGB, default pixelformat case.  Fail.");
 		return SDL_SetError("Unsupported YUV format in copy");
     }
     mod = (pitch / targetbpp);
@@ -1413,7 +1400,6 @@ SDL_SW_CopyYUVToRGB(SDL_SW_YUVTexture * swdata, const SDL_Rect * srcrect,
         SDL_Rect rect = *srcrect;
         SDL_SoftStretch(swdata->stretch, &rect, swdata->display, NULL);
     }
-	// LOGI("daphne-libretro: In SDL_SW_CopyYUVToRGB, bottom of routine.  Success.");
 	return 0;
 }
 

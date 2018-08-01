@@ -24,7 +24,7 @@
 // by Matt Ownby
 
 // used to test mpeg seeking accuracy
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #pragma warning (disable:4996)
 #endif
@@ -39,11 +39,8 @@
 #include "../video/video.h"
 #include "../timer/timer.h"
 
-// RJS ADD
-extern SDL_Renderer *g_renderer;
-
 // Win32 doesn't use strcasecmp, it uses stricmp (lame)
-#ifdef WIN32
+#ifdef _WIN32
 #define strcasecmp stricmp
 #endif
 
@@ -613,11 +610,7 @@ void seektest::video_repaint()
 		}
 	} // end if dimensions are incorrect
 
-	// RJS START
-	// SDL_FillRect(m_video_overlay[m_active_video_overlay], NULL, 0);	// erase anything on video overlay
-	SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
-	SDL_RenderClear(g_renderer);
-	// RJS END
+	SDL_FillRect(m_video_overlay[m_active_video_overlay], NULL, 0);	// erase anything on video overlay
 
 	// if video overlay is enabled
 	if (m_overlay)

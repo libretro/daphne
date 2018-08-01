@@ -25,9 +25,11 @@
 
 // Does automatic tests that require no user intervention, useful for before doing an official release
 
-#ifdef WIN32
+#ifdef _WIN32
 #pragma warning (disable:4786) // disable warning about truncating to 255 in debug info
 #endif
+
+#include <string.h>
 
 #include "releasetest.h"
 #include "../io/conout.h"
@@ -58,8 +60,6 @@ extern Uint8 *g_line_buf3;	// 3rd buf
 extern unsigned int g_filter_type;
 // RJS CHANGE BACK - MAIN THREAD - "render" to this screen (surface), which will be used in the render (LDP) thread
 extern SDL_Surface *g_screen;	// to test video modes
-// RJS ADD
-extern SDL_Renderer *g_renderer;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -368,110 +368,6 @@ void releasetest::test_yuv_hwaccel()
 	// we'll need some way to manage that aspect. Skipping for now.  Docing this whole routine out.
 	printline("YUV hardware acceleration test functionality *** NOT PORTED YET ***");
 	return;
-#if 0
-	bool test_result = false;
-
-		delete g_ldp;	// make sure that any yuv overlays which are allocated get deleted
-
-		printline("Beginning YUV hardware acceleration test (this test should be last since it may mess up the video modes beyond use)");
-
-		// test set/get environment variable functions
-		set_yuv_hwaccel(false);
-		logtest(get_yuv_hwaccel() == false, "Env Var Test #1");
-
-		set_yuv_hwaccel(true);
-		logtest(get_yuv_hwaccel() == true, "Env Var Test #2");
-
-		set_yuv_hwaccel(false);
-		logtest(get_yuv_hwaccel() == false, "Env Var Test #3");
-
-		// windowed, w/ accel
-		// windowed, w/o accel
-		// fullscreen w/ accel
-		// fullscreen w/o accel
-		for (int accel = 0; accel < 2; accel++)
-		{
-			for (int windowed = 0; windowed < 2; windowed++)
-			{
-				test_result = false;
-
-				// RJS START - SDL2 doesn't have a single screen idea, it can do windows now.  Also,
-				// it always tries to put what it can on the GPU so SDL_HWSURFACE is no longer needed.
-				/*
-				Uint32 sdl_flags = SDL_SWSURFACE;	// sw surface if acceleration is disabled (see video.cpp notes)
-
-				// if hwaccel is enabled, use hw surface (see video.cpp notes)
-				if (accel == 1)
-				{
-					sdl_flags = SDL_HWSURFACE;
-				}
-				if (windowed == 0) sdl_flags |= SDL_FULLSCREEN;
-				*/
-				// RJS END
-
-				// RJS NOTE - this feels like it should be after creatign the window
-				SDL_Delay(1000);	// wait a second to give video card a chance to catch its breath (especially Radeon's)
-#ifndef GP2X
-				// RJS CHANGE - see sdl_flags not above
-				// g_screen = SDL_SetVideoMode(640, 480, 0, sdl_flags);
-				g_screen = SDL_CreateWindow("Main Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_FULLSCREEN);
-
-#else
-				g_screen = SDL_SetVideoMode(320, 240, 0, SDL_HWSURFACE);	// gp2x settings, only supports 320x240
-#endif
-				// RJS START - SDL2 now requires a renderer, this is an abstraction for what
-				// SDL2 might use D3D, OGL, OGLes, etc.  That's why it's needed.
-				if (g_screen) g_renderer = SDL_CreateRenderer(g_screen, -1, 0);
-				// RJS END
-
-				// RJS CHANGE
-				// if (g_screen)
-				if ((g_screen) && (g_renderer))
-				{
-					bool bAccel = false;	// to avoid compiler warnings
-					if (accel) bAccel = true;
-
-					set_yuv_hwaccel(bAccel);
-					// make sure environment variable got set correctly
-					if (get_yuv_hwaccel() == (bool) bAccel)
-					{
-						SDL_Delay(1000);
-						// RJS START - SDL2 has gotten rid of overlays and now uses textures
-						// SDL_Overlay *overlay = SDL_CreateYUVOverlay (640, 480, SDL_YUY2_OVERLAY, g_screen);
-						SDL_Texture *overlay = SDL_CreateTexture(g_renderer, SDL_PIXELFORMAT_YUY2, SDL_TEXTUREACCESS_STREAMING, 640, 480);
-						// RJS END
-
-
-						if (overlay)
-						{
-							// RJS START - Whether a texture is on the GPU or not, in SDL2, is hidden from you in common
-							// routines.  We're skipping it here.
-							/*
-							if (overlay->hw_overlay == (unsigned int) accel)
-							{
-								test_result = true;
-							}
-							*/
-							// RJS END
-
-							// RJS CHANGE
-							// SDL_FreeYUVOverlay(overlay);
-							SDL_DestroyTexture(overlay);
-						}
-					}
-				}
-				// else screen creation failed
-
-				string msg = "YUV Hwaccel (windowed = " + numstr::ToStr(windowed) + ") and (accel = " + numstr::ToStr(accel) +
-					")";
-				logtest(test_result, msg.c_str());
-				//make_delay(1000);	// just so the vidmodes aren't switching mind-numbingly fast
-			}
-		}
-
-		// restore g_ldp to a value	
-		g_ldp = new ldp();	// just create generic NOLDP for now ...
-#endif // #if 0
 }
 
 void releasetest::test_think_delay()

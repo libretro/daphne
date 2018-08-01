@@ -47,9 +47,6 @@
 #include "../video/palette.h"
 #include "../video/video.h"
 
-// RJS ADD
-extern SDL_Renderer *g_renderer;
-
 #define SUPERDON_TRANSPARENT_COLOR 15
 
 /////////////////////////////////////////////////////////////////////

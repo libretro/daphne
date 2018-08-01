@@ -33,9 +33,6 @@
 #include "../io/conout.h"
 #include "../ldp-out/ldp.h"
 
-// RJS ADD
-extern SDL_Renderer *g_renderer;
-
 ////////////////
 
 // MEMORY MAP (so far)

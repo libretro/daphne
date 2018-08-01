@@ -95,9 +95,6 @@
 #include "../video/palette.h"
 #include "../cpu/generic_z80.h"
 
-// RJS ADD
-extern SDL_Renderer *g_renderer;
-
 interstellar::interstellar()
 {
 	struct cpudef cpu;
@@ -631,11 +628,7 @@ void interstellar::palette_calculate()
 void interstellar::video_repaint()
 {
 	// clear the video before drawing
-	// RJS START
 	SDL_FillRect(m_video_overlay[m_active_video_overlay], NULL, 0);
-	// SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
-	// SDL_RenderClear(g_renderer);
-	// RJS END
 
 	// draw the sprites
 	for (int sprite = 0x200 - 4; sprite >= 0x000; sprite-=4)
