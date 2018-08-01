@@ -30,7 +30,6 @@
 #include "libretro_daphne.h"
 #include "../daphne-1.0-src/daphne.h"
 #include "../main_android.h"
-#include "..\src\core\android\SDL_android.h"
 #include "../include/SDL_render.h"
 
 
@@ -94,8 +93,6 @@ void retro_keyboard_input_callback(bool in_down, unsigned in_keycode, uint32_t i
 			
 void retro_set_environment(retro_environment_t in_environment)
 {
-	LOGI("daphne-libretro: In retro_set_environment, top of function.");
-
 	if (! in_environment) return;
 
 	cb_environment = in_environment;
@@ -115,7 +112,6 @@ void retro_set_environment(retro_environment_t in_environment)
 	t_keyboardcb.callback = retro_keyboard_input_callback;
 	cb_environment(RETRO_ENVIRONMENT_SET_KEYBOARD_CALLBACK, (void *)&t_keyboardcb);
 
-	LOGI("daphne-libretro: In retro_set_environment, bottom of function.");
 }
 
 /**************************************************************************************************
@@ -138,12 +134,8 @@ int retro_get_variable(char * strVariable)
 *************************************************************************************************/
 void retro_set_video_refresh(retro_video_refresh_t in_videorefresh)
 {
-	LOGI("daphne-libretro: In retro_set_video_refresh, top of function.");
-
 	if (! in_videorefresh) return;
 	cb_videorefresh = in_videorefresh;
-	
-	LOGI("daphne-libretro: In retro_set_video_refresh, bottom of function.");
 }
 
 /**************************************************************************************************
@@ -152,22 +144,14 @@ void retro_set_video_refresh(retro_video_refresh_t in_videorefresh)
 *************************************************************************************************/
 void retro_set_audio_sample(retro_audio_sample_t in_audiosample)
 {
-	LOGI("daphne-libretro: In retro_set_audio_sample, top of function.");
-
 	if (! in_audiosample) return;
 	cb_audiosample = in_audiosample;
-
-	LOGI("daphne-libretro: In retro_set_audio_sample, bottom of function.");
 }
 
 void retro_set_audio_sample_batch(retro_audio_sample_batch_t in_audiosamplebatch)
 {
-	LOGI("daphne-libretro: In retro_set_audio_sample_batch, top of function.");
-
 	if (! in_audiosamplebatch) return;
 	cb_audiosamplebatch = in_audiosamplebatch;
-
-	LOGI("daphne-libretro: In retro_set_audio_sample_batch, bottom of function.");
 }
 
 /**************************************************************************************************
@@ -175,12 +159,8 @@ void retro_set_audio_sample_batch(retro_audio_sample_batch_t in_audiosamplebatch
 **************************************************************************************************/
 void retro_set_input_poll(retro_input_poll_t in_inputpoll)
 {
-	LOGI("daphne-libretro: In retro_set_input_poll, top of function.");
-
 	if (! in_inputpoll) return;
 	cb_inputpoll = in_inputpoll;
-
-	LOGI("daphne-libretro: In retro_set_input_poll, bottom of function.");
 }
 
 /**************************************************************************************************
@@ -189,12 +169,8 @@ void retro_set_input_poll(retro_input_poll_t in_inputpoll)
 **************************************************************************************************/
 void retro_set_input_state(retro_input_state_t in_inputstate)
 {
-	LOGI("daphne-libretro: In retro_set_input_state, top of function.");
-
 	if (! in_inputstate) return;
 	cb_inputstate = in_inputstate;
-
-	LOGI("daphne-libretro: In retro_set_input_state, bottom of function.");
 }
 
 
@@ -211,8 +187,6 @@ void retro_set_input_state(retro_input_state_t in_inputstate)
 **************************************************************************************************/
 void retro_init(void)
 {
-	LOGI("daphne-libretro: In retro_init, top of function.");
-
 	// Set the internal pixel format.
 	if (cb_environment)
 	{
@@ -269,8 +243,6 @@ void retro_init(void)
 
 	// Call Daphne startup code.
 	// daphne_retro_init();
-
-	LOGI("daphne-libretro: In retro_init, bottom of function.");
 }
 
 /**************************************************************************************************
@@ -278,7 +250,6 @@ void retro_init(void)
 **************************************************************************************************/
 void retro_deinit(void)
 {
-	LOGI("daphne-libretro: In retro_deinit, top of function.");
 	if (cb_logprint) cb_logprint(RETRO_LOG_INFO, "daphne-libretro: In retro_deinit.");
 
 #ifdef __ANDROID__
@@ -287,8 +258,6 @@ void retro_deinit(void)
 #endif
 
 	main_daphne_shutdown();
-
-	LOGI("daphne-libretro: In retro_deinit, bottom of function.");
 }
 
 
@@ -314,16 +283,12 @@ unsigned int retro_api_version(void)
 **************************************************************************************************/
 void retro_get_system_info(struct retro_system_info *out_systeminfo)
 {
-	LOGI("daphne-libretro: In retro_get_system_info, top of function.");
-
 	memset(out_systeminfo, 0, sizeof(*out_systeminfo));
     out_systeminfo->library_name		= "Daphne";
     out_systeminfo->library_version		= "v0.04";
     out_systeminfo->need_fullpath		= true;
 	out_systeminfo->block_extract		= true;
     out_systeminfo->valid_extensions	= DAPHNE_ROM_EXTENSION;
-
-	LOGI("daphne-libretro: In retro_get_system_info, bottom of function.");
 }
 
 /**************************************************************************************************
@@ -332,8 +297,6 @@ void retro_get_system_info(struct retro_system_info *out_systeminfo)
 **************************************************************************************************/
 void retro_get_system_av_info(struct retro_system_av_info *out_avinfo)
 {
-	LOGI("daphne-libretro: In retro_get_system_av_info, top of function.");
-
     memset(out_avinfo, 0, sizeof(*out_avinfo));
     
 	out_avinfo->geometry.base_width   = DAPHNE_VIDEO_W;
@@ -345,8 +308,6 @@ void retro_get_system_av_info(struct retro_system_av_info *out_avinfo)
 	out_avinfo->timing.fps = DAPHNE_TIMING_FPS;
 	// RJS HERE - sample rate input to RA
 	out_avinfo->timing.sample_rate = DAPHNE_AUDIO_SAMPLE_RATE;
-
-	LOGI("daphne-libretro: In retro_get_system_av_info, bottom of function.");
 }
 
 
@@ -392,8 +353,6 @@ extern "C" {
 
 void retro_keyboard_input_callback(bool in_down, unsigned in_keycode, uint32_t in_character, uint16_t in_key_modifiers)
 {
-	LOGI("daphne-libretro: In retro_keyboard_input_callback, top of function.  down: %d  keycode: %d  character: %d  mods: %d", in_down, in_keycode, in_character, in_key_modifiers);
-
 	if (gf_isThayers == false)		return;
 	if (in_keycode >= RETROK_LAST)	return;
 
@@ -792,15 +751,9 @@ bool retro_run_once = JNI_FALSE;
 
 void retro_run(void)
 {
-	// LOGI("*** RETRO RUN BEAT ***");
-	// LOGI("daphne-libretro: In retro_run, top of function.");
-
-	// 2017.11.08 - RJS - Counter to tell when retro_run is paused.
-	// LOGI("rrf: %d  rrf_xxxx: %d  rrf_delta: %d", retro_run_frames, retro_run_frames, retro_run_frames_delta);
 	if (retro_run_frames_delta >= RETRO_RUN_FRAMES_PAUSED_THRESHOLD)
 	{
 		retro_run_frames_delta = 0;
-		LOGI("rrf: %d  rrf_xxxx: %d  rrf_delta: %d  -  Should be UNPAUSEing.", retro_run_frames, retro_run_frames, retro_run_frames_delta);
 		input_pause(false);
 	}
 	retro_run_frames++;
@@ -823,12 +776,10 @@ void retro_run(void)
 		{
 			uint16_t n_key;
 			n_key = cb_inputstate(n_port, RETRO_DEVICE_JOYPAD, 0, n_button_ndx);
-			// RJS REMOVE LOGI("daphne-libretro: In retro_run, before check of input state.  keycode: %d  port: %d  key: %d.", n_button_ndx, n_port, n_key);
 			// 2017.09.18 - RJS - I may not need this debouncer as this is kept track in SDL_PrivateJoystickButton.		Nope, you need it.
 			if (retro_has_inputstate_changed(n_port, n_button_ndx, n_key))
 			{
 			#ifdef __ANDROID__
-				// LOGI("daphne-libretro: In retro_run, input state has changed.  keycode: %d  port: %d  key: %d.", n_button_ndx, n_port, n_key);
 				if (n_button_ndx == 0)	n_button_ndx = AKEYCODE_BUTTON_A;
 				if (n_button_ndx == 1)	n_button_ndx = AKEYCODE_BUTTON_X;
 				if (n_button_ndx == 8)	n_button_ndx = AKEYCODE_BUTTON_B;
@@ -866,7 +817,6 @@ void retro_run(void)
 	int16_t * ab_buffer	= NULL;
 
 	ab_buffer = get_ab_waiting(&ab_ndx, &ab_frames);
-	LOGI("In retro_run, ab_buffer: %d  ab_frames: %d  cd_audiosamplebatch: %d", (int)ab_buffer, ab_frames, (int)cb_audiosamplebatch);
 	if (cb_audiosamplebatch) cb_audiosamplebatch(ab_buffer, ab_frames);
 	set_ab_streaming_done(ab_ndx);
 
@@ -898,8 +848,6 @@ void retro_run(void)
 	sw_overlay = get_vb_waiting(&vb_ndx);
 	if (sw_overlay && cb_videorefresh) cb_videorefresh(sw_overlay->pixels, sw_overlay->w, sw_overlay->h, sw_overlay->w * DAPHNE_VIDEO_ByPP);
 	set_vb_rendering_done(vb_ndx);
-
-	// LOGI("daphne-libretro: In retro_run, bottom of function.");
 }
 
 
@@ -1123,8 +1071,6 @@ bool retro_load_game_fill_framefile(char * pstr_framefile, int str_framefile_sz)
 	strcpy(str_default_framefile, gstr_rom_name);
 	strcat(str_default_framefile, ".txt");
 	strcpy(pstr_framefile, str_default_framefile);
-
-	LOGI("daphne-libretro: In retro_load_game_fill_framefile, rom name:  %s", gstr_rom_name);
 
 	if ((strcasecmp(gstr_rom_name, "ace")		== 0) ||
 		(strcasecmp(gstr_rom_name, "ace_a2")	== 0) ||
@@ -1405,8 +1351,6 @@ bool retro_load_game_fill_framefile(char * pstr_framefile, int str_framefile_sz)
 **************************************************************************************************/
 bool retro_load_game(const struct retro_game_info *in_game)
 {
-	LOGI("daphne-libretro: In retro_load_game, top of function.");
-
 	if (cb_logprint) cb_logprint(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game, path is: %s", in_game->path);
 
 	// Strip out the path.
@@ -1561,7 +1505,6 @@ bool retro_load_game(const struct retro_game_info *in_game)
 		strcat(strCommandline, pstr_args[i]);
 		strcat(strCommandline, " ");
 	}
-	LOGI("daphne-libretro: In retro_load_game, commandline to main_daphne: %d  %s", num_args, strCommandline);
 
 	if (main_daphne(num_args, pstr_args) == 0) return true;
 	
@@ -1572,7 +1515,6 @@ bool retro_load_game(const struct retro_game_info *in_game)
 	// Build out the command line v01.
 	// Loading game type.
 	DAPHNE_GAME_TYPE e_gametype = retro_load_game_get_game_type(gstr_rom_name);
-	LOGI("daphne-libretro: In retro_load_game, game type: %d  path: %s  rom name: %s", e_gametype, gstr_rom_path, gstr_rom_name);
 	if (e_gametype == DAPHNE_GAME_TYPE_UNDEFINED)
 	{
 		retro_log(3, "daphne-libretro: In daphne_retro_load_game, game %s unavailable.", gstr_rom_name);
@@ -1631,8 +1573,6 @@ bool retro_load_game(const struct retro_game_info *in_game)
 	static char strHomedir[9] = "-homedir";
 	pstr_daphne_arguements[i]		= strHomedir;
 	pstr_daphne_arguements[i + 1]	= strcat(gstr_rom_path, "/..");
-
-	LOGI("daphne-libretro: In retro_load_game, bottom of function - going to main_daphne.  path: %s", pstr_daphne_arguements[i + 1]);
 
 	if (main_daphne(i + DAPHNE_NUM_GLOBAL_COMMANDLINE_ARGS, pstr_daphne_arguements) == 0) return true;
 	else return false;
