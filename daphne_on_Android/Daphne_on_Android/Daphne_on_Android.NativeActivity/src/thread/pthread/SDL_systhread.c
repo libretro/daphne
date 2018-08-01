@@ -85,9 +85,8 @@ static SDL_bool checked_setname = SDL_FALSE;
 static int (*ppthread_setname_np)(pthread_t, const char*) = NULL;
 #endif
 int
-SDL_SYS_CreateThread(void *data, void *args)
+SDL_SYS_CreateThread(SDL_Thread *thread, void *args)
 {\
-    SDL_Thread * thread = (SDL_Thread*)data;
 	// 2017.02.07 - RJS ADD - Logging.
 
 	pthread_attr_t type;

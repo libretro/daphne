@@ -66,59 +66,7 @@ typedef enum {
  *  The function passed to SDL_CreateThread().
  *  It is passed a void* user context parameter and returns an int.
  */
-typedef int (SDLCALL * SDL_ThreadFunction) (void *data);
-
-#if defined(__WIN32__) && !defined(HAVE_LIBC)
-/**
- *  \file SDL_thread.h
- *
- *  We compile SDL into a DLL. This means, that it's the DLL which
- *  creates a new thread for the calling process with the SDL_CreateThread()
- *  API. There is a problem with this, that only the RTL of the SDL.DLL will
- *  be initialized for those threads, and not the RTL of the calling
- *  application!
- *
- *  To solve this, we make a little hack here.
- *
- *  We'll always use the caller's _beginthread() and _endthread() APIs to
- *  start a new thread. This way, if it's the SDL.DLL which uses this API,
- *  then the RTL of SDL.DLL will be used to create the new thread, and if it's
- *  the application, then the RTL of the application will be used.
- *
- *  So, in short:
- *  Always use the _beginthread() and _endthread() of the calling runtime
- *  library!
- */
-#define SDL_PASSED_BEGINTHREAD_ENDTHREAD
-#include <process.h>            /* This has _beginthread() and _endthread() defined! */
-
-typedef uintptr_t(__cdecl * pfnSDL_CurrentBeginThread) (void *, unsigned,
-                                                        unsigned (__stdcall *
-                                                                  func) (void
-                                                                         *),
-                                                        void *arg, unsigned,
-                                                        unsigned *threadID);
-typedef void (__cdecl * pfnSDL_CurrentEndThread) (unsigned code);
-
-/**
- *  Create a thread.
- */
-extern DECLSPEC SDL_Thread *SDLCALL
-SDL_CreateThread(SDL_ThreadFunction fn, const char *name, void *data,
-                 pfnSDL_CurrentBeginThread pfnBeginThread,
-                 pfnSDL_CurrentEndThread pfnEndThread);
-
-/**
- *  Create a thread.
- */
-#if defined(SDL_CreateThread) && SDL_DYNAMIC_API
-#undef SDL_CreateThread
-#define SDL_CreateThread(fn, name, data) SDL_CreateThread_REAL(fn, name, data, (pfnSDL_CurrentBeginThread)_beginthreadex, (pfnSDL_CurrentEndThread)_endthreadex)
-#else
-#define SDL_CreateThread(fn, name, data) SDL_CreateThread(fn, name, data, (pfnSDL_CurrentBeginThread)_beginthreadex, (pfnSDL_CurrentEndThread)_endthreadex)
-#endif
-
-#else
+typedef int (* SDL_ThreadFunction) (void *data);
 
 /**
  *  Create a thread.
@@ -140,8 +88,6 @@ SDL_CreateThread(SDL_ThreadFunction fn, const char *name, void *data,
  */
 extern DECLSPEC SDL_Thread *SDLCALL
 SDL_CreateThread(SDL_ThreadFunction fn, const char *name, void *data);
-
-#endif
 
 /**
  * Get the thread name, as it was specified in SDL_CreateThread().

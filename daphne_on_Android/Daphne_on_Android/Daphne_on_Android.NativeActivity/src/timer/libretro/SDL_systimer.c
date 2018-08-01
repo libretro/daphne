@@ -28,7 +28,6 @@
 #include "SDL_timer.h"
 #include "SDL_hints.h"
 
-
 /* The first (low-resolution) ticks value of the application */
 static DWORD start = 0;
 static BOOL ticks_started = FALSE; 
@@ -165,8 +164,7 @@ SDL_GetPerformanceFrequency(void)
     return frequency.QuadPart;
 }
 
-void
-SDL_Delay(Uint32 ms)
+void SDL_Delay(Uint32 ms)
 {
     /* Sleep() is not publicly available to apps in early versions of WinRT.
      *
