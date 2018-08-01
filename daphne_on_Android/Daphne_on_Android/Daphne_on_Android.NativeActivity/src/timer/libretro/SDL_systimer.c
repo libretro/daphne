@@ -217,9 +217,7 @@ void SDL_Delay(Uint32 ms)
    Also added OS X Monotonic clock support
    Based on work in https://github.com/ThomasHabets/monotonic_clock
  */
-#if HAVE_NANOSLEEP || HAVE_CLOCK_GETTIME
 #include <time.h>
-#endif
 #ifdef __APPLE__
 #include <mach/mach_time.h>
 #endif
