@@ -29,6 +29,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
 #include <string.h>
 #include "serial.h"
 #include "conout.h"
@@ -504,9 +505,7 @@ void send_tx_string(const char *s)
 	unsigned int i = 0;
 
 	for (i = 0; i < strlen(s); i++)
-	{
 		serial_tx(s[i]);
-	}
 	serial_tx(0x0D);
 }
 
