@@ -38,12 +38,6 @@
 #include <carbon/carbon.h>
 #endif
 
-#ifdef WIN32
-#include <windows.h>
-//#include <strmif.h>
-//#include <control.h>
-//#include <uuids.h>
-#endif
 
 #ifdef FREEBSD
 #include <sys/types.h>
@@ -54,7 +48,9 @@
 #include <sys/utsname.h>	// MATT : I'm not sure if this is good for UNIX in general so I put it here
 #endif
 
-#ifdef UNIX
+#ifdef _WIN32
+#include <windows.h>
+#else
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -62,18 +58,6 @@
 #include <sys/time.h>
 #include <unistd.h>	// for write
 #endif
-
-// RJS START
-#ifdef __ANDROID__
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <netdb.h>	// for DNS
-#include <sys/time.h>
-#include <unistd.h>	// for write
-#endif
-// RJS END
-
 
 #include <zlib.h>	// for crc32 calculation
 #include "../io/error.h"
