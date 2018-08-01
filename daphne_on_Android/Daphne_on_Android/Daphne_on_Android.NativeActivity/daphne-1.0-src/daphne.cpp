@@ -94,11 +94,6 @@ using namespace std;
 #include "video\SDL_DrawText.h"
 
 #include "..\main_android.h"
-#ifdef __ANDROID__
-extern "C" {
-	extern void sdl_init();
-}
-#endif
 
 
 // -------------------------------------------------------------------------------------------------
@@ -212,16 +207,6 @@ int main_daphne(int argc, char **argv)
 	// 1 - we can initialize either audio or video first
 	// 2 - we can trace segfaults using a debugger
 	LOGI("daphne-libretro: In main_daphne, before SDL_Init.");
-
-#ifdef __ANDROID__
-	sdl_init();
-#endif
-
-	if (SDL_Init(SDL_INIT_NOPARACHUTE) < 0)
-	{
-		printerror("Could not initialize SDL!");
-		exit(1);
-	}
 
 	LOGI("daphne-libretro: In main_daphne, after SDL_Init.");
 
@@ -451,7 +436,6 @@ int main_daphne_shutdown()
 	LOGI("daphne-libretro: In main_daphne_shutdown, after free_bmps.");
 	restore_leds();
 	LOGI("daphne-libretro: In main_daphne_shutdown, after restore_leds.");
-	atexit(SDL_Quit);
 	LOGI("daphne-libretro: In main_daphne_shutdown, after atexit.");
 
 	LOGI("daphne-libretro: In main_daphne_shutdown, bottom of routine. Result: %d", result_code);

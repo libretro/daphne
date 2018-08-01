@@ -164,14 +164,6 @@ bool init_display()
 		*/
 		// RJS END
 
-		if (g_fullscreen)
-		{
-			SDL_ShowCursor(SDL_DISABLE);	// hide mouse in fullscreen mode
-			// RJS CHANGE
-			// sdl_flags |= SDL_FULLSCREEN;
-			sdl_flags |= SDL_WINDOW_FULLSCREEN;
-		}
-
 		// go through each standard resolution size to see if we are using a standard resolution
 		for (x=0; x < (sizeof(cg_normalwidths) / sizeof(Uint16)); x++)
 		{
@@ -216,23 +208,6 @@ bool init_display()
 			}
 			// else the aspect ratio is already correct, so don't change anything
 		}
-
-#ifndef GP2X
-		{
-			// RJS START
-			// g_screen = SDL_SetVideoMode(g_vid_width, g_vid_height, suggested_bpp, sdl_flags);
-			// SDL_WM_SetCaption("DAPHNE: First Ever Multiple Arcade Laserdisc Emulator =]", "daphne");
-			/*
-			g_screen = SDL_CreateWindow("DAPHNE: First Ever Multiple Arcade Laserdisc Emulator",
-										SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-										g_vid_width, g_vid_height, sdl_flags);
-			*/
-			// RJS END
-		}
-#else
-		SDL_ShowCursor(SDL_DISABLE);	// always hide mouse for gp2x
-		g_screen = SDL_SetVideoMode(320, 240, 0, SDL_HWSURFACE);
-#endif
 
 		// create a 32-bit surface
 		// RJS CHANGE
