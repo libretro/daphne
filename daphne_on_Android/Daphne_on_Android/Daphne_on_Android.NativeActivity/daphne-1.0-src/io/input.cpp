@@ -38,9 +38,7 @@
 #include "../ldp-out/ldp.h"
 #include "fileparse.h"
 
-#include "../../main_android.h"
-
-#ifdef UNIX
+#ifndef _WIN32
 #include <fcntl.h>	// for non-blocking i/o
 #endif
 
@@ -49,7 +47,7 @@
 using namespace std;
 
 // Win32 doesn't use strcasecmp, it uses stricmp (lame)
-#ifdef WIN32
+#ifdef _WIN32
 #define strcasecmp stricmp
 #endif
 
@@ -686,8 +684,6 @@ int * get_joystick_buttons_map()
 	if (g_game) nGameType = g_game->get_game_type();
 	if (nGameType >= MAX_DEFINED_GAME_TYPES) nGameType = GAME_UNDEFINED;
 
-	LOGI("In get_joystick_buttons_map, game type being used for input: %d", nGameType);
-
 	int * pnReturnTable = joystick_buttons_map_table[nGameType];
 	return (pnReturnTable);
 }
@@ -895,13 +891,10 @@ int SDL_input_shutdown(void)
 // checks to see if there is incoming input, and acts on it
 void SDL_check_input()
 {
-	// LOGI("daphne-libretro: In SDL_check_input, top of routine.");
-
 	SDL_Event event;
 
 	while ((SDL_PollEvent (&event)) && (!get_quitflag()))
 	{
-		// LOGI("daphne-libretro: In SDL_check_input, new event.  type: %d  key: %d", event.type, event.key.keysym.sym);
 		// if they press the tilda key to bring down the console
 		// this is somewhat of a hacked if statement but I can't see
 		// a better way based on the SDL_Console API ...
@@ -957,8 +950,6 @@ void SDL_check_input()
 		// else it's not safe to activate the coin, so we just wait
 	}
 	// else the coin queue is empty, so we needn't do anything ...
-
-	// LOGI("daphne-libretro: In SDL_check_input, bottom of routine.");
 }
 
 #ifdef CPU_DEBUG
@@ -987,7 +978,6 @@ void toggle_console()
 // processes incoming input
 void process_event(SDL_Event *event)
 {
-	LOGI("In process_event, top of routine.  type: %d  jbutton: %d  keysym: %d", event->type, event->jbutton.button, event->key.keysym.sym);
 	unsigned int i = 0;
 
 	switch (event->type)
@@ -1052,7 +1042,6 @@ void process_event(SDL_Event *event)
 			break;
 		case SDL_JOYBUTTONDOWN:
 		{
-			LOGI("In process_event, in SDL_JOYBUTTONDOWN. button: %d", event->jbutton.button);
 			reset_idle(); // added by JFA for -idleexit
 
 			// RJS ADD - get joystick buttons map
@@ -1068,14 +1057,11 @@ void process_event(SDL_Event *event)
 					break;
 				}
 			}
-			LOGI("In process_event, in SDL_JOYBUTTONDOWN, end of finding button. maxbuttons: %d  foundbutton: %d", MAX_DEFINED_JOYSTICK_BUTTONS, i);
-
 			break;
 		}
 
 		case SDL_JOYBUTTONUP:
 		{
-			LOGI("In process_event, in SDL_JOYBUTTONUP. button: %d", event->jbutton.button);
 			reset_idle(); // added by JFA for -idleexit
 
 			// RJS ADD - get jopystick buttons map
@@ -1090,7 +1076,6 @@ void process_event(SDL_Event *event)
 					break;
 				}
 			}
-			LOGI("In process_event, in SDL_JOYBUTTONUP, end of finding button. maxbuttons: %d  foundbutton: %d", MAX_DEFINED_JOYSTICK_BUTTONS, i);
 
 			break;
 		}
@@ -1128,7 +1113,6 @@ void process_event(SDL_Event *event)
 
 	// added by JFA for -idleexit
 	if (get_idleexit() > 0 && elapsed_ms_time(idle_timer) > get_idleexit()) set_quitflag();
-	LOGI("In process_event, bottom of routine.");
 }
 
 // if a key is pressed, we go here
