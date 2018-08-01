@@ -45,6 +45,7 @@
 #include "../pch.h"
 
 #include <string>
+#include <string.h>
 #include "io/my_stdio.h"
 
 using namespace std;

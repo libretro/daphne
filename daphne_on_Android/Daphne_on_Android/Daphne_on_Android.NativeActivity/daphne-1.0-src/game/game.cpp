@@ -38,6 +38,7 @@
 
 #include <zlib.h>	// for CRC checking
 #include <string>	// STL strings, useful to prevent buffer overrun
+#include <string.h>
 #include "../daphne.h"	// for get_quitflag()
 #include "../io/homedir.h"
 #include "../io/conout.h"
