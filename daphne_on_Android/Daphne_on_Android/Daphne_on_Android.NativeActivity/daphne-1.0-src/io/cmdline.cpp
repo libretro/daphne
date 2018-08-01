@@ -28,9 +28,6 @@
 #define _CRT_NONSTDC_NO_DEPRECATE 1
 #endif
 
-// RJS ADD - we aren't precompiling any headers but still need what would have been compiled
-#include "..\..\pch.h"
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
