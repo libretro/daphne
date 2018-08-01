@@ -217,12 +217,6 @@ SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/s_copysign.c
     #<ClCompile Include="src\main\android\SDL_android_main.c" />
     #<ClCompile Include="src\power\android\SDL_syspower.c" />
     #<ClCompile Include="src\power\SDL_power.c" />
-    #<ClCompile Include="src\render\opengles2\SDL_render_gles2.c" />
-    #<ClCompile Include="src\render\opengles2\SDL_shaders_gles2.c" />
-    #<ClCompile Include="src\render\opengles\SDL_render_gles.c" />
-    #<ClCompile Include="src\render\opengl\SDL_render_gl.c" />
-    #<ClCompile Include="src\render\opengl\SDL_shaders_gl.c" />
-
 
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/SDL_render.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/SDL_yuv_mmx.c
