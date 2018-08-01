@@ -140,6 +140,7 @@ else
    TARGET := $(TARGET_NAME)_libretro.dll
    SHARED := -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T -lwinmm -Wl,--no-undefined
    GL_LIB := -lopengl32
+	LIBS += -lwinmm
    CXXFLAGS += -I..
    CFLAGS += -I..
 endif
