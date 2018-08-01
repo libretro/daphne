@@ -48,12 +48,6 @@
 
 using namespace std;
 
-// RJS ADD
-#include "../../main_android.h"
-#ifdef __ANDROID__
-#include "android\asset_manager.h"
-#endif
-
 #ifndef GP2X
 unsigned int g_vid_width = 640, g_vid_height = 480;	// default video width and video height
 #ifdef DEBUG
@@ -102,8 +96,6 @@ float g_fRotateDegrees = 0.0;
 // returns true if successful, false if failure
 bool init_display()
 {
-	LOGI("daphne-libretro: In init_display, top of function.");
-
 	bool result = false;	// whether video initialization is successful or not
 	bool abnormalscreensize = true; // assume abnormal
 	// RJS START
@@ -142,14 +134,9 @@ bool init_display()
 	char s[250] = { 0 };
 	Uint32 x = 0;	// temporary index
 
-	LOGI("daphne-libretro: In init_display, before SDL_InitSubSystem.");
-
 	// if we were able to initialize the video properly
 	if ( SDL_InitSubSystem(SDL_INIT_VIDEO) >=0 )
 	{
-
-		LOGI("daphne-libretro: In init_display, after positive SDL_InitSubSystem.");
-	
 		// RJS START - This is handled differently in SDL2, I think through textures.
 		/*
 		vidinfo = SDL_GetVideoInfo();
@@ -225,12 +212,8 @@ bool init_display()
 		// TEX g_screen_blitter = SDL_CreateTexture(g_renderer, SDL_BITSPERPIXEL(32), SDL_TEXTUREACCESS_STREAMING,
 		//	g_vid_width, g_vid_height);
 
-		LOGI("daphne-libretro: In init_display, before SDL_CreateRGBSurface.");
-
 		g_screen_blitter = SDL_CreateRGBSurface(0, g_vid_width, g_vid_height, 32, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
 		result = true;
-
-		LOGI("daphne-libretro: In init_display, after SDL_CreateRGBSurface.  g_screen: %d  g_screen_blitter: %d", (int) g_screen, (int) g_screen_blitter);
 
 		if (g_screen && g_screen_blitter)
 		{
@@ -259,15 +242,11 @@ bool init_display()
 		}
 	}
 
-	LOGI("daphne-libretro: In init_display, after negative SDL_InitSubSystem or through sucessful positive block, see above log.");
-
 	if (result == 0)
 	{
 		sprintf(s, "Could not initialize video display: %s", SDL_GetError());
 		printerror(s);
 	}
-
-	LOGI("daphne-libretro: In init_display, bottom of function. result: %d", result);
 
 	return(result);
 
@@ -338,23 +317,14 @@ void display_repaint()
 bool load_bmps()
 {
 	// 2017.02.01 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In load_bmps, top of routine.");
 
 	bool result = true;	// assume success unless we hear otherwise
 	int index = 0;
-#ifdef __ANDROID__
-	char filename[PATH_MAX];
-#else
-	char filename[_MAX_PATH];
-#endif
+	char filename[1024];
 
 	// RJS - ADD - Need the place downloaded bmps are since we are not 
 	// embedding them in .so.
-#ifdef __ANDROID__
-	char strBMPhomedir[PATH_MAX];
-#else
-	char strBMPhomedir[_MAX_PATH];
-#endif
+	char strBMPhomedir[1024];
 	sprintf(strBMPhomedir, "%s/", g_homedir.get_homedir().c_str());
 
 	for (; index < LED_RANGE; index++)
@@ -409,7 +379,6 @@ bool load_bmps()
 	}
 
 	// 2017.02.01 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In load_bmps, bottom of routine.");
 	return(result);
 }
 
@@ -467,18 +436,9 @@ bool copy_android_asset_to_directory(const char *filename)
 }
 // RJS END
 
-// 2017.07.14 - RJS ADD (below includes) - see JavaVM stuff in below routine (load_one_bmp).
-/*
-#include <dlfcn.h>
-#include "android\asset_manager.h"
-#include "android\asset_manager_jni.h"
-#include "jni.h"
-*/
-
 SDL_Surface *load_one_bmp(const char *filename)
 {
 	// 2017.02.01 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In load_one_bmp, top of routine.  File: %s", filename);
 	
 	// 2017.07.14 - RJS - Adding asset loading in Android.  If asset doesn't exist, then just falls
 	// through.  Problems are we don;t have a JavaVM here.  I've been looking into how to do it, there
@@ -506,13 +466,11 @@ SDL_Surface *load_one_bmp(const char *filename)
 	void * libdvm_dso = dlopen("libdvm.so", RTLD_NOW);
 	if (!libdvm_dso)
 	{
-		LOGI("daphne-libretro: In load_one_bmp, libdvm, couldn't open: %s", dlerror());
 	}
 
 	void * libandroid_runtime_dso = dlopen("libandroid_runtime.so", RTLD_NOW);
 	if (!libandroid_runtime_dso)
 	{
-		LOGI("daphne-libretro: In load_one_bmp, libandroid_runtime, couldn't open: %s", dlerror());
 	}
 
 	if ((!libdvm_dso) || (!libandroid_runtime_dso))
@@ -524,14 +482,12 @@ SDL_Surface *load_one_bmp(const char *filename)
 		JNI_CreateJavaVM = (typeof JNI_CreateJavaVM)dlsym(libdvm_dso, "JNI_CreateJavaVM");
 		if (!JNI_CreateJavaVM)
 		{
-			LOGI("daphne-libretro: In load_one_bmp, JNI_CreateJavaVM, couldn't find symbol: %s", dlerror());
 		}
 
 		jint(*registerNatives)(JNIEnv* env, jclass clazz);
 		registerNatives = (typeof registerNatives)dlsym(libandroid_runtime_dso, "Java_com_android_internal_util_WithFramework_registerNatives");
 		if (!registerNatives)
 		{
-			LOGI("daphne-libretro: In load_one_bmp, Java_com_android_internal_util_WithFramework_registerNatives, couldn't find symbol: %s", dlerror());
 		}
 
 		if ((!JNI_CreateJavaVM) || (!registerNatives)) {
@@ -560,9 +516,6 @@ SDL_Surface *load_one_bmp(const char *filename)
 		err = err + filename + " - Need to report back to LR that there is an error to display or shutdown.";
 		printerror(err.c_str());
 	}
-
-	// 2017.02.01 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In load_one_bmp, bottom of routine.");
 
 	return(result);
 }
@@ -599,35 +552,24 @@ void draw_overlay_leds(unsigned int values[], int num_digits, int start_x, int y
 		src.x = values[i] * OVERLAY_LED_WIDTH;
 
 		// 2017.11.09 - RJS - Added ability for space to be replaced with 0.
-		if (SCOREBOARD_OVERLAY_DEFAULT)
-		{
-			if (src.x == (0x0F * OVERLAY_LED_WIDTH)) src.x = 0x00;
-		}
+      if (src.x == (0x0F * OVERLAY_LED_WIDTH)) src.x = 0x00;
 
 		// RJS CHANGE BACK - MAIN THREAD to surfaces
 		/*
 		if (i == 0)
 		{
-			LOGI("overlay surface: BEFORE");
 			for (int j = 0; j < OVERLAY_LED_HEIGHT; j++)
 			{
 				uint8_t * temp = ((uint8_t *) overlay->pixels) + dest.x + (overlay->pitch * j);
-				LOGI("overlay surface: %02x %02x %02x %02x %02x %02x %02x %02x", *temp, *(temp + 1), *(temp + 2), *(temp + 3), *(temp + 4), *(temp + 5), *(temp + 6), *(temp + 7));
 			}
-			LOGI("source bmp");
 			for (int j = 0; j < OVERLAY_LED_HEIGHT; j++)
 			{
 				uint8_t * temp = ((uint8_t *)g_other_bmps[B_OVERLAY_LEDS]->pixels) + src.x + (g_other_bmps[B_OVERLAY_LEDS]->pitch * j);
-				LOGI("        surface: %02x %02x %02x %02x %02x %02x %02x %02x", *temp, *(temp + 1), *(temp + 2), *(temp + 3), *(temp + 4), *(temp + 5), *(temp + 6), *(temp + 7));
 			}
 
-			LOGI("overlay format: format: %d  paladdr: %d  bpp: %d  Bpp: %d Rm: %d  Gm: %d  Bm: %d  Am: %d", overlay->format->format, (int)overlay->format->palette, overlay->format->BitsPerPixel, overlay->format->BytesPerPixel, overlay->format->Rmask, overlay->format->Gmask, overlay->format->Bmask, overlay->format->Amask);
-			LOGI("overlay format: Rl: %d  Gl: %d  Bl: %d  Al: %d   Rs: %d  Gs: %d  Bs: %d  As: %d", overlay->format->Rloss, overlay->format->Gloss, overlay->format->Bloss, overlay->format->Aloss, overlay->format->Rshift, overlay->format->Gshift, overlay->format->Bshift, overlay->format->Ashift);
-			LOGI(":overlay palette:");
 			for (int j = 0; j < overlay->format->palette->ncolors; j++)
 			{
 				SDL_Color * curr_color = (overlay->format->palette->colors) + j;
-				LOGI("r: %d  g: %d  b: %d  a: %d", curr_color->r, curr_color->g, curr_color->b, curr_color->a);
 			}
 		}
 		*/
@@ -644,13 +586,10 @@ void draw_overlay_leds(unsigned int values[], int num_digits, int start_x, int y
 		/*
 		if (i == 0)
 		{
-			LOGI("overlay surface: AFTER");
 			for (int j = 0; j < OVERLAY_LED_HEIGHT; j++)
 			{
 				uint8_t * temp = ((uint8_t *)overlay->pixels) + dest.x + (overlay->pitch * j);
-				LOGI("overlay surface: %02x %02x %02x %02x %02x %02x %02x %02x", *temp, *(temp + 1), *(temp + 2), *(temp + 3), *(temp + 4), *(temp + 5), *(temp + 6), *(temp + 7));
 			}
-			LOGI("x");
 		}
 		*/
 		
