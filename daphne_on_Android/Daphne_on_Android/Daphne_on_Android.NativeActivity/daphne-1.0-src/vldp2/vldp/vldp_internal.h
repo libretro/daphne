@@ -48,9 +48,6 @@ struct precache_entry_s
 
 int idle_handler(void *surface);
 void blank_video();
-// RJS CHANGE - all this overelay stuff needs to change to texture
-// void erase_yuv_overlay(SDL_Overlay *dst);
-void erase_yuv_overlay(SDL_Texture *dst);
 int ivldp_got_new_command();
 void ivldp_ack_command();
 void ivldp_lock_handler();
@@ -96,11 +93,6 @@ extern int s_overlay_allocated;	// whether the SDL overlays have been allocated
 // Which frame we've skipped to (0 if we haven't skipped)
 // Used in order to maintain the current frame number until the skip actually occurs.
 extern unsigned int s_uPendingSkipFrame;
-
-// RJS CHANGE
-// extern SDL_Overlay *s_hw_overlay;	// if the game uses video overlay, we can't modify our buffers, so we have to
-// 							// copy to the extra overlay and let that get displayed
-extern SDL_Texture *s_hw_overlay;
 
 extern unsigned int s_skip_per_frame;	// how many frames to skip per frame (for playing at 2X for example)
 extern unsigned int s_stall_per_frame;	// how many frames to stall per frame (for playing at 1/2X for example)

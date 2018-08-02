@@ -861,6 +861,7 @@ int SDL_input_shutdown(void)
 // checks to see if there is incoming input, and acts on it
 void SDL_check_input()
 {
+#if 0
 	SDL_Event event;
 
 	while ((SDL_PollEvent (&event)) && (!get_quitflag()))
@@ -889,6 +890,7 @@ void SDL_check_input()
 			process_event(&event);
 		}
 	}
+#endif
 	check_console_refresh();
 
 	// added by JFA for -idleexit
