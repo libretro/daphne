@@ -67,13 +67,13 @@ char gstr_rom_extension[sizeof(DAPHNE_ROM_EXTENSION)];
 * retro_audio_sample_t			Renders single audio frame, following cb renders
 * retro_audio_sample_batch_t	multiple audio frames.  Use only one of these.
 **************************************************************************************************/
-static	retro_log_printf_t			cb_logprint			= NULL;
-		retro_video_refresh_t		video_cb       		= NULL;
-static	retro_input_poll_t			poll_cb     		= NULL;
-static	retro_input_state_t			cb_inputstate		= NULL;
-static	retro_environment_t			cb_environment		= NULL;
-static	retro_audio_sample_t		cb_audiosample		   = NULL;
-retro_audio_sample_batch_t	audio_batch_cb	            = NULL;
+static	retro_log_printf_t			log_cb			   = NULL;
+		retro_video_refresh_t		   video_cb          = NULL;
+static	retro_input_poll_t			input_poll_cb    	= NULL;
+static	retro_input_state_t			input_state_cb		= NULL;
+static	retro_environment_t			environ_cb		   = NULL;
+static	retro_audio_sample_t		   audio_cb		      = NULL;
+retro_audio_sample_batch_t	         audio_batch_cb	   = NULL;
 
 
 /**************************************************************************************************
@@ -93,7 +93,7 @@ void retro_set_environment(retro_environment_t in_environment)
 {
 	if (! in_environment) return;
 
-	cb_environment = in_environment;
+	environ_cb = in_environment;
 	
 	static const struct retro_variable t_environmentvariables[] =
 	{
@@ -104,12 +104,11 @@ void retro_set_environment(retro_environment_t in_environment)
 		{ NULL, NULL }
 	};
 
-	cb_environment(RETRO_ENVIRONMENT_SET_VARIABLES, (void *)t_environmentvariables);
+	environ_cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void *)t_environmentvariables);
 
 	struct retro_keyboard_callback t_keyboardcb;
 	t_keyboardcb.callback = retro_keyboard_input_callback;
-	cb_environment(RETRO_ENVIRONMENT_SET_KEYBOARD_CALLBACK, (void *)&t_keyboardcb);
-
+	environ_cb(RETRO_ENVIRONMENT_SET_KEYBOARD_CALLBACK, (void *)&t_keyboardcb);
 }
 
 /**************************************************************************************************
@@ -118,7 +117,7 @@ int retro_get_variable(char * strVariable)
 {
 	struct retro_variable var = { 0 };
 	var.key = strVariable;
-	if (cb_environment(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+	if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
 	{
 		if (strncmp(var.value, "disable", 8) == 0)	return 0;
 		if (strncmp(var.value, "enable", 7) == 0)	return 1;
@@ -143,7 +142,7 @@ void retro_set_video_refresh(retro_video_refresh_t in_videorefresh)
 void retro_set_audio_sample(retro_audio_sample_t in_audiosample)
 {
 	if (! in_audiosample) return;
-	cb_audiosample = in_audiosample;
+	audio_cb = in_audiosample;
 }
 
 void retro_set_audio_sample_batch(retro_audio_sample_batch_t in_audiosamplebatch)
@@ -158,7 +157,7 @@ void retro_set_audio_sample_batch(retro_audio_sample_batch_t in_audiosamplebatch
 void retro_set_input_poll(retro_input_poll_t in_inputpoll)
 {
 	if (! in_inputpoll) return;
-	poll_cb = in_inputpoll;
+	input_poll_cb = in_inputpoll;
 }
 
 /**************************************************************************************************
@@ -168,7 +167,7 @@ void retro_set_input_poll(retro_input_poll_t in_inputpoll)
 void retro_set_input_state(retro_input_state_t in_inputstate)
 {
 	if (! in_inputstate) return;
-	cb_inputstate = in_inputstate;
+	input_state_cb = in_inputstate;
 }
 
 
@@ -186,12 +185,12 @@ void retro_set_input_state(retro_input_state_t in_inputstate)
 void retro_init(void)
 {
 	// Set the internal pixel format.
-	if (cb_environment)
+	if (environ_cb)
 	{
 		// RGB565 picked here as that is what is recommended.  However, Daphne
 		// itself uses YUY2 (16 bpp).
 		enum retro_pixel_format n_pixelformat = RETRO_PIXEL_FORMAT_RGB565;
-		cb_environment(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &n_pixelformat);
+		environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &n_pixelformat);
 	}
 
 	// Set the available buttons for the user.  Not doing analogs for right now.
@@ -213,25 +212,26 @@ void retro_init(void)
 		{ 0, RETRO_DEVICE_JOYPAD,	0, RETRO_DEVICE_ID_JOYPAD_L3,		"LSB"		},	// 13
 		{ 0, RETRO_DEVICE_NONE,		0, RETRO_DEVICE_ID_JOYPAD_L3,		NULL		}	// 14
 	};
-	cb_environment(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, &t_inputdescriptors);
+	environ_cb(RETRO_ENVIRONMENT_SET_INPUT_DESCRIPTORS, &t_inputdescriptors);
 
 	// Setup cross platform logging.
 	struct retro_log_callback t_logcb;
-	if (cb_environment(RETRO_ENVIRONMENT_GET_LOG_INTERFACE, &t_logcb))
+	if (environ_cb(RETRO_ENVIRONMENT_GET_LOG_INTERFACE, &t_logcb))
 	{
-		cb_logprint = t_logcb.log;
-		cb_logprint(RETRO_LOG_INFO, "daphne-libretro: Logging initialized.");
+		log_cb = t_logcb.log;
+		log_cb(RETRO_LOG_INFO, "daphne-libretro: Logging initialized.");
 	}
 
-	if (cb_logprint) cb_logprint(RETRO_LOG_INFO, "daphne-libretro: In retro_init.");
+	if (log_cb)
+      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_init.");
 
     // Set the performance level, not sure what "4" means
     unsigned int n_perflevel = 4;
-    cb_environment(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &n_perflevel);
+    environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &n_perflevel);
 
 	// Get system specific information.
 	struct retro_system_specific_info t_system_specific;
-	cb_environment(RETRO_ENVIRONMENT_GET_SYSTEM_SPECIFIC_INFO, &t_system_specific);
+	environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_SPECIFIC_INFO, &t_system_specific);
 
 	// Clear the rom paths.
 	gf_isThayers			= false;
@@ -248,7 +248,8 @@ void retro_init(void)
 **************************************************************************************************/
 void retro_deinit(void)
 {
-	if (cb_logprint) cb_logprint(RETRO_LOG_INFO, "daphne-libretro: In retro_deinit.");
+	if (log_cb)
+      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_deinit.");
 
 	main_daphne_shutdown();
 }
@@ -417,7 +418,7 @@ void retro_run(void)
 	retro_run_once = true;
 
 	// Poll input.
-	poll_cb();
+	input_poll_cb();
 
 	// Notice numplayers starts at 1.  The playercontrollerid_list points to the player ordinal
 	// to the actual device id (port).  Hardcoded here for later proper updating.
@@ -429,7 +430,7 @@ void retro_run(void)
 		for (int n_button_ndx = 0; n_button_ndx < RETRO_MAX_BUTTONS; n_button_ndx++)
 		{
 			uint16_t n_key;
-			n_key = cb_inputstate(n_port, RETRO_DEVICE_JOYPAD, 0, n_button_ndx);
+			n_key = input_state_cb(n_port, RETRO_DEVICE_JOYPAD, 0, n_button_ndx);
 			// 2017.09.18 - RJS - I may not need this debouncer as this is kept track in SDL_PrivateJoystickButton.		Nope, you need it.
 			if (retro_has_inputstate_changed(n_port, n_button_ndx, n_key))
 			{
@@ -463,7 +464,7 @@ void retro_run(void)
 			#endif
 			}
 		}
-		// float analogX = (float)cb_inputstate(n_port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_X) / 32768.0f;
+		// float analogX = (float)input_state_cb(n_port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_X) / 32768.0f;
 	}
 
 #if 0
@@ -593,29 +594,34 @@ bool retro_load_game_get_path(const struct retro_game_info *in_game)
 	// Make sure we only have a path and no data was loaded.
 	if (in_game->data != NULL)
 	{
-		if (cb_logprint) cb_logprint(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, data buffer was loaded.");
+		if (log_cb)
+         log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, data buffer was loaded.");
 		return false;
 	}
 
 	// Double check that we have a path.  Inputs from non-pathed sources will not be valid.
 	if (in_game->path == NULL)
 	{
-		if (cb_logprint) cb_logprint(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, path was NULL, should never be.");
+		if (log_cb)
+         log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, path was NULL, should never be.");
 		return false;
 	}
 
-	if (cb_logprint) cb_logprint(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, full path from LR. Path: %s", in_game->path);
+	if (log_cb)
+      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, full path from LR. Path: %s", in_game->path);
 
 	// Strip out the file name.
 	// Make sure the path is long enough.
 	int n_pathsize = strlen(in_game->path);
 	if (n_pathsize <= (sizeof(DAPHNE_ROM_EXTENSION) + sizeof(".")))
 	{
-		if (cb_logprint) cb_logprint(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, path filename doesn't seem to have a valid format. Pathsize: %d  Extsize: %d", n_pathsize, (sizeof(DAPHNE_ROM_EXTENSION) + sizeof(".")));
+		if (log_cb)
+         log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, path filename doesn't seem to have a valid format. Pathsize: %d  Extsize: %d", n_pathsize, (sizeof(DAPHNE_ROM_EXTENSION) + sizeof(".")));
 		return false;
 	}
 
-	if (cb_logprint) cb_logprint(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, full path size from LR. Path: %d", n_pathsize);
+	if (log_cb)
+      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, full path size from LR. Path: %d", n_pathsize);
 
 	// Look for the last slash in the path.
 	const char * pstr_filename = strrchr(in_game->path, '/');
@@ -628,32 +634,37 @@ bool retro_load_game_get_path(const struct retro_game_info *in_game)
 		pstr_filename++;
 	}
 
-	if (cb_logprint) cb_logprint(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, filename and extension. Filename: %s", pstr_filename);
+	if (log_cb)
+      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, filename and extension. Filename: %s", pstr_filename);
 
 	// Split the filename from extension.
 	const char * pstr_fileextension = strrchr((char *) pstr_filename, '.');
 	pstr_fileextension++;
 	if (strcmp(DAPHNE_ROM_EXTENSION, pstr_fileextension) != 0)
 	{
-		if (cb_logprint) cb_logprint(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, filename doesn't seem to have a valid format. Ext: %s  Fileext: %s", DAPHNE_ROM_EXTENSION, pstr_fileextension);
+		if (log_cb)
+         log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, filename doesn't seem to have a valid format. Ext: %s  Fileext: %s", DAPHNE_ROM_EXTENSION, pstr_fileextension);
 		return false;
 	}
 
-	if (cb_logprint) cb_logprint(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, extension. Extension: %s", pstr_fileextension);
+	if (log_cb)
+      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, extension. Extension: %s", pstr_fileextension);
 
 	// Load globals with path, filename, and extension.  Assumption is everything is OK.
 	strcpy(gstr_rom_extension, pstr_fileextension);
 
 	if ((pstr_fileextension - pstr_filename - 1) > sizeof(gstr_rom_name))
 	{
-		if (cb_logprint) cb_logprint(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, filename doesn't seem to have a valid format.");
+		if (log_cb)
+         log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, filename doesn't seem to have a valid format.");
 		return false;
 	}
 	memcpy(gstr_rom_name, pstr_filename, pstr_fileextension - pstr_filename - 1);
 
 	if ((pstr_filename - in_game->path - 1) > sizeof(gstr_rom_path))
 	{
-		if (cb_logprint) cb_logprint(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, path doesn't seem to have a valid format.");
+		if (log_cb)
+         log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, path doesn't seem to have a valid format.");
 		return false;
 	}
 	memcpy(gstr_rom_path, in_game->path, pstr_filename - in_game->path - 1); 
@@ -669,7 +680,8 @@ bool retro_load_game_get_path(const struct retro_game_info *in_game)
 	}
 #endif
 
-	if (cb_logprint) cb_logprint(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, final file. Path: %s  Name: %s  Ext: %s", gstr_rom_path, gstr_rom_name, gstr_rom_extension);
+	if (log_cb)
+      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, final file. Path: %s  Name: %s  Ext: %s", gstr_rom_path, gstr_rom_name, gstr_rom_extension);
 
 	// All is good.
 	return true;
@@ -1004,7 +1016,8 @@ bool retro_load_game_fill_framefile(char * pstr_framefile, int str_framefile_sz)
 **************************************************************************************************/
 bool retro_load_game(const struct retro_game_info *in_game)
 {
-	if (cb_logprint) cb_logprint(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game, path is: %s", in_game->path);
+	if (log_cb)
+      log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game, path is: %s", in_game->path);
 
 	// Strip out the path.
 	if (! retro_load_game_get_path(in_game)) return false;
@@ -1303,41 +1316,14 @@ size_t retro_get_memory_size(unsigned in_id)
 **************************************************************************************************/
 void retro_log(int in_debug_info_warn_error, const char *in_fmt, ...)
 {
-	if (!cb_logprint) return;
+	if (!log_cb)
+      return;
 
 	enum retro_log_level e_log_level = (enum retro_log_level) in_debug_info_warn_error;
 	if (e_log_level > RETRO_LOG_ERROR) e_log_level = RETRO_LOG_ERROR;
 
 	va_list va_arguements;
 	va_start(va_arguements, in_fmt);
-	cb_logprint(e_log_level, in_fmt, va_arguements);
+	log_cb(e_log_level, in_fmt, va_arguements);
 	va_end(va_arguements);
 }
-
-//**************************************************************************************************
-//**************************************************************************************************
-/* 2017.10.10 - RJS - JavaVM removal.
-JavaVM *  retro_get_javavm()
-{
-	if (!cb_environment) return NULL;
-
-	struct retro_system_specific_info info;
-	memset(&info, 0, sizeof(struct retro_system_specific_info));
-	cb_environment(RETRO_ENVIRONMENT_GET_SYSTEM_SPECIFIC_INFO, &info);
-
-	return info.javavm;
-}
-
-// **************************************************************************************************
-// **************************************************************************************************
-jobject retro_get_nativeinstance()
-{
-	if (!cb_environment) return NULL;
-
-	struct retro_system_specific_info info;
-	memset(&info, 0, sizeof(struct retro_system_specific_info));
-	cb_environment(RETRO_ENVIRONMENT_GET_SYSTEM_SPECIFIC_INFO, &info);
-
-	return info.clazz;
-}
-*/
