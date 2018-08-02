@@ -219,11 +219,11 @@ void retro_init(void)
 	if (environ_cb(RETRO_ENVIRONMENT_GET_LOG_INTERFACE, &t_logcb))
 	{
 		log_cb = t_logcb.log;
-		log_cb(RETRO_LOG_INFO, "daphne-libretro: Logging initialized.");
+		log_cb(RETRO_LOG_INFO, "daphne-libretro: Logging initialized.\n");
 	}
 
 	if (log_cb)
-      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_init.");
+      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_init.\n");
 
     // Set the performance level, not sure what "4" means
     unsigned int n_perflevel = 4;
@@ -249,7 +249,7 @@ void retro_init(void)
 void retro_deinit(void)
 {
 	if (log_cb)
-      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_deinit.");
+      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_deinit.\n");
 
 	main_daphne_shutdown();
 }
@@ -595,7 +595,7 @@ bool retro_load_game_get_path(const struct retro_game_info *in_game)
 	if (in_game->data != NULL)
 	{
 		if (log_cb)
-         log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, data buffer was loaded.");
+         log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, data buffer was loaded.\n");
 		return false;
 	}
 
@@ -603,12 +603,12 @@ bool retro_load_game_get_path(const struct retro_game_info *in_game)
 	if (in_game->path == NULL)
 	{
 		if (log_cb)
-         log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, path was NULL, should never be.");
+         log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, path was NULL, should never be.\n");
 		return false;
 	}
 
 	if (log_cb)
-      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, full path from LR. Path: %s", in_game->path);
+      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, full path from LR. Path: %s\n", in_game->path);
 
 	// Strip out the file name.
 	// Make sure the path is long enough.
@@ -621,7 +621,7 @@ bool retro_load_game_get_path(const struct retro_game_info *in_game)
 	}
 
 	if (log_cb)
-      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, full path size from LR. Path: %d", n_pathsize);
+      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, full path size from LR. Path: %d\n", n_pathsize);
 
 	// Look for the last slash in the path.
 	const char * pstr_filename = strrchr(in_game->path, '/');
@@ -635,7 +635,7 @@ bool retro_load_game_get_path(const struct retro_game_info *in_game)
 	}
 
 	if (log_cb)
-      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, filename and extension. Filename: %s", pstr_filename);
+      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, filename and extension. Filename: %s\n", pstr_filename);
 
 	// Split the filename from extension.
 	const char * pstr_fileextension = strrchr((char *) pstr_filename, '.');
@@ -643,12 +643,12 @@ bool retro_load_game_get_path(const struct retro_game_info *in_game)
 	if (strcmp(DAPHNE_ROM_EXTENSION, pstr_fileextension) != 0)
 	{
 		if (log_cb)
-         log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, filename doesn't seem to have a valid format. Ext: %s  Fileext: %s", DAPHNE_ROM_EXTENSION, pstr_fileextension);
+         log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, filename doesn't seem to have a valid format. Ext: %s  Fileext: %s\n", DAPHNE_ROM_EXTENSION, pstr_fileextension);
 		return false;
 	}
 
 	if (log_cb)
-      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, extension. Extension: %s", pstr_fileextension);
+      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, extension. Extension: %s\n", pstr_fileextension);
 
 	// Load globals with path, filename, and extension.  Assumption is everything is OK.
 	strcpy(gstr_rom_extension, pstr_fileextension);
@@ -656,7 +656,7 @@ bool retro_load_game_get_path(const struct retro_game_info *in_game)
 	if ((pstr_fileextension - pstr_filename - 1) > sizeof(gstr_rom_name))
 	{
 		if (log_cb)
-         log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, filename doesn't seem to have a valid format.");
+         log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, filename doesn't seem to have a valid format.\n");
 		return false;
 	}
 	memcpy(gstr_rom_name, pstr_filename, pstr_fileextension - pstr_filename - 1);
@@ -664,7 +664,7 @@ bool retro_load_game_get_path(const struct retro_game_info *in_game)
 	if ((pstr_filename - in_game->path - 1) > sizeof(gstr_rom_path))
 	{
 		if (log_cb)
-         log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, path doesn't seem to have a valid format.");
+         log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game_get_path, path doesn't seem to have a valid format.\n");
 		return false;
 	}
 	memcpy(gstr_rom_path, in_game->path, pstr_filename - in_game->path - 1); 
@@ -681,7 +681,7 @@ bool retro_load_game_get_path(const struct retro_game_info *in_game)
 #endif
 
 	if (log_cb)
-      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, final file. Path: %s  Name: %s  Ext: %s", gstr_rom_path, gstr_rom_name, gstr_rom_extension);
+      log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, final file. Path: %s  Name: %s  Ext: %s\n", gstr_rom_path, gstr_rom_name, gstr_rom_extension);
 
 	// All is good.
 	return true;
@@ -1017,7 +1017,7 @@ bool retro_load_game_fill_framefile(char * pstr_framefile, int str_framefile_sz)
 bool retro_load_game(const struct retro_game_info *in_game)
 {
 	if (log_cb)
-      log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game, path is: %s", in_game->path);
+      log_cb(RETRO_LOG_ERROR, "daphne-libretro: In retro_load_game, path is: %s\n", in_game->path);
 
 	// Strip out the path.
 	if (! retro_load_game_get_path(in_game)) return false;
