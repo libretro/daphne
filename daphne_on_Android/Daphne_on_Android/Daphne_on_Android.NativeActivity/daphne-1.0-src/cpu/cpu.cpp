@@ -27,11 +27,6 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
-#ifdef _XBOX
-#include "stdafx.h"
-#include "xbox_grafx.h"
-#endif
-
 #ifdef DEBUG
 #include <assert.h>
 #endif
@@ -58,15 +53,6 @@
 #include "../ldp-in/vp931.h"
 
 #include "../../main_android.h"
-
-#ifdef _XBOX
-#include "gamepad.h"
-#include "video\video.h"
-#include "xstuff.h"
-#include "daphne_xbox.h"
-#include "ldp-out\ldp-vldp.h"
-
-#endif
 
 #include <stack>	// for cpu pausing operations
 
@@ -690,11 +676,7 @@ void cpu_execute_loop()
 			// if not enough time has elapsed, slow down
 			while (g_expected_elapsed_ms > actual_elapsed_ms)
 			{
-#ifndef _XBOX
 				SDL_Delay(1);
-#else
-				XBOX_Delay(1);
-#endif
 				actual_elapsed_ms = elapsed_ms_time(g_cpu_timer);
 			}
 		}
@@ -1060,11 +1042,7 @@ void cpu_execute_one_cycle()
 			// if not enough time has elapsed, slow down
 			while (g_expected_elapsed_ms > actual_elapsed_ms)
 			{
-#ifndef _XBOX
 				SDL_Delay(1);
-#else
-				XBOX_Delay(1);
-#endif
 				actual_elapsed_ms = elapsed_ms_time(g_cpu_timer);
 			}
 		}

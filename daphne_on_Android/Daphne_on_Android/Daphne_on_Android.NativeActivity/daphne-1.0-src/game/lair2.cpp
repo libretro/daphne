@@ -55,11 +55,6 @@ NORMAL_MODE = 0x20
 #define strcasecmp stricmp
 #endif
 
-#ifdef _XBOX
-#include "../xbox/xbox_grafx.h"
-#include "../cpu/mamewrap.h"
-#endif
-
 #include <stdio.h> 
 #include "lair2.h"
 #include "../ldp-out/ldp.h"
@@ -73,17 +68,7 @@ NORMAL_MODE = 0x20
 #include "../daphne.h"
 #include "../io/sram.h"
 #include "../timer/timer.h"	// for debugging
-#ifndef _XBOX
 #include "../cpu/x86/i86intf.h"
-#else
-#include "../cpu/i86intf.h"
-#endif
-
-#ifdef _XBOX
-#include "../xbox/daphne_xbox.h"
-#include "../xbox/xfile.h"
-#include "../xbox/gamepad.h"
-#endif
 
 #ifdef DEBUG
 #include "../io/numstr.h"
@@ -365,10 +350,6 @@ lair2::lair2() :
 	// MPO:	we need to default to some version so it doesn't crash ...
 	set_version(6);	// v3.19 is the newest DL2 rom so it makes sense to have that as default
 
-#ifdef _XBOX
-	set_version(GameOpts[GameInfo.GameIndex].RomVersion);
-#endif
-
 	// set mem (yes, we load in at 0xF0000 because the program entry point is at 0xFFFF0)
 	g_lair2_211_roms[0].buf = g_lair2_300_roms[0].buf  = 
 	g_lair2_314_roms[0].buf = g_lair2_315_roms[0].buf = 
@@ -400,11 +381,6 @@ ace91::ace91()
 	m_rom_list = g_ace91_roms;
 	g_dl2_euro = 0;
 	g_Dv = g_ace91vars;
-
-#ifdef _XBOX
-	set_version(GameOpts[GameInfo.GameIndex].RomVersion);
-#endif
-
 }
 
 void ace91::set_version(int version)
@@ -536,11 +512,7 @@ bool lair2::handle_cmdline_arg(const char *arg)
 
 void lair2::patch_roms()
 {		
-	#ifndef _XBOX
-	if (strcasecmp(m_shortgamename, "lair2") == 0)
-	#else
 	if (strcmp(m_shortgamename, "lair2") == 0)
-	#endif
 	{
 		switch (g_dl2_ver)
 		{
