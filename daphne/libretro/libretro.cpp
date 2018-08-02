@@ -625,6 +625,7 @@ bool retro_load_game_get_path(const struct retro_game_info *in_game)
 
 	// Look for the last slash in the path.
 	const char * pstr_filename = strrchr(in_game->path, '/');
+		if (pstr_filename == NULL) pstr_filename = strrchr(in_game->path, '\\'); //windows
 	if (pstr_filename == NULL)
 	{
 		// We could have the case of just a filename.
