@@ -1,5 +1,5 @@
 DEPS_DIR    := $(CORE_DIR)/deps
-DAPHNE_MAIN_DIR := $(CORE_DIR)/daphne_on_Android/Daphne_on_Android/Daphne_on_Android.NativeActivity
+DAPHNE_MAIN_DIR := $(CORE_DIR)/daphne
 DAPHNE_DIR  := $(DAPHNE_MAIN_DIR)/daphne-1.0-src
 
 INCFLAGS    := -I$(CORE_DIR) \
