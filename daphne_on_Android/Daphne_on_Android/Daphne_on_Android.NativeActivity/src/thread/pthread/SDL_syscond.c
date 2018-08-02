@@ -18,6 +18,13 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+
+#if __STDC_VERSION__ >= 199901L
+#define _XOPEN_SOURCE 600
+#else
+#define _XOPEN_SOURCE 500
+#endif /* __STDC_VERSION__ */
+
 #include "../../SDL_internal.h"
 
 #include <sys/time.h>
@@ -33,6 +40,7 @@ struct SDL_cond
 {
     pthread_cond_t cond;
 };
+
 
 /* Create a condition variable */
 SDL_cond *

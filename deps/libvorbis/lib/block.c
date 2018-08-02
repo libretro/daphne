@@ -17,6 +17,11 @@
  more amusing by Vorbis' current two allowed block sizes.
 
  ********************************************************************/
+#if defined __GNUC__
+  #define hv_alloca(_n)  __builtin_alloca(_n)
+#else
+  #define hv_alloca(_n)  alloca(_n)
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,7 +29,7 @@
 #include <ogg/ogg.h>
 #include "vorbis/codec.h"
 #include "codec_internal.h"
-
+#include <alloca.h>
 #include "window.h"
 #include "mdct.h"
 #include "lpc.h"

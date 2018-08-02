@@ -40,7 +40,7 @@ ifeq ($(platform), unix)
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
    GL_LIB := -lGL
-   LIBS += -lpthread
+   LIBS += -lpthread  -lz -ldl -lSDLmain -lSDL  
 else ifneq (,$(findstring osx,$(platform)))
    TARGET := $(TARGET_NAME)_libretro.dylib
    fpic := -fPIC

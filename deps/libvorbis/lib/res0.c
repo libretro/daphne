@@ -30,6 +30,7 @@
 #include "codebook.h"
 #include "misc.h"
 #include "os.h"
+#include <alloca.h>
 
 //#define TRAIN_RES 1
 //#define TRAIN_RESAUX 1

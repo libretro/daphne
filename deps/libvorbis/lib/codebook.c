@@ -24,6 +24,7 @@
 #include "scales.h"
 #include "misc.h"
 #include "os.h"
+#include <alloca.h>
 
 /* packs the given codebook into the bitstream **************************/
 
