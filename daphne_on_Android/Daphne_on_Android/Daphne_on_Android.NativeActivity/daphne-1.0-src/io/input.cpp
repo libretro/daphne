@@ -30,7 +30,6 @@
 #include "conout.h"
 #include "homedir.h"
 #include "../video/video.h"
-#include "../video/SDL_Console.h"
 #include "../daphne.h"
 #include "../timer/timer.h"
 #include "../game/game.h"
@@ -57,7 +56,6 @@ const int JOY_AXIS_MID = (int) (32768 * (0.75));		// how far they have to move t
 bool g_use_joystick = true;	// use a joystick by default
 // RJS ADD - invert controls
 bool g_invert_joystick = false;
-bool g_consoledown = false;			// whether the console is down or not
 bool g_alt_pressed = false;	// whether the ALT key is presssed (for ALT-Enter combo)
 unsigned int idle_timer; // added by JFA for -idleexit
 
@@ -866,32 +864,9 @@ void SDL_check_input()
 
 	while ((SDL_PollEvent (&event)) && (!get_quitflag()))
 	{
-		// if they press the tilda key to bring down the console
-		// this is somewhat of a hacked if statement but I can't see
-		// a better way based on the SDL_Console API ...
-		if ((event.type == SDL_KEYDOWN) && (event.key.keysym.sym == SDLK_BACKQUOTE))
-		{
-			// we must not bring down the console if blitting is not allowed
-			if (g_ldp->is_blitting_allowed())
-			{
-#ifdef CPU_DEBUG
-				toggle_console();
-#endif
-			}
-		}
-		// if we've got the console down, process events
-		else if (g_consoledown)
-		{
-			ConsoleEvents(&event);
-		}
-		// else handle events normally
-		else
-		{
 			process_event(&event);
-		}
 	}
 #endif
-	check_console_refresh();
 
 	// added by JFA for -idleexit
 	if (get_idleexit() > 0 && elapsed_ms_time(idle_timer) > get_idleexit()) set_quitflag();
@@ -923,28 +898,6 @@ void SDL_check_input()
 	}
 	// else the coin queue is empty, so we needn't do anything ...
 }
-
-#ifdef CPU_DEBUG
-void toggle_console()
-{
-	if (get_console_initialized())
-	{
-		// if console is down, get rid of it
-		if (g_consoledown)
-		{
-			g_consoledown = false;
-			SDL_EnableUNICODE(0);
-			display_repaint();
-		}
-		// if console is not down, display it
-		else
-		{
-			g_consoledown = true;
-			SDL_EnableUNICODE(1);
-		}
-	}
-}
-#endif
 
 // RJS NOTE - event processing here
 // processes incoming input
@@ -1246,36 +1199,6 @@ void process_joystick_hat_motion(SDL_Event *event)
 	prev_hat_position = event->jhat.value;
 }
 
-// functions to help us avoid 'extern' statements
-bool get_consoledown()
-{
-	return (g_consoledown);
-}
-
-void set_consoledown (bool value)
-{
-	g_consoledown = value;
-}
-
-// draws console if it's down and if there's been enough of a delay
-void check_console_refresh()
-{
-
-	static unsigned int console_refresh = 0;
-	const unsigned int refresh_every = 125;	// refreshes console every (this many) ms
-
-	if (g_consoledown)
-	{
-		if (elapsed_ms_time(console_refresh) > refresh_every)
-		{
-			DrawConsole();
-			vid_blit(get_screen_blitter(), 0, 0);
-			vid_flip();
-			console_refresh = refresh_ms_time();
-		}
-	}
-}
-
 bool input_pause(bool fPause)
 {
 	bool fCurrentState = g_game->get_game_paused();
@@ -1346,13 +1269,6 @@ void input_enable(Uint8 move)
 		}
 		break;
 	case SWITCH_CONSOLE:
-		// we must not bring down the console if blitting is not allowed
-		if (g_ldp->is_blitting_allowed())
-		{
-#ifdef CPU_DEBUG
-			toggle_console();
-#endif
-		}
 		break;
 	}
 }

@@ -78,10 +78,6 @@ void FilterMouseEvents(bool bFilteredOut);
 
 void SDL_check_input();
 
-#ifdef CPU_DEBUG
-void toggle_console();
-#endif
-
 void process_event(SDL_Event *event);
 // RJS CHANGE START
 //void process_keydown(SDLKey key);
@@ -93,9 +89,6 @@ bool input_isinverted();
 // RJS CHANGE END
 void process_joystick_motion(SDL_Event *event);
 void process_joystick_hat_motion(SDL_Event *event);
-bool get_consoledown();
-void set_consoledown(bool);
-void check_console_refresh();
 bool input_pause(bool fPaused);
 void input_enable(Uint8);
 void input_disable(Uint8);

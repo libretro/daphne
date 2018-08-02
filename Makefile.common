@@ -197,8 +197,6 @@ SOURCES_CXX += $(DAPHNE_DIR)/video/led.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/video/palette.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/video/rgb2yuv.cpp
 
-SOURCES_CXX += $(DAPHNE_DIR)/video/SDL_Console.cpp
-SOURCES_CXX += $(DAPHNE_DIR)/video/SDL_ConsoleCommands.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/video/SDL_DrawText.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/video/tms9128nl.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/video/video.cpp

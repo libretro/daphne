@@ -39,7 +39,6 @@
 #include "../io/error.h"
 #include "../io/mpo_fileio.h"
 #include "../io/mpo_mem.h"
-#include "SDL_Console.h"
 #include "../game/game.h"
 #include "../ldp-out/ldp.h"
 #include "../ldp-out/ldp-vldp-gl.h"
@@ -76,7 +75,6 @@ SDL_Surface *g_other_bmps[B_EMPTY] = { 0 };
 SDL_Surface *g_screen = NULL;	// our primary display
 SDL_Surface *g_screen_blitter = NULL;	// the surface we blit to (we don't blit directly to g_screen because opengl doesn't like that)
 
-bool g_console_initialized = false;	// 1 once console is initialized
 bool g_fullscreen = false;	// whether we should initialize video in fullscreen mode or not
 int sboverlay_characterset = 1;
 
@@ -198,22 +196,8 @@ bool init_display()
 
 		if (g_screen && g_screen_blitter)
 		{
-			// RJS START - removed, lazy
-			// sprintf(s, "Set %dx%d at %d bpp with flags: %x", g_screen->w, g_screen->h, g_screen->format->BitsPerPixel, g_screen->flags);
-			// printline(s);
-			// RJS END
-
-			// initialize SDL console in the background
-			if (ConsoleInit("pics/ConsoleFont.bmp", g_screen_blitter, 100)==0)
-			{
-				AddCommand(g_cpu_break, "break");
-				g_console_initialized = true;
-				result = true;
-			}
-			else
-			{
-				printerror("Error initializing SDL console =(");			
-			}
+         // NOTE: SDL Console was initialized here.
+         result                = true;
 
 			// sometimes the screen initializes to white, so this attempts to prevent that
 			vid_blank();
@@ -237,12 +221,6 @@ bool init_display()
 void shutdown_display()
 {
 	printline("Shutting down video display...");
-
-	if (g_console_initialized)
-	{
-		ConsoleShutdown();
-		g_console_initialized = false;
-	}
 }
 
 void vid_flip()
@@ -677,11 +655,6 @@ SDL_Surface *get_screen()
 SDL_Surface *get_screen_blitter()
 {
 	return g_screen_blitter;
-}
-
-int get_console_initialized()
-{
-	return g_console_initialized;
 }
 
 bool get_fullscreen()

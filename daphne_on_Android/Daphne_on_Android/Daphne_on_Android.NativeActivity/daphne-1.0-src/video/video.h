@@ -80,7 +80,6 @@ void free_one_bmp(SDL_Surface *);
 SDL_Surface *get_screen();
 SDL_Surface *get_screen_blitter();
 
-int get_console_initialized();
 bool get_fullscreen();
 void set_fullscreen(bool value);
 void set_rotate_degrees(float fDegrees);
