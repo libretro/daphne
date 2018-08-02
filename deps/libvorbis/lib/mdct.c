@@ -45,7 +45,9 @@
 #include "mdct.h"
 #include "os.h"
 #include "misc.h"
+#ifndef _WIN32
 #include <alloca.h>
+#endif
 
 /* build lookups for trig functions; also pre-figure scaling and
    some window function algebra. */

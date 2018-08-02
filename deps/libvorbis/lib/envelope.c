@@ -22,7 +22,9 @@
 #include <ogg/ogg.h>
 #include "vorbis/codec.h"
 #include "codec_internal.h"
+#ifndef _WIN32
 #include <alloca.h>
+#endif
 #include "os.h"
 #include "scales.h"
 #include "envelope.h"

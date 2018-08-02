@@ -24,7 +24,9 @@
 #include "vorbis/codec.h"
 #include "codebook.h"
 #include "scales.h"
+#ifndef _WIN32
 #include <alloca.h>
+#endif
 
 /**** pack/unpack helpers ******************************************/
 

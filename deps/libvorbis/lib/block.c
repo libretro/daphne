@@ -29,7 +29,9 @@
 #include <ogg/ogg.h>
 #include "vorbis/codec.h"
 #include "codec_internal.h"
+#ifndef _WIN32
 #include <alloca.h>
+#endif
 #include "window.h"
 #include "mdct.h"
 #include "lpc.h"

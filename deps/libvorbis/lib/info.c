@@ -30,7 +30,9 @@
 #include "psy.h"
 #include "misc.h"
 #include "os.h"
+#ifndef _WIN32
 #include <alloca.h>
+#endif
 
 #define GENERAL_VENDOR_STRING "Xiph.Org libVorbis 1.3.5"
 #define ENCODE_VENDOR_STRING "Xiph.Org libVorbis I 20150105 (⛄⛄⛄⛄)"

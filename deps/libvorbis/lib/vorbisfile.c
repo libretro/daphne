@@ -29,7 +29,9 @@
 
 #include "os.h"
 #include "misc.h"
+#ifndef _WIN32
 #include <alloca.h>
+#endif
 
 /* A 'chained bitstream' is a Vorbis bitstream that contains more than
    one logical bitstream arranged end to end (the only form of Ogg

@@ -20,7 +20,9 @@
 #include <string.h>
 #include "vorbis/codec.h"
 #include "codec_internal.h"
+#ifndef _WIN32
 #include <alloca.h>
+#endif
 #include "masking.h"
 #include "psy.h"
 #include "os.h"
