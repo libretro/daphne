@@ -82,7 +82,6 @@ Uint16 get_video_width();
 void set_video_width(Uint16);
 Uint16 get_video_height();
 void set_video_height(Uint16);
-void yuv2rgb(SDL_Color *result, int y, int u, int v);
 void draw_string(const char*, int, int, SDL_Surface*);
 
 // used to enable/disable the HWACCEL environment variable
