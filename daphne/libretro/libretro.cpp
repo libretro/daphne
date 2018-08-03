@@ -374,17 +374,6 @@ extern bool input_pause(bool fPaused);
 extern void set_vb_rendering_done(int vb_ndx);
 extern int retro_run_frames_delta;
 
-// 2017.11.06 - RJS - This should be the same amount as the VIDEO_BUFFER_AMOUNT define.  Hard coding in for ease.
-// 2018.04.02 - RJS - Ignore above comment.  Left for legacy.
-/*
-struct VIDEO_BUFFER
-{
-	int					vb_ndx;
-	SDL_SW_YUVTexture *	sw_overlay;
-};
-struct VIDEO_BUFFER tVB[4] = { { -1, NULL },{ -1, NULL },{ -1, NULL },{ -1, NULL } };
-*/
-
 int retro_run_frames	= 0;
 
 bool retro_run_once = false;
