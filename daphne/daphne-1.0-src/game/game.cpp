@@ -1088,14 +1088,6 @@ unsigned int game::get_disc_fpks()
 	return m_uDiscFPKS;
 }
 
-// UPDATE : it's too expensive to use floating point on GP2X, so we are phasing this function out in
-//  favor of integer operations.
-// returns how many ms per frame the disc runs at
-//double game::get_disc_ms_per_frame()
-//{
-//	return m_disc_ms_per_frame;
-//}
-
 Uint8 game::get_game_type()
 {
 	return m_game_type;

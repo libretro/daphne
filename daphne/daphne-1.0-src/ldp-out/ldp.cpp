@@ -803,48 +803,6 @@ void ldp::pre_think()
 			// compute the next boundary
 			m_uMsFrameBoundary = (unsigned int) ((((Uint64) (m_uCurrentOffsetFrame+1)) * 1000000) / uDiscFPKS);
 		}
-
-		// else the current frame has not changed
-
-#ifdef DEBUG
-#ifndef GP2X	// GP2X is slow enough that we don't want to do this safety check by default
-		// SAFETY CHECK
-		// This ensures that the number that is calculated is not far off what it should be.
-		// (this test is only meaningful if we are emulating a cpu, because otherwise we may deliberately
-		//  be calling this function slower than every 1 ms, such as ffr() or vldp's internal tests )
-		if (get_cpu_hz(0))
-		{
-			unsigned int uElapsedMS = elapsed_ms_time(m_play_time); // compute milliseconds
-			unsigned int time_result = m_last_seeked_frame + m_iSkipOffsetSincePlay +
-				(unsigned int) ((((Uint64) uElapsedMS) * g_game->get_disc_fpks()) / 1000000);
-			Uint16 diff = 0;
-
-			// this isn't necessarily the same as m_uCurrentFrame due to potential skips that can occur
-			// (this is updated immediately, m_uCurrentFrame is updated on a time boundary)
-			unsigned int uCurrentFrame = m_last_seeked_frame + m_iSkipOffsetSincePlay + m_uCurrentOffsetFrame;
-
-			if (uCurrentFrame > time_result) diff = uCurrentFrame - time_result;
-			else diff = time_result - uCurrentFrame;
-
-			// if the difference is noticeable, then alert the developer
-			if (diff > 5)
-			{
-				static unsigned int last_warning = 0;
-
-				if (elapsed_ms_time(last_warning) > 1000)
-				{
-					string s = "WARNING : cycle frame is ";
-					s += numstr::ToStr(uCurrentFrame) + " but time frame is ";
-					s += numstr::ToStr(time_result) + " which has a diff of ";
-					s += numstr::ToStr(diff);
-					printline(s.c_str());
-					last_warning = refresh_ms_time();
-				}
-			}
-		}
-#endif // not GP2X
-#endif // DEBUG
-
 	}
 	// otherwise the disc is idle, so we need not change the current frame
 
