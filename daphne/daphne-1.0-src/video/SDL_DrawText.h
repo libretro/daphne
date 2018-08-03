@@ -20,8 +20,8 @@ extern "C" {
 
 void SDLDrawText(const char *string, SDL_Surface *surface, int FontType, int x, int y );
 
-// RJS CHANGE - need final format for conversion from bmp to final surface
-// int LoadFont(const char *BitmapName, int flags );
+int LoadFontFromMemory(const char *src, int size,
+      int flags, SDL_PixelFormat * pnSurfaceFormat);
 int LoadFont(const char *BitmapName, int flags, SDL_PixelFormat * pnSurfaceFormat);
 int FontHeight( int FontNumber );
 int FontWidth( int FontNumber );

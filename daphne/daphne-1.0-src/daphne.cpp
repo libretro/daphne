@@ -175,10 +175,8 @@ void set_cur_dir(const char *exe_loc)
 }
 
 /////////////////////// MAIN /////////////////////
+#include "../../assets/pics/ConsoleFont.h"
 
-// the main function for both Windows and Linux <grin>
-// RJS CHANGE
-// int main(int argc, char **argv)
 int main_daphne(int argc, char **argv)
 {
 	int result_code = 1;	// assume an error unless we find otherwise
@@ -216,7 +214,7 @@ int main_daphne(int argc, char **argv)
 				// RJS ADD START - loading the only font we have, not sure where it is ever loaded in the first place, maybe latent code,
 				// this font must be loaded first since there is an enum making the "small" font number 0
 				//			if (ConsoleInit("pics/ConsoleFont.bmp", g_screen_blitter, 100)==0)
-				LoadFont("pics/ConsoleFont.bmp", TRANS_FONT, get_screen_blitter()->format);
+				LoadFontFromMemory((const char*)consolefont, consolefont_size, TRANS_FONT, get_screen_blitter()->format);
 
 				if (sound_init())
 				{

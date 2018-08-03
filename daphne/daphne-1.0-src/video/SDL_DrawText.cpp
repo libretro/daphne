@@ -19,7 +19,57 @@ static int		TotalFonts = 0;
 /* Linked list of fonts */
 static BitFont *BitFonts = NULL;
 
+int LoadFontFromMemory(const char *src, int size,
+      int flags, SDL_PixelFormat * pnSurfaceFormat)
+{
+	int		FontNumber = 0;
+	BitFont	**CurrentFont = &BitFonts;
+	SDL_Surface	*Temp;
+   SDL_RWops *rw = SDL_RWFromConstMem(src, size);
+	
+	while(*CurrentFont)
+	{
+		CurrentFont = &((*CurrentFont)->NextFont);
+		FontNumber++;
+	}
+	
+	/* load the font bitmap */
+	if(NULL ==  (Temp = SDL_LoadBMP_RW(rw, 1)))
+	{
+		printf("Error Cannot load binary file\n");
+		return -1;
+	}
 
+	/* Add a font to the list */
+	*CurrentFont = (BitFont*)malloc(sizeof(BitFont));
+
+	// RJS CHANGE START
+	// (*CurrentFont)->FontSurface = SDL_DisplayFormat(Temp);
+	(*CurrentFont)->FontSurface = SDL_ConvertSurface(Temp, pnSurfaceFormat, 0);
+	// RJS CHANGE END
+	SDL_FreeSurface(Temp);
+
+	(*CurrentFont)->CharWidth = (*CurrentFont)->FontSurface->w/256;
+	(*CurrentFont)->CharHeight = (*CurrentFont)->FontSurface->h;
+	(*CurrentFont)->FontNumber = FontNumber;
+	(*CurrentFont)->NextFont = NULL;
+
+	TotalFonts++;
+
+	/* Set font as transparent if the flag is set */
+	if(flags & TRANS_FONT)
+	{
+		/* This line was left in in case of problems getting the pixel format */
+		/* SDL_SetColorKey((*CurrentFont)->FontSurface, SDL_SRCCOLORKEY|SDL_RLEACCEL, 0xFF00FF); */
+		// RJS CHANGE
+		// SDL_SetColorKey((*CurrentFont)->FontSurface, SDL_SRCCOLORKEY | SDL_RLEACCEL,
+		// 	(*CurrentFont)->FontSurface->format->Rmask | (*CurrentFont)->FontSurface->format->Bmask);
+		SDL_SetColorKey((*CurrentFont)->FontSurface, SDL_TRUE | SDL_RLEACCEL,
+			(*CurrentFont)->FontSurface->format->Rmask | (*CurrentFont)->FontSurface->format->Bmask);
+	}
+	
+	return FontNumber;
+}
 
 /* Loads the font into a new struct 
  * returns -1 as an error else it returns the number
