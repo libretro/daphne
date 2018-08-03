@@ -56,7 +56,6 @@ const int JOY_AXIS_MID = (int) (32768 * (0.75));		// how far they have to move t
 bool g_use_joystick = true;	// use a joystick by default
 // RJS ADD - invert controls
 bool g_invert_joystick = false;
-bool g_alt_pressed = false;	// whether the ALT key is presssed (for ALT-Enter combo)
 unsigned int idle_timer; // added by JFA for -idleexit
 
 const double STICKY_COIN_SECONDS = 0.125;	// how many seconds a coin acceptor is forced to be "depressed" and how many seconds it is forced to be "released"
@@ -1050,13 +1049,6 @@ void process_keydown(SDL_Keycode key)
 			input_enable(move);
 		}
 	}
-	
-	// check for ALT-ENTER here
-	if ((key == SDLK_LALT) || (key == SDLK_RALT))
-	{
-		g_alt_pressed = true;
-	}
-	// end ALT-ENTER check
 }
 
 // if a key is released, we go here
@@ -1072,12 +1064,6 @@ void process_keyup(SDL_Keycode key)
 		{
 			input_disable(move);
 		}
-	}
-
-	// if they are releasing an ALT key	
-	if ((key == SDLK_LALT) || (key == SDLK_RALT))
-	{
-		g_alt_pressed = false;
 	}
 }
 
@@ -1212,6 +1198,8 @@ bool input_pause(bool fPause)
 // search button on their remote.
 static int fCoinStart_Started_References = 0;
 
+static inline void add_coin_to_queue(bool enabled, Uint8 val);
+
 // if user has pressed a key/moved the joystick/pressed a button
 void input_enable(Uint8 move)
 {
@@ -1299,7 +1287,7 @@ void input_disable(Uint8 move)
 	// else do nothing
 }
 
-inline void add_coin_to_queue(bool enabled, Uint8 val)
+static inline void add_coin_to_queue(bool enabled, Uint8 val)
 {
 	Uint64 total_cycles = get_total_cycles_executed(0);
 	struct coin_input coin;
