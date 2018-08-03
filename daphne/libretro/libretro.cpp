@@ -229,10 +229,6 @@ void retro_init(void)
     unsigned int n_perflevel = 4;
     environ_cb(RETRO_ENVIRONMENT_SET_PERFORMANCE_LEVEL, &n_perflevel);
 
-	// Get system specific information.
-	struct retro_system_specific_info t_system_specific;
-	environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_SPECIFIC_INFO, &t_system_specific);
-
 	// Clear the rom paths.
 	gf_isThayers			= false;
 	gstr_rom_extension[0]	= '\0';
