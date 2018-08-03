@@ -196,11 +196,11 @@ SDL_FillRect2(Uint8 * pixels, int pitch, Uint32 color, int w, int h)
 static void
 SDL_FillRect3(Uint8 * pixels, int pitch, Uint32 color, int w, int h)
 {
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN
+#ifndef MSB_FIRST
     Uint8 b1 = (Uint8) (color & 0xFF);
     Uint8 b2 = (Uint8) ((color >> 8) & 0xFF);
     Uint8 b3 = (Uint8) ((color >> 16) & 0xFF);
-#elif SDL_BYTEORDER == SDL_BIG_ENDIAN
+#else
     Uint8 b1 = (Uint8) ((color >> 16) & 0xFF);
     Uint8 b2 = (Uint8) ((color >> 8) & 0xFF);
     Uint8 b3 = (Uint8) (color & 0xFF);

@@ -262,7 +262,7 @@ enum
                                SDL_PACKEDLAYOUT_2101010, 32, 4),
 
     /* Aliases for RGBA byte arrays of color data, for the current platform */
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+#ifdef MSB_FIRST
     SDL_PIXELFORMAT_RGBA32 = SDL_PIXELFORMAT_RGBA8888,
     SDL_PIXELFORMAT_ARGB32 = SDL_PIXELFORMAT_ARGB8888,
     SDL_PIXELFORMAT_BGRA32 = SDL_PIXELFORMAT_BGRA8888,

@@ -20,27 +20,23 @@
 
 // LOAD_LIL_SINT16: loads little-endian 16-bit value
 //  Usage: Sint16 val = LOAD_LIL_SINT16(void *ptr);
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN
-// little endian version
+#ifndef MSB_FIRST
 #define LOAD_LIL_SINT16(ptr) (Sint16) *((Sint16 *) (ptr))
 #else
-// big endian version
 #define LOAD_LIL_SINT16(ptr) (Sint16) (*((Uint8 *) (ptr))	| ((*((Uint8 *) (ptr)+1)) << 8))
 #endif
 
 // LOAD_LIL_UINT32: loads little-endian 32-bit value
 //  Usage: Uint32 val = LOAD_LIL_UINT32(void *ptr);
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN
-// little endian version
+#ifndef MSB_FIRST
 #define LOAD_LIL_UINT32(ptr) (Uint32) *((Uint32 *) (ptr))
 #else
-// big endian version
 #define LOAD_LIL_UINT32(ptr) (Uint32) (*((Uint8 *) (ptr)) | ((*((Uint8 *) (ptr)+1)) << 8) | ((*((Uint8 *) (ptr)+2)) << 16) | ((*((Uint8 *) (ptr)+3)) << 24))
 #endif
 
 // STORE_LIL_UINT32: stores 32-bit unsigned 'val' to 'ptr' in little-endian format
 //  Usage: STORE_LIL_UINT32(void *ptr, Uint32 val);
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN
+#ifndef MSB_FIRST
 #define STORE_LIL_UINT32(ptr,val) *((Uint32 *) (ptr)) = (val)
 #else
 #define STORE_LIL_UINT32(ptr,val) *((Uint8 *) (ptr)) = (val) & 0xFF; \

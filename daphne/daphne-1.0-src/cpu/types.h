@@ -29,7 +29,7 @@
 #include <SDL.h>	// for endian detection
 
 // MPO : added this SDL endian stuff so no source code changes are necessary
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN
+#ifndef MSB_FIRST
 /* Define this if running on little-endian (x86) systems */
 #define HOST_LITTLE_ENDIAN
 #endif

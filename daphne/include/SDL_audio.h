@@ -118,7 +118,7 @@ typedef Uint16 SDL_AudioFormat;
  *  \name Native audio byte ordering
  */
 /* @{ */
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN
+#ifndef MSB_FIRST
 #define AUDIO_U16SYS    AUDIO_U16LSB
 #define AUDIO_S16SYS    AUDIO_S16LSB
 #define AUDIO_S32SYS    AUDIO_S32LSB

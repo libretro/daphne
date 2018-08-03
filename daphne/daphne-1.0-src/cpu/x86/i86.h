@@ -52,7 +52,7 @@ typedef enum {
 #define TRUE 1
 #endif
 
-#ifdef LSB_FIRST
+#ifndef MSB_FIRST
 typedef enum { AL,AH,CL,CH,DL,DH,BL,BH,SPL,SPH,BPL,BPH,SIL,SIH,DIL,DIH } BREGS;
 #else
 typedef enum { AH,AL,CH,CL,DH,DL,BH,BL,SPH,SPL,BPH,BPL,SIH,SIL,DIH,DIL } BREGS;

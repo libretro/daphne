@@ -682,9 +682,9 @@ int lair2_irq_callback(int irqline)
 // raise IRQ line
 void lair2::do_irq(unsigned int which_irq)
 {
+#ifndef MSB_FIRST
 	if (m_bSerialHack)
 	{
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN
 		while (ldp1000_result_ready())
 		{
 			// NOTE : only works on little endian!
@@ -698,8 +698,8 @@ void lair2::do_irq(unsigned int which_irq)
 			*p_endbuf2 = (*p_endbuf2 + 1) % 0x100;
 			++(*p_RxCnt2);
 		}
-#endif
 	}
+#endif
 
 	// cpu timer IRQ
 	if (which_irq == 0)

@@ -150,7 +150,7 @@ SDL_PixelFormatEnumToMasks(Uint32 format, int *bpp, Uint32 * Rmask,
     *Rmask = *Gmask = *Bmask = *Amask = 0;
 
     if (format == SDL_PIXELFORMAT_RGB24) {
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+#ifdef MSB_FIRST
         *Rmask = 0x00FF0000;
         *Gmask = 0x0000FF00;
         *Bmask = 0x000000FF;
@@ -163,7 +163,7 @@ SDL_PixelFormatEnumToMasks(Uint32 format, int *bpp, Uint32 * Rmask,
     }
 
     if (format == SDL_PIXELFORMAT_BGR24) {
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+#ifdef MSB_FIRST
         *Rmask = 0x000000FF;
         *Gmask = 0x0000FF00;
         *Bmask = 0x00FF0000;
@@ -407,13 +407,13 @@ SDL_MasksToPixelFormatEnum(int bpp, Uint32 Rmask, Uint32 Gmask, Uint32 Bmask,
         switch (Rmask) {
         case 0:
         case 0x00FF0000:
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+#ifdef MSB_FIRST
             return SDL_PIXELFORMAT_RGB24;
 #else
             return SDL_PIXELFORMAT_BGR24;
 #endif
         case 0x000000FF:
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+#ifdef MSB_FIRST
             return SDL_PIXELFORMAT_BGR24;
 #else
             return SDL_PIXELFORMAT_RGB24;

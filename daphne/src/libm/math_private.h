@@ -62,7 +62,7 @@ typedef unsigned int u_int32_t;
  * For VFP, floats words follow the memory system mode.
  */
 
-#if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
+#ifdef MSB_FIRST
 
 typedef union
 {

@@ -12,10 +12,6 @@
 #include <stddef.h>
 #include <SDL.h>		// need SDL to get data types (Uint8, etc)
 
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN
-#define LSB_FIRST	/* little endian */
-#endif
-
 extern int mame_debug;	// declare mame_debug somewhere
 
 ///////////////////////////////////////////
@@ -61,7 +57,7 @@ typedef Sint32		INT32;
  * which expects 'int' really.
  ******************************************************************************/
 typedef union {
-#ifdef LSB_FIRST
+#ifndef MSB_FIRST
 	struct { UINT8 l,h,h2,h3; } b;
 	struct { UINT16 l,h; } w;
 #else

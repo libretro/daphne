@@ -58,7 +58,7 @@ static void CorrectAlphaChannel(SDL_Surface *surface)
 {
     /* Check to see if there is any alpha channel data */
     SDL_bool hasAlpha = SDL_FALSE;
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+#ifdef MSB_FIRST
     int alphaChannelOffset = 0;
 #else
     int alphaChannelOffset = 3;
@@ -263,7 +263,7 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
             Bmask = 0x001F;
             break;
         case 24:
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+#ifdef MSB_FIRST
             Rmask = 0x000000FF;
             Gmask = 0x0000FF00;
             Bmask = 0x00FF0000;
@@ -404,7 +404,7 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
                 was_error = SDL_TRUE;
                 goto done;
             }
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+#ifdef MSB_FIRST
             /* Byte-swap the pixels if needed. Note that the 24bpp
                case has already been taken care of above. */
             switch (biBitCount) {

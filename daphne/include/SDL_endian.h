@@ -207,7 +207,7 @@ SDL_SwapFloat(float x)
  *  Byteswap item from the specified endianness to the native endianness.
  */
 /* @{ */
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN
+#ifndef MSB_FIRST
 #define SDL_SwapLE16(X) (X)
 #define SDL_SwapLE32(X) (X)
 #define SDL_SwapLE64(X) (X)

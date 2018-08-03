@@ -51,7 +51,7 @@
 typedef union
 {
 
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN
+#ifndef MSB_FIRST
 	struct
 	{
 		Uint8 l,h;
