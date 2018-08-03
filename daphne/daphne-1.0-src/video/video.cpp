@@ -264,6 +264,8 @@ void display_repaint()
 	g_game->video_force_blit();
 }
 
+static SDL_Surface *load_one_bmp(const char *filename);
+
 // loads all the .bmp's used by DAPHNE
 // returns true if they were all successfully loaded, or a false if they weren't
 bool load_bmps()
@@ -362,77 +364,8 @@ bool copy_android_asset_to_directory(const char *filename)
 }
 // RJS END
 
-SDL_Surface *load_one_bmp(const char *filename)
+static SDL_Surface *load_one_bmp(const char *filename)
 {
-	// 2017.02.01 - RJS ADD - Logging.
-	
-	// 2017.07.14 - RJS - Adding asset loading in Android.  If asset doesn't exist, then just falls
-	// through.  Problems are we don;t have a JavaVM here.  I've been looking into how to do it, there
-	// is no official way to do this without it comming from JNI.  Going to try to use what is in the
-	// Android frameworks DdmConnection.cpp, DdmConnection::start(const char* name).  This is clearly
-	// not efficient in the long run, just hacking in here for ease of debugging.
-	// 2017.07.20 - RJS - So this just won't work.  First off, there is no concept of assets in just
-	// a .so file, duh.  They are kept in the apk itself.  The only real way to embed a data file
-	// in a .so is to create an offline tool that will read the file and create the char[] or
-	// some such data structure.  Punting on this and will require support files to be downloaded
-	// sort of like needing a BIOS file for an emulator to work.  The code trying to get a JavaVM
-	// has been copied to SDL_android.c . . . hope it works.
-	/*
-	JavaVM * vm		= NULL;
-	JNIEnv * env	= NULL;
-
-	JavaVMInitArgs	args;
-	JavaVMOption	opt;
-	opt.optionString		= "-agentlib:jdwp=transport=dt_android_adb,suspend=n,server=y";
-	args.version			= JNI_VERSION_1_4;
-	args.options			= &opt;
-	args.nOptions			= 1;
-	args.ignoreUnrecognized	= JNI_FALSE;
-
-	void * libdvm_dso = dlopen("libdvm.so", RTLD_NOW);
-	if (!libdvm_dso)
-	{
-	}
-
-	void * libandroid_runtime_dso = dlopen("libandroid_runtime.so", RTLD_NOW);
-	if (!libandroid_runtime_dso)
-	{
-	}
-
-	if ((!libdvm_dso) || (!libandroid_runtime_dso))
-	{
-		if (libandroid_runtime_dso) dlclose(libandroid_runtime_dso);
-		if (libdvm_dso) dlclose(libdvm_dso);
-	} else {
-		jint(*JNI_CreateJavaVM)(JavaVM** p_vm, JNIEnv** p_env, void* vm_args);
-		JNI_CreateJavaVM = (typeof JNI_CreateJavaVM)dlsym(libdvm_dso, "JNI_CreateJavaVM");
-		if (!JNI_CreateJavaVM)
-		{
-		}
-
-		jint(*registerNatives)(JNIEnv* env, jclass clazz);
-		registerNatives = (typeof registerNatives)dlsym(libandroid_runtime_dso, "Java_com_android_internal_util_WithFramework_registerNatives");
-		if (!registerNatives)
-		{
-		}
-
-		if ((!JNI_CreateJavaVM) || (!registerNatives)) {
-			if (libandroid_runtime_dso) dlclose(libandroid_runtime_dso);
-			if (libdvm_dso) dlclose(libdvm_dso);
-		} else {
-			if (JNI_CreateJavaVM(&vm, &env, &args) == 0)
-			{
-				if (registerNatives(env, 0) == 0)
-				{
-					env.
-					AAssetManager * assetMgr = AAssetManager_fromJava(env, )
-				}
-			}
-		}
-	}
-	*/
-	// 2017.07.14 - RJS END
-	
 	SDL_Surface *result = SDL_LoadBMP(filename);
 	if (!result)
 	{
@@ -619,31 +552,27 @@ bool draw_othergfx(int which, int x, int y, bool bSendToScreenBlitter)
 	return true;
 }
 
-// de-allocates all of the .bmps that we have allocated
-void free_bmps()
+static void free_one_bmp(SDL_Surface *candidate)
 {
+	SDL_FreeSurface(candidate);
+}
 
+// de-allocates all of the .bmps that we have allocated
+void free_bmps(void)
+{
 	int nuke_index = 0;
 
 	// get rid of all the LED's
 	for (; nuke_index < LED_RANGE; nuke_index++)
-	{
 		free_one_bmp(g_led_bmps[nuke_index]);
-	}
 	for (nuke_index = 0; nuke_index < B_EMPTY; nuke_index++)
 	{
 		// check to make sure it exists before we try to free
 		if (g_other_bmps[nuke_index])
-		{
 			free_one_bmp(g_other_bmps[nuke_index]);
-		}
 	}
 }
 
-void free_one_bmp(SDL_Surface *candidate)
-{
-	SDL_FreeSurface(candidate);
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
