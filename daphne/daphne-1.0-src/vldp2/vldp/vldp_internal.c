@@ -32,8 +32,6 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-//#include <unistd.h>
-//#include "inttypesreplace.h"
 
 #include <SDL.h>
 
@@ -41,18 +39,10 @@
 #include "vldp_common.h"
 #include "mpegscan.h"
 
-#ifdef WIN32
-#include "../vc++/inttypes.h"
-#else
-#include <inttypes.h>
-#endif
+#include <stdint.h>
 
-// RJS START
-// #include "mpeg2.h"
-// #include "video_out.h"
 #include "../include/mpeg2.h"
 #include "../include/video_out.h"
-// RJS END
 
 /////////////////////////////
 
