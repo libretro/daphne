@@ -65,12 +65,8 @@ const Uint16 cg_normalheights[]= { 240 };
 // the dimensions that we draw (may differ from g_vid_width/height if aspect ratio is enforced)
 unsigned int g_draw_width = 640, g_draw_height = 480;
 
-// RJS START - MAIN THREAD back to surface, rendering happen in the LDP thread
 SDL_Surface *g_led_bmps[LED_RANGE] = { 0 };
 SDL_Surface *g_other_bmps[B_EMPTY] = { 0 };
-// SDL_Texture *g_led_bmps[LED_RANGE] = { 0 };
-// SDL_Texture *g_other_bmps[B_EMPTY] = { 0 };
-// RJS END
 
 SDL_Surface *g_screen = NULL;	// our primary display
 SDL_Surface *g_screen_blitter = NULL;	// the surface we blit to (we don't blit directly to g_screen because opengl doesn't like that)
@@ -93,58 +89,13 @@ bool init_display()
 {
 	bool result = false;	// whether video initialization is successful or not
 	bool abnormalscreensize = true; // assume abnormal
-	// RJS START
-	// const SDL_VideoInfo *vidinfo = NULL;
-	// Uint8 suggested_bpp = 0;
-	// RJS END
 	Uint32 sdl_flags = 0;	// the default for this depends on whether we are using HW accelerated YUV overlays or not
 	
-	// RJS REMOVED
-	//char *hw_env = getenv("SDL_VIDEO_YUV_HWACCEL");
-
-	// RJS START - SDL2 handles where a surface will be, SW or HW. This isn't needed.
-	/*
-	// if HW acceleration has been disabled, we need to use a SW surface due to some oddities with crashing and fullscreen
-	if (hw_env && (hw_env[0] == '0'))
-	{
-		sdl_flags = SDL_SWSURFACE;
-	}
-
-	// else if HW acceleration hasn't been explicitely disabled ...
-	else
-	{
-
-		sdl_flags = SDL_HWSURFACE;
-		// Win32 notes (may not apply to linux) :
-		// After digging around in the SDL source code, I've discovered a few things ...
-		// When using fullscreen mode, you should always use SDL_HWSURFACE because otherwise
-		// you can't use YUV hardware overlays due to SDL creating an extra surface without
-		// your consent (which seems retarded to me hehe).
-		// SDL_SWSURFACE + hw accelerated YUV overlays will work in windowed mode, but might
-		// as well just use SDL_HWSURFACE for everything.
-	}
-	*/
-	// RJS END
-
 	char s[250] = { 0 };
 	Uint32 x = 0;	// temporary index
 
 	// if we were able to initialize the video properly
 	{
-		// RJS START - This is handled differently in SDL2, I think through textures.
-		/*
-		vidinfo = SDL_GetVideoInfo();
-		suggested_bpp = vidinfo->vfmt->BitsPerPixel;
-
-		// if we were in 8-bit mode, try to get at least 16-bit color
-		// because we definitely use more than 256 colors in daphne
-		if (suggested_bpp < 16)
-		{
-			suggested_bpp = 32;
-		}
-		*/
-		// RJS END
-
 		// go through each standard resolution size to see if we are using a standard resolution
 		for (x=0; x < (sizeof(cg_normalwidths) / sizeof(Uint16)); x++)
 		{
@@ -327,42 +278,11 @@ bool load_bmps()
 	for (index = 0; index < B_EMPTY; index++)
 	{
 		if (g_other_bmps[index] == NULL)
-		{
 			result = false;
-		}
 	}
 
-	// 2017.02.01 - RJS ADD - Logging.
 	return(result);
 }
-
-
-// 2017.06.22 - RJS ADD - Since files are saved into the .so which is a zip and therefore we don't have a
-// typical path to them we need to copy them out.  This routine does that.  A later consideration should
-// be to output all files at once.
-bool copy_android_asset_to_directory(const char *filename)
-{
-	/*
-	AAssetManager * mgr = app->activity->assetManager;
-	AAssetDir* assetDir = AAssetManager_openDir(mgr, "");
-	const char* filename = (const char*)NULL;
-
-	while ((filename = AAssetDir_getNextFileName(assetDir)) != NULL) {
-		AAsset* asset = AAssetManager_open(mgr, filename, AASSET_MODE_STREAMING);
-		char buf[BUFSIZ];
-		int nb_read = 0;
-		FILE* out = fopen(filename, "w");
-		while ((nb_read = AAsset_read(asset, buf, BUFSIZ)) > 0)
-			fwrite(buf, nb_read, 1, out);
-		fclose(out);
-		AAsset_close(asset);
-	}
-
-	AAssetDir_close(assetDir);
-	*/
-	return true;
-}
-// RJS END
 
 static SDL_Surface *load_one_bmp(const char *filename)
 {
