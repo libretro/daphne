@@ -17,10 +17,6 @@
 *
 ***************************************************************************************************
 **************************************************************************************************/
-#ifdef __ANDROID__
-#include <limits.h>
-#include "android\log.h"
-#endif
 
 /**************************************************************************************************
 ***************************************************************************************************
@@ -31,13 +27,8 @@
 **************************************************************************************************/
 #define UNUSED(x) (void)(x)
 
-#ifdef __ANDROID__
-#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "RA...Core", __VA_ARGS__))
-#define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "RA...Core", __VA_ARGS__))
-#else
 #define LOGI(...) 
 #define LOGE(...) 
-#endif
 #define RETRO_RUN_FRAMES_PAUSED_THRESHOLD	100
 
 // Not 0 is for adding 0 where there are spaces, thus always printing.
