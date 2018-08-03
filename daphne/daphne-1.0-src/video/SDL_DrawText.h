@@ -22,10 +22,6 @@ void SDLDrawText(const char *string, SDL_Surface *surface, int FontType, int x, 
 
 int LoadFontFromMemory(const char *src, int size,
       int flags, SDL_PixelFormat * pnSurfaceFormat);
-int LoadFont(const char *BitmapName, int flags, SDL_PixelFormat * pnSurfaceFormat);
-int FontHeight( int FontNumber );
-int FontWidth( int FontNumber );
-BitFont* FontPointer(int FontNumber );
 
 #ifdef __cplusplus
 };

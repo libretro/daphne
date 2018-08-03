@@ -71,63 +71,29 @@ int LoadFontFromMemory(const char *src, int size,
 	return FontNumber;
 }
 
-/* Loads the font into a new struct 
- * returns -1 as an error else it returns the number
- * of the font for the user to use
+/* Returns a pointer to the font struct of the number
+ * returns NULL if theres an error
  */
-// RJS CHANGE - need final format for conversion from bmp to final surface
-// int LoadFont(const char *BitmapName, int flags)
-int LoadFont(const char *BitmapName, int flags, SDL_PixelFormat * pnSurfaceFormat)
+static BitFont* FontPointer(int FontNumber)
 {
-	int		FontNumber = 0;
-	BitFont	**CurrentFont = &BitFonts;
-	SDL_Surface	*Temp;
-	
-	while(*CurrentFont)
+	int		fontamount = 0;
+	BitFont	*CurrentFont = BitFonts;
+
+
+	while(fontamount<TotalFonts)
 	{
-		CurrentFont = &((*CurrentFont)->NextFont);
-		FontNumber++;
+		if(CurrentFont->FontNumber == FontNumber)
+			return CurrentFont;
+		else
+		{
+			CurrentFont = CurrentFont->NextFont;
+			fontamount++;
+		}
 	}
 	
-	/* load the font bitmap */
-	if(NULL ==  (Temp = SDL_LoadBMP(BitmapName)))
-	{
-		printf("Error Cannot load file %s\n", BitmapName );
-		return -1;
-	}
+	return NULL;
 
-	/* Add a font to the list */
-	*CurrentFont = (BitFont*)malloc(sizeof(BitFont));
-
-	// RJS CHANGE START
-	// (*CurrentFont)->FontSurface = SDL_DisplayFormat(Temp);
-	(*CurrentFont)->FontSurface = SDL_ConvertSurface(Temp, pnSurfaceFormat, 0);
-	// RJS CHANGE END
-	SDL_FreeSurface(Temp);
-
-	(*CurrentFont)->CharWidth = (*CurrentFont)->FontSurface->w/256;
-	(*CurrentFont)->CharHeight = (*CurrentFont)->FontSurface->h;
-	(*CurrentFont)->FontNumber = FontNumber;
-	(*CurrentFont)->NextFont = NULL;
-
-	TotalFonts++;
-
-	/* Set font as transparent if the flag is set */
-	if(flags & TRANS_FONT)
-	{
-		/* This line was left in in case of problems getting the pixel format */
-		/* SDL_SetColorKey((*CurrentFont)->FontSurface, SDL_SRCCOLORKEY|SDL_RLEACCEL, 0xFF00FF); */
-		// RJS CHANGE
-		// SDL_SetColorKey((*CurrentFont)->FontSurface, SDL_SRCCOLORKEY | SDL_RLEACCEL,
-		// 	(*CurrentFont)->FontSurface->format->Rmask | (*CurrentFont)->FontSurface->format->Bmask);
-		SDL_SetColorKey((*CurrentFont)->FontSurface, SDL_TRUE | SDL_RLEACCEL,
-			(*CurrentFont)->FontSurface->format->Rmask | (*CurrentFont)->FontSurface->format->Bmask);
-	}
-	
-//	printf("Loaded font \"%s\". Width:%d, Height:%d\n", BitmapName, (*CurrentFont)->CharWidth, (*CurrentFont)->CharHeight );
-	return FontNumber;
 }
-
 
 /* Takes the font type, coords, and text to draw to the surface*/
 void SDLDrawText(const char *string, SDL_Surface *surface, int FontType, int x, int y )
@@ -167,55 +133,5 @@ void SDLDrawText(const char *string, SDL_Surface *surface, int FontType, int x, 
 		SDL_BlitSurface(CurrentFont->FontSurface, &SourceRect, surface, &DestRect);
 		DestRect.x += CurrentFont->CharWidth;
 	}
-
-}
-
-
-/* Returns the height of the font numbers character
- * returns 0 if the fontnumber was invalid */
-int FontHeight( int FontNumber )
-{
-	BitFont		*CurrentFont;
-
-	CurrentFont = FontPointer(FontNumber);
-	if(CurrentFont)
-		return CurrentFont->CharHeight;
-	else
-		return 0;
-}
-
-/* Returns the width of the font numbers charcter */
-int FontWidth( int FontNumber )
-{
-	BitFont		*CurrentFont;
-
-	CurrentFont = FontPointer(FontNumber);
-	if(CurrentFont)
-		return CurrentFont->CharWidth;
-	else
-		return 0;
-}
-
-/* Returns a pointer to the font struct of the number
- * returns NULL if theres an error
- */
-BitFont* FontPointer(int FontNumber)
-{
-	int		fontamount = 0;
-	BitFont	*CurrentFont = BitFonts;
-
-
-	while(fontamount<TotalFonts)
-	{
-		if(CurrentFont->FontNumber == FontNumber)
-			return CurrentFont;
-		else
-		{
-			CurrentFont = CurrentFont->NextFont;
-			fontamount++;
-		}
-	}
-	
-	return NULL;
 
 }
