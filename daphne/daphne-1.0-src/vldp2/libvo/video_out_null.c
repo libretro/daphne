@@ -269,16 +269,6 @@ static void null_draw_frame (vo_instance_t *instance, uint8_t * const * buf, voi
 	}
 #endif // VLDP_DEBUG
 
-#ifndef VLDP_BENCHMARK
-	// WARNING : by putting this delay here, we are slowing down seek speed (s_skip_all and s_frames_to_skip!!!)
-	// Maybe it would be better to remove this???  What would be impacted?  Why did I put this here in the first place?
-	// My comment wasn't very informative :)
-
-	// UPDATE : this SDL_Delay seems harmful to me and doesn't seem to help, so I've commented it out to see if anything
-	//  bad happens as a result :)
-//	SDL_Delay(0);
-#endif
-	
 	// end MATT
 	// LOGI("daphne-libretro: In null_draw_frame, bottom of routine. s_uSkipAllCount: %d", s_uSkipAllCount);
 }
