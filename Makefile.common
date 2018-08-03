@@ -318,14 +318,10 @@ SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_blit_copy.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_blit_N.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_blit_slow.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_bmp.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_clipboard.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_egl.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_fillrect.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_pixels.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_rect.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_RLEaccel.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_shape.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_stretch.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_surface.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_video.c
 
