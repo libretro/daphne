@@ -940,28 +940,6 @@ SDL_OpenAudioDevice(const char *device, int iscapture,
 }
 
 void
-SDL_LockAudioDevice(SDL_AudioDeviceID devid)
-{
-}
-
-void
-SDL_LockAudio(void)
-{
-    SDL_LockAudioDevice(1);
-}
-
-void
-SDL_UnlockAudioDevice(SDL_AudioDeviceID devid)
-{
-}
-
-void
-SDL_UnlockAudio(void)
-{
-    SDL_UnlockAudioDevice(1);
-}
-
-void
 SDL_CloseAudioDevice(SDL_AudioDeviceID devid)
 {
 }
