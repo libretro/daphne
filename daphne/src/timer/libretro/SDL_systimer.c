@@ -22,7 +22,11 @@
 
 #ifdef _WIN32
 
-#include "../../core/windows/SDL_windows.h"
+#ifdef _XBOX
+#include <xtl.h>
+#else
+#include <windows.h>
+#endif
 #include <mmsystem.h>
 
 #include "SDL_timer.h"
