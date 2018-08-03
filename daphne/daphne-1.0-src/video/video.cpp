@@ -186,10 +186,10 @@ void vid_blit(SDL_Surface *srf, int x, int y)
 	if (g_ldp->is_blitting_allowed())
    {
       SDL_Rect dest;
-      dest.x = (short) x;
-      dest.y = (short) y;
-      dest.w = (unsigned short) srf->w;
-      dest.h = (unsigned short) srf->h;
+      dest.x = (int16_t) x;
+      dest.y = (int16_t) y;
+      dest.w = (uint16_t) srf->w;
+      dest.h = (uint16_t) srf->h;
       SDL_BlitSurface(srf, NULL, g_screen, &dest);
    }
 	// else blitting isn't allowed, so just ignore
@@ -443,10 +443,10 @@ bool draw_othergfx(int which, int x, int y, bool bSendToScreenBlitter)
 	//  to be more friendly to our opengl implementation!
 	SDL_Surface *srf = g_other_bmps[which];
 	SDL_Rect dest;
-	dest.x = (short) x;
-	dest.y = (short) y;
-	dest.w = (unsigned short)srf->w;
-	dest.h = (unsigned short)srf->h;
+	dest.x = (int16_t) x;
+	dest.y = (int16_t) y;
+	dest.w = (uint16_t)srf->w;
+	dest.h = (uint16_t)srf->h;
 
 	// if we should blit this to the screen blitter for later use ...
 	if (bSendToScreenBlitter)
@@ -534,9 +534,9 @@ void draw_string(const char* t, int col, int row, SDL_Surface* overlay)
 {
 	SDL_Rect dest;
 
-	dest.x = (short) ((col*6));
-	dest.y = (short) ((row*13));
-	dest.w = (unsigned short) (6 * strlen(t)); // width of rectangle area to draw (width of font * length of string)
+	dest.x = (int16_t) ((col*6));
+	dest.y = (int16_t) ((row*13));
+	dest.w = (uint16_t) (6 * strlen(t)); // width of rectangle area to draw (width of font * length of string)
 	dest.h = 13;	// height of area (height of font)
 	
 	SDL_FillRect(overlay, &dest, 0); // erase anything at our destination before we print new text
