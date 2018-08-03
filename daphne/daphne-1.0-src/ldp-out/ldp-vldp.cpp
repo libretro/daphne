@@ -114,18 +114,11 @@ typedef struct
 	SDL_SW_YUVTexture *	video_buffer;
 } VIDEO_BUFFER;
 
-// We're not going to use a usable queue since we'll just crawl the queues looking for a STATE_USEABLE.  Ordered
-// usable queues aren't necessary.
-// int g_vb_usable_top = 0;
-// int g_vb_usable_queue[VIDEO_BUFFER_AMOUNT] = { 0, 1, 2, 3 };
-
 int g_vb_filling_queue = -1;
 
 int g_vb_waiting_top	= -1;
 int g_vb_waiting_next	= 0;
 int g_vb_waiting_queue[VIDEO_BUFFER_AMOUNT] = { -1, -1, -1, -1 };
-
-// int g_vb_rendering_queue = -1;
 
 VIDEO_BUFFER g_hw_overlay[VIDEO_BUFFER_AMOUNT] = { { VB_STATE_USEABLE, NULL }, { VB_STATE_USEABLE, NULL }, { VB_STATE_USEABLE, NULL }, { VB_STATE_USEABLE, NULL } };
 
@@ -143,14 +136,11 @@ bool initialize_vb(Uint32 format, Uint32 target_format, int w, int h)
 		g_hw_overlay[i].video_buffer = SDL_RJS_SW_CreateYUVBuffer(format, target_format, w, h);
 		if (g_hw_overlay[i].video_buffer == NULL) return false;
 
-		// g_vb_usable_queue[i]	= i;
 		g_vb_waiting_queue[i]	= -1;
 	}
 
-	// g_vb_usable_top			= 0;
 	g_vb_filling_queue		= -1;
 	g_vb_waiting_top		= -1;
-	// g_vb_rendering_queue	= -1;
 	g_vb_waiting_next		= 0;
 
 	LOGVBSYS("INITIALIZATION, bottom.");
@@ -169,14 +159,11 @@ void teardown_vb()
 		if (g_hw_overlay[i].video_buffer != NULL) SDL_SW_DestroyYUVTexture(g_hw_overlay[i].video_buffer);
 		g_hw_overlay[i].video_buffer = NULL;
 
-		// g_vb_usable_queue[i] = i;
 		g_vb_waiting_queue[i] = -1;
 	}
 
-	// g_vb_usable_top = 0;
 	g_vb_filling_queue		= -1;
 	g_vb_waiting_top		= -1;
-	// g_vb_rendering_queue	= -1;
 	g_vb_waiting_next		= 0;
 
 	LOGVBSYS("TEARDOWN, bottom.");
