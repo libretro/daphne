@@ -58,8 +58,6 @@
 #include "../video/rgb2yuv.h"
 #include "ldp-vldp.h"
 #include "framemod.h"
-#include "ldp-vldp-gl.h"	// for OpenGL callbacks
-#include "ldp-vldp-gp2x.h"	// for GP2X callbacks (if no gp2x, this is harmless)
 #include "../vldp2/vldp/vldp.h"	// to get the vldp structs
 #include "../video/palette.h"
 #include "../video/SDL_DrawText.h"
@@ -131,9 +129,7 @@ int g_vb_waiting_queue[VIDEO_BUFFER_AMOUNT] = { -1, -1, -1, -1 };
 
 VIDEO_BUFFER g_hw_overlay[VIDEO_BUFFER_AMOUNT] = { { VB_STATE_USEABLE, NULL }, { VB_STATE_USEABLE, NULL }, { VB_STATE_USEABLE, NULL }, { VB_STATE_USEABLE, NULL } };
 
-// FOR_DEBUG #define LOGVBSYS(STRIN) ((void)__android_log_print(ANDROID_LOG_INFO, "RA...CoreVB", "fb: %d\t\tw_top: %d\tw_next: %d\tw_q: [0]:%d\t[1]:%d\t[2]:%d\t[3]:%d\t Buffer: [0]:%d\t[1]:%d\t[2]:%d\t[3]:%d  "STRIN, g_vb_filling_queue, g_vb_waiting_top, g_vb_waiting_next, g_vb_waiting_queue[0], g_vb_waiting_queue[1], g_vb_waiting_queue[2], g_vb_waiting_queue[3], g_hw_overlay[0].buffer_state, g_hw_overlay[1].buffer_state, g_hw_overlay[2].buffer_state, g_hw_overlay[3].buffer_state))
 #define LOGVBSYS(STRIN)
-
 
 // ********************************************************************************************************************************
 // ********************************************************************************************************************************
@@ -144,9 +140,6 @@ bool initialize_vb(Uint32 format, Uint32 target_format, int w, int h)
 	for (int i = 0; i < VIDEO_BUFFER_AMOUNT; i++)
 	{
 		g_hw_overlay[i].buffer_state = VB_STATE_USEABLE;
-	#ifdef __ANDROID__
-		if (g_hw_overlay[i].video_buffer != NULL)	LOGI("daphne-libretro: In initialize_vb, BUFFER being allocated twice, LEAK!");
-	#endif
 		g_hw_overlay[i].video_buffer = SDL_RJS_SW_CreateYUVBuffer(format, target_format, w, h);
 		if (g_hw_overlay[i].video_buffer == NULL) return false;
 

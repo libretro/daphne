@@ -20,17 +20,6 @@
 
 #include <limits.h>
 
-// RJS - TODO Um, do this in the proper place.
-#ifdef __ANDROID__
-#ifndef ANDROID
-#define ANDROID
-#endif
-#endif
-
-#ifdef __ANDROID__
-#include <android\native_activity.h>
-#endif
-
 /**************************************************************************************************
 ***************************************************************************************************
 *
@@ -113,11 +102,7 @@ extern char gstr_rom_extension[sizeof(DAPHNE_ROM_EXTENSION)];
 extern "C" {
 #endif
 
-	void retro_log(int in_debug_info_warn_error, const char *in_fmt, ...);
-	/* 2017.10.10 - RJS - JavaVM removal.
-	JavaVM *  retro_get_javavm();
-	jobject retro_get_nativeinstance();
-	*/
+   void retro_log(int in_debug_info_warn_error, const char *in_fmt, ...);
 
 #ifdef __cplusplus
 }

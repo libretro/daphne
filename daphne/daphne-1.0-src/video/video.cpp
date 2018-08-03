@@ -41,7 +41,6 @@
 #include "../io/mpo_mem.h"
 #include "../game/game.h"
 #include "../ldp-out/ldp.h"
-#include "../ldp-out/ldp-vldp-gl.h"
 // RJS - ADD - needed for home directory
 #include "../io/homedir.h"
 

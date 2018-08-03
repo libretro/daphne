@@ -39,13 +39,11 @@ ifeq ($(platform), unix)
    TARGET := $(TARGET_NAME)_libretro.so
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
-   GL_LIB := -lGL
    LIBS += -lpthread -ldl
 else ifneq (,$(findstring osx,$(platform)))
    TARGET := $(TARGET_NAME)_libretro.dylib
    fpic := -fPIC
    SHARED := -dynamiclib
-   GL_LIB := -framework OpenGL
    CXXFLAGS += -DOSX
    CFLAGS += -DOSX
 	ifeq ($(arch),ppc)
@@ -61,22 +59,19 @@ else ifeq ($(platform), pi)
    SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
    CXXFLAGS += -I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/vmcs_host/linux
    CFLAGS += -I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/vmcs_host/linux
-   GLES := 1
    LIBS += -L/opt/vc/lib
 else ifneq (,$(findstring ios,$(platform)))
    TARGET := $(TARGET_NAME)_libretro_ios.dylib
    fpic := -fPIC
    SHARED := -dynamiclib
-GLES=1
 
 ifeq ($(IOSSDK),)
    IOSSDK := $(shell xcodebuild -version -sdk iphoneos Path)
 endif
 
-   GL_LIB := -framework OpenGLES
    DEFINES := -DIOS
-   CXXFLAGS += -DHAVE_OPENGLES -DHAVE_OPENGLES2 $(DEFINES)
-   CFLAGS += -DHAVE_OPENGLES -DHAVE_OPENGLES2 $(DEFINES)
+   CXXFLAGS += $(DEFINES)
+   CFLAGS   += $(DEFINES)
    CC = cc -arch armv7 -isysroot $(IOSSDK)
    CXX = c++ -arch armv7 -isysroot $(IOSSDK)
 ifeq ($(platform),ios9)
@@ -92,12 +87,9 @@ else ifneq (,$(findstring qnx,$(platform)))
    TARGET := $(TARGET_NAME)_libretro_qnx.so
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=link.T
-   GL_LIB := -lGL
 
    CC = qcc -Vgcc_ntoarmv7le
    AR = qcc -Vgcc_ntoarmv7le
-   GL_LIB := -lGLESv2
-   GLES := 1
 else ifneq (,$(findstring armv,$(platform)))
    CC = gcc
    TARGET := $(TARGET_NAME)_libretro.so
@@ -105,11 +97,6 @@ else ifneq (,$(findstring armv,$(platform)))
    SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
    CXXFLAGS += -I.
    CFLAGS += -I.
-ifneq (,$(findstring gles,$(platform)))
-   GLES := 1
-else
-   GL_LIB := -lGL
-endif
 ifneq (,$(findstring cortexa8,$(platform)))
    CXXFLAGS += -marm -mcpu=cortex-a8
    CFLAGS += -marm -mcpu=cortex-a8
@@ -139,7 +126,6 @@ else
    CC = gcc
    TARGET := $(TARGET_NAME)_libretro.dll
    SHARED := -shared -static-libgcc -static-libstdc++ -s -Wl,--version-script=link.T -lwinmm -Wl,--no-undefined
-   GL_LIB := -lopengl32
 	LIBS += -lwinmm -lws2_32
    CXXFLAGS += -I..
    CFLAGS += -I..
@@ -171,21 +157,6 @@ endif
 CFLAGS   += $(INCFLAGS) $(FLAGS)
 CXXFLAGS += $(INCFLAGS) $(FLAGS)
 
-ifeq ($(GLES), 1)
-   CXXFLAGS += -DHAVE_OPENGLES -DHAVE_OPENGLES2
-   CFLAGS += -DHAVE_OPENGLES -DHAVE_OPENGLES2
-   ifeq ($(GLES31), 1)
-      CXXFLAGS += -DHAVE_OPENGLES3 -DHAVE_OPENGLES_3_1
-      CFLAGS += -DHAVE_OPENGLES3 -DHAVE_OPENGLES_3_1
-   else ifeq ($(GLES3), 1)
-      CXXFLAGS += -DHAVE_OPENGLES3
-      CFLAGS += -DHAVE_OPENGLES3
-   endif
-   LIBS += -lGLESv2 # Still link against GLESv2 when using GLES3 API, at least on desktop Linux.
-else
-   LIBS += $(GL_LIB)
-endif
-
 ifeq ($(CORE), 1)
    CXXFLAGS += -DCORE
    CFLAGS += -DCORE
@@ -197,7 +168,7 @@ CFLAGS += -D__LIBRETRO__
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(CXX) $(fpic) $(SHARED) $(INCLUDES) -o $@ $(OBJECTS) $(LIBS) -lm $(EXTRA_GL_LIBS)
+	$(CXX) $(fpic) $(SHARED) $(INCLUDES) -o $@ $(OBJECTS) $(LIBS) -lm
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(fpic) -c -o $@ $<
