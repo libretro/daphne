@@ -54,34 +54,20 @@ extern FILE *mc6809_ftrace;
 
 // RJS MC
 #include <stdint.h>
-#define UINT8_MC	__uint8_t
-#define UINT16_MC	__uint16_t
-#define UINT32_MC	__uint32_t
-#define UINT64_MC	__uint64_t
-#define INT8_MC		__int8_t
-#define INT16_MC	__int16_t
-#define INT32_MC	__int32_t
+#define UINT8_MC	uint8_t
+#define UINT16_MC	uint16_t
+#define UINT32_MC	uint32_t
+#define UINT64_MC	uint64_t
+#define INT8_MC	int8_t
+#define INT16_MC	int16_t
+#define INT32_MC	int32_t
 
-// 2018.01.12 - RJS - Here ARM is not compiled with --signed_chars so we're explicitly
-// indicating signed here.  Why aren't we just turning on --signed_chars?  It is unknown
-// how it will affect other cpu cores and they are all currently working.  A more
-// through test should be taken to check using this flag which feels like it should have
-// been on the whole time.
-#ifdef __ANDROID__
-#define INT_MC		INT32_MC
-#define UINT_MC		UINT32_MC
+#define INT_MC		int32_t
+#define UINT_MC   uint32_t
 #define XCHAR_MC	char
-#define CHAR_MC		signed char
-#define UCHAR_MC	unsigned char
-#define ULONGINT_MC	UINT64_MC
-#else
-#define INT_MC		int
-#define UINT_MC		unsigned int
-#define XCHAR_MC	char
-#define CHAR_MC		signed char
-#define UCHAR_MC	unsigned char
-#define ULONGINT_MC	unsigned long int
-#endif
+#define CHAR_MC	int8_t
+#define UCHAR_MC	uint8_t
+#define ULONGINT_MC	uint64_t
 
 #include "6809infc.h"
 
