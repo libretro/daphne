@@ -83,14 +83,6 @@ Uint16 get_video_height();
 void set_video_height(Uint16);
 void draw_string(const char*, int, int, SDL_Surface*);
 
-// used to enable/disable the HWACCEL environment variable
-// (the YUV overlay must be created after this has been called for it to take effect)
-// if 'enabled' is true, the YUV hw accel is enabled.
-void set_yuv_hwaccel(bool enabled);
-
-// returns true if acceleration is enabled or false if not
-bool get_yuv_hwaccel();
-
 void set_force_aspect_ratio(bool bEnabled);
 
 bool get_force_aspect_ratio();

@@ -942,7 +942,6 @@ bool parse_cmd_line(int argc, char **argv)
 		// disable YUV hardware acceleration
 		else if (strcasecmp(s, "-nohwaccel")==0)
 		{
-			set_yuv_hwaccel(false);
 		}
 
 		else if (strcasecmp(s, "-pal_dl")==0)

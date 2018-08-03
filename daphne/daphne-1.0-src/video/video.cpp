@@ -545,38 +545,6 @@ void draw_string(const char* t, int col, int row, SDL_Surface* overlay)
 	// SDL_UpdateRects(overlay, 1, &dest);
 }
 
-// NOTE : put into a separate function to make autotesting easier
-void set_yuv_hwaccel(bool enabled)
-{
-	const char *val = "0";
-	if (enabled) val = "1";
-#ifdef WIN32
-	SetEnvironmentVariable("SDL_VIDEO_YUV_HWACCEL", val);
-	string sEnv = "SDL_VIDEO_YUV_HWACCEL=";
-	sEnv += val;
-	putenv(sEnv.c_str());
-#else
-	setenv("SDL_VIDEO_YUV_HWACCEL", val, 1);
-#endif
-}
-
-bool get_yuv_hwaccel()
-{
-	bool result = true;	// it is enabled by default
-#ifdef WIN32
-	char buf[30];
-	ZeroMemory(buf, sizeof(buf));
-	DWORD res = GetEnvironmentVariable("SDL_VIDEO_YUV_HWACCEL", buf, sizeof(buf));
-	if (buf[0] == '0') result = false;
-#else
-	char *hw_env = getenv("SDL_VIDEO_YUV_HWACCEL");
-
-	// if HW acceleration has been disabled
-	if (hw_env && (hw_env[0] == '0')) result = false;
-#endif
-	return result;
-}
-
 void set_force_aspect_ratio(bool bEnabled)
 {
 	g_bForceAspectRatio = bEnabled;

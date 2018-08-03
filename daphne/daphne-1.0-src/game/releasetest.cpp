@@ -515,7 +515,6 @@ void releasetest::test_vldp_render()
 		// no need to call init (it would fail anyway as we don't have a framefile)
 
 		// create the overlay
-		set_yuv_hwaccel(true);	// by having hwaccel turned on, we also implicitly test our screenshot code
 		unsigned int width = REL_VID_W << 1;
 		unsigned int height = REL_VID_H << 1;
 		report_mpeg_dimensions_callback(width, height);
