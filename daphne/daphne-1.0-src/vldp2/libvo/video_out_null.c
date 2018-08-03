@@ -21,28 +21,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-// RJS CHANGE
-// #include "config.h"
 #include "../include/config.h"
 
 #include <stdlib.h>
 #include <inttypes.h>
 
-// RJS START
-// #include "video_out.h"
-// #include "convert.h"
 #include "../include/video_out.h"
 #include "../include/convert.h"
 #include "../../../main_android.h"
-// RJS END
-
-// start MPO
 
 #include <string.h>	// for memset
 #include "../vldp/vldp_common.h"	// to get access to g_in_info struct and the yuv_buf struct
 #include "../vldp/vldp_internal.h"	// for access to s_ variables from vldp_internal
 
-#define YUV_BUF_COUNT 3	// libmpeg2 needs 3 buffers to do its thing ...
+#define YUV_BUF_COUNT 3        // libmpeg2 needs 3 buffers to do its thing ...
 struct yuv_buf g_yuv_buf[YUV_BUF_COUNT];
 
 ////
@@ -62,7 +54,6 @@ static void null_draw_frame (vo_instance_t *instance, uint8_t * const * buf, voi
 		{
 			VLDP_BOOL bFrameNotShownDueToCmd = VLDP_FALSE;
 
-#ifndef VLDP_BENCHMARK
 			// PERFORMANCE WARNING:
 			//  We need to use 64-bit math here because otherwise, we will overflow a little after 2 minutes,
 			//   using 32-bit math.
@@ -87,14 +78,12 @@ static void null_draw_frame (vo_instance_t *instance, uint8_t * const * buf, voi
 			// LOGI("daphne-libretro: In null_draw_frame, before skip calculation.  actual_elapsed_ms: %d  correct_elapsed_ms: %d  u2milDivFpks: %u  ce_ms + fpks: %d", actual_elapsed_ms, correct_elapsed_ms, g_out_info.u2milDivFpks, (correct_elapsed_ms + g_out_info.u2milDivFpks));
 			if (actual_elapsed_ms < (correct_elapsed_ms + g_out_info.u2milDivFpks))
 			{
-#endif
 				// this is the potentially expensive callback that gets the hardware overlay
 				// ready to be displayed, so we do this before we sleep
 				// NOTE : if this callback fails, we don't want to display the frame due to double buffering considerations
 				// LOGI("daphne-libretro: In null_draw_frame, before prepare_frame call.  id: %d", (int)id);
 				if (g_in_info->prepare_frame(&g_yuv_buf[(int) id]))
 				{
-#ifndef VLDP_BENCHMARK
 				
 					// stall if we are playing too quickly and if we don't have a command waiting for us
 					// LOGI("daphne-libretro: In null_draw_frame, before stall calculation.  uMsTimer - timer: %d  correct_elapsed_ms: %d  uMsTimer: %u  s_timer: %d", (g_in_info->uMsTimer - s_timer), correct_elapsed_ms, g_in_info->uMsTimer, s_timer);
@@ -141,18 +130,14 @@ static void null_draw_frame (vo_instance_t *instance, uint8_t * const * buf, voi
 					//  so we only display the frame if we haven't received a command
 					if (!bFrameNotShownDueToCmd)
 					{
-#endif
 						// draw the frame
 						// we are using the pointer 'id' as an index, kind of risky, but convenient :)
 						// RJS HERE - Display frame callback from null driver.
 						// LOGI("daphne-libretro: In null_draw_frame, before display_frame call.  id: %d", (int) id);
 						g_in_info->display_frame(&g_yuv_buf[(int) id]);
 						// LOGI("daphne-libretro: In null_draw_frame, after display_frame call. s_uFramesShownSinceTimer: %d", s_uFramesShownSinceTimer);
-#ifndef VLDP_BENCHMARK
 					} // end if we didn't get a new command to interrupt the frame being displayed
-#endif
 				} // end if the frame was prepared properly
-#ifndef VLDP_BENCHMARK
 				// else maybe we couldn't get a lock on the buffer fast enough, so we'll have to wait ...
 
 			} // end if we don't drop any frames
@@ -166,7 +151,6 @@ static void null_draw_frame (vo_instance_t *instance, uint8_t * const * buf, voi
 			}
 			*/
 
-#endif
 			// if the frame was either displayed or dropped (due to lag) ...
 			if (!bFrameNotShownDueToCmd)
 			{
@@ -260,25 +244,12 @@ static void null_draw_frame (vo_instance_t *instance, uint8_t * const * buf, voi
 			}
 		}
 	}
-
-#ifdef VLDP_DEBUG
-	// if we're dropping all frames, log it
-	if (s_skip_all)
-	{
-		s_uSkipAllCount++;
-	}
-#endif // VLDP_DEBUG
-
-	// end MATT
-	// LOGI("daphne-libretro: In null_draw_frame, bottom of routine. s_uSkipAllCount: %d", s_uSkipAllCount);
 }
 #pragma warning (pop)
 
 static void null_setup_fbuf (vo_instance_t * _instance,
 			    uint8_t ** buf, void ** id)
 {
-	// RJS CHANGE - Uh, what?
-	// static buffer_index = 0;
 	static int buffer_index = 0;
 	*id = (int *) buffer_index;	// THIS IS A LITTLE TRICKY
 	// We are setting an integer value to a pointer ...
@@ -319,14 +290,9 @@ static int null_setup (vo_instance_t * instance, int width, int height,
 		// We do not re-allocate these buffers if they have already been previous allocated, as a safety measure
 		g_yuv_buf[i].Y_size = width * height;
 		g_yuv_buf[i].UV_size = g_yuv_buf[i].Y_size >> 2;
-		// RJS START
-		// if (!g_yuv_buf[i].Y) g_yuv_buf[i].Y = malloc(g_yuv_buf[i].Y_size);
-		// if (!g_yuv_buf[i].U) g_yuv_buf[i].U = malloc(g_yuv_buf[i].UV_size);
-		// if (!g_yuv_buf[i].V) g_yuv_buf[i].V = malloc(g_yuv_buf[i].UV_size);
 		if (!g_yuv_buf[i].Y) g_yuv_buf[i].Y = (unsigned char *) malloc(g_yuv_buf[i].Y_size);
 		if (!g_yuv_buf[i].U) g_yuv_buf[i].U = (unsigned char *) malloc(g_yuv_buf[i].UV_size);
 		if (!g_yuv_buf[i].V) g_yuv_buf[i].V = (unsigned char *) malloc(g_yuv_buf[i].UV_size);
-		// RJS END
 	}
 	
     result->convert = NULL;
