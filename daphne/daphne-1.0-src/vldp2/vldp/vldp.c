@@ -391,7 +391,6 @@ const struct vldp_out_info *vldp_init(const struct vldp_in_info *in_info)
 	g_out_info.unlock = vldp_unlock;
 
 	// RJS CHANGE - new parm for SDL2
-	// private_thread = SDL_CreateThread(idle_handler, NULL);	// start our internal thread
 	private_thread = SDL_CreateThread(idle_handler, "PRIVATE", NULL);	// start our internal thread
 	
 	// if private thread was created successfully
