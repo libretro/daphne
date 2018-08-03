@@ -30,10 +30,6 @@
 #pragma warning (disable:4100)	// disable the warning about unreferenced formal parameters (MSVC++)
 #endif
 
-#ifdef UNIX
-//#define TRY_MMAP 1	// NOTE : this seems to fail on read-only filesystems (such as NTFS mounted from linux)
-#endif
-
 #include "../timer/timer.h"
 #include "../io/conout.h"
 #include "../io/mpo_fileio.h"
@@ -53,10 +49,6 @@
 
 #include <vorbis/codec.h>		// OGG VORBIS specific headers
 #include <vorbis/vorbisfile.h>
-
-#ifdef TRY_MMAP
-#include <sys/mman.h>
-#endif
 
 // how much uncompressed audio we deal with at a time
 #define AUDIO_BUF_CHUNK	4096
@@ -186,16 +178,10 @@ int mmclose (void *datasource)
 		printline("ldp-vldp-audio.cpp: datasource != g_bigbuf, this should never happen!");
 	}
 	
-#ifdef TRY_MMAP
-	printline("Unmapping audio stream from memory ...");
-	munmap(g_big_buf, g_audio_filesize);
-	datasource = NULL;
-#else
 	printline("Freeing memory used to store audio stream...");
 	//free(datasource);
 	delete [] g_big_buf;
 	g_big_buf = NULL;
-#endif
 
 	mpo_close(g_pIOAudioHandle);
 	g_pIOAudioHandle = NULL;
@@ -405,13 +391,6 @@ bool ldp_vldp::open_audio_stream(const string &strFilename)
 	if (g_pIOAudioHandle)
 	{
 		g_audio_filesize = static_cast<unsigned int>(g_pIOAudioHandle->size & 0xFFFFFFFF);
-#ifdef TRY_MMAP
-		g_big_buf = (Uint8 *) mmap(NULL, g_audio_filesize, PROT_READ, MAP_PRIVATE, fileno(g_pIOAudioHandle->handle), 0);
-		if (!g_big_buf)
-		{
-			printline("ERROR : mmap failed");
-		}
-#else
 		g_big_buf = new unsigned char[g_audio_filesize];
 		if (g_big_buf)
 		{
@@ -421,7 +400,6 @@ bool ldp_vldp::open_audio_stream(const string &strFilename)
 		{
 			printline("ERROR : out of memory");
 		}
-#endif
 		if (g_big_buf)
 		{
 			int open_result = ov_open_callbacks(g_big_buf, &s_ogg, NULL, 0, mycallbacks);
@@ -468,11 +446,7 @@ bool ldp_vldp::open_audio_stream(const string &strFilename)
 			// if we have memory allocated, de-allocate it
 			if (g_big_buf)
 			{
-#ifdef TRY_MMAP
-				munmap(g_big_buf, g_audio_filesize);
-#else
 				delete [] g_big_buf;
-#endif
 				g_big_buf = NULL;
 			}
 		}
