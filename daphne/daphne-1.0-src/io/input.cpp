@@ -843,10 +843,6 @@ void FilterMouseEvents(bool bFilteredOut)
 	{
 		iState = SDL_IGNORE;
 	}
-
-	SDL_EventState(SDL_MOUSEMOTION, iState);
-	SDL_EventState(SDL_MOUSEBUTTONDOWN, iState);
-	SDL_EventState(SDL_MOUSEBUTTONUP, iState);
 }
 
 // does any shutting down necessary
