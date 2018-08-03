@@ -1,5 +1,4 @@
 #include "test_sb.h"
-#include "../io/logger_factory.h"
 #include "../daphne.h"	// for get_quitflag
 #include "../io/input.h"
 #include "../ldp-out/ldp.h"

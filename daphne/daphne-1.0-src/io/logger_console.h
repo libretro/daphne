@@ -7,7 +7,6 @@
 // logs to the console
 class ConsoleLogger : public ILogger
 {
-	friend class LoggerFactory;
 public:
 	static ILogger *GetInstance();
 	void DeleteInstance();

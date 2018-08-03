@@ -17,8 +17,6 @@ protected:
 // doesn't actually do anything, useful for testing
 class NullLogger : public ILogger
 {
-	friend class LoggerFactory;
-
 public:
 	// we want the null logger to be creatable directly without using the factory, so that
 	//  our tests don't need to rely on ConsoleLogger

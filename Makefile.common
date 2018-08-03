@@ -142,7 +142,6 @@ SOURCES_CXX += $(DAPHNE_DIR)/io/homedir.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/io/input.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/io/logger.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/io/logger_console.cpp
-SOURCES_CXX += $(DAPHNE_DIR)/io/logger_factory.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/io/mpo_fileio.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/io/network.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/io/numstr.cpp
