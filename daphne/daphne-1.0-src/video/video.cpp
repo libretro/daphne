@@ -70,9 +70,6 @@ int sboverlay_characterset = 1;
 // (this is probably a good idea as a default option)
 bool g_bForceAspectRatio = true;
 
-// the # of degrees to rotate counter-clockwise in opengl mode
-float g_fRotateDegrees = 0.0;
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // initializes the window in which we will draw our BMP's
@@ -496,11 +493,6 @@ SDL_Surface *get_screen()
 SDL_Surface *get_screen_blitter()
 {
 	return g_screen_blitter;
-}
-
-void set_rotate_degrees(float fDegrees)
-{
-	g_fRotateDegrees = fDegrees;
 }
 
 void set_sboverlay_characterset(int value)

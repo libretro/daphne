@@ -982,9 +982,6 @@ bool parse_cmd_line(int argc, char **argv)
 		}
 		else if (strcasecmp(s, "-rotate")==0)
 		{
-			get_next_word(s, sizeof(s));
-			float f = (float) numstr::ToDouble(s);
-			set_rotate_degrees(f);
 		}
 
 		// continuously updates SRAM (after every seek)  

@@ -76,7 +76,6 @@ void free_bmps();
 SDL_Surface *get_screen();
 SDL_Surface *get_screen_blitter();
 
-void set_rotate_degrees(float fDegrees);
 void set_sboverlay_characterset(int value);
 Uint16 get_video_width();
 void set_video_width(Uint16);
