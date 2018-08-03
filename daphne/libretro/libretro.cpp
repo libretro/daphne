@@ -340,11 +340,6 @@ void retro_reset(void)
 /**************************************************************************************************
 * Handles keyboard input.
 **************************************************************************************************/
-extern "C" {
-	extern int Android_OnKeyDown(int keycode);
-	extern int Android_OnKeyUp(int keycode);
-}
-
 void retro_keyboard_input_callback(bool in_down, unsigned in_keycode, uint32_t in_character, uint16_t in_key_modifiers)
 {
 	if (gf_isThayers == false)		return;
@@ -378,12 +373,6 @@ bool retro_has_inputstate_changed(int in_port, int in_button, uint16_t in_key)
 /**************************************************************************************************
 * Runs the game for one video frame.
 **************************************************************************************************/
-extern "C" {
-	extern int Android_OnPadDown(int n_port, int keycode);
-	extern int Android_OnPadUp(int n_port, int keycode);
-	extern int16_t * get_ab_waiting(int * ab_ndx, int * ab_frames);
-	extern void set_ab_streaming_done(int ab_ndx);
-}
 extern SDL_SW_YUVTexture * get_vb_waiting(int * vb_ndx);
 extern bool input_pause(bool fPaused);
 extern void set_vb_rendering_done(int vb_ndx);
