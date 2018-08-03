@@ -1056,10 +1056,6 @@ void process_keydown(SDL_Keycode key)
 	{
 		g_alt_pressed = true;
 	}
-	else if ((key == SDLK_RETURN) && (g_alt_pressed))
-	{
-		vid_toggle_fullscreen();
-	}
 	// end ALT-ENTER check
 }
 

@@ -76,8 +76,6 @@ void free_bmps();
 SDL_Surface *get_screen();
 SDL_Surface *get_screen_blitter();
 
-bool get_fullscreen();
-void set_fullscreen(bool value);
 void set_rotate_degrees(float fDegrees);
 void set_sboverlay_characterset(int value);
 Uint16 get_video_width();
@@ -86,7 +84,6 @@ Uint16 get_video_height();
 void set_video_height(Uint16);
 void yuv2rgb(SDL_Color *result, int y, int u, int v);
 void draw_string(const char*, int, int, SDL_Surface*);
-void vid_toggle_fullscreen();
 
 // used to enable/disable the HWACCEL environment variable
 // (the YUV overlay must be created after this has been called for it to take effect)

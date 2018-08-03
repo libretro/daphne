@@ -931,12 +931,6 @@ bool parse_cmd_line(int argc, char **argv)
 			set_force_aspect_ratio(false);
 		}
 
-		// run daphne in fullscreen mode
-		else if (strcasecmp(s, "-fullscreen")==0)
-		{
-			set_fullscreen(true);
-		}
-
 		// disable log file
 		else if (strcasecmp(s, "-nolog")==0)
 		{

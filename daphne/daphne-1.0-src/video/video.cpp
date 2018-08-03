@@ -46,7 +46,6 @@
 
 using namespace std;
 
-#ifndef GP2X
 unsigned int g_vid_width = 640, g_vid_height = 480;	// default video width and video height
 #ifdef DEBUG
 const Uint16 cg_normalwidths[] = { 320, 640, 800, 1024, 1280, 1280, 1600 };
@@ -55,11 +54,6 @@ const Uint16 cg_normalheights[]= { 240, 480, 600, 768, 960, 1024, 1200 };
 const Uint16 cg_normalwidths[] = { 640, 800, 1024, 1280, 1280, 1600 };
 const Uint16 cg_normalheights[]= { 480, 600, 768, 960, 1024, 1200 };
 #endif // DEBUG
-#else
-unsigned int g_vid_width = 320, g_vid_height = 240;	// default for gp2x
-const Uint16 cg_normalwidths[] = { 320 };
-const Uint16 cg_normalheights[]= { 240 };
-#endif
 
 // the dimensions that we draw (may differ from g_vid_width/height if aspect ratio is enforced)
 unsigned int g_draw_width = 640, g_draw_height = 480;
@@ -70,7 +64,6 @@ SDL_Surface *g_other_bmps[B_EMPTY] = { 0 };
 SDL_Surface *g_screen = NULL;	// our primary display
 SDL_Surface *g_screen_blitter = NULL;	// the surface we blit to (we don't blit directly to g_screen because opengl doesn't like that)
 
-bool g_fullscreen = false;	// whether we should initialize video in fullscreen mode or not
 int sboverlay_characterset = 1;
 
 // whether we will try to force a 4:3 aspect ratio regardless of window size
@@ -505,17 +498,6 @@ SDL_Surface *get_screen_blitter()
 	return g_screen_blitter;
 }
 
-bool get_fullscreen()
-{
-	return g_fullscreen;
-}
-
-// sets our g_fullscreen bool (determines whether will be in fullscreen mode or not)
-void set_fullscreen(bool value)
-{
-	g_fullscreen = value;
-}
-
 void set_rotate_degrees(float fDegrees)
 {
 	g_fRotateDegrees = fDegrees;
@@ -596,19 +578,6 @@ void draw_string(const char* t, int col, int row, SDL_Surface* overlay)
 	SDLDrawText(t,  overlay, FONT_SMALL, dest.x, dest.y);
 	// RJS REMOVE - MAIN THREAD this shouldn't be needed since we're just copying to render in the LDP thread
 	// SDL_UpdateRects(overlay, 1, &dest);
-}
-
-// toggles fullscreen mode
-void vid_toggle_fullscreen()
-{
-	// Commented out because it creates major problems with YUV overlays and causing segfaults..
-	// The real way to toggle fullscreen is to kill overlay, kill surface, make surface, make overlay.
-	/*
-	g_screen = SDL_SetVideoMode(g_screen->w,
-		g_screen->h,
-		g_screen->format->BitsPerPixel,
-		g_screen->flags ^ SDL_FULLSCREEN);
-		*/
 }
 
 // NOTE : put into a separate function to make autotesting easier
