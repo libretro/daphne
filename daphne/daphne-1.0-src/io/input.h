@@ -93,7 +93,6 @@ bool input_pause(bool fPaused);
 void input_enable(Uint8);
 void input_disable(Uint8);
 void reset_idle(void); // added by JFA
-void set_use_joystick(bool val);
 
 #endif // INPUT_H
 

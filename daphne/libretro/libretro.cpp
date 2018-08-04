@@ -405,37 +405,13 @@ void retro_run(void)
 		{
 			uint16_t n_key;
 			n_key = input_state_cb(n_port, RETRO_DEVICE_JOYPAD, 0, n_button_ndx);
-			// 2017.09.18 - RJS - I may not need this debouncer as this is kept track in SDL_PrivateJoystickButton.		Nope, you need it.
+
 			if (retro_has_inputstate_changed(n_port, n_button_ndx, n_key))
 			{
-			#ifdef __ANDROID__
-				if (n_button_ndx == 0)	n_button_ndx = AKEYCODE_BUTTON_A;
-				if (n_button_ndx == 1)	n_button_ndx = AKEYCODE_BUTTON_X;
-				if (n_button_ndx == 8)	n_button_ndx = AKEYCODE_BUTTON_B;
-				if (n_button_ndx == 9)	n_button_ndx = AKEYCODE_BUTTON_Y;
-
-				if (n_button_ndx == 2)	n_button_ndx = AKEYCODE_BACK;
-				if (n_button_ndx == 3)	n_button_ndx = AKEYCODE_BUTTON_START;
-
-				if (n_button_ndx == 4)	n_button_ndx = AKEYCODE_DPAD_UP;
-				if (n_button_ndx == 5)	n_button_ndx = AKEYCODE_DPAD_DOWN;
-				if (n_button_ndx == 6)	n_button_ndx = AKEYCODE_DPAD_LEFT;
-				if (n_button_ndx == 7)	n_button_ndx = AKEYCODE_DPAD_RIGHT;
-
-				if (n_button_ndx == 10)	n_button_ndx = AKEYCODE_BUTTON_L1;
-				if (n_button_ndx == 11)	n_button_ndx = AKEYCODE_BUTTON_R1;
-
-				if (n_button_ndx == 12)	n_button_ndx = AKEYCODE_BUTTON_L2;
-				if (n_button_ndx == 13)	n_button_ndx = AKEYCODE_BUTTON_R2;
-
-				if (n_button_ndx == 14)	n_button_ndx = AKEYCODE_BUTTON_THUMBL;
-				if (n_button_ndx == 15)	n_button_ndx = AKEYCODE_BUTTON_THUMBR;
-
+#if 0
 				if (n_key)	Android_OnPadDown(n_port, n_button_ndx);
 				else		Android_OnPadUp(n_port, n_button_ndx);
-			#else
-				// 2018.01.23 - RJS - Need Windows here
-			#endif
+#endif
 			}
 		}
 		// float analogX = (float)input_state_cb(n_port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_X) / 32768.0f;

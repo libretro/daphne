@@ -53,7 +53,6 @@ using namespace std;
 
 const int JOY_AXIS_MID = (int) (32768 * (0.75));		// how far they have to move the joystick before it 'grabs'
 
-bool g_use_joystick = true;	// use a joystick by default
 // RJS ADD - invert controls
 bool g_invert_joystick = false;
 unsigned int idle_timer; // added by JFA for -idleexit
@@ -808,17 +807,6 @@ int SDL_input_init()
 	}
 	g_sticky_coin_cycles = (Uint32) (STICKY_COIN_SECONDS * get_cpu_hz(0));	// only needs to be calculated once
 
-   // if joystick usage is enabled
-   if (g_use_joystick)
-   {
-      printline("Joystick #0 was successfully opened");
-   }
-   // notify user that their attempt to disable the joystick is successful
-   else
-   {
-      printline("Joystick usage disabled");
-   }
-
    CFG_Keys();	// NOTE : for some freak reason, this should not be done BEFORE the joystick is initialized, I don't know why!
    result = 1;
 
@@ -1320,9 +1308,3 @@ void reset_idle(void)
 	idle_timer = refresh_ms_time();
 }
 // end edit
-
-// primarily to disable joystick use if user wishes not to use one
-void set_use_joystick(bool val)
-{
-	g_use_joystick = val;
-}

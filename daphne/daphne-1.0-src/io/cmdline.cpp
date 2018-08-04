@@ -788,7 +788,6 @@ bool parse_cmd_line(int argc, char **argv)
 		// to disable any existing joysticks that may be plugged in that may interfere with input
 		else if (strcasecmp(s, "-nojoystick")==0)
 		{
-			set_use_joystick(false);
 		}
       // if want data sent to the server
 		else if (strcasecmp(s, "-serversend")==0)
