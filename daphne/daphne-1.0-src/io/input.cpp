@@ -115,7 +115,6 @@ int g_key_defs[SWITCH_COUNT][2] =
 
 ////////////
 
-#ifndef GP2X
 // RJS CHANGE START
 /*
 // added by Russ
@@ -588,67 +587,6 @@ int * joystick_buttons_map_table[MAX_DEFINED_GAME_TYPES] =
 
 // RJS CHANGE END
 
-#else
-// RJS START ADD - to keep up with non-GP2X
-#define MAX_DEFINED_JOYSTICK_BUTTONS	18
-#define MAX_DEFINED_GAME_TYPES			23
-// RJS END
-
-// button mapping for gp2x
-// RJS CHANGE
-// int joystick_buttons_map[18] =
-int joystick_buttons_map_default[MAX_DEFINED_JOYSTICK_BUTTONS] =
-{
-	SWITCH_UP,	// 0 (up)
-	SWITCH_UP,	// 1 (up-left)
-	SWITCH_LEFT,	// 2 (left)
-	SWITCH_DOWN,	// 3 (down-left)
-	SWITCH_DOWN,	// 4 (down)
-	SWITCH_DOWN,	// 5 (down-right)
-	SWITCH_RIGHT,	// 6 (right)
-	SWITCH_UP,	// 7 (up-right)
-	SWITCH_START1,	// 8 (start)
-	SWITCH_COIN1,	// 9 (select)
-	SWITCH_QUIT,	// 10 (left)
-	SWITCH_PAUSE,	// 11 (right)
-	SWITCH_BUTTON1,	// 12 (A)
-	SWITCH_BUTTON2, // 13 (B)
-	SWITCH_BUTTON3,	// 14 (X)
-	SWITCH_CONSOLE,	// 15 (Y)
-	SWITCH_BUTTON1, // 16 is vol +
-	SWITCH_BUTTON1 // 17 is vol -
-};
-
-// RJS START ADD - to keep up with non-GP2X
-// Hard coding 23 is stupid, see enum of game types in game.h, no new games are likely so leaving it.
-int * joystick_buttons_map_table[MAX_DEFINED_GAME_TYPES] =
-{
-	joystick_buttons_map_default,		// 00 GAME_UNDEFINED
-	joystick_buttons_map_default,		// 01 GAME_LAIR
-	joystick_buttons_map_default,		// 02 GAME_LAIR2
-	joystick_buttons_map_default,		// 03 GAME_ACE
-	joystick_buttons_map_default,		// 04 GAME_ACE91
-	joystick_buttons_map_default,		// 05 GAME_CLIFF
-	joystick_buttons_map_default,		// 06 GAME_GTG
-	joystick_buttons_map_default,		// 07 GAME_SUPERD
-	joystick_buttons_map_default,		// 08 GAME_THAYERS
-	joystick_buttons_map_default,		// 09 GAME_ASTRON
-	joystick_buttons_map_default,		// 10 GAME_GALAXY
-	joystick_buttons_map_default,		// 11 GAME_ESH
-	joystick_buttons_map_default,		// 12 GAME_LAIREURO
-	joystick_buttons_map_default,		// 13 GAME_BADLANDS
-	joystick_buttons_map_default,		// 14 GAME_STARRIDER
-	joystick_buttons_map_default,		// 15 GAME_BEGA
-	joystick_buttons_map_default,		// 16 GAME_INTERSTELLAR
-	joystick_buttons_map_default,		// 17 GAME_SAE
-	joystick_buttons_map_default,		// 18 GAME_MACH3
-	joystick_buttons_map_default,		// 19 GAME_UVT
-	joystick_buttons_map_default,		// 20 GAME_BADLANDP
-	joystick_buttons_map_default,		// 21 GAME_DLE1
-	joystick_buttons_map_default		// 22 GAME_DLE2
-};
-// RJS END
-#endif
 
 // Mouse button to key mappings
 // Added by ScottD for Singe
