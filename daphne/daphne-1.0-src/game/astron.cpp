@@ -1423,3 +1423,13 @@ void astronh::clock_8251(void)
 	}
 }
 
+
+unsigned astron::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *astron::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

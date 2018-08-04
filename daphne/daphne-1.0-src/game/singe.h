@@ -51,6 +51,8 @@ public:
 	bool handle_cmdline_arg(const char *arg);
 	void palette_calculate();
 	void video_repaint();
+   unsigned get_libretro_button_map(unsigned id);
+   const char *get_libretro_button_name(unsigned id);
 
 	// g_ldp function wrappers (to make function pointers out of them)
 	static void enable_audio1() { g_ldp->enable_audio1(); }

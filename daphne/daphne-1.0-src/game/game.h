@@ -34,6 +34,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <libretro.h>
+
 // we allow up to triple buffering
 #define MAX_VIDEO_OVERLAY_BUFFERS	3
 
@@ -106,6 +108,8 @@ public:
 	virtual void input_disable(Uint8);
 	virtual void OnMouseMotion(Uint16 x, Uint16 y, Sint16 xrel, Sint16 yrel);  // Added by ScottD
 	virtual void OnVblank();	// this gets called by the ldp class every vblank (since many games use vblank for their interrupt)
+   virtual unsigned get_libretro_button_map(unsigned id);
+   virtual const char *get_libretro_button_name(unsigned id);
 
 	// This optional function will get called 4 times by the ldv1000 driver IF the game driver has first called ldv1000_report_vsync.
 	// If 'bIsStatus' is false, then this is the command strobe.

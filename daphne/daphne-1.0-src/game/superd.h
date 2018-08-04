@@ -54,6 +54,8 @@ public:
 	void OnLDV1000LineChange(bool bIsStatus, bool bIsEnabled);
 	bool set_bank(unsigned char, unsigned char);
 	void video_repaint();
+   unsigned get_libretro_button_map(unsigned id);
+   const char *get_libretro_button_name(unsigned id);
 	void palette_calculate();
 	
 protected:

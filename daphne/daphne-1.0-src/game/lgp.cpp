@@ -530,3 +530,12 @@ bool lgp::set_bank(Uint8 which_bank, Uint8 value)
 	return result;
 }
 
+unsigned lgp::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *lgp::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

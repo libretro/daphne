@@ -42,6 +42,8 @@ public:
 	virtual ~releasetest();
 	void start();
 	void video_repaint();
+   unsigned get_libretro_button_map(unsigned id);
+   const char *get_libretro_button_name(unsigned id);
 private:
 	// after a test, call this function to indicate whether test passed or failed
 	void logtest(bool passed, const string &testname);

@@ -6,8 +6,8 @@ INCFLAGS    := -I$(CORE_DIR) \
 					-I$(CORE_DIR)/deps/libogg/include \
 					-I$(CORE_DIR)/deps/libvorbis/include \
 					-I$(DAPHNE_MAIN_DIR)/include \
-					-I$(CORE_DIR)/deps/libvorbis/lib
-
+					-I$(CORE_DIR)/deps/libvorbis/lib \
+					-I$(CORE_DIR)/daphne/libretro
 
 SOURCES_C   := $(DEPS_DIR)/libogg/src/bitwise.c \
 					$(DEPS_DIR)/libogg/src/framing.c \

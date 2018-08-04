@@ -43,3 +43,13 @@ void test_sb::start()
 
 	pScoreboard->PreDeleteInstance();
 }
+
+unsigned test_sb::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *test_sb::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

@@ -820,3 +820,13 @@ void interstellar::draw_16x16(int character_number, int xcoord, int ycoord, int 
 	draw_8x8((character_number * 4) + 2, xcoord + (xflip?8:0), ycoord + (yflip?0:8), xflip, yflip, palette);
 	draw_8x8((character_number * 4) + 3, xcoord + (xflip?0:8), ycoord + (yflip?0:8), xflip, yflip, palette);
 }
+
+unsigned interstellar::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *interstellar::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

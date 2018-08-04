@@ -33,7 +33,7 @@
 // board that only has one sprite/character generator and one ay-3-8910. The
 // conversion runs either the Pioneer LD-V1000 or Pioneer PR8210 (the 8210
 // version has an extra pcb on top which includes another 6502 and rom). 
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
@@ -1042,4 +1042,14 @@ void bega::write_m6850_data(Uint8 data)
    // writing to the data register clears the interrupt bit (7) and the transmit data register empty bit (1)
    mc6850_status &= 0x7d;
    write_ldp1000(data);
+}
+
+unsigned bega::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *bega::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
 }

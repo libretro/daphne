@@ -133,3 +133,13 @@ void benchmark::video_repaint()
 		*(pos++) = 0xFF;	// white
 	}
 }
+
+unsigned benchmark::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *benchmark::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

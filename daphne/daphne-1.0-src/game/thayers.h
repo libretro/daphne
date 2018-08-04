@@ -52,6 +52,8 @@ public:
 	bool set_bank(unsigned char, unsigned char);
 	void palette_calculate();
 	void video_repaint();
+   unsigned get_libretro_button_map(unsigned id);
+   const char *get_libretro_button_name(unsigned id);
     void init_overlay_scoreboard(bool fShowScoreboard);
 	void write_scoreboard(Uint8, Uint8, int); // function to decode scoreboard data
 

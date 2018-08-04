@@ -26,7 +26,9 @@
 
 #include "libretro.h"
 #include "libretro_daphne.h"
+#include "../daphne-1.0-src/io/input.h"
 #include "../daphne-1.0-src/daphne.h"
+#include "../daphne-1.0-src/game/game.h"
 #include "../main_android.h"
 #include "../include/SDL_render.h"
 
@@ -47,6 +49,10 @@
 *
 ***************************************************************************************************
 **************************************************************************************************/
+#define RETRO_MAX_PLAYERS 2
+#define RETRO_MAX_BUTTONS (RETRO_DEVICE_ID_JOYPAD_R3 + 1)
+
+static int button_ids[RETRO_MAX_BUTTONS] = {SWITCH_NOTHING};
 
 // File and path of loaded rom.
 bool gf_isThayers = false;
@@ -325,7 +331,8 @@ void retro_set_controller_port_device(unsigned in_port, unsigned in_device)
 **************************************************************************************************/
 void retro_reset(void)
 {
-	// TODO: Put Daphne reset code here.
+   if (g_game)
+      g_game->reset();
 
 	// Clear the rom paths.
 	gstr_rom_extension[0]	= '\0';
@@ -345,8 +352,6 @@ void retro_keyboard_input_callback(bool in_down, unsigned in_keycode, uint32_t i
 /**************************************************************************************************
 * Checks if the given port and button's input state has changed.  Save new state if needed.
 **************************************************************************************************/
-#define RETRO_MAX_PLAYERS 2
-#define RETRO_MAX_BUTTONS (RETRO_DEVICE_ID_JOYPAD_R3 + 1)
 
 bool retro_has_inputstate_changed(int in_port, int in_button, uint16_t in_key)
 {
@@ -394,9 +399,11 @@ void retro_run(void)
 	// Poll input.
 	input_poll_cb();
 
+
 	// Notice numplayers starts at 1.  The playercontrollerid_list points to the player ordinal
 	// to the actual device id (port).  Hardcoded here for later proper updating.
 	int n_playercontrollerid_list[RETRO_MAX_PLAYERS] = { 0, 1 };
+
 	for (int n_numplayers = 0; n_numplayers < RETRO_MAX_PLAYERS; n_numplayers++)
 	{
 		int n_port = n_playercontrollerid_list[n_numplayers];
@@ -408,10 +415,13 @@ void retro_run(void)
 
 			if (retro_has_inputstate_changed(n_port, n_button_ndx, n_key))
 			{
-#if 0
-				if (n_key)	Android_OnPadDown(n_port, n_button_ndx);
-				else		Android_OnPadUp(n_port, n_button_ndx);
-#endif
+            if (button_ids[n_button_ndx] != SWITCH_NOTHING)
+            {
+               if (n_key)
+                  input_enable(button_ids[n_button_ndx]);
+               else
+                  input_disable(button_ids[n_button_ndx]);
+            }
 			}
 		}
 		// float analogX = (float)input_state_cb(n_port, RETRO_DEVICE_ANALOG, RETRO_DEVICE_INDEX_ANALOG_LEFT, RETRO_DEVICE_ID_ANALOG_X) / 32768.0f;
@@ -1119,10 +1129,16 @@ bool retro_load_game(const struct retro_game_info *in_game)
 		strcat(strCommandline, " ");
 	}
 
-	if (main_daphne(num_args, pstr_args) == 0) return true;
+	if (main_daphne(num_args, pstr_args) != 0)
+      return false;
+
+   if (g_game)
+   {
+      for (int n_button_ndx = 0; n_button_ndx < RETRO_MAX_BUTTONS; n_button_ndx++)
+         button_ids[n_button_ndx]    = g_game->get_libretro_button_map(n_button_ndx);
+   }
 	
-	return false;
-	
+	return true;
 
 	/*
 	// Build out the command line v01.

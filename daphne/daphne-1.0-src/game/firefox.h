@@ -42,6 +42,8 @@ public:
 	void input_enable(Uint8);
 	void input_disable(Uint8);
 	void OnVblank();
+   unsigned get_libretro_button_map(unsigned id);
+   const char *get_libretro_button_name(unsigned id);
 	bool set_bank(unsigned char, unsigned char);
 	void palette_calculate();
 	void video_repaint();	// function to repaint video

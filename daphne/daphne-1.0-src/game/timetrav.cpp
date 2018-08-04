@@ -194,3 +194,13 @@ void timetrav::palette_calculate()
 		palette_set_color(i, temp_color);
 	}
 }
+
+unsigned timetrav::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *timetrav::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

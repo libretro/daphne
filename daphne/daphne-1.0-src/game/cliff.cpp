@@ -737,3 +737,13 @@ void gtg::set_preset(int val)
 	if (val==1) disc_side=1;
 	else if (val==2) disc_side=2;
 }
+
+unsigned cliff::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *cliff::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

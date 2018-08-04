@@ -359,3 +359,13 @@ bool starrider::set_bank(unsigned char which_bank, unsigned char value)
 	
 	return result;
 }
+
+unsigned starrider::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *starrider::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

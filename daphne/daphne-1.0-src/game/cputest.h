@@ -38,6 +38,8 @@ public:
 	void port_write(Uint16 port, Uint8 value);
 	void update_pc(Uint32);
 	void set_preset(int);
+   unsigned get_libretro_button_map(unsigned id);
+   const char *get_libretro_button_name(unsigned id);
 	void start();
 private:
 	Uint32 m_speedtimer;

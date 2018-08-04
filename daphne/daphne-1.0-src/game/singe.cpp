@@ -322,3 +322,13 @@ void singe::set_last_error(const char *cpszErrMsg)
 	// TODO : figure out reliable way to call printerror (maybe there isn't one?)
 	printline(cpszErrMsg);
 }
+
+unsigned singe::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *singe::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

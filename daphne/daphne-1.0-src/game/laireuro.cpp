@@ -804,3 +804,13 @@ bool laireuro::set_bank(Uint8 which_bank, Uint8 value)
 	
 	return result;
 }
+
+unsigned laireuro::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *laireuro::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

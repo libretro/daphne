@@ -1199,3 +1199,13 @@ void lair2::EEPROM_9536_write(Uint8 value)
 
 	  old = value;
 }
+
+unsigned lair2::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *lair2::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

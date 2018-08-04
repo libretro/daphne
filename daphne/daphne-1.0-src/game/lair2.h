@@ -77,6 +77,8 @@ public:
 	void patch_roms();			
 	void ldp_fill_buf();				// gets our ldp info and fills DL2 buffer
 	void video_repaint();
+   unsigned get_libretro_button_map(unsigned id);
+   const char *get_libretro_button_name(unsigned id);
 	void EEPROM_9536_write(Uint8 value);
 
 protected:

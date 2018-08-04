@@ -717,6 +717,16 @@ void firefox::OnVblank()
 	vp931_report_vsync();
 }
 
+unsigned firefox::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *firefox::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}
+
 // used to set dip switch values
 bool firefox::set_bank(unsigned char which_bank, unsigned char value)
 {

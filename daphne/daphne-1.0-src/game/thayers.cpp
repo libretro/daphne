@@ -829,3 +829,13 @@ void thayers::thayers_write_g_port(unsigned char)
 {
 //	printline("Not implemented");
 }
+
+unsigned thayers::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *thayers::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

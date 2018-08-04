@@ -37,6 +37,8 @@ public:
 	bool handle_cmdline_arg(const char *arg);
 	void palette_calculate();
 	void video_repaint();
+   unsigned get_libretro_button_map(unsigned id);
+   const char *get_libretro_button_name(unsigned id);
 
 private:
 	Uint16 m_early1, m_early2;	// two early frames we can alternate between

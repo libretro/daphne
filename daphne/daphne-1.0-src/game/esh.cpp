@@ -602,3 +602,13 @@ void esh::input_disable(Uint8 move)
 		break;
 	}
 }
+
+unsigned esh::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *esh::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

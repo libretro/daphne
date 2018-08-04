@@ -48,6 +48,8 @@ public:
 	void OnVblank();
 	void OnLDV1000LineChange(bool bIsStatus, bool bIsEnabled);
 	void video_repaint();
+   unsigned get_libretro_button_map(unsigned id);
+   const char *get_libretro_button_name(unsigned id);
     void init_overlay_scoreboard(bool fShowScoreboard);
 	void palette_calculate();
 	void set_preset(int);

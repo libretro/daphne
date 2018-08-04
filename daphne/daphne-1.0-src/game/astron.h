@@ -74,6 +74,8 @@ public:
 	bool set_bank(Uint8, Uint8);
 	virtual void write_ldp(Uint8, Uint16);
 	virtual Uint8 read_ldp(Uint16);
+   unsigned get_libretro_button_map(unsigned id);
+   const char *get_libretro_button_name(unsigned id);
 protected:
 	int current_bank;
 	void recalc_palette();

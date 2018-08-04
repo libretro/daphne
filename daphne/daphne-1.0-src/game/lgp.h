@@ -47,6 +47,8 @@ public:
 	virtual void input_disable(Uint8);
 	bool set_bank(Uint8, Uint8);
 	void video_repaint();	// function to repaint video
+   unsigned get_libretro_button_map(unsigned id);
+   const char *get_libretro_button_name(unsigned id);
 protected:
 	Uint8 m_soundchip1_id;   
 	Uint8 m_soundchip2_id;

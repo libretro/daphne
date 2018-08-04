@@ -155,3 +155,13 @@ void mcputest::port_write(Uint16 Port, Uint8 Value)
 	}
 
 }
+
+unsigned mcputest::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *mcputest::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

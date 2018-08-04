@@ -737,3 +737,13 @@ void releasetest::test_sound_mixing()
 
 	logtest(bTestPassed, "Sample Mixing + Main Audio Mixer + Clipping");
 }
+
+unsigned releasetest::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *releasetest::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

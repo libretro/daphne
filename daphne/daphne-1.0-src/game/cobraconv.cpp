@@ -722,3 +722,12 @@ void cobraconv::draw_sprites(int offset, Uint8 *character_set)
 	}
 }
 
+unsigned cobraconv::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *cobraconv::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

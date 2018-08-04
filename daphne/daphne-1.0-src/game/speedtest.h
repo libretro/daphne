@@ -32,6 +32,8 @@ public:
 	speedtest();
 	void set_preset(int);	// set up dip switches/rom names, etc with prepared values
 	void start();
+   unsigned get_libretro_button_map(unsigned id);
+   const char *get_libretro_button_name(unsigned id);
 private:
 	char m_max_frame[6];	// max frame # to seek to for speed test
 

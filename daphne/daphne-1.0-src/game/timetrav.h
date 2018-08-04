@@ -42,6 +42,8 @@ public:
 	void input_disable(Uint8);
 	bool set_bank(unsigned char, unsigned char);
 	void palette_calculate();
+   unsigned get_libretro_button_map(unsigned id);
+   const char *get_libretro_button_name(unsigned id);
 
 protected:
 };

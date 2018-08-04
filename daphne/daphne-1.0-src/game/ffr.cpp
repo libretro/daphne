@@ -266,3 +266,12 @@ void ffr::set_preset(int iPreset)
 	}
 }
 
+unsigned ffr::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *ffr::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

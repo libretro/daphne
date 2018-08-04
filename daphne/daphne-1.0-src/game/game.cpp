@@ -352,6 +352,16 @@ void game::OnVblank()
 {
 }
 
+unsigned game::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *game::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}
+
 void game::OnLDV1000LineChange(bool bIsStatus, bool bIsEnabled)
 {
 	// get rid of warnings

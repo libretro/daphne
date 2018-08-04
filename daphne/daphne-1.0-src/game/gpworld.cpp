@@ -797,4 +797,14 @@ void gpworld::draw_sprite(int spr_number)
 		}
 	}
 }
+
+unsigned gpworld::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *gpworld::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}
 // END modified Mame code

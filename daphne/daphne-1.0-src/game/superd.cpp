@@ -661,3 +661,13 @@ void superd::OnLDV1000LineChange(bool bIsStatus, bool bIsEnabled)
 	}
 	// else the line is disabled which we don't care about
 }
+
+unsigned superd::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *superd::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

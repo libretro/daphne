@@ -29,16 +29,16 @@
 //  - eliminate redundant ROM loads for UVT
 //  - make test switch a toggle
 //  - add samples for UVT/CC
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 #pragma warning (disable:4100) // disable warning about unreferenced parameter
 #endif
 
 // Win32 doesn't use strcasecmp, it uses stricmp (lame)
-#ifdef WIN32
+#ifdef _WIN32
 #define strcasecmp stricmp
 #endif
 
@@ -1343,3 +1343,13 @@ void cobram3::patch_roms()
 		printline("CobraM3 infinite lives cheat enabled!");
 	}
 } 
+
+unsigned mach3::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *mach3::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

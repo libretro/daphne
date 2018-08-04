@@ -668,3 +668,13 @@ void badlands::update_shoot_led(Uint8 value)
 		}
 	}
 }
+
+unsigned badlands::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *badlands::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

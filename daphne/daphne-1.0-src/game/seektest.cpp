@@ -659,3 +659,13 @@ void seektest::video_repaint()
 	
 	// else if overlay is disabled, don't draw anything
 }
+
+unsigned seektest::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *seektest::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

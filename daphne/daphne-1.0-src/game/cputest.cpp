@@ -207,3 +207,12 @@ void cputest::set_preset(int val)
 	} // end switch	
 }
 
+unsigned cputest::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *cputest::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

@@ -54,6 +54,8 @@ public:
 	bool set_bank(unsigned char, unsigned char);
 	void palette_calculate();
 	void video_repaint();	// function to repaint video
+   unsigned get_libretro_button_map(unsigned id);
+   const char *get_libretro_button_name(unsigned id);
 
 protected:
 	void update_shoot_led(Uint8);

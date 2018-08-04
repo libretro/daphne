@@ -136,3 +136,13 @@ void speedtest::start()
 	g_ldp->pre_search(frame, true);
 	g_ldp->pre_play();
 }
+
+unsigned speedtest::get_libretro_button_map(unsigned id)
+{
+   return SWITCH_NOTHING;
+}
+
+const char *speedtest::get_libretro_button_name(unsigned id)
+{
+   return "N/A";
+}

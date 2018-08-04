@@ -34,6 +34,8 @@ public:
 	Uint8 cpu_mem_read(Uint16 addr);			// memory read routine
 	void cpu_mem_write(Uint16 addr, Uint8 value);		// memory write routine
 	void port_write(Uint16 Port, Uint8 Value);
+   unsigned get_libretro_button_map(unsigned id);
+   const char *get_libretro_button_name(unsigned id);
 //	bool load_roms();
 
 protected:

@@ -30,6 +30,8 @@ public:
 	void set_preset(int);
 	void palette_calculate();
 	void video_repaint();
+   unsigned get_libretro_button_map(unsigned id);
+   const char *get_libretro_button_name(unsigned id);
 private:
 	Uint32 m_seconds_to_run;	// how many seconds to run the benchmark
 };

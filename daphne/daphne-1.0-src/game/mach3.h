@@ -58,6 +58,8 @@ public:
 	void port_write(Uint16, Uint8);
 	void input_enable(Uint8);
 	void input_disable(Uint8);
+   unsigned get_libretro_button_map(unsigned id);
+   const char *get_libretro_button_name(unsigned id);
 	bool set_bank(unsigned char, unsigned char);
 //	void set_version(int);
 //	bool handle_cmdline_arg(const char *arg);
