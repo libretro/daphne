@@ -91,7 +91,6 @@ SOURCES_CXX += $(DAPHNE_DIR)/game/mach3.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/game/singe.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/game/starrider.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/game/superd.cpp
-SOURCES_CXX += $(DAPHNE_DIR)/game/test_sb.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/game/thayers.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/game/timetrav.cpp
 

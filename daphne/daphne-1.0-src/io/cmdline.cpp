@@ -65,7 +65,6 @@
 #ifdef BUILD_SINGE
 #include "../game/singe.h"
 #endif // BUILD_SINGE
-#include "../game/test_sb.h"
 #include "../ldp-out/ldp.h"
 #include "../ldp-out/sony.h"
 #include "../ldp-out/pioneer.h"
@@ -500,10 +499,6 @@ bool parse_game_type()
 	else if (strcasecmp(s, "timetrav")==0)
 	{
 		g_game = new timetrav();
-	}
-	else if (strcasecmp(s, "test_sb")==0)
-	{
-		g_game = new test_sb();
 	}
 	else if (strcasecmp(s, "tq")==0)
 	{
