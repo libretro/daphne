@@ -47,11 +47,6 @@
 #include "../game/game.h"
 #include "../game/superd.h"
 #include "../game/thayers.h"
-#include "../game/speedtest.h"
-#include "../game/seektest.h"
-#include "../game/releasetest.h"
-#include "../game/cputest.h"
-#include "../game/multicputest.h"
 #include "../game/firefox.h"
 #include "../game/ffr.h"
 #include "../game/astron.h"
@@ -63,7 +58,6 @@
 #include "../game/cobraconv.h"
 #include "../game/gpworld.h"
 #include "../game/interstellar.h"
-#include "../game/benchmark.h"
 #include "../game/lair2.h"
 #include "../game/mach3.h"
 #include "../game/lgp.h"
@@ -252,10 +246,6 @@ bool parse_game_type()
 		g_game = new bega();
 		g_game->set_version(2);
 	}
-	else if (strcasecmp(s, "benchmark")==0)
-	{
-		g_game = new benchmark();
-	}
 	else if (strcasecmp(s, "blazer")==0)
 	{
 		g_game = new blazer();
@@ -288,10 +278,6 @@ bool parse_game_type()
 	else if (strcasecmp(s, "cobram3")==0)
 	{
 		g_game = new cobram3();
-	}
-	else if (strcasecmp(s, "cputest")==0)
-	{
-		g_game = new cputest();
 	}
 	else if (strcasecmp(s, "dle11") == 0)
 	{
@@ -475,15 +461,6 @@ bool parse_game_type()
 	{
 		g_game = new mach3();
 	}
-	else if (strcasecmp(s, "mcputest")==0)
-	{
-		g_game = new mcputest();
-	}
-	else if (strcasecmp(s, "releasetest")==0)
-	{
-		bSGNMatches = false;
-		g_game = new releasetest();
-	}
 	else if (strcasecmp(s, "roadblaster")==0)
 	{
 		g_game = new roadblaster();
@@ -492,10 +469,6 @@ bool parse_game_type()
 	{
 		g_game = new sae();
 	}
-	else if (strcasecmp(s, "seektest")==0)
-	{
-		g_game = new seektest();
-	}
 	// singe has a bunch of extra deps so we make it optional to build
 #ifdef BUILD_SINGE
 	else if (strcasecmp(s, "singe") == 0)
@@ -503,10 +476,6 @@ bool parse_game_type()
 		g_game = new singe();
 	}
 #endif // BUILD_SINGE
-	else if (strcasecmp(s, "speedtest")==0)
-	{
-		g_game = new speedtest();
-	}
 	else if (strcasecmp(s, "sdq")==0)
 	{
 		g_game = new superd();
