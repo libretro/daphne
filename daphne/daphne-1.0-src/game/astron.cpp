@@ -1426,10 +1426,46 @@ void astronh::clock_8251(void)
 
 unsigned astron::get_libretro_button_map(unsigned id)
 {
+   switch (id)
+   {
+      case RETRO_DEVICE_ID_JOYPAD_SELECT:
+         return SWITCH_COIN1; /*Player Coin */
+      case RETRO_DEVICE_ID_JOYPAD_START:
+         return SWITCH_START1; /*Player Start */
+      case RETRO_DEVICE_ID_JOYPAD_B:
+      case RETRO_DEVICE_ID_JOYPAD_Y:
+         return SWITCH_BUTTON1; /* Fire */
+      case RETRO_DEVICE_ID_JOYPAD_UP:
+         return SWITCH_UP; /* Up */
+      case RETRO_DEVICE_ID_JOYPAD_DOWN:
+         return SWITCH_DOWN; /* Down */
+      case RETRO_DEVICE_ID_JOYPAD_LEFT:
+         return SWITCH_LEFT; /* Left */
+      case RETRO_DEVICE_ID_JOYPAD_RIGHT:
+         return SWITCH_RIGHT; /* Right */
+   }
    return SWITCH_NOTHING;
 }
 
 const char *astron::get_libretro_button_name(unsigned id)
 {
+   switch (id)
+   {
+      case RETRO_DEVICE_ID_JOYPAD_SELECT:
+         return "Coin Insert";
+      case RETRO_DEVICE_ID_JOYPAD_START:
+         return "Start";
+      case RETRO_DEVICE_ID_JOYPAD_B:
+      case RETRO_DEVICE_ID_JOYPAD_Y:
+         return "Fire";
+      case RETRO_DEVICE_ID_JOYPAD_UP:
+         return "Up";
+      case RETRO_DEVICE_ID_JOYPAD_DOWN:
+         return "Down";
+      case RETRO_DEVICE_ID_JOYPAD_LEFT:
+         return "Left";
+      case RETRO_DEVICE_ID_JOYPAD_RIGHT:
+         return "Right";
+   }
    return "N/A";
 }
