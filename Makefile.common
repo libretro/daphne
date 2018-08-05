@@ -74,7 +74,6 @@ SOURCES_CXX += $(DAPHNE_DIR)/daphne.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/game/astron.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/game/badlands.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/game/bega.cpp
-SOURCES_CXX += $(DAPHNE_DIR)/game/boardinfo.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/game/cliff.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/game/cobraconv.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/game/esh.cpp
