@@ -69,26 +69,11 @@ struct coin_input
 ////////////////////////
 
 int SDL_input_init();
-int SDL_input_shutdown();
-
-// Filters out mouse events if 'bFilteredOut' is true.
-// The purpose is so that games that don't use the mouse don't get a bunch of extra mouse
-//  events which can hurt performance.
-void FilterMouseEvents(bool bFilteredOut);
 
 void SDL_check_input();
 
-void process_event(SDL_Event *event);
-// RJS CHANGE START
-//void process_keydown(SDLKey key);
-//void process_keyup(SDLKey key);
-void process_keydown(SDL_Keycode key);
-void process_keyup(SDL_Keycode key);
 void input_invert_controls(bool fInvert);
 bool input_isinverted();
-// RJS CHANGE END
-void process_joystick_motion(SDL_Event *event);
-void process_joystick_hat_motion(SDL_Event *event);
 bool input_pause(bool fPaused);
 void input_enable(Uint8);
 void input_disable(Uint8);

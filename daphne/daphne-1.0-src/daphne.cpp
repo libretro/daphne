@@ -275,7 +275,6 @@ int main_daphne(int argc, char **argv)
 							printerror("Could not load ROM images! You must supply these.");
 							result_code = 1;
 						}
-						// SDL_input_shutdown();
 					}
 					else
 					{
@@ -364,8 +363,6 @@ int main_daphne_shutdown()
 
 	g_ldp->pre_shutdown();
 	g_game->video_shutdown();
-
-	SDL_input_shutdown();
 
 	sound_shutdown();
 	shutdown_display();

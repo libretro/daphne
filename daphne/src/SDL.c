@@ -150,22 +150,6 @@ SDL_InitSubSystem(Uint32 flags)
 #endif
 
 	// RJS ADD - logging
-	LOGI("daphne-libretro: In SDL_InitSubSystem, before event subsystem.");
-    /* Initialize the event subsystem */
-    if ((flags & SDL_INIT_EVENTS)) {
-#if !SDL_EVENTS_DISABLED
-        if (SDL_PrivateShouldInitSubsystem(SDL_INIT_EVENTS)) {
-            if (SDL_StartEventLoop() < 0) {
-                return (-1);
-            }
-            SDL_QuitInit();
-        }
-        SDL_PrivateSubsystemRefCountIncr(SDL_INIT_EVENTS);
-#else
-        return SDL_SetError("SDL not built with events support");
-#endif
-    }
-
 	// RJS ADD - logging
 	LOGI("daphne-libretro: In SDL_InitSubSystem, before timer subsystem.");
     /* Initialize the timer subsystem */
@@ -338,16 +322,6 @@ SDL_QuitSubSystem(Uint32 flags)
             SDL_TimerQuit();
         }
         SDL_PrivateSubsystemRefCountDecr(SDL_INIT_TIMER);
-    }
-#endif
-
-#if !SDL_EVENTS_DISABLED
-    if ((flags & SDL_INIT_EVENTS)) {
-        if (SDL_PrivateShouldQuitSubsystem(SDL_INIT_EVENTS)) {
-            SDL_QuitQuit();
-            SDL_StopEventLoop();
-        }
-        SDL_PrivateSubsystemRefCountDecr(SDL_INIT_EVENTS);
     }
 #endif
 }

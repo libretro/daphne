@@ -750,31 +750,8 @@ int SDL_input_init()
 
 	idle_timer = refresh_ms_time(); // added by JFA for -idleexit
 
-	// if the mouse is disabled, then filter mouse events out ...
-	if (!g_game->getMouseEnabled())
-	{
-		FilterMouseEvents(true);
-	}
-
 	return(result);
 
-}
-
-void FilterMouseEvents(bool bFilteredOut)
-{
-	int iState = SDL_ENABLE;
-
-	if (bFilteredOut)
-	{
-		iState = SDL_IGNORE;
-	}
-}
-
-// does any shutting down necessary
-// 1 = success, 0 = failure
-int SDL_input_shutdown(void)
-{
-	return(1);
 }
 
 // checks to see if there is incoming input, and acts on it
@@ -820,6 +797,7 @@ void SDL_check_input()
 	// else the coin queue is empty, so we needn't do anything ...
 }
 
+#if 0
 // RJS NOTE - event processing here
 // processes incoming input
 void process_event(SDL_Event *event)
@@ -1102,6 +1080,7 @@ void process_joystick_hat_motion(SDL_Event *event)
 
 	prev_hat_position = event->jhat.value;
 }
+#endif
 
 bool input_pause(bool fPause)
 {
