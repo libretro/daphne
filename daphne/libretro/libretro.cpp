@@ -93,8 +93,6 @@ retro_audio_sample_batch_t	         audio_batch_cb	   = NULL;
 /**************************************************************************************************
 * Called before retro_init.
 **************************************************************************************************/
-void retro_keyboard_input_callback(bool in_down, unsigned in_keycode, uint32_t in_character, uint16_t in_key_modifiers);
-			
 void retro_set_environment(retro_environment_t in_environment)
 {
 	if (! in_environment) return;
@@ -111,10 +109,6 @@ void retro_set_environment(retro_environment_t in_environment)
 	};
 
 	environ_cb(RETRO_ENVIRONMENT_SET_VARIABLES, (void *)t_environmentvariables);
-
-	struct retro_keyboard_callback t_keyboardcb;
-	t_keyboardcb.callback = retro_keyboard_input_callback;
-	environ_cb(RETRO_ENVIRONMENT_SET_KEYBOARD_CALLBACK, (void *)&t_keyboardcb);
 }
 
 /**************************************************************************************************
@@ -338,15 +332,6 @@ void retro_reset(void)
 	gstr_rom_extension[0]	= '\0';
 	gstr_rom_name[0]		= '\0';
 	gstr_rom_path[0]		= '\0';
-}
-
-/**************************************************************************************************
-* Handles keyboard input.
-**************************************************************************************************/
-void retro_keyboard_input_callback(bool in_down, unsigned in_keycode, uint32_t in_character, uint16_t in_key_modifiers)
-{
-	if (gf_isThayers == false)		return;
-	if (in_keycode >= RETROK_LAST)	return;
 }
 
 /**************************************************************************************************
