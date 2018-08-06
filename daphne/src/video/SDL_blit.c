@@ -133,45 +133,35 @@ SDL_ChooseBlitFunc(Uint32 src_format, Uint32 dst_format, int flags,
 
     /* Get the available CPU features */
     if (features == 0xffffffff) {
-        const char *override = SDL_getenv("SDL_BLIT_CPU_FEATURES");
-
         features = SDL_CPU_ANY;
 
         /* Allow an override for testing .. */
-        if (override) {
-            SDL_sscanf(override, "%u", &features);
-        } else {
-            if (SDL_HasSSE()) {
+        {
+            if (SDL_HasSSE())
                 features |= SDL_CPU_SSE;
-            }
-            if (SDL_HasSSE2()) {
+            if (SDL_HasSSE2())
                 features |= SDL_CPU_SSE2;
-            }
             if (SDL_HasAltiVec()) {
-                if (SDL_UseAltivecPrefetch()) {
+                if (SDL_UseAltivecPrefetch())
                     features |= SDL_CPU_ALTIVEC_PREFETCH;
-                } else {
+                else
                     features |= SDL_CPU_ALTIVEC_NOPREFETCH;
-                }
             }
         }
     }
 
     for (i = 0; entries[i].func; ++i) {
         /* Check for matching pixel formats */
-        if (src_format != entries[i].src_format) {
+        if (src_format != entries[i].src_format)
             continue;
-        }
-        if (dst_format != entries[i].dst_format) {
+        if (dst_format != entries[i].dst_format)
             continue;
-        }
 
         /* Check modulation flags */
         flagcheck =
             (flags & (SDL_COPY_MODULATE_COLOR | SDL_COPY_MODULATE_ALPHA));
-        if ((flagcheck & entries[i].flags) != flagcheck) {
+        if ((flagcheck & entries[i].flags) != flagcheck)
             continue;
-        }
 
         /* Check blend flags */
         flagcheck =

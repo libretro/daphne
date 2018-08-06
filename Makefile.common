@@ -258,17 +258,7 @@ SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/s_copysign.c
     #<ClCompile Include="src\power\android\SDL_syspower.c" />
     #<ClCompile Include="src\power\SDL_power.c" />
 
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/SDL_render.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/SDL_yuv_sw.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/software/SDL_blendfillrect.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/software/SDL_blendline.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/software/SDL_blendpoint.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/software/SDL_drawline.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/software/SDL_drawpoint.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/software/SDL_render_sw.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/software/SDL_rotate.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/SDL.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/SDL_assert.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/SDL_error.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/SDL_hints.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/SDL_log.c
