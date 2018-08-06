@@ -289,14 +289,6 @@ SOURCES_C += $(DAPHNE_MAIN_DIR)/src/thread/SDL_thread.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/timer/SDL_timer.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/timer/libretro/SDL_systimer.c
 
-    #<ClCompile Include="src\video\android\SDL_androidclipboard.c" />
-    #<ClCompile Include="src\video\android\SDL_androidevents.c" />
-    #<ClCompile Include="src\video\android\SDL_androidgl.c" />
-    #<ClCompile Include="src\video\android\SDL_androidkeyboard.c" />
-    #<ClCompile Include="src\video\android\SDL_androidtouch.c" />
-    #<ClCompile Include="src\video\android\SDL_androidvideo.c" />
-    #<ClCompile Include="src\video\android\SDL_androidwindow.c" />
-
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_blit.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_blit_0.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_blit_1.c
