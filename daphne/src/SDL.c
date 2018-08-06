@@ -35,11 +35,6 @@
 #include "joystick/SDL_joystick_c.h"
 
 #include "../main_android.h"
-#if defined(__ANDROID__)
-#include "core/android/SDL_android.h"
-#include "../libretro/libretro_daphne.h"
-extern void SDL_Android_Init(JNIEnv* env, jclass cls);
-#endif
 
 /* Initialization/Cleanup routines */
 #if !SDL_TIMERS_DISABLED

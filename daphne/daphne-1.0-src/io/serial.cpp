@@ -323,7 +323,7 @@ bool serial_init(int port, int baudrate)
 
 // RJS CHANGE
 // #ifdef LINUX
-#if defined(LINUX) || defined(ANDROID)
+#if defined(__linux__)
 	sprintf(portname, "/dev/ttyS%d", port);
 #else
 

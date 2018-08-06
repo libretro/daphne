@@ -155,21 +155,13 @@ bool parse_homedir()
 		// else we couldn't set the homedir, so just leave it as default
 #endif // not MAC_OSX
 #else // WIN32
-#ifndef __ANDROID__
 		// RJS ADD - added the ifndef around this.
 		g_homedir.set_homedir(".");	// for win32 set it to the current directory
 		// "." is already the default,
 		//  so the the main purpose for this is to ensure that the ram and
 		//  framefile directories are created
-#endif
 		
 #endif
-		// RJS ADD START - What could possibly go wrong hardcoding this. FIXME
-#ifdef __ANDROID__
-		// g_homedir.set_homedir("/sdcard/Roms/Daphne");
-		g_homedir.set_homedir("/sdcard/Download/Daphne");
-#endif
-		// RJS ADD END
 	} // end if homedir was not set
 
 	//Reset arg index and return

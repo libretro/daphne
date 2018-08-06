@@ -538,13 +538,6 @@ void net_send_data_to_server()
 
 	if (!g_send_data_to_server) return;	// if user forbids data to be sent, don't do it
 
-// RJS ADD START
-#ifdef __ANDROID__
-	// We ain't send noth'n in Android.
-	return;
-#endif
-// RJS ADD END
-
 #ifdef DEBUG
 	// I don't wanna mess up the server stats with people trying to debug daphne
 	return;

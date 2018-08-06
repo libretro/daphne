@@ -168,11 +168,7 @@ void addlog(const char *s, bool fCreateFile)
 	if (g_log_enabled)
 	{
 		mpo_io *io = NULL;
-		#ifdef __ANDROID__
-			string logname = "/sdcard";
-		#else
-			string logname = g_homedir.get_homedir();
-		#endif
+      string logname = g_homedir.get_homedir();
 		logname += "/";
 		logname += LOGNAME;
 

@@ -31,12 +31,7 @@ homedir::homedir()
 	m_appdir = ".";	// our current directory must be our app directory, so a '.' here is sufficient
 
 	// m_homedir = ".";	// using curdir is a sensible default for the constructor
-#ifdef __ANDROID__
-	m_homedir = "/sdcard/Roms/Daphne";
-	// m_homedir = "/sdcard/Download/Daphne";
-#else
 	m_homedir = ".";
-#endif
 	strcpy(m_strhomedir, this->get_homedir().c_str());
 }
 
