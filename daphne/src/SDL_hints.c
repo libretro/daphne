@@ -18,12 +18,12 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include <stdlib.h>
 #include "./SDL_internal.h"
 
 #include "SDL_hints.h"
 #include "SDL_error.h"
 
-//2017.02.17 - RJS ADD - logging
 #include "../main_android.h"
 
 
@@ -137,58 +137,39 @@ SDL_GetHintBoolean(const char *name, SDL_bool default_value)
 void
 SDL_AddHintCallback(const char *name, SDL_HintCallback callback, void *userdata)
 {
-	// 2017.02.17 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_AddHintCallback, top of routine. name: %s  callback: %d  userdata: %d", name, (int) callback, (int) userdata);
-
 	SDL_Hint *hint;
     SDL_HintWatch *entry;
     const char *value;
 
     if (!name || !*name) {
-		// 2017.02.17 - RJS ADD - Logging.
-		LOGI("daphne-libretro: In SDL_AddHintCallback, invalid name exit. name: %s", name);
         SDL_InvalidParamError("name");
         return;
     }
     if (!callback) {
-		// 2017.02.17 - RJS ADD - Logging.
-		LOGI("daphne-libretro: In SDL_AddHintCallback, invalid callback exit. callback: %d", (int) callback);
         SDL_InvalidParamError("callback");
         return;
     }
 
-	// 2017.02.17 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_AddHintCallback, before SDL_DelHintCallback.");
     SDL_DelHintCallback(name, callback, userdata);
-	// 2017.02.17 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_AddHintCallback, after SDL_DelHintCallback.");
 
     entry = (SDL_HintWatch *)malloc(sizeof(*entry));
     if (!entry) {
-		// 2017.02.17 - RJS ADD - Logging.
-		LOGI("daphne-libretro: In SDL_AddHintCallback, could not malloc entry record, exiting.");
         SDL_OutOfMemory();
         return;
     }
     entry->callback = callback;
     entry->userdata = userdata;
 
-	// 2017.02.17 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_AddHintCallback, before check if name is in hint list.");
     for (hint = SDL_hints; hint; hint = hint->next) {
         if (SDL_strcmp(name, hint->name) == 0) {
             break;
         }
     }
-	// 2017.02.17 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_AddHintCallback, after check if name is in hint list.");
 
 	if (!hint) {
         /* Need to add a hint entry for this watcher */
         hint = (SDL_Hint *)malloc(sizeof(*hint));
         if (!hint) {
-			// 2017.02.17 - RJS ADD - Logging.
-			LOGI("daphne-libretro: In SDL_AddHintCallback, could not malloc new hint record, exiting.");
             SDL_OutOfMemory();
             free(entry);
             return;
@@ -200,8 +181,6 @@ SDL_AddHintCallback(const char *name, SDL_HintCallback callback, void *userdata)
         hint->next = SDL_hints;
         SDL_hints = hint;
     }
-	// 2017.02.17 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_AddHintCallback, after new hint added to hint list.");
 
     /* Add it to the callbacks for this hint */
     entry->next = hint->callbacks;
@@ -209,12 +188,7 @@ SDL_AddHintCallback(const char *name, SDL_HintCallback callback, void *userdata)
 
     /* Now call it with the current value */
     value = SDL_GetHint(name);
-	// 2017.02.17 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_AddHintCallback, before calling callback.");
     callback(userdata, name, value, value);
-
-	// 2017.02.17 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_AddHintCallback, bottom of routine.");
 }
 
 void

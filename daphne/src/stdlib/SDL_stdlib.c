@@ -23,6 +23,7 @@
 #define SDL_DISABLE_ANALYZE_MACROS 1
 #endif
 
+#include <math.h>
 #include "../SDL_internal.h"
 
 /* This file contains portable stdlib functions for SDL */

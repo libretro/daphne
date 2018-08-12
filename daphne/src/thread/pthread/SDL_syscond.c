@@ -25,6 +25,7 @@
 #define _XOPEN_SOURCE 500
 #endif /* __STDC_VERSION__ */
 
+#include <stdlib.h>
 #include "../../SDL_internal.h"
 
 #include <sys/time.h>

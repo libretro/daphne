@@ -27,6 +27,7 @@
 #define _GNU_SOURCE 1
 #endif
 
+#include <stdlib.h>
 #include "../SDL_internal.h"
 
 /* This file contains portable string manipulation functions for SDL */

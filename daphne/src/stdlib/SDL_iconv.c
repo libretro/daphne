@@ -23,6 +23,7 @@
 #define SDL_DISABLE_ANALYZE_MACROS 1
 #endif
 
+#include <stdlib.h>
 #include "../SDL_internal.h"
 
 /* This file contains portable iconv functions for SDL */
