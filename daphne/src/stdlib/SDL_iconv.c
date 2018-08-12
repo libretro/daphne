@@ -892,7 +892,7 @@ SDL_iconv_string(const char *tocode, const char *fromcode, const char *inbuf,
     }
     outbuf = string;
     outbytesleft = stringsize;
-    SDL_memset(outbuf, 0, 4);
+    memset(outbuf, 0, 4);
 
     while (inbytesleft > 0) {
         retCode = SDL_iconv(cd, &inbuf, &inbytesleft, &outbuf, &outbytesleft);
@@ -908,7 +908,7 @@ SDL_iconv_string(const char *tocode, const char *fromcode, const char *inbuf,
                 }
                 outbuf = string + (outbuf - oldstring);
                 outbytesleft = stringsize - (outbuf - string);
-                SDL_memset(outbuf, 0, 4);
+                memset(outbuf, 0, 4);
             }
             break;
         case SDL_ICONV_EILSEQ:

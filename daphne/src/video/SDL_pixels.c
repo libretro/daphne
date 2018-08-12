@@ -638,7 +638,7 @@ SDL_AllocPalette(int ncolors)
     palette->version = 1;
     palette->refcount = 1;
 
-    SDL_memset(palette->colors, 0xFF, ncolors * sizeof(*palette->colors));
+    memset(palette->colors, 0xFF, ncolors * sizeof(*palette->colors));
 
     return palette;
 }
@@ -687,7 +687,7 @@ SDL_SetPaletteColors(SDL_Palette * palette, const SDL_Color * colors,
     }
 
     if (colors != (palette->colors + firstcolor)) {
-        SDL_memcpy(palette->colors + firstcolor, colors,
+        memcpy(palette->colors + firstcolor, colors,
                    ncolors * sizeof(*colors));
     }
     ++palette->version;
@@ -884,7 +884,7 @@ Map1to1(SDL_Palette * src, SDL_Palette * dst, int *identical)
             /* If an identical palette, no need to map */
             if (src == dst
                 ||
-                (SDL_memcmp
+                (memcmp
                  (src->colors, dst->colors,
                   src->ncolors * sizeof(SDL_Color)) == 0)) {
                 *identical = 1;
@@ -1100,7 +1100,7 @@ SDL_CalculateGammaRamp(float gamma, Uint16 * ramp)
 
     /* 0.0 gamma is all black */
     if (gamma == 0.0f) {
-        SDL_memset(ramp, 0, 256 * sizeof(Uint16));
+        memset(ramp, 0, 256 * sizeof(Uint16));
         return;
     } else if (gamma == 1.0f) {
         /* 1.0 gamma is identity */

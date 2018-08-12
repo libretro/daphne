@@ -109,14 +109,14 @@ SDL_FillRect1SSE(Uint8 *pixels, int pitch, Uint32 color, int w, int h)
             int adjust = 16 - ((uintptr_t)p & 15);
             if (adjust) {
                 n -= adjust;
-                SDL_memset(p, color, adjust);
+                memset(p, color, adjust);
                 p += adjust;
             }
             SSE_WORK;
         }
         if (n & 63) {
             int remainder = (n & 63);
-            SDL_memset(p, color, remainder);
+            memset(p, color, remainder);
         }
         pixels += pitch;
     }

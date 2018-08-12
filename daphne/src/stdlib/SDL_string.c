@@ -70,7 +70,7 @@ SDL_ScanLong(const char *text, int radix, long *valuep)
     }
     for (;;) {
         int v;
-        if (SDL_isdigit((unsigned char) *text)) {
+        if (isdigit((unsigned char) *text)) {
             v = *text - '0';
         } else if (radix == 16 && SDL_isupperhex(*text)) {
             v = 10 + (*text - 'A');
@@ -106,7 +106,7 @@ SDL_ScanUnsignedLong(const char *text, int radix, unsigned long *valuep)
     }
     for (;;) {
         int v;
-        if (SDL_isdigit((unsigned char) *text)) {
+        if (isdigit((unsigned char) *text)) {
             v = *text - '0';
         } else if (radix == 16 && SDL_isupperhex(*text)) {
             v = 10 + (*text - 'A');
@@ -138,7 +138,7 @@ SDL_ScanUintPtrT(const char *text, int radix, uintptr_t * valuep)
     }
     for (;;) {
         int v;
-        if (SDL_isdigit((unsigned char) *text)) {
+        if (isdigit((unsigned char) *text)) {
             v = *text - '0';
         } else if (radix == 16 && SDL_isupperhex(*text)) {
             v = 10 + (*text - 'A');
@@ -175,7 +175,7 @@ SDL_ScanLongLong(const char *text, int radix, Sint64 * valuep)
     }
     for (;;) {
         int v;
-        if (SDL_isdigit((unsigned char) *text)) {
+        if (isdigit((unsigned char) *text)) {
             v = *text - '0';
         } else if (radix == 16 && SDL_isupperhex(*text)) {
             v = 10 + (*text - 'A');
@@ -211,7 +211,7 @@ SDL_ScanUnsignedLongLong(const char *text, int radix, Uint64 * valuep)
     }
     for (;;) {
         int v;
-        if (SDL_isdigit((unsigned char) *text)) {
+        if (isdigit((unsigned char) *text)) {
             v = *text - '0';
         } else if (radix == 16 && SDL_isupperhex(*text)) {
             v = 10 + (*text - 'A');
@@ -249,7 +249,7 @@ SDL_ScanFloat(const char *text, double *valuep)
     if (*text == '.') {
         int mult = 10;
         ++text;
-        while (SDL_isdigit((unsigned char) *text)) {
+        while (isdigit((unsigned char) *text)) {
             lvalue = *text - '0';
             value += (double) lvalue / mult;
             mult *= 10;
@@ -266,160 +266,6 @@ SDL_ScanFloat(const char *text, double *valuep)
     return (text - textstart);
 }
 #endif
-
-void *
-SDL_memset(SDL_OUT_BYTECAP(len) void *dst, int c, size_t len)
-{
-#if defined(HAVE_MEMSET)
-    return memset(dst, c, len);
-#else
-    size_t left;
-    Uint32 *dstp4;
-    Uint8 *dstp1 = (Uint8 *) dst;
-    Uint32 value4 = (c | (c << 8) | (c << 16) | (c << 24));
-    Uint8 value1 = (Uint8) c;
-
-    /* The destination pointer needs to be aligned on a 4-byte boundary to
-     * execute a 32-bit set. Set first bytes manually if needed until it is
-     * aligned. */
-    while ((intptr_t)dstp1 & 0x3) {
-        if (len--) {
-            *dstp1++ = value1;
-        } else {
-            return dst;
-        }
-    }
-
-    dstp4 = (Uint32 *) dstp1;
-    left = (len % 4);
-    len /= 4;
-    while (len--) {
-        *dstp4++ = value4;
-    }
-
-    dstp1 = (Uint8 *) dstp4;
-    switch (left) {
-    case 3:
-        *dstp1++ = value1;
-    case 2:
-        *dstp1++ = value1;
-    case 1:
-        *dstp1++ = value1;
-    }
-
-    return dst;
-#endif /* HAVE_MEMSET */
-}
-
-void *
-SDL_memcpy(SDL_OUT_BYTECAP(len) void *dst, SDL_IN_BYTECAP(len) const void *src, size_t len)
-{
-#ifdef __GNUC__
-    /* Presumably this is well tuned for speed.
-       On my machine this is twice as fast as the C code below.
-     */
-    return __builtin_memcpy(dst, src, len);
-#elif defined(HAVE_MEMCPY)
-    return memcpy(dst, src, len);
-#elif defined(HAVE_BCOPY)
-    bcopy(src, dst, len);
-    return dst;
-#else
-    /* GCC 4.9.0 with -O3 will generate movaps instructions with the loop
-       using Uint32* pointers, so we need to make sure the pointers are
-       aligned before we loop using them.
-     */
-    if (((intptr_t)src & 0x3) || ((intptr_t)dst & 0x3)) {
-        /* Do an unaligned byte copy */
-        Uint8 *srcp1 = (Uint8 *)src;
-        Uint8 *dstp1 = (Uint8 *)dst;
-
-        while (len--) {
-            *dstp1++ = *srcp1++;
-        }
-    } else {
-        size_t left = (len % 4);
-        Uint32 *srcp4, *dstp4;
-        Uint8 *srcp1, *dstp1;
-
-        srcp4 = (Uint32 *) src;
-        dstp4 = (Uint32 *) dst;
-        len /= 4;
-        while (len--) {
-            *dstp4++ = *srcp4++;
-        }
-
-        srcp1 = (Uint8 *) srcp4;
-        dstp1 = (Uint8 *) dstp4;
-        switch (left) {
-        case 3:
-            *dstp1++ = *srcp1++;
-        case 2:
-            *dstp1++ = *srcp1++;
-        case 1:
-            *dstp1++ = *srcp1++;
-        }
-    }
-    return dst;
-#endif /* __GNUC__ */
-}
-
-void *
-SDL_memmove(SDL_OUT_BYTECAP(len) void *dst, SDL_IN_BYTECAP(len) const void *src, size_t len)
-{
-#if defined(HAVE_MEMMOVE)
-    return memmove(dst, src, len);
-#else
-    char *srcp = (char *) src;
-    char *dstp = (char *) dst;
-
-    if (src < dst) {
-        srcp += len - 1;
-        dstp += len - 1;
-        while (len--) {
-            *dstp-- = *srcp--;
-        }
-    } else {
-        while (len--) {
-            *dstp++ = *srcp++;
-        }
-    }
-    return dst;
-#endif /* HAVE_MEMMOVE */
-}
-
-int
-SDL_memcmp(const void *s1, const void *s2, size_t len)
-{
-#if defined(HAVE_MEMCMP)
-    return memcmp(s1, s2, len);
-#else
-    char *s1p = (char *) s1;
-    char *s2p = (char *) s2;
-    while (len--) {
-        if (*s1p != *s2p) {
-            return (*s1p - *s2p);
-        }
-        ++s1p;
-        ++s2p;
-    }
-    return 0;
-#endif /* HAVE_MEMCMP */
-}
-
-size_t
-SDL_strlen(const char *string)
-{
-#if defined(HAVE_STRLEN)
-    return strlen(string);
-#else
-    size_t len = 0;
-    while (*string++) {
-        ++len;
-    }
-    return len;
-#endif /* HAVE_STRLEN */
-}
 
 size_t
 SDL_wcslen(const wchar_t * string)
@@ -444,7 +290,7 @@ SDL_wcslcpy(SDL_OUT_Z_CAP(maxlen) wchar_t *dst, const wchar_t *src, size_t maxle
     size_t srclen = SDL_wcslen(src);
     if (maxlen > 0) {
         size_t len = SDL_min(srclen, maxlen - 1);
-        SDL_memcpy(dst, src, len * sizeof(wchar_t));
+        memcpy(dst, src, len * sizeof(wchar_t));
         dst[len] = '\0';
     }
     return srclen;
@@ -472,10 +318,10 @@ SDL_strlcpy(SDL_OUT_Z_CAP(maxlen) char *dst, const char *src, size_t maxlen)
 #if defined(HAVE_STRLCPY)
     return strlcpy(dst, src, maxlen);
 #else
-    size_t srclen = SDL_strlen(src);
+    size_t srclen = strlen(src);
     if (maxlen > 0) {
         size_t len = SDL_min(srclen, maxlen - 1);
-        SDL_memcpy(dst, src, len);
+        memcpy(dst, src, len);
         dst[len] = '\0';
     }
     return srclen;
@@ -484,7 +330,7 @@ SDL_strlcpy(SDL_OUT_Z_CAP(maxlen) char *dst, const char *src, size_t maxlen)
 
 size_t SDL_utf8strlcpy(SDL_OUT_Z_CAP(dst_bytes) char *dst, const char *src, size_t dst_bytes)
 {
-    size_t src_bytes = SDL_strlen(src);
+    size_t src_bytes = strlen(src);
     size_t bytes = SDL_min(src_bytes, dst_bytes - 1);
     size_t i = 0;
     char trailing_bytes = 0;
@@ -508,7 +354,7 @@ size_t SDL_utf8strlcpy(SDL_OUT_Z_CAP(dst_bytes) char *dst, const char *src, size
                 }
             }
         }
-        SDL_memcpy(dst, src, bytes);
+        memcpy(dst, src, bytes);
     }
     dst[bytes] = '\0';
     return bytes;
@@ -520,8 +366,8 @@ SDL_strlcat(SDL_INOUT_Z_CAP(maxlen) char *dst, const char *src, size_t maxlen)
 #if defined(HAVE_STRLCAT)
     return strlcat(dst, src, maxlen);
 #else
-    size_t dstlen = SDL_strlen(dst);
-    size_t srclen = SDL_strlen(src);
+    size_t dstlen = strlen(dst);
+    size_t srclen = strlen(src);
     if (dstlen < maxlen) {
         SDL_strlcpy(dst + dstlen, src, maxlen - dstlen);
     }
@@ -535,7 +381,7 @@ SDL_strdup(const char *string)
 #if defined(HAVE_STRDUP)
     return strdup(string);
 #else
-    size_t len = SDL_strlen(string) + 1;
+    size_t len = strlen(string) + 1;
     char *newstr = malloc(len);
     if (newstr) {
         SDL_strlcpy(newstr, string, len);
@@ -550,7 +396,7 @@ SDL_strrev(char *string)
 #if defined(HAVE__STRREV)
     return _strrev(string);
 #else
-    size_t len = SDL_strlen(string);
+    size_t len = strlen(string);
     char *a = &string[0];
     char *b = &string[len - 1];
     len /= 2;
@@ -586,7 +432,7 @@ SDL_strlwr(char *string)
 #else
     char *bufp = string;
     while (*bufp) {
-        *bufp = SDL_tolower((unsigned char) *bufp);
+        *bufp = tolower((unsigned char) *bufp);
         ++bufp;
     }
     return string;
@@ -619,7 +465,7 @@ SDL_strrchr(const char *string, int c)
 #elif defined(HAVE_RINDEX)
     return SDL_const_cast(char*,rindex(string, c));
 #else
-    const char *bufp = string + SDL_strlen(string) - 1;
+    const char *bufp = string + strlen(string) - 1;
     while (bufp >= string) {
         if (*bufp == c) {
             return (char *) bufp;
@@ -636,7 +482,7 @@ SDL_strstr(const char *haystack, const char *needle)
 #if defined(HAVE_STRSTR)
     return SDL_const_cast(char*,strstr(haystack, needle));
 #else
-    size_t length = SDL_strlen(needle);
+    size_t length = strlen(needle);
     while (*haystack) {
         if (SDL_strncmp(haystack, needle, length) == 0) {
             return (char *) haystack;
@@ -793,7 +639,7 @@ SDL_strtol(const char *string, char **endp, int base)
     long value;
 
     if (!base) {
-        if ((SDL_strlen(string) > 2) && (SDL_strncmp(string, "0x", 2) == 0)) {
+        if ((strlen(string) > 2) && (SDL_strncmp(string, "0x", 2) == 0)) {
             base = 16;
         } else {
             base = 10;
@@ -818,7 +664,7 @@ SDL_strtoul(const char *string, char **endp, int base)
     unsigned long value;
 
     if (!base) {
-        if ((SDL_strlen(string) > 2) && (SDL_strncmp(string, "0x", 2) == 0)) {
+        if ((strlen(string) > 2) && (SDL_strncmp(string, "0x", 2) == 0)) {
             base = 16;
         } else {
             base = 10;
@@ -843,7 +689,7 @@ SDL_strtoll(const char *string, char **endp, int base)
     Sint64 value;
 
     if (!base) {
-        if ((SDL_strlen(string) > 2) && (SDL_strncmp(string, "0x", 2) == 0)) {
+        if ((strlen(string) > 2) && (SDL_strncmp(string, "0x", 2) == 0)) {
             base = 16;
         } else {
             base = 10;
@@ -868,7 +714,7 @@ SDL_strtoull(const char *string, char **endp, int base)
     Uint64 value;
 
     if (!base) {
-        if ((SDL_strlen(string) > 2) && (SDL_strncmp(string, "0x", 2) == 0)) {
+        if ((strlen(string) > 2) && (SDL_strncmp(string, "0x", 2) == 0)) {
             base = 16;
         } else {
             base = 10;
@@ -971,8 +817,8 @@ SDL_strncasecmp(const char *str1, const char *str2, size_t maxlen)
     char a = 0;
     char b = 0;
     while (*str1 && *str2 && maxlen) {
-        a = SDL_tolower((unsigned char) *str1);
-        b = SDL_tolower((unsigned char) *str2);
+        a = tolower((unsigned char) *str1);
+        b = tolower((unsigned char) *str2);
         if (a != b)
             break;
         ++str1;
@@ -982,8 +828,8 @@ SDL_strncasecmp(const char *str1, const char *str2, size_t maxlen)
     if (maxlen == 0) {
         return 0;
     } else {
-        a = SDL_tolower((unsigned char) *str1);
-        b = SDL_tolower((unsigned char) *str2);
+        a = tolower((unsigned char) *str1);
+        b = tolower((unsigned char) *str2);
         return (int) ((unsigned char) a - (unsigned char) b);
     }
 #endif /* HAVE_STRNCASECMP */
@@ -1014,7 +860,7 @@ SDL_vsscanf(const char *text, const char *fmt, va_list ap)
 
     while (*fmt) {
         if (*fmt == ' ') {
-            while (SDL_isspace((unsigned char) *text)) {
+            while (isspace((unsigned char) *text)) {
                 ++text;
             }
             ++fmt;
@@ -1066,7 +912,7 @@ SDL_vsscanf(const char *text, const char *fmt, va_list ap)
                 continue;
             }
 
-            while (SDL_isspace((unsigned char) *text)) {
+            while (isspace((unsigned char) *text)) {
                 ++text;
             }
 
@@ -1099,7 +945,7 @@ SDL_vsscanf(const char *text, const char *fmt, va_list ap)
                             ++index;
                         }
                         if (text[index] == '0') {
-                            if (SDL_tolower((unsigned char) text[index + 1]) == 'x') {
+                            if (tolower((unsigned char) text[index + 1]) == 'x') {
                                 radix = 16;
                             } else {
                                 radix = 8;
@@ -1226,7 +1072,7 @@ SDL_vsscanf(const char *text, const char *fmt, va_list ap)
                     break;
                 case 's':
                     if (suppress) {
-                        while (!SDL_isspace((unsigned char) *text)) {
+                        while (!isspace((unsigned char) *text)) {
                             ++text;
                             if (count) {
                                 if (--count == 0) {
@@ -1236,7 +1082,7 @@ SDL_vsscanf(const char *text, const char *fmt, va_list ap)
                         }
                     } else {
                         char *valuep = va_arg(ap, char *);
-                        while (!SDL_isspace((unsigned char) *text)) {
+                        while (!isspace((unsigned char) *text)) {
                             *valuep++ = *text++;
                             if (count) {
                                 if (--count == 0) {
@@ -1318,9 +1164,9 @@ SDL_PrintString(char *text, size_t maxlen, SDL_FormatInfo *info, const char *str
     size_t length = 0;
     size_t slen;
 
-    if (info && info->width && (size_t)info->width > SDL_strlen(string)) {
+    if (info && info->width && (size_t)info->width > strlen(string)) {
         char fill = info->pad_zeroes ? '0' : ' ';
-        size_t width = info->width - SDL_strlen(string);
+        size_t width = info->width - strlen(string);
         while (width-- > 0 && maxlen > 0) {
             *text++ = fill;
             ++length;

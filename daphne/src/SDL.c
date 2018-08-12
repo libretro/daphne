@@ -372,7 +372,7 @@ SDL_Quit(void)
     /* Now that every subsystem has been quit, we reset the subsystem refcount
      * and the list of initialized subsystems.
      */
-    SDL_memset( SDL_SubsystemRefCount, 0x0, sizeof(SDL_SubsystemRefCount) );
+    memset( SDL_SubsystemRefCount, 0x0, sizeof(SDL_SubsystemRefCount) );
 
     SDL_bInMainQuit = SDL_FALSE;
 }
@@ -458,27 +458,5 @@ SDL_GetPlatform()
     return "Unknown (see SDL_platform.h)";
 #endif
 }
-
-#if defined(__WIN32__)
-
-#if !defined(HAVE_LIBC) || (defined(__WATCOMC__) && defined(BUILD_DLL))
-/* Need to include DllMain() on Watcom C for some reason.. */
-
-BOOL APIENTRY
-_DllMainCRTStartup(HANDLE hModule,
-                   DWORD ul_reason_for_call, LPVOID lpReserved)
-{
-    switch (ul_reason_for_call) {
-    case DLL_PROCESS_ATTACH:
-    case DLL_THREAD_ATTACH:
-    case DLL_THREAD_DETACH:
-    case DLL_PROCESS_DETACH:
-        break;
-    }
-    return TRUE;
-}
-#endif /* building DLL with Watcom C */
-
-#endif /* __WIN32__ */
 
 /* vi: set sts=4 ts=4 sw=4 expandtab: */

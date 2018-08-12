@@ -96,10 +96,8 @@ typedef unsigned int uintptr_t;
 #if WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP
 #define HAVE_XINPUT_H 1
 #endif
-#define HAVE_LIBC 1
 #define STDC_HEADERS 1
 #define HAVE_STRING_H 1
-#define HAVE_CTYPE_H 1
 #define HAVE_MATH_H 1
 #define HAVE_FLOAT_H 1
 #define HAVE_SIGNAL_H 1

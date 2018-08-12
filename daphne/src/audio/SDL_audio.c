@@ -191,7 +191,7 @@ queue_audio_to_device(SDL_AudioDevice *device, const Uint8 *data, Uint32 len)
         }
 
         datalen = SDL_min(len, SDL_AUDIOBUFFERQUEUE_PACKETLEN - packet->datalen);
-        SDL_memcpy(packet->data + packet->datalen, data, datalen);
+        memcpy(packet->data + packet->datalen, data, datalen);
         data += datalen;
         len -= datalen;
         packet->datalen += datalen;
@@ -213,7 +213,7 @@ dequeue_audio_from_device(SDL_AudioDevice *device, Uint8 *stream, Uint32 len)
         const Uint32 cpy = SDL_min(len, avail);
         SDL_assert(device->queued_bytes >= avail);
 
-        SDL_memcpy(ptr, packet->data + packet->startpos, cpy);
+        memcpy(ptr, packet->data + packet->startpos, cpy);
         packet->startpos += cpy;
         ptr += cpy;
         device->queued_bytes -= cpy;
@@ -253,7 +253,7 @@ SDL_BufferQueueDrainCallback(void *userdata, Uint8 *stream, int len)
 
     if (len > 0) {  /* fill any remaining space in the stream with silence. */
         SDL_assert(device->buffer_queue_head == NULL);
-        SDL_memset(stream, device->spec.silence, len);
+        memset(stream, device->spec.silence, len);
     }
 }
 
@@ -321,7 +321,7 @@ SDL_RunAudio(void *devicep)
         if ( SDL_AtomicGet(&device->enabled) ) {
             SDL_LockMutex(device->mixer_lock);
             if (SDL_AtomicGet(&device->paused)) {
-				SDL_memset(stream, silence, stream_len);
+				memset(stream, silence, stream_len);
             } else {
 				// SDL_BufferQueueDrainCallback
                 (*callback) (udata, stream, stream_len);
@@ -336,7 +336,7 @@ SDL_RunAudio(void *devicep)
             if (stream == NULL) {
                 stream = device->fake_stream;
             } else {
-                SDL_memcpy(stream, device->convert.buf,
+                memcpy(stream, device->convert.buf,
                            device->convert.len_cvt);
             }
         }
@@ -424,7 +424,7 @@ SDL_AudioInit(const char *driver_name)
     for (i = 0; (!initialized) && (bootstrap[i]); ++i) {
         /* make sure we should even try this driver before doing so... */
         const AudioBootStrap *backend = bootstrap[i];
-        if ((driver_name && (SDL_strncasecmp(backend->name, driver_name, SDL_strlen(driver_name)) != 0)) ||
+        if ((driver_name && (SDL_strncasecmp(backend->name, driver_name, strlen(driver_name)) != 0)) ||
             (!driver_name && backend->demand_only)) {
             continue;
         }
@@ -599,7 +599,7 @@ close_audio_device(SDL_AudioDevice * device)
 static int
 prepare_audiospec(const SDL_AudioSpec * orig, SDL_AudioSpec * prepared)
 {
-    SDL_memcpy(prepared, orig, sizeof(SDL_AudioSpec));
+    memcpy(prepared, orig, sizeof(SDL_AudioSpec));
 
     if (orig->freq == 0) {
         const char *env = SDL_getenv("SDL_AUDIO_FREQUENCY");

@@ -207,7 +207,7 @@ windows_file_read(SDL_RWops * context, void *ptr, size_t size, size_t maxnum)
             context->hidden.windowsio.buffer.left;
         read_ahead =
             SDL_min(total_need, context->hidden.windowsio.buffer.left);
-        SDL_memcpy(ptr, data, read_ahead);
+        memcpy(ptr, data, read_ahead);
         context->hidden.windowsio.buffer.left -= read_ahead;
 
         if (read_ahead == total_need) {
@@ -226,7 +226,7 @@ windows_file_read(SDL_RWops * context, void *ptr, size_t size, size_t maxnum)
             return 0;
         }
         read_ahead = SDL_min(total_need, (int) byte_read);
-        SDL_memcpy(ptr, context->hidden.windowsio.buffer.data, read_ahead);
+        memcpy(ptr, context->hidden.windowsio.buffer.data, read_ahead);
         context->hidden.windowsio.buffer.size = byte_read;
         context->hidden.windowsio.buffer.left = byte_read - read_ahead;
         total_read += read_ahead;
@@ -432,7 +432,7 @@ mem_read(SDL_RWops * context, void *ptr, size_t size, size_t maxnum)
         total_bytes = mem_available;
     }
 
-    SDL_memcpy(ptr, context->hidden.mem.here, total_bytes);
+    memcpy(ptr, context->hidden.mem.here, total_bytes);
     context->hidden.mem.here += total_bytes;
 
     return (total_bytes / size);
@@ -444,7 +444,7 @@ mem_write(SDL_RWops * context, const void *ptr, size_t size, size_t num)
     if ((context->hidden.mem.here + (num * size)) > context->hidden.mem.stop) {
         num = (context->hidden.mem.stop - context->hidden.mem.here) / size;
     }
-    SDL_memcpy(context->hidden.mem.here, ptr, num * size);
+    memcpy(context->hidden.mem.here, ptr, num * size);
     context->hidden.mem.here += num * size;
     return num;
 }

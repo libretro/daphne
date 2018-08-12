@@ -98,7 +98,7 @@
 #endif
 
 #define PIXEL_COPY(to, from, len, bpp)          \
-    SDL_memcpy(to, from, (size_t)(len) * (bpp))
+    memcpy(to, from, (size_t)(len) * (bpp))
 
 /*
  * Various colorkey blit methods, for opaque and per-surface alpha
@@ -1358,14 +1358,14 @@ RLEColorkeySurface(SDL_Surface * surface)
             }
             len = MIN(run, maxn);
             ADD_COUNTS(skip, len);
-            SDL_memcpy(dst, srcbuf + runstart * bpp, len * bpp);
+            memcpy(dst, srcbuf + runstart * bpp, len * bpp);
             dst += len * bpp;
             run -= len;
             runstart += len;
             while (run) {
                 len = MIN(run, maxn);
                 ADD_COUNTS(0, len);
-                SDL_memcpy(dst, srcbuf + runstart * bpp, len * bpp);
+                memcpy(dst, srcbuf + runstart * bpp, len * bpp);
                 dst += len * bpp;
                 runstart += len;
                 run -= len;
@@ -1489,7 +1489,7 @@ UnRLEAlpha(SDL_Surface * surface)
         return (SDL_FALSE);
     }
     /* fill background with transparent pixels */
-    SDL_memset(surface->pixels, 0, surface->h * surface->pitch);
+    memset(surface->pixels, 0, surface->h * surface->pitch);
 
     dst = surface->pixels;
     srcbuf = (Uint8 *) (df + 1);

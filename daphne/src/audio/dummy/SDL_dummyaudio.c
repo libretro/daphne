@@ -40,7 +40,7 @@ DUMMYAUDIO_CaptureFromDevice(_THIS, void *buffer, int buflen)
     SDL_Delay((this->spec.samples * 1000) / this->spec.freq);
 
     /* always return a full buffer of silence. */
-    SDL_memset(buffer, this->spec.silence, buflen);
+    memset(buffer, this->spec.silence, buflen);
     return buflen;
 }
 

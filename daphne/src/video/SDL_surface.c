@@ -87,7 +87,7 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
             return NULL;
         }
         /* This is important for bitmaps */
-        SDL_memset(surface->pixels, 0, surface->h * surface->pitch);
+        memset(surface->pixels, 0, surface->h * surface->pitch);
     }
 
     /* Allocate an empty mapping */
@@ -908,7 +908,7 @@ SDL_ConvertSurface(SDL_Surface * surface, const SDL_PixelFormat * format,
 
     /* Copy the palette if any */
     if (format->palette && convert->format->palette) {
-        SDL_memcpy(convert->format->palette->colors,
+        memcpy(convert->format->palette->colors,
                    format->palette->colors,
                    format->palette->ncolors * sizeof(SDL_Color));
         convert->format->palette->ncolors = format->palette->ncolors;
@@ -956,7 +956,7 @@ SDL_ConvertSurface(SDL_Surface * surface, const SDL_PixelFormat * format,
         if (surface->format->palette) {
             if (format->palette &&
                 surface->format->palette->ncolors <= format->palette->ncolors &&
-                (SDL_memcmp(surface->format->palette->colors, format->palette->colors,
+                (memcmp(surface->format->palette->colors, format->palette->colors,
                   surface->format->palette->ncolors * sizeof(SDL_Color)) == 0)) {
                 /* The palette is identical, just set the same colorkey */
                 SDL_SetColorKey(convert, 1, surface->map->info.colorkey);
@@ -1098,7 +1098,7 @@ int SDL_ConvertPixels(int width, int height,
         width *= bpp;
 
         for (i = height; i--;) {
-            SDL_memcpy(dst, src, width);
+            memcpy(dst, src, width);
             src = (Uint8*)src + src_pitch;
             dst = (Uint8*)dst + dst_pitch;
         }
@@ -1110,7 +1110,7 @@ int SDL_ConvertPixels(int width, int height,
             src_pitch /= 2;
             dst_pitch /= 2;
             for (i = height * 2; i--;) {
-                SDL_memcpy(dst, src, width);
+                memcpy(dst, src, width);
                 src = (Uint8*)src + src_pitch;
                 dst = (Uint8*)dst + dst_pitch;
             }
@@ -1118,7 +1118,7 @@ int SDL_ConvertPixels(int width, int height,
             /* U/V plane is half the height of the Y plane */
             height /= 2;
             for (i = height; i--;) {
-                SDL_memcpy(dst, src, width);
+                memcpy(dst, src, width);
                 src = (Uint8*)src + src_pitch;
                 dst = (Uint8*)dst + dst_pitch;
             }

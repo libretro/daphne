@@ -44,7 +44,7 @@ int
 SDL_setenv(const char *name, const char *value, int overwrite)
 {
     /* Input validation */
-    if (!name || SDL_strlen(name) == 0 || SDL_strchr(name, '=') != NULL || !value) {
+    if (!name || strlen(name) == 0 || SDL_strchr(name, '=') != NULL || !value) {
         return (-1);
     }
     
@@ -55,7 +55,7 @@ int
 SDL_setenv(const char *name, const char *value, int overwrite)
 {
     /* Input validation */
-    if (!name || SDL_strlen(name) == 0 || SDL_strchr(name, '=') != NULL || !value) {
+    if (!name || strlen(name) == 0 || SDL_strchr(name, '=') != NULL || !value) {
         return (-1);
     }
     
@@ -80,7 +80,7 @@ SDL_setenv(const char *name, const char *value, int overwrite)
     char *new_variable;
 
     /* Input validation */
-    if (!name || SDL_strlen(name) == 0 || SDL_strchr(name, '=') != NULL || !value) {
+    if (!name || strlen(name) == 0 || SDL_strchr(name, '=') != NULL || !value) {
         return (-1);
     }
     
@@ -93,7 +93,7 @@ SDL_setenv(const char *name, const char *value, int overwrite)
     }
 
     /* This leaks. Sorry. Get a better OS so we don't have to do this. */
-    len = SDL_strlen(name) + SDL_strlen(value) + 2;
+    len = strlen(name) + strlen(value) + 2;
     new_variable = (char *)malloc(len);
     if (!new_variable) {
         return (-1);
@@ -113,7 +113,7 @@ SDL_setenv(const char *name, const char *value, int overwrite)
     char *new_variable;
 
     /* Input validation */
-    if (!name || SDL_strlen(name) == 0 || SDL_strchr(name, '=') != NULL || !value) {
+    if (!name || strlen(name) == 0 || SDL_strchr(name, '=') != NULL || !value) {
         return (-1);
     }
 
@@ -123,14 +123,14 @@ SDL_setenv(const char *name, const char *value, int overwrite)
     }
 
     /* Allocate memory for the variable */
-    len = SDL_strlen(name) + SDL_strlen(value) + 2;
+    len = strlen(name) + strlen(value) + 2;
     new_variable = (char *)malloc(len);
     if (!new_variable) {
         return (-1);
     }
 
     SDL_snprintf(new_variable, len, "%s=%s", name, value);
-    value = new_variable + SDL_strlen(name) + 1;
+    value = new_variable + strlen(name) + 1;
     name = new_variable;
 
     /* Actually put it into the environment */
@@ -174,7 +174,7 @@ char *
 SDL_getenv(const char *name)
 {
     /* Input validation */
-    if (!name || SDL_strlen(name)==0) {
+    if (!name || strlen(name)==0) {
         return NULL;
     }
 
@@ -187,7 +187,7 @@ SDL_getenv(const char *name)
     size_t bufferlen;
 
     /* Input validation */
-    if (!name || SDL_strlen(name)==0) {
+    if (!name || strlen(name)==0) {
         return NULL;
     }
     
@@ -215,13 +215,13 @@ SDL_getenv(const char *name)
     char *value;
 
     /* Input validation */
-    if (!name || SDL_strlen(name)==0) {
+    if (!name || strlen(name)==0) {
         return NULL;
     }
     
     value = (char *) 0;
     if (SDL_env) {
-        len = SDL_strlen(name);
+        len = strlen(name);
         for (i = 0; SDL_env[i] && !value; ++i) {
             if ((SDL_strncmp(SDL_env[i], name, len) == 0) &&
                 (SDL_env[i][len] == '=')) {

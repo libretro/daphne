@@ -61,9 +61,7 @@
 #elif defined(HAVE_STDINT_H)
 # include <stdint.h>
 #endif
-#ifdef HAVE_CTYPE_H
 # include <ctype.h>
-#endif
 #ifdef HAVE_MATH_H
 # if defined(__WINRT__)
 /* Defining _USE_MATH_DEFINES is required to get M_PI to be defined on
@@ -336,15 +334,8 @@ extern DECLSPEC int SDLCALL SDL_abs(int x);
 #define SDL_min(x, y) (((x) < (y)) ? (x) : (y))
 #define SDL_max(x, y) (((x) > (y)) ? (x) : (y))
 
-extern DECLSPEC int SDLCALL SDL_isdigit(int x);
-extern DECLSPEC int SDLCALL SDL_isspace(int x);
-extern DECLSPEC int SDLCALL SDL_toupper(int x);
-extern DECLSPEC int SDLCALL SDL_tolower(int x);
-
-extern DECLSPEC void *SDLCALL SDL_memset(SDL_OUT_BYTECAP(len) void *dst, int c, size_t len);
-
-#define SDL_zero(x) SDL_memset(&(x), 0, sizeof((x)))
-#define SDL_zerop(x) SDL_memset((x), 0, sizeof(*(x)))
+#define SDL_zero(x) memset(&(x), 0, sizeof((x)))
+#define SDL_zerop(x) memset((x), 0, sizeof(*(x)))
 
 /* Note that memset() is a byte assignment and this is a 32-bit assignment, so they're not directly equivalent. */
 SDL_FORCE_INLINE void SDL_memset4(void *dst, Uint32 val, size_t dwords)
@@ -375,17 +366,10 @@ SDL_FORCE_INLINE void SDL_memset4(void *dst, Uint32 val, size_t dwords)
 #endif
 }
 
-
-extern DECLSPEC void *SDLCALL SDL_memcpy(SDL_OUT_BYTECAP(len) void *dst, SDL_IN_BYTECAP(len) const void *src, size_t len);
-
-extern DECLSPEC void *SDLCALL SDL_memmove(SDL_OUT_BYTECAP(len) void *dst, SDL_IN_BYTECAP(len) const void *src, size_t len);
-extern DECLSPEC int SDLCALL SDL_memcmp(const void *s1, const void *s2, size_t len);
-
 extern DECLSPEC size_t SDLCALL SDL_wcslen(const wchar_t *wstr);
 extern DECLSPEC size_t SDLCALL SDL_wcslcpy(SDL_OUT_Z_CAP(maxlen) wchar_t *dst, const wchar_t *src, size_t maxlen);
 extern DECLSPEC size_t SDLCALL SDL_wcslcat(SDL_INOUT_Z_CAP(maxlen) wchar_t *dst, const wchar_t *src, size_t maxlen);
 
-extern DECLSPEC size_t SDLCALL SDL_strlen(const char *str);
 extern DECLSPEC size_t SDLCALL SDL_strlcpy(SDL_OUT_Z_CAP(maxlen) char *dst, const char *src, size_t maxlen);
 extern DECLSPEC size_t SDLCALL SDL_utf8strlcpy(SDL_OUT_Z_CAP(dst_bytes) char *dst, const char *src, size_t dst_bytes);
 extern DECLSPEC size_t SDLCALL SDL_strlcat(SDL_INOUT_Z_CAP(maxlen) char *dst, const char *src, size_t maxlen);
@@ -470,18 +454,13 @@ extern DECLSPEC char *SDLCALL SDL_iconv_string(const char *tocode,
                                                const char *fromcode,
                                                const char *inbuf,
                                                size_t inbytesleft);
-#define SDL_iconv_utf8_locale(S)    SDL_iconv_string("", "UTF-8", S, SDL_strlen(S)+1)
-#define SDL_iconv_utf8_ucs2(S)      (Uint16 *)SDL_iconv_string("UCS-2-INTERNAL", "UTF-8", S, SDL_strlen(S)+1)
-#define SDL_iconv_utf8_ucs4(S)      (Uint32 *)SDL_iconv_string("UCS-4-INTERNAL", "UTF-8", S, SDL_strlen(S)+1)
+#define SDL_iconv_utf8_locale(S)    SDL_iconv_string("", "UTF-8", S, strlen(S)+1)
+#define SDL_iconv_utf8_ucs2(S)      (Uint16 *)SDL_iconv_string("UCS-2-INTERNAL", "UTF-8", S, strlen(S)+1)
+#define SDL_iconv_utf8_ucs4(S)      (Uint32 *)SDL_iconv_string("UCS-4-INTERNAL", "UTF-8", S, strlen(S)+1)
 
 /* force builds using Clang's static analysis tools to use literal C runtime
    here, since there are possibly tests that are ineffective otherwise. */
 #if defined(__clang_analyzer__) && !defined(SDL_DISABLE_ANALYZE_MACROS)
-#define SDL_memset memset
-#define SDL_memcpy memcpy
-#define SDL_memmove memmove
-#define SDL_memcmp memcmp
-#define SDL_strlen strlen
 #define SDL_strlcpy strlcpy
 #define SDL_strlcat strlcat
 #define SDL_strdup strdup
@@ -497,11 +476,6 @@ extern DECLSPEC char *SDLCALL SDL_iconv_string(const char *tocode,
 #define SDL_snprintf snprintf
 #define SDL_vsnprintf vsnprintf
 #endif
-
-SDL_FORCE_INLINE void *SDL_memcpy4(SDL_OUT_BYTECAP(dwords*4) void *dst, SDL_IN_BYTECAP(dwords*4) const void *src, size_t dwords)
-{
-    return SDL_memcpy(dst, src, dwords * 4);
-}
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus

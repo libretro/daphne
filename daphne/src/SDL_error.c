@@ -267,7 +267,7 @@ main(int argc, char *argv[])
     SDL_SetError("Hi there!");
     printf("Error 1: %s\n", SDL_GetError());
     SDL_ClearError();
-    SDL_memset(buffer, '1', BUFSIZ);
+    memset(buffer, '1', BUFSIZ);
     buffer[BUFSIZ] = 0;
     SDL_SetError("This is the error: %s (%f)", buffer, 1.0);
     printf("Error 2: %s\n", SDL_GetError());

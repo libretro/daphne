@@ -56,10 +56,6 @@
 #undef HAVE_DXGI_H
 #undef HAVE_XINPUT_H
 
-/* Comment this if you want to build without any C library requirements */
-#undef HAVE_LIBC
-#if HAVE_LIBC
-
 /* Useful headers */
 #undef HAVE_ALLOCA_H
 #undef HAVE_SYS_TYPES_H
@@ -71,7 +67,6 @@
 #undef HAVE_STRINGS_H
 #undef HAVE_INTTYPES_H
 #undef HAVE_STDINT_H
-#undef HAVE_CTYPE_H
 #undef HAVE_MATH_H
 #undef HAVE_ICONV_H
 #undef HAVE_SIGNAL_H
@@ -172,11 +167,6 @@
 #undef HAVE_PTHREAD_SET_NAME_NP
 #undef HAVE_SEM_TIMEDWAIT
 
-#else
-#define HAVE_STDARG_H   1
-#define HAVE_STDDEF_H   1
-#define HAVE_STDINT_H   1
-#endif /* HAVE_LIBC */
 
 /* SDL internal assertion support */
 #undef SDL_DEFAULT_ASSERT_LEVEL

@@ -28,7 +28,7 @@
 #ifdef __SSE__
 /* This assumes 16-byte aligned src and dst */
 static SDL_INLINE void
-SDL_memcpySSE(Uint8 * dst, const Uint8 * src, int len)
+memcpySSE(Uint8 * dst, const Uint8 * src, int len)
 {
     int i;
 
@@ -48,7 +48,7 @@ SDL_memcpySSE(Uint8 * dst, const Uint8 * src, int len)
     }
 
     if (len & 63)
-        SDL_memcpy(dst, src, len & 63);
+        memcpy(dst, src, len & 63);
 }
 #endif /* __SSE__ */
 
@@ -76,7 +76,7 @@ SDL_BlitCopy(SDL_BlitInfo * info)
     if (overlap) {
         if ( dst < src ) {
                 while ( h-- ) {
-                        SDL_memmove(dst, src, w);
+                        memmove(dst, src, w);
                         src += srcskip;
                         dst += dstskip;
                 }
@@ -84,7 +84,7 @@ SDL_BlitCopy(SDL_BlitInfo * info)
                 src += ((h-1) * srcskip);
                 dst += ((h-1) * dstskip);
                 while ( h-- ) {
-                        SDL_memmove(dst, src, w);
+                        memmove(dst, src, w);
                         src -= srcskip;
                         dst -= dstskip;
                 }
@@ -97,7 +97,7 @@ SDL_BlitCopy(SDL_BlitInfo * info)
         !((uintptr_t) src & 15) && !(srcskip & 15) &&
         !((uintptr_t) dst & 15) && !(dstskip & 15)) {
         while (h--) {
-            SDL_memcpySSE(dst, src, w);
+            memcpySSE(dst, src, w);
             src += srcskip;
             dst += dstskip;
         }
@@ -106,7 +106,7 @@ SDL_BlitCopy(SDL_BlitInfo * info)
 #endif
 
     while (h--) {
-        SDL_memcpy(dst, src, w);
+        memcpy(dst, src, w);
         src += srcskip;
         dst += dstskip;
     }
