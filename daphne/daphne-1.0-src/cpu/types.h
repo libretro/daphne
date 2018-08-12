@@ -26,23 +26,7 @@
 #ifndef _TYPES_H_
 #define _TYPES_H_
 
-#include <SDL.h>	// for endian detection
-
-// MPO : added this SDL endian stuff so no source code changes are necessary
-#ifndef MSB_FIRST
-/* Define this if running on little-endian (x86) systems */
-#define HOST_LITTLE_ENDIAN
-#endif
-
-// MPO : translate our convention to Nofrendo's convention
-#ifdef NATIVE_CPU_PPC
-#define TARGET_CPU_PPC
-#endif
-
-// MPO : for xcode on OSX, defining NATIVE_CPU_PPC manually is difficult, but gcc defines _ppc_ automatically
-#ifdef __ppc__
-#define TARGET_CPU_PPC
-#endif
+#include <stdint.h>
 
 /* These should be changed depending on the platform */
 typedef  char     int8;

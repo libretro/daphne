@@ -53,11 +53,6 @@
 #include "nes6502.h"
 //#include "dis6502.h" //DCR
 
-#ifdef TARGET_CPU_PPC
-// for the __lhbrx instruction
-#include "ppc_intrinsics.h"
-#endif
-
 #include "cpu-debug.h"	// MPO
 
 //DCR
@@ -299,10 +294,10 @@
    if (condition) \
    { \
       IMMEDIATE_BYTE(btemp); \
-      if (((Sint8) btemp + (PC & 0x00FF)) & 0x100) \
+      if (((int8_t) btemp + (PC & 0x00FF)) & 0x100) \
          ADD_CYCLES(1); \
       ADD_CYCLES(3); \
-      PC += ((Sint8) btemp); \
+      PC += ((int8_t) btemp); \
    } \
    else \
    { \
@@ -1205,17 +1200,13 @@ static uint8 dead_page[NES6502_BANKSIZE];
 
 INLINE uint32 zp_readword(register uint8 address)
 {
-#ifdef HOST_LITTLE_ENDIAN
+#ifndef MSB_FIRST
    /* TODO: this fails if host architecture doesn't support byte alignment */
    return (uint32) (*(uint16 *)(ram + address));
 #else
-#ifdef TARGET_CPU_PPC
-   return __lhbrx(ram, address);
-#else
    uint32 x = (uint32) *(uint16 *)(ram + address);
    return (x << 8) | (x >> 8);
-#endif /* TARGET_CPU_PPC */
-#endif /* HOST_LITTLE_ENDIAN */
+#endif
 }
 
 INLINE uint8 bank_readbyte(register uint32 address)
@@ -1225,18 +1216,14 @@ INLINE uint8 bank_readbyte(register uint32 address)
 
 INLINE uint32 bank_readword(register uint32 address)
 {
-#ifdef HOST_LITTLE_ENDIAN
+#ifndef MSB_FIRST
    /* TODO: this fails if src address is $xFFF */
    /* TODO: this fails if host architecture doesn't support byte alignment */
    return (uint32) (*(uint16 *)(cpu.mem_page[address >> NES6502_BANKSHIFT] + (address & NES6502_BANKMASK)));
 #else
-#ifdef TARGET_CPU_PPC
-   return __lhbrx(cpu.mem_page[address >> NES6502_BANKSHIFT], address & NES6502_BANKMASK);
-#else
    uint32 x = (uint32) *(uint16 *)(cpu.mem_page[address >> NES6502_BANKSHIFT] + (address & NES6502_BANKMASK));
    return (x << 8) | (x >> 8);
-#endif /* TARGET_CPU_PPC */
-#endif /* HOST_LITTLE_ENDIAN */
+#endif
 }
 
 INLINE void bank_writebyte(register uint32 address, register uint8 value)
