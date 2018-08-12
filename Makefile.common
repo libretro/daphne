@@ -229,7 +229,6 @@ SOURCES_C += $(DAPHNE_MAIN_DIR)/src/cpuinfo/SDL_cpuinfo.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/events/SDL_quit.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/events/SDL_touch.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/events/SDL_windowevents.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/filesystem/dummy/SDL_sysfilesystem.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/file/SDL_rwops.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/haptic/dummy/SDL_syshaptic.c
 #SOURCES_C += $(DAPHNE_MAIN_DIR)/src/haptic/SDL_haptic.c
