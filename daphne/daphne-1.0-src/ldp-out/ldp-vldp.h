@@ -53,7 +53,6 @@ const int FILTER_BLEND = (1 << 0);		// blend fields together (cheap de-interlace
 const int FILTER_SCANLINES = (1 << 1);	// make every other field black (to give it a more authentic look, this also de-interlaces for free)
 
 #include "ldp.h"
-#include "../io/dll.h"
 
 class ldp_vldp : public ldp
 {
@@ -106,8 +105,6 @@ public:
 		struct fileframes *pFrames, unsigned int &frame_index, unsigned int max_frames, string &err_msg);
  
 private:
-	bool load_vldp_lib();
-	void free_vldp_lib();
 	bool read_frame_conversions();
 	bool first_video_file_exists();
 	bool last_video_file_parsed();
@@ -135,7 +132,6 @@ private:
 
 	struct fileframes m_mpeginfo[MAX_MPEG_FILES]; // names of mpeg files
 	unsigned int m_file_index; // # of mpeg files in our list
-	DLL_INSTANCE m_dll_instance;	// pointer to DLL we load
 
 	bool m_bFramefileSet;	// whether m_framefile was set via commandline or if it's just the default from the constructor
 	bool m_audio_file_opened;	// whether we have audio to accompany the video

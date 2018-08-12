@@ -403,12 +403,6 @@ Uint8 *g_line_buf3 = NULL;	// 3rd buf
 
 /////////////////////////////////////////
 
-// We have to dynamically load the .DLL/.so file due to incompatibilities between MSVC++ and mingw32 library files
-// These pointers and typedefs assist us in doing so.
-
-typedef const struct vldp_out_info *(*initproc)(const struct vldp_in_info *in_info);
-initproc pvldp_init;	// pointer to the init proc ...
-
 // pointer to all functions the VLDP exposes to us ...
 const struct vldp_out_info *g_vldp_info = NULL;
 
@@ -465,171 +459,153 @@ bool ldp_vldp::init_player()
 
 	g_vertical_stretch = m_vertical_stretch;  // callbacks don't have access to m_vertical_stretch
 	
+   // try to read in the framefile
+   if (read_frame_conversions())
+   {
 
-	// load the .DLL first in case we call any of its functions elsewhere
-	if (load_vldp_lib())
-	{
+      // just a sanity check to make sure their frame file is correct
+      if (first_video_file_exists())
+      {				
+         // if the last video file has not been parsed, assume none of them have been
+         // This is safe because if they have been parsed, it will just skip them
+         if (!last_video_file_parsed())
+         {
+            printnotice("Press any key to parse your video file(s). This may take a while. Press ESC if you'd rather quit.");
+            need_to_parse = true;
+         }
 
-		// try to read in the framefile
-		if (read_frame_conversions())
-		{
+         if (audio_init() && !get_quitflag())
+         {
+            // if our game is using video overlay,
+            // AND if we're not doing tests that an overlay would interfere with
+            // we'll use our slower callback
 
-			// just a sanity check to make sure their frame file is correct
-			if (first_video_file_exists())
-			{				
-				// if the last video file has not been parsed, assume none of them have been
-				// This is safe because if they have been parsed, it will just skip them
-				if (!last_video_file_parsed())
-				{
-					printnotice("Press any key to parse your video file(s). This may take a while. Press ESC if you'd rather quit.");
-					need_to_parse = true;
-				}
-				
-				if (audio_init() && !get_quitflag())
-				{
-					// if our game is using video overlay,
-					// AND if we're not doing tests that an overlay would interfere with
-					// we'll use our slower callback
+            // 201x.xx.xx - RJS - since the change of moving the LDP thread to start earlier, the video overlays were not
+            // initialized (video_init) yet, however this flag can be
+            // if (g_game->get_active_video_overlay() && !m_testing)
+            if (g_game->does_game_use_video_overlay() && !m_testing)
+            {
+               g_local_info.prepare_frame = prepare_frame_callback_with_overlay;
+            }
 
-					// 201x.xx.xx - RJS - since the change of moving the LDP thread to start earlier, the video overlays were not
-					// initialized (video_init) yet, however this flag can be
-					// if (g_game->get_active_video_overlay() && !m_testing)
-					if (g_game->does_game_use_video_overlay() && !m_testing)
-					{
-						g_local_info.prepare_frame = prepare_frame_callback_with_overlay;
-					}
-					
-					// otherwise we can draw the frame much faster w/o worrying about
-					// video overlay
-					else
-					{
-						g_local_info.prepare_frame = prepare_frame_callback_without_overlay;
-					}
-					g_local_info.display_frame = display_frame_callback;
-					g_local_info.report_parse_progress = report_parse_progress_callback;
-					g_local_info.report_mpeg_dimensions = report_mpeg_dimensions_callback;
-					g_local_info.render_blank_frame = blank_overlay;
-					g_local_info.blank_during_searches = m_blank_on_searches;
-					g_local_info.blank_during_skips = m_blank_on_skips;
-					g_local_info.GetTicksFunc = GetTicksFunc;
+            // otherwise we can draw the frame much faster w/o worrying about
+            // video overlay
+            else
+            {
+               g_local_info.prepare_frame = prepare_frame_callback_without_overlay;
+            }
+            g_local_info.display_frame = display_frame_callback;
+            g_local_info.report_parse_progress = report_parse_progress_callback;
+            g_local_info.report_mpeg_dimensions = report_mpeg_dimensions_callback;
+            g_local_info.render_blank_frame = blank_overlay;
+            g_local_info.blank_during_searches = m_blank_on_searches;
+            g_local_info.blank_during_skips = m_blank_on_skips;
+            g_local_info.GetTicksFunc = GetTicksFunc;
 
-					g_vldp_info = pvldp_init(&g_local_info);
+            g_vldp_info = vldp_init(&g_local_info);
 
-					// if we successfully made contact with VLDP ...
-					if (g_vldp_info != NULL)
-					{
-						// make sure we are using the API that we expect
-						if  (g_vldp_info->uApiVersion == API_VERSION)
-						{
-							// this number is used repeatedly, so we calculate it once
-							g_vertical_offset = g_game->get_video_row_offset();
+            // if we successfully made contact with VLDP ...
+            if (g_vldp_info != NULL)
+            {
+               // this number is used repeatedly, so we calculate it once
+               g_vertical_offset = g_game->get_video_row_offset();
 
-							// if testing has been requested then run them ...
-							if (m_testing)
-							{
-								list<string> lstrPassed, lstrFailed;
-								run_tests(lstrPassed, lstrFailed);
-								// run releasetest to see actual results now ...
-								printline("Run releasetest to see printed results!");
-								set_quitflag();
-							}
+               // if testing has been requested then run them ...
+               if (m_testing)
+               {
+                  list<string> lstrPassed, lstrFailed;
+                  run_tests(lstrPassed, lstrFailed);
+                  // run releasetest to see actual results now ...
+                  printline("Run releasetest to see printed results!");
+                  set_quitflag();
+               }
 
-							// bPreCacheOK will be true if precaching succeeds or is never attempted
-							bool bPreCacheOK = true;
+               // bPreCacheOK will be true if precaching succeeds or is never attempted
+               bool bPreCacheOK = true;
 
-							// If precaching has been requested, do it now.
-							// The check for RAM requirements is done inside the
-							//  precache_all_video function, so we don't need to worry about that here.
-							if (m_bPreCache)
-								bPreCacheOK = precache_all_video();
+               // If precaching has been requested, do it now.
+               // The check for RAM requirements is done inside the
+               //  precache_all_video function, so we don't need to worry about that here.
+               if (m_bPreCache)
+                  bPreCacheOK = precache_all_video();
 
-							// if we need to parse all the video
-							if (need_to_parse)
-								parse_all_video();
+               // if we need to parse all the video
+               if (need_to_parse)
+                  parse_all_video();
 
-							// if precaching succeeded or we didn't request precaching
-							if (bPreCacheOK)
-							{
-								blitting_allowed = false;	// this is the point where blitting isn't allowed anymore
+               // if precaching succeeded or we didn't request precaching
+               if (bPreCacheOK)
+               {
+                  blitting_allowed = false;	// this is the point where blitting isn't allowed anymore
 
-								// open first file so that
-								// we can draw video overlay even if the disc is not playing
-								printline("LDP-VLDP INFO : opening video file . . .");
-								printline(m_mpeginfo[0].name.c_str());
-								if (open_and_block(m_mpeginfo[0].name))
-								{
-									// although we just opened a video file, we have not opened an audio file,
-									// so we want to force a re-open of the same video file when we do a real search,
-									// in order to ensure that the audio file is opened also.
-									m_cur_mpeg_filename = "";
+                  // open first file so that
+                  // we can draw video overlay even if the disc is not playing
+                  printline("LDP-VLDP INFO : opening video file . . .");
+                  printline(m_mpeginfo[0].name.c_str());
+                  if (open_and_block(m_mpeginfo[0].name))
+                  {
+                     // although we just opened a video file, we have not opened an audio file,
+                     // so we want to force a re-open of the same video file when we do a real search,
+                     // in order to ensure that the audio file is opened also.
+                     m_cur_mpeg_filename = "";
 
-									// set MPEG size ASAP in case different from NTSC default
-									m_discvideo_width = g_vldp_info->w;
-									m_discvideo_height = g_vldp_info->h;
+                     // set MPEG size ASAP in case different from NTSC default
+                     m_discvideo_width = g_vldp_info->w;
+                     m_discvideo_height = g_vldp_info->h;
 
-									if (is_sound_enabled())
-									{
-										struct sounddef soundchip;
-										soundchip.type = SOUNDCHIP_VLDP;
-										// no further parameters necessary
-										m_uSoundChipID = add_soundchip(&soundchip);
-									}
+                     if (is_sound_enabled())
+                     {
+                        struct sounddef soundchip;
+                        soundchip.type = SOUNDCHIP_VLDP;
+                        // no further parameters necessary
+                        m_uSoundChipID = add_soundchip(&soundchip);
+                     }
 
-									result = true;
-								}
-								else
-								{
-									printline("LDP-VLDP ERROR : first video file could not be opened!");
-								}
-							} // end if it's ok to proceed
-							// else precaching failed
-							else
-							{
-								printerror("LDP-VLDP ERROR : precaching failed");
-							}
-						} // end if API matches up
-						else
-						{
-							printerror("VLDP library is the wrong version!");
-						}
-						
-					} // end if reading the frame conversion file worked
-					else
-					{
-						printline("LDP-VLDP ERROR : vldp_init returned NULL (which shouldn't ever happen)");
-					}
-				} // if audio init succeeded
-				else
-				{
-					// only report an audio problem if there is one
-					if (!get_quitflag())
-					{
-						printline("Could not initialize VLDP audio!");
-					}
-					
-					// otherwise report that they quit
-					else
-					{
-						printline("VLDP : Quit requested, shutting down!");
-					}
-				} // end if audio init failed or if user opted to quit instead of parse
-			} // end if first file was present (sanity check)
-			// else if first file was not found, we do just quit because an error is printed elsewhere
-		} // end if framefile was read in properly
-		else
-		{
-			// if the user didn't specify a framefile from the command-line, then give them a little hint.
-			if (!m_bFramefileSet)
-			{
-				printline("You must specify a -framefile argument when using VLDP.");
-			}
-			// else the other error messages are more than sufficient
-		}
-	} // end if .DLL was loaded properly
-	else
-	{
-		printline("Could not load VLDP dynamic library!!!");
-	}
+                     result = true;
+                  }
+                  else
+                  {
+                     printline("LDP-VLDP ERROR : first video file could not be opened!");
+                  }
+               } // end if it's ok to proceed
+               // else precaching failed
+               else
+               {
+                  printerror("LDP-VLDP ERROR : precaching failed");
+               }
+
+            } // end if reading the frame conversion file worked
+            else
+            {
+               printline("LDP-VLDP ERROR : vldp_init returned NULL (which shouldn't ever happen)");
+            }
+         } // if audio init succeeded
+         else
+         {
+            // only report an audio problem if there is one
+            if (!get_quitflag())
+            {
+               printline("Could not initialize VLDP audio!");
+            }
+
+            // otherwise report that they quit
+            else
+            {
+               printline("VLDP : Quit requested, shutting down!");
+            }
+         } // end if audio init failed or if user opted to quit instead of parse
+      } // end if first file was present (sanity check)
+      // else if first file was not found, we do just quit because an error is printed elsewhere
+   } // end if framefile was read in properly
+   else
+   {
+      // if the user didn't specify a framefile from the command-line, then give them a little hint.
+      if (!m_bFramefileSet)
+      {
+         printline("You must specify a -framefile argument when using VLDP.");
+      }
+      // else the other error messages are more than sufficient
+   }
 	
 	// if init didn't completely finish, then we need to shutdown everything
 	if (!result)
@@ -656,7 +632,6 @@ void ldp_vldp::shutdown_player()
 			printline("ldp_vldp::shutdown_player WARNING : sound chip could not be deleted");
 		}
 	}
-	free_vldp_lib();
 	audio_shutdown();
 	free_yuv_overlay();	// de-allocate overlay if we have one allocated ...
 }
@@ -1434,22 +1409,6 @@ bool ldp_vldp::handle_cmdline_arg(const char *arg)
 
 
 //////////////////////////////////
-
-// loads the VLDP dynamic library, returning true on success
-bool ldp_vldp::load_vldp_lib()
-{
-	pvldp_init = vldp_init;
-	
-	return true;
-}
-
-// frees the VLDP dynamic library if we loaded it in
-void ldp_vldp::free_vldp_lib()
-{
-}
-
-
-
 
 // read frame conversions in from LD-frame to mpeg-frame data file
 bool ldp_vldp::read_frame_conversions()
