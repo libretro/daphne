@@ -263,7 +263,6 @@ SOURCES_C += $(DAPHNE_MAIN_DIR)/src/SDL_hints.c
 
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/stdlib/SDL_getenv.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/stdlib/SDL_iconv.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/stdlib/SDL_qsort.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/stdlib/SDL_stdlib.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/stdlib/SDL_string.c
 
