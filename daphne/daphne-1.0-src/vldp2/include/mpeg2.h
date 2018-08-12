@@ -125,9 +125,7 @@ void mpeg2_slice(decoder_t * const decoder, const int code, const uint8_t * cons
 void mpeg2_slice (decoder_t * decoder, int code, const uint8_t * buffer);
 #endif
 
-#define MPEG2_ACCEL_X86_MMX 1
 #define MPEG2_ACCEL_X86_3DNOW 2
-#define MPEG2_ACCEL_X86_MMXEXT 4
 #define MPEG2_ACCEL_PPC_ALTIVEC 1
 #define MPEG2_ACCEL_ALPHA 1
 #define MPEG2_ACCEL_ALPHA_MVI 2

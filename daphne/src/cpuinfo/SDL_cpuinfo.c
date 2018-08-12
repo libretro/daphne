@@ -52,7 +52,6 @@
 
 #define CPU_HAS_RDTSC   0x00000001
 #define CPU_HAS_ALTIVEC 0x00000002
-#define CPU_HAS_MMX     0x00000004
 #define CPU_HAS_3DNOW   0x00000008
 #define CPU_HAS_SSE     0x00000010
 #define CPU_HAS_SSE2    0x00000020
@@ -377,12 +376,6 @@ SDL_HasAltiVec(void)
     if (SDL_GetCPUFeatures() & CPU_HAS_ALTIVEC) {
         return SDL_TRUE;
     }
-    return SDL_FALSE;
-}
-
-SDL_bool
-SDL_HasMMX(void)
-{
     return SDL_FALSE;
 }
 
