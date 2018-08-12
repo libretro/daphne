@@ -201,7 +201,6 @@ SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/slice.c
 SOURCES_C += $(DAPHNE_DIR)/vldp2/vldp/mpegscan.c
 SOURCES_C += $(DAPHNE_DIR)/vldp2/vldp/vldp.c
 SOURCES_C += $(DAPHNE_DIR)/vldp2/vldp/vldp_internal.c
-SOURCES_C += $(DAPHNE_DIR)/vldp2/libvo/video_out_null.c
 
 SOURCES_CXX += $(DAPHNE_MAIN_DIR)/libretro/libretro.cpp
 

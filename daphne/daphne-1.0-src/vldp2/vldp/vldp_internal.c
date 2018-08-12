@@ -45,6 +45,296 @@
 #include "../include/video_out.h"
 
 /////////////////////////////
+// NULL DRIVER
+/////////////////////////////
+#define YUV_BUF_COUNT 3        // libmpeg2 needs 3 buffers to do its thing ...
+struct yuv_buf g_yuv_buf[YUV_BUF_COUNT];
+
+////
+#pragma warning (push)
+#pragma warning (disable:4018)
+static void vo_null_draw(uint8_t * const * buf, void *id)
+{
+    Sint32 correct_elapsed_ms = 0;	// we want this signed since we compare against actual_elapsed_ms
+    Sint32 actual_elapsed_ms = 0;	// we want this signed because it could be negative
+	unsigned int uStallFrames = 0;	// how many frames we have to stall during the loop (for multi-speed playback)
+
+	// if we don't need to skip any frames
+	if (!(s_frames_to_skip | s_skip_all))
+	{		
+		// loop once, or more than once if we are paused
+		do
+		{
+			VLDP_BOOL bFrameNotShownDueToCmd = VLDP_FALSE;
+
+			// PERFORMANCE WARNING:
+			//  We need to use 64-bit math here because otherwise, we will overflow a little after 2 minutes,
+			//   using 32-bit math.
+			// If you want to assume that you will never be playing video longer than 2 minutes, then you can change this back
+			//  to 32-bit integer math.
+			// Also, you can use floating point math here, but some CPU's (gp2x) don't have floating point units, which drastically
+			//  hurts performance.  On a fast modern PC, you probably won't notice a difference either way.
+			Sint64 s64Ms = s_uFramesShownSinceTimer;
+			s64Ms = (s64Ms * 1000000) / g_out_info.uFpks;
+
+			// compute how much time ought to have elapsed based on our frame count
+			correct_elapsed_ms = (Sint32) (s64Ms) +
+				// add on any extra delay that has been requested (simulated seek delay)
+				s_extra_delay_ms;
+			actual_elapsed_ms = g_in_info->uMsTimer - s_timer;
+
+			// the extra delay should only be 'used' once, so for safety reasons we reset
+			// it here, where we can guarantee that it only will be used once.
+			s_extra_delay_ms = 0;
+
+			// if we are caught up enough that we don't need to skip any frames, then display the frame
+			// LOGI("daphne-libretro: In null_draw_frame, before skip calculation.  actual_elapsed_ms: %d  correct_elapsed_ms: %d  u2milDivFpks: %u  ce_ms + fpks: %d", actual_elapsed_ms, correct_elapsed_ms, g_out_info.u2milDivFpks, (correct_elapsed_ms + g_out_info.u2milDivFpks));
+			if (actual_elapsed_ms < (correct_elapsed_ms + g_out_info.u2milDivFpks))
+			{
+				// this is the potentially expensive callback that gets the hardware overlay
+				// ready to be displayed, so we do this before we sleep
+				// NOTE : if this callback fails, we don't want to display the frame due to double buffering considerations
+				// LOGI("daphne-libretro: In null_draw_frame, before prepare_frame call.  id: %d", (int)id);
+				if (g_in_info->prepare_frame(&g_yuv_buf[(int) id]))
+				{
+				
+					// stall if we are playing too quickly and if we don't have a command waiting for us
+					// LOGI("daphne-libretro: In null_draw_frame, before stall calculation.  uMsTimer - timer: %d  correct_elapsed_ms: %d  uMsTimer: %u  s_timer: %d", (g_in_info->uMsTimer - s_timer), correct_elapsed_ms, g_in_info->uMsTimer, s_timer);
+					while (((Sint32) (g_in_info->uMsTimer - s_timer) < correct_elapsed_ms)
+						&& (!bFrameNotShownDueToCmd))
+					{
+						// IMPORTANT: this delay should come before the check for ivldp_got_new_command,
+						//  so that if we get a new command, we exit the loop immediately without
+						//  delaying, so that we don't have to check a second time for a new command.
+	    				SDL_Delay(1);	// note, if this is set to 0, we don't get commands as quickly
+
+						// Breaking when getting a new commend before our frame has expired
+						//  will shorten 1 frame's length.  However, it could speed skips up,
+						//  so I am leaving it in.
+						// Also, if we get a new command, uMsTimer may not advance until
+						//  we acknowledge the new command.
+						if (ivldp_got_new_command())
+						{
+							// strip off count and examine command
+							switch(g_req_cmdORcount & 0xF0)
+							{
+							case VLDP_REQ_PAUSE:
+							case VLDP_REQ_STEP_FORWARD:
+								ivldp_respond_req_pause_or_step();
+								break;
+							case VLDP_REQ_SPEEDCHANGE:
+								ivldp_respond_req_speedchange();
+								break;
+							case VLDP_REQ_NONE:
+								break;
+
+								// Anything else, we will not show the next frame and will
+								//  immediately exit this loop in order to handle the command
+								//  elsewhere.
+							default:
+								bFrameNotShownDueToCmd = VLDP_TRUE;
+								break;
+							}
+						}
+					}
+
+					// If a command comes in at the last second,
+					//  we don't want to render the next frame that we were going to because it could cause overrun
+					//  so we only display the frame if we haven't received a command
+					if (!bFrameNotShownDueToCmd)
+					{
+						// draw the frame
+						// we are using the pointer 'id' as an index, kind of risky, but convenient :)
+						// RJS HERE - Display frame callback from null driver.
+						// LOGI("daphne-libretro: In null_draw_frame, before display_frame call.  id: %d", (int) id);
+						g_in_info->display_frame(&g_yuv_buf[(int) id]);
+						// LOGI("daphne-libretro: In null_draw_frame, after display_frame call. s_uFramesShownSinceTimer: %d", s_uFramesShownSinceTimer);
+					} // end if we didn't get a new command to interrupt the frame being displayed
+				} // end if the frame was prepared properly
+				// else maybe we couldn't get a lock on the buffer fast enough, so we'll have to wait ...
+
+			} // end if we don't drop any frames
+
+			/*
+			// else we're too far beyond so we're gonna have to drop some this frame to catch up (doh!)
+			else
+			{
+				fprintf(stderr, "NOTE : dropped frame %u!  Expected %u but got %u\n",
+					g_out_info.current_frame, correct_elapsed_ms, actual_elapsed_ms);
+			}
+			*/
+
+			// if the frame was either displayed or dropped (due to lag) ...
+			if (!bFrameNotShownDueToCmd)
+			{
+				// now that the frame has either been displayed or dropped, we can update the counter to reflect
+				// NOTE : this should come before play_handler() is called, because if we become paused,
+				//  we change the value of s_uFramesShownSinceTimer.
+				++s_uFramesShownSinceTimer;
+			}
+
+			// if the frame is to be paused, then stall
+			if (s_paused)
+			{
+				paused_handler();
+			}
+			// else if we are supposed to be playing
+			else
+			{
+				play_handler();
+				
+				// We only want to advance the current frame if we didn't receive a pause request in the play handler.
+				// NOTE : this should come after the handlers in case the state of s_paused changes
+				if (!s_paused)
+				{
+					// If we aren't going to stall on any frames ...
+					// NOTE : I think this should be toward the outside of this loop, because
+					//  if we are skipping while playing at a slower speed, I would think that
+					//  the skip should be slower too.  I could be wrong though ...
+					// We DO want to make sure that if we are stalling, that the current frame
+					//  is not incremented.
+					if (uStallFrames == 0)
+					{
+						// if we have no pending frame, then the frame we've just displayed is the proceeding frame
+						if (s_uPendingSkipFrame == 0)
+						{
+							// only advance frame # if we've displayed/dropped a frame
+							if (!bFrameNotShownDueToCmd)
+							{
+								++g_out_info.current_frame;
+
+								// if we have to stall one or more frames per frame (multi-speed playback)
+								if (s_stall_per_frame > 0)
+								{
+									uStallFrames = s_stall_per_frame;
+								}
+
+								// if we are skipping one or more frames per frame that is displayed
+								// (multi-speed playback)
+								if (s_skip_per_frame > 0)
+								{
+									s_frames_to_skip = s_frames_to_skip_with_inc = s_skip_per_frame;
+								}
+								// else don't adjust the frameskip variables
+							}
+							// else don't advance the frame number
+						}
+						// else we just skipped, so update current frame to reflect that ...
+						else
+						{
+							g_out_info.current_frame = s_uPendingSkipFrame;
+							s_uPendingSkipFrame = 0;
+						}
+					} // end if we aren't going to stall on the currently rendered frame
+					// else don't increment the frame, but decrement the uStallFrames counter
+					else
+					{
+						--uStallFrames;
+					}
+				}
+			}
+
+		} while ((s_paused || uStallFrames > 0) && !s_skip_all && !s_step_forward);
+		// loop while we are paused OR while we are stalling so video overlay gets redrawn
+
+		s_step_forward = 0;	// clear this in case it was set (since we have now stepped forward)
+
+	} // end if we don't have frames to skip
+	
+	// if we have frames to skip
+	else
+	{		
+		// we could skip frames for another reason
+		if (s_frames_to_skip > 0)
+		{
+			--s_frames_to_skip;	// we've skipped a frame, so decrease the count
+
+			// if we need to also increase the frame number (multi-speed playback)
+			if (s_frames_to_skip_with_inc > 0)
+			{
+				--s_frames_to_skip_with_inc;
+				++g_out_info.current_frame;
+			}
+		}
+	}
+}
+#pragma warning (pop)
+
+static void vo_null_setup_fbuf (uint8_t ** buf, void ** id)
+{
+	static int buffer_index = 0;
+	*id = (int *) buffer_index;	// THIS IS A LITTLE TRICKY
+	// We are setting an integer value to a pointer ...
+	// Because it is convenient to let the pointer hold the value of this integer for us
+	// Hopefully it doesn't cause any trouble later ;)
+
+    buf[0] = g_yuv_buf[buffer_index].Y;
+    buf[1] = g_yuv_buf[buffer_index].U;
+    buf[2] = g_yuv_buf[buffer_index].V;
+    
+    buffer_index++;
+
+	// we are operating under a (safe?) assumption that this function is called in sets of YUV_BUF_COUNT
+	// so it should be safe to wraparound ... if our assumption is wrong, major havoc will ensure :)
+	if (buffer_index >= YUV_BUF_COUNT)
+	{
+		buffer_index = 0;
+	}
+
+}
+
+static int vo_null_setup (int width, int height,
+		       vo_setup_result_t * result)
+{
+	int i = 0;
+
+	// UPDATE : I believe these functions are no longer necessary because we do them in
+	// idle_handler_open() now instead.
+	/*	
+	g_in_info->report_mpeg_dimensions(width, height);	// alert parent-thread
+	g_out_info.w = width;
+	g_out_info.h = height;
+	*/
+
+	for (i = 0; i < YUV_BUF_COUNT; i++)
+	{
+		// allocate buffer according to size of picture	
+		// We do not re-allocate these buffers if they have already been previous allocated, as a safety measure
+		g_yuv_buf[i].Y_size = width * height;
+		g_yuv_buf[i].UV_size = g_yuv_buf[i].Y_size >> 2;
+		if (!g_yuv_buf[i].Y) g_yuv_buf[i].Y = (unsigned char *) malloc(g_yuv_buf[i].Y_size);
+		if (!g_yuv_buf[i].U) g_yuv_buf[i].U = (unsigned char *) malloc(g_yuv_buf[i].UV_size);
+		if (!g_yuv_buf[i].V) g_yuv_buf[i].V = (unsigned char *) malloc(g_yuv_buf[i].UV_size);
+	}
+	
+    result->convert = NULL;
+    return 0;
+}
+
+static void vo_null_close(void)
+{
+	int i = 0;
+	
+	for (i = 0; i < YUV_BUF_COUNT; i++)
+	{
+		// NOTE : it's ok to call free(NULL) so we do not need to do safety checking here!
+		free(g_yuv_buf[i].Y);
+		g_yuv_buf[i].Y = NULL;
+		free(g_yuv_buf[i].U);
+		g_yuv_buf[i].U = NULL;
+		free(g_yuv_buf[i].V);
+		g_yuv_buf[i].V = NULL;
+	}
+}
+
+static void vo_null_open (void)
+{
+   memset(g_yuv_buf, 0, sizeof(g_yuv_buf));	// MPO, fill this struct with 0's so that we can track whether mem has been allocated or not
+}
+
+/////////////////////////////
+// VLDP INTERNAL
+/////////////////////////////
 
 // NOTICE : these variables should only be used by the private thread !!!!!!!!!!!!
 
@@ -89,7 +379,6 @@ struct precache_entry_s s_sPreCacheEntries[MAX_PRECACHE_FILES];	// struct array 
 
 static FILE *g_mpeg_handle = NULL;	// mpeg file we currently have open
 static mpeg2dec_t *g_mpeg_data = NULL;	// structure for libmpeg2's state
-static vo_instance_t *s_video_output = NULL;
 static Uint32 g_frame_position[MAX_LDP_FRAMES] = { 0 };	// the file position of each I frame
 static Uint16 g_totalframes = 0;	// total # of frames in the current mpeg
 
@@ -116,16 +405,8 @@ int idle_handler(void *surface)
 
 	int done = 0;
 
-	s_video_output = (vo_instance_t *)vo_null_open();	// open 'null' driver (we just pass decoded frames to parent thread)
-	if (s_video_output)
-	{
-		g_mpeg_data = mpeg2_init();
-	}
-	else
-	{
-		fprintf(stderr, "VLDP : Error opening LIBVO!\n");
-		done = 1;
-	}
+	vo_null_open();	// open 'null' driver (we just pass decoded frames to parent thread)
+   g_mpeg_data = mpeg2_init();
 
 	// unless we are drawing video to the screen, we just sit here
 	// and listen for orders from the parent thread
@@ -196,7 +477,7 @@ int idle_handler(void *surface)
 	// 2017.02.13 - RJS ADD - Logging.
 	g_out_info.status = STAT_ERROR;
 	mpeg2_close(g_mpeg_data);	// shutdown libmpeg2
-	s_video_output->close(s_video_output);		// shutdown null driver
+	vo_null_close();		// shutdown null driver
 
 	// de-allocate any files that have been precached
 	while (s_uPreCacheIdxCount > 0)
@@ -421,7 +702,7 @@ static void decode_mpeg2 (uint8_t * current, uint8_t * end)
 		case STATE_SEQUENCE:
 		    /* might set nb fbuf, convert format, stride */
 		    /* might set fbufs */
-		    if (s_video_output->setup (s_video_output, info->sequence->width,
+		    if (vo_null_setup (info->sequence->width,
 				       info->sequence->height, &setup_result))
 			{
 				fprintf (stderr, "display setup failed\n");	// this should never happen
@@ -430,18 +711,15 @@ static void decode_mpeg2 (uint8_t * current, uint8_t * end)
 		    if (setup_result.convert)
 				mpeg2_convert (g_mpeg_data, setup_result.convert, NULL);
 					    
-		    // if this driver offers a setup_fbuf callback ...
-//		    else if (s_video_output->setup_fbuf)
-// we KNOW we offer a setup_fbuf function, so get rid of this conditional
 		    {
 				uint8_t * buf[3];
 				void * id;
 	
-				s_video_output->setup_fbuf (s_video_output, buf, &id);
+				vo_null_setup_fbuf (buf, &id);
 				mpeg2_set_buf (g_mpeg_data, buf, id);
-				s_video_output->setup_fbuf (s_video_output, buf, &id);
+				vo_null_setup_fbuf (buf, &id);
 				mpeg2_set_buf (g_mpeg_data, buf, id);
-				s_video_output->setup_fbuf (s_video_output, buf, &id);
+				vo_null_setup_fbuf (buf, &id);
 				mpeg2_set_buf (g_mpeg_data, buf, id);
 		    }
 		    break;
@@ -463,7 +741,7 @@ static void decode_mpeg2 (uint8_t * current, uint8_t * end)
 			// if the init hasn't been called yet, this may fail so we have to put the conditional
 		    if (info->display_fbuf)
 		    {
-				s_video_output->draw (s_video_output, info->display_fbuf->buf,
+				vo_null_draw (info->display_fbuf->buf,
 				      info->display_fbuf->id);
 		    }
 		    
@@ -542,10 +820,7 @@ void idle_handler_open()
 
 		// we need to close this surface, because the new mpeg may have a different resolution than the old one, and therefore,
 		// the YUV buffer must be re-allocated
-		// RJS CHANGE - safty precaution
-		// s_video_output->close(s_video_output);
-		if ((*s_video_output->close) != NULL)
-			s_video_output->close(s_video_output);
+      vo_null_close();
 	}
 
 	// if we've been requested to open a real file ...
