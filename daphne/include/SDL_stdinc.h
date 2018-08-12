@@ -39,11 +39,7 @@
 # include <stddef.h>
 # include <stdarg.h>
 #else
-# if defined(HAVE_STDLIB_H)
 #  include <stdlib.h>
-# elif defined(HAVE_MALLOC_H)
-#  include <malloc.h>
-# endif
 # if defined(HAVE_STDDEF_H)
 #  include <stddef.h>
 # endif

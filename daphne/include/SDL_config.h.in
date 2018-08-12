@@ -64,7 +64,6 @@
 #undef HAVE_ALLOCA_H
 #undef HAVE_SYS_TYPES_H
 #undef STDC_HEADERS
-#undef HAVE_STDLIB_H
 #undef HAVE_STDARG_H
 #undef HAVE_MALLOC_H
 #undef HAVE_MEMORY_H
