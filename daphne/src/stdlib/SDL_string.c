@@ -1166,7 +1166,11 @@ SDL_PrintString(char *text, size_t maxlen, SDL_FormatInfo *info, const char *str
         if (info->force_case == SDL_CASE_LOWER) {
             SDL_strlwr(text);
         } else if (info->force_case == SDL_CASE_UPPER) {
-            strupr(text);
+            while (*text != '\0')
+            {
+                *text = toupper(*text);
+                text++;
+            }
         }
     }
     return length;
