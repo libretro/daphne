@@ -47,20 +47,11 @@
 #  include <stdarg.h>
 # endif
 #endif
-#ifdef HAVE_STRING_H
 # if !defined(STDC_HEADERS) && defined(HAVE_MEMORY_H)
 #  include <memory.h>
 # endif
 # include <string.h>
-#endif
-#ifdef HAVE_STRINGS_H
-# include <strings.h>
-#endif
-#if defined(HAVE_INTTYPES_H)
-# include <inttypes.h>
-#elif defined(HAVE_STDINT_H)
 # include <stdint.h>
-#endif
 # include <ctype.h>
 #ifdef HAVE_MATH_H
 # if defined(__WINRT__)
