@@ -215,22 +215,6 @@ SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_wave.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/cpuinfo/SDL_cpuinfo.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/file/SDL_rwops.c
 
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/s_floor.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/e_sqrt.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/e_rem_pio2.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/k_rem_pio2.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/e_atan2.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/e_log.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/e_pow.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/s_atan.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/k_cos.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/k_sin.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/s_cos.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/s_fabs.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/s_scalbn.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/s_sin.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/s_copysign.c
-
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/SDL_yuv_sw.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/SDL_error.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/SDL_hints.c
