@@ -26,7 +26,7 @@
 
 // The code in this file translates general LDP functions into LDP-specific functions
 // Part of the Daphne emulator
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
@@ -52,7 +52,7 @@
 // 2017.02.01 - RJS ADD - Logging
 #include "../../main_android.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 #pragma warning (disable:4100)	// disable the warning about unreferenced parameters
 #endif
 

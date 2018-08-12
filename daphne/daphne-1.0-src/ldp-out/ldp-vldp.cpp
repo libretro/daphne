@@ -26,7 +26,7 @@
 // pretends to be an LDP, but uses the VLDP library for output
 // (for people who have no laserdisc player)
 
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #define _CRT_NONSTDC_NO_DEPRECATE 1
 #pragma warning (disable:4100)	// disable the warning about unreferenced formal parameters (MSVC++)
@@ -93,9 +93,6 @@ SDL_Rect *g_screen_clip_rect = &g_no_clip_rect;	// used a lot, we only want to c
 // 2017.02.14 - RJS - changed from apk version using textures to surfaces for RA
 // 2017.06.22 - RJS - changed to using SW textures directly
 // 2017.10.13 - RJS - changed to a array of textures so we can render one, have one waiting, build one, and an extra one.
-// APK SDL_Texture *g_hw_overlay = NULL;
-// SURFACE SDL_Surface *g_hw_overlay = NULL;
-// ALPHA SDL_SW_YUVTexture * g_hw_overlay = NULL;
 #define VIDEO_BUFFER_AMOUNT 4
 typedef enum
 {

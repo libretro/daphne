@@ -32,7 +32,7 @@
 
 using namespace std;
 
-#ifdef WIN32
+#ifdef _WIN32
 #pragma warning (disable:4786) // disable warning about truncating to 255 in debug info
 #endif
 
@@ -174,12 +174,8 @@ int prepare_frame_callback_with_overlay(struct yuv_buf *buf);
 int prepare_frame_callback_without_overlay(struct yuv_buf *buf);
 void display_frame_callback(struct yuv_buf *buf);
 void set_blend_fields(bool val);
-// RJS START - Convert SDL_Overlay
-// void buf2overlay(SDL_Overlay *dst, struct yuv_buf *src);
-// void buf2overlay_YUY2(SDL_Overlay *dst, struct yuv_buf *src);
 void buf2overlay(SDL_Texture *dst, struct yuv_buf *src);
 void buf2overlay_YUY2(Uint8 *out_pixels, Uint16 in_pitch, int in_h, int in_w, struct yuv_buf *src);
-// RJS END
 void update_parse_meter();
 void report_parse_progress_callback(double percent_complete);
 void report_mpeg_dimensions_callback(int, int);
