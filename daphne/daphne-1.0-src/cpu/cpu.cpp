@@ -704,26 +704,7 @@ void cpu_execute_loop()
 			if (actual_elapsed_ms > 16)
 			{
 				last_inputcheck = refresh_ms_time();
-#ifndef _XBOX
 				SDL_check_input();	// check for input events (keyboard, joystick, etc)
-#else
-				//if(g_game->get_game_type() != GAME_LAIR2)
-					XBOX_ReadPads();
-
-				// check for quit to menu
-				if (XBOX_QuitGame())
-				{
-					if (VideoThreadActive || GameInfo.LaserIndex == NOLDP)
-						set_quitflag();
-				}
-
-				// draw the scoreboard if we need to
-				if ( (GameInfo.LaserIndex == NOLDP) || (VideoThreadActive == FALSE))
-				{
-					display_repaint();
-					XBOX_RenderScene();
-				}			
-#endif
 			}
 
 			// be nice to cpu if we're looping here ...
@@ -1064,46 +1045,6 @@ void cpu_execute_one_cycle()
 		// 2017.08.18 - RJS - Single input check done here.  There is a lot of flotsam in this cpp.
 		// If this core will live on, it should be eliminated for search  ease.
 		SDL_check_input();	// check for input events (keyboard, joystick, etc)
-							/*
-		do
-		{
-			// limit checks for input events to every 16 ms
-			//(this is really expensive in Windows for some reason)
-			actual_elapsed_ms = elapsed_ms_time(last_inputcheck);
-			if (actual_elapsed_ms > 16)
-			{
-				last_inputcheck = refresh_ms_time();
-#ifndef _XBOX
-				SDL_check_input();	// check for input events (keyboard, joystick, etc)
-#else
-				//if(g_game->get_game_type() != GAME_LAIR2)
-				XBOX_ReadPads();
-
-				// check for quit to menu
-				if (XBOX_QuitGame())
-				{
-					if (VideoThreadActive || GameInfo.LaserIndex == NOLDP)
-						set_quitflag();
-				}
-
-				// draw the scoreboard if we need to
-				if ((GameInfo.LaserIndex == NOLDP) || (VideoThreadActive == FALSE))
-				{
-					display_repaint();
-					XBOX_RenderScene();
-				}
-#endif
-			}
-			
-
-			// be nice to cpu if we're looping here ...
-			if (g_cpu_paused)
-			{
-				make_delay(1);
-			}
-
-		} while (g_cpu_paused && !get_quitflag());	// the only time this should loop is if the user pauses the game
-		*/
 	// } // end while quitflag is not true
 }
 
