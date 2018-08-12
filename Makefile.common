@@ -207,8 +207,6 @@ SOURCES_CXX += $(DAPHNE_MAIN_DIR)/libretro/libretro.cpp
 
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/atomic/SDL_atomic.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/atomic/SDL_spinlock.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/dummy/SDL_dummyaudio.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audio.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audiocvt.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audiotypecvt.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_wave.c
