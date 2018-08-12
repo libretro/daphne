@@ -29,7 +29,6 @@
 #ifndef _SDL_H
 #define _SDL_H
 
-#include "SDL_main.h"
 #include "SDL_stdinc.h"
 #include "SDL_assert.h"
 #include "SDL_atomic.h"
@@ -46,7 +45,6 @@
 #include "SDL_mutex.h"
 #include "SDL_render.h"
 #include "SDL_rwops.h"
-#include "SDL_system.h"
 #include "SDL_thread.h"
 #include "SDL_timer.h"
 #include "SDL_version.h"

@@ -36,7 +36,7 @@
 #include <unistd.h>
 #endif /* __LINUX__ */
 
-#if defined(__LINUX__) || defined(__MACOSX__) || defined(__IPHONEOS__)
+#if defined(__LINUX__) || defined(__APPLE__)
 #include <dlfcn.h>
 #ifndef RTLD_DEFAULT
 #define RTLD_DEFAULT NULL
@@ -69,7 +69,7 @@ RunThread(void *data)
     return NULL;
 }
 
-#if defined(__MACOSX__) || defined(__IPHONEOS__)
+#if defined(__APPLE__)
 static SDL_bool checked_setname = SDL_FALSE;
 static int (*ppthread_setname_np)(const char*) = NULL;
 #elif defined(__LINUX__)
@@ -84,10 +84,10 @@ SDL_SYS_CreateThread(SDL_Thread *thread, void *args)
 	pthread_attr_t type;
 
     /* do this here before any threads exist, so there's no race condition. */
-    #if defined(__MACOSX__) || defined(__IPHONEOS__) || defined(__LINUX__)
+    #if defined(__APPLE__) || defined(__LINUX__)
     if (!checked_setname) {
         void *fn = dlsym(RTLD_DEFAULT, "pthread_setname_np");
-        #if defined(__MACOSX__) || defined(__IPHONEOS__)
+        #if defined(__APPLE__)
         ppthread_setname_np = (int(*)(const char*)) fn;
         #elif defined(__LINUX__)
         ppthread_setname_np = (int(*)(pthread_t, const char*)) fn;
@@ -122,10 +122,10 @@ void
 SDL_SYS_SetupThread(const char *name)
 {
     if (name != NULL) {
-        #if defined(__MACOSX__) || defined(__IPHONEOS__) || defined(__LINUX__)
+        #if defined(__APPLE__) || defined(__LINUX__)
         SDL_assert(checked_setname);
         if (ppthread_setname_np != NULL) {
-            #if defined(__MACOSX__) || defined(__IPHONEOS__)
+            #if defined(__APPLE__)
             ppthread_setname_np(name);
             #elif defined(__LINUX__)
             ppthread_setname_np(pthread_self(), name);

@@ -48,12 +48,6 @@
 
 using namespace std;
 
-#ifdef MAC_OSX
-#include "mmxdefs.h"
-#endif
-
-#include <SDL_main.h>
-
 #ifdef WIN32
 // win32 doesn't have regular chdir apparently
 #define chdir _chdir

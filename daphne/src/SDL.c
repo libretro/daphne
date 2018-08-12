@@ -50,11 +50,6 @@ extern int SDL_HelperWindowDestroy(void);
 
 
 /* The initialized subsystems */
-#ifdef SDL_MAIN_NEEDED
-static SDL_bool SDL_MainIsReady = SDL_FALSE;
-#else
-static SDL_bool SDL_MainIsReady = SDL_TRUE;
-#endif
 static SDL_bool SDL_bInMainQuit = SDL_FALSE;
 static Uint8 SDL_SubsystemRefCount[ 32 ];
 
@@ -81,12 +76,8 @@ SDL_PrivateSubsystemRefCountDecr(Uint32 subsystem)
 static SDL_bool
 SDL_PrivateShouldInitSubsystem(Uint32 subsystem)
 {
-	// RJS ADD - logging
- 	LOGI("daphne-libretro: In SDL_PrivateShouldInitSubsystem, top of routine.");
     int subsystem_index = SDL_MostSignificantBitIndex32(subsystem);
     SDL_assert(SDL_SubsystemRefCount[subsystem_index] < 255);
-	// RJS ADD - logging
- 	LOGI("daphne-libretro: In SDL_PrivateShouldInitSubsystem, bottom of routine.");
     return (SDL_SubsystemRefCount[subsystem_index] == 0);
 }
 
@@ -107,25 +98,13 @@ SDL_PrivateShouldQuitSubsystem(Uint32 subsystem) {
 void
 SDL_SetMainReady(void)
 {
-    SDL_MainIsReady = SDL_TRUE;
 }
 
 int
 SDL_InitSubSystem(Uint32 flags)
 {
-	// RJS ADD - logging
-	LOGI("daphne-libretro: In SDL_InitSubSystem, top of function.");
-
-	if (!SDL_MainIsReady) {
-        SDL_SetError("Application didn't initialize properly, did you include SDL_main.h in the file containing your main() function?");
-        return -1;
-    }
-
     /* Clear the error message */
     SDL_ClearError();
-
-	// RJS ADD - logging
-	LOGI("daphne-libretro: In SDL_InitSubSystem, after SDL_ClearError.");
 
     if ((flags & SDL_INIT_GAMECONTROLLER)) {
         /* game controller implies joystick */
@@ -149,9 +128,6 @@ SDL_InitSubSystem(Uint32 flags)
     SDL_TicksInit();
 #endif
 
-	// RJS ADD - logging
-	// RJS ADD - logging
-	LOGI("daphne-libretro: In SDL_InitSubSystem, before timer subsystem.");
     /* Initialize the timer subsystem */
     if ((flags & SDL_INIT_TIMER)){
 #if !SDL_TIMERS_DISABLED
@@ -166,16 +142,11 @@ SDL_InitSubSystem(Uint32 flags)
 #endif
     }
 
-	// RJS ADD - logging
-	LOGI("daphne-libretro: In SDL_InitSubSystem, before video subsystem.");
     /* Initialize the video subsystem */
     if ((flags & SDL_INIT_VIDEO)){
-		// RJS ADD - logging
-		LOGI("daphne-libretro: In SDL_InitSubSystem, in video init if, before SDL_PrivateShouldInitSubsystem.");
 #if !SDL_VIDEO_DISABLED
         if (SDL_PrivateShouldInitSubsystem(SDL_INIT_VIDEO)) {
 			// RJS ADD - logging
-			LOGI("daphne-libretro: In SDL_InitSubSystem, in video init if, before SDL_VideoInit.");
             if (SDL_VideoInit(NULL) < 0) {
                 return (-1);
             }
@@ -186,8 +157,6 @@ SDL_InitSubSystem(Uint32 flags)
 #endif
     }
 
-	// RJS ADD - logging
-	LOGI("daphne-libretro: In SDL_InitSubSystem, before audio subsystem.");
     /* Initialize the audio subsystem */
     if ((flags & SDL_INIT_AUDIO)){
 #if !SDL_AUDIO_DISABLED
@@ -202,8 +171,6 @@ SDL_InitSubSystem(Uint32 flags)
 #endif
     }
 
-	// RJS ADD - logging
-	LOGI("daphne-libretro: In SDL_InitSubSystem, before joystick subsystem.");
     /* Initialize the joystick subsystem */
     if ((flags & SDL_INIT_JOYSTICK)){
 #if !SDL_JOYSTICK_DISABLED
@@ -218,8 +185,6 @@ SDL_InitSubSystem(Uint32 flags)
 #endif
     }
 
-	// RJS ADD - logging
-	LOGI("daphne-libretro: In SDL_InitSubSystem, before gamecontroller subsystem.");
     if ((flags & SDL_INIT_GAMECONTROLLER)){
 #if !SDL_JOYSTICK_DISABLED
         if (SDL_PrivateShouldInitSubsystem(SDL_INIT_GAMECONTROLLER)) {
@@ -233,8 +198,6 @@ SDL_InitSubSystem(Uint32 flags)
 #endif
     }
 
-	// RJS ADD - logging
-	LOGI("daphne-libretro: In SDL_InitSubSystem, before haptic subsystem.");
     /* Initialize the haptic subsystem */
     if ((flags & SDL_INIT_HAPTIC)){
 #if !SDL_HAPTIC_DISABLED
@@ -249,8 +212,6 @@ SDL_InitSubSystem(Uint32 flags)
 #endif
     }
 
-	// RJS ADD - logging
-	LOGI("daphne-libretro: In SDL_InitSubSystem, bottom of function.");
     return (0);
 }
 

@@ -24,6 +24,7 @@
 #define THAYERS_H
 
 #include <SDL.h>
+#include <SDL_Keycode.h>
 #include "game.h"
 #include "../scoreboard/scoreboard_collection.h"
 
