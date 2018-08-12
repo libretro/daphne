@@ -607,14 +607,14 @@ void tms9128nl_convert_color(unsigned char color_src, SDL_Color *color)
 	}
 }
 
+#define CHAR_WIDTH 8
+#define CHAR_HEIGHT 8
+
 // draws a character to the Cliff video display
 // 40 columns by 24 rows
 // uses Cliffy's video memory to retrieve 8x8 character bitmap
 void tms9128nl_drawchar(unsigned char ch, int col, int row)
 {
-	const int CHAR_WIDTH = 8;
-	const int CHAR_HEIGHT = 8;
-
 	int bmp_index = (ch * 8) + (g_tms_pgt_addr << 11); // index in vid mem where bmp data is located
 	int i = 0, j = 0;	// temp indices
 	int x = col * CHAR_WIDTH;
