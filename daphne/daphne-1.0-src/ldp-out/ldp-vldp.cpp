@@ -435,7 +435,6 @@ ldp_vldp::ldp_vldp()
 	m_blank_on_skips = false;
 
 	// RJS HERE
-	LOGI("In ldp_vldp constructor.");
 	m_seek_frames_per_ms = 0;
 	m_min_seek_delay = 0;
 
@@ -460,44 +459,34 @@ ldp_vldp::~ldp_vldp()
 // called when daphne starts up
 bool ldp_vldp::init_player()
 {
-	LOGI("daphne-libretro: In ldp_vldp::init_player, top of routine.");
 
 	bool result = false;
 	bool need_to_parse = false;	// whether we need to parse all video
 
 	g_vertical_stretch = m_vertical_stretch;  // callbacks don't have access to m_vertical_stretch
 	
-	LOGI("daphne-libretro: In ldp_vldp::init_player, before load_vldp_lib.");
 
 	// load the .DLL first in case we call any of its functions elsewhere
 	if (load_vldp_lib())
 	{
-		LOGI("daphne-libretro: In ldp_vldp::init_player, after load_vldp_lib.");
 
 		// try to read in the framefile
 		if (read_frame_conversions())
 		{
-			LOGI("daphne-libretro: In ldp_vldp::init_player, after read_frame_conversions.");
 
 			// just a sanity check to make sure their frame file is correct
 			if (first_video_file_exists())
 			{				
-				LOGI("daphne-libretro: In ldp_vldp::init_player, after first_video_file_exists.");
-
 				// if the last video file has not been parsed, assume none of them have been
 				// This is safe because if they have been parsed, it will just skip them
 				if (!last_video_file_parsed())
 				{
-					LOGI("daphne-libretro: In ldp_vldp::init_player, in last_video_file_parsed if block.");
-
 					printnotice("Press any key to parse your video file(s). This may take a while. Press ESC if you'd rather quit.");
 					need_to_parse = true;
 				}
 				
-				LOGI("daphne-libretro: In ldp_vldp::init_player, before audio_init.");
 				if (audio_init() && !get_quitflag())
 				{
-					LOGI("daphne-libretro: In ldp_vldp::init_player, after successful audio_init.");
 					// if our game is using video overlay,
 					// AND if we're not doing tests that an overlay would interfere with
 					// we'll use our slower callback
@@ -524,12 +513,8 @@ bool ldp_vldp::init_player()
 					g_local_info.blank_during_skips = m_blank_on_skips;
 					g_local_info.GetTicksFunc = GetTicksFunc;
 
-					LOGI("daphne-libretro: In ldp_vldp::init_player, before pvldp_init.");
-
 					g_vldp_info = pvldp_init(&g_local_info);
 
-					LOGI("daphne-libretro: In ldp_vldp::init_player, after pvldp_init. vldp_info: %d", (int) g_vldp_info);
-					
 					// if we successfully made contact with VLDP ...
 					if (g_vldp_info != NULL)
 					{
@@ -556,26 +541,16 @@ bool ldp_vldp::init_player()
 							// The check for RAM requirements is done inside the
 							//  precache_all_video function, so we don't need to worry about that here.
 							if (m_bPreCache)
-							{
-								LOGI("daphne-libretro: In ldp_vldp::init_player, before precache_all_video.");
 								bPreCacheOK = precache_all_video();
-							}
 
 							// if we need to parse all the video
 							if (need_to_parse)
-							{
-								LOGI("daphne-libretro: In ldp_vldp::init_player, before parse_all_video.");
 								parse_all_video();
-							}
-
-							LOGI("daphne-libretro: In ldp_vldp::init_player, before bPreCacheOK.  bPreCacheOK: %d", bPreCacheOK);
 
 							// if precaching succeeded or we didn't request precaching
 							if (bPreCacheOK)
 							{
 								blitting_allowed = false;	// this is the point where blitting isn't allowed anymore
-
-								LOGI("daphne-libretro: In ldp_vldp::init_player, in bPreCacheOK, before open_and_block.");
 
 								// open first file so that
 								// we can draw video overlay even if the disc is not playing
@@ -583,8 +558,6 @@ bool ldp_vldp::init_player()
 								printline(m_mpeginfo[0].name.c_str());
 								if (open_and_block(m_mpeginfo[0].name))
 								{
-									LOGI("daphne-libretro: In ldp_vldp::init_player, in bPreCacheOK, after successful open_and_block.");
-
 									// although we just opened a video file, we have not opened an audio file,
 									// so we want to force a re-open of the same video file when we do a real search,
 									// in order to ensure that the audio file is opened also.
@@ -603,8 +576,6 @@ bool ldp_vldp::init_player()
 									}
 
 									result = true;
-
-									LOGI("daphne-libretro: In ldp_vldp::init_player, in bPreCacheOK, end of successful open_and_block.");
 								}
 								else
 								{
@@ -666,7 +637,6 @@ bool ldp_vldp::init_player()
 		shutdown_player();
 	}
 
-	LOGI("daphne-libretro: In ldp_vldp::init_player, bottom of routine.");
 	return result;
 }
 
@@ -693,8 +663,6 @@ void ldp_vldp::shutdown_player()
 
 bool ldp_vldp::open_and_block(const string &strFilename)
 {
-	LOGI("daphne-libretro: In ldp_vldp::open_and_block, top of routine.  Filename: %s  Path: %s", strFilename.c_str(), m_mpeg_path.c_str());
-
 	bool bResult = false;
 
 	// during parsing, blitting is allowed
@@ -711,9 +679,7 @@ bool ldp_vldp::open_and_block(const string &strFilename)
 			// OR if the file has been precached and we are able to refer to it
 		|| (g_vldp_info->open_precached(mi->second, (m_mpeg_path + strFilename).c_str())))
 	{
-		LOGI("daphne-libretro: In ldp_vldp::open_and_block, before wait_for_status.");
 		bResult = wait_for_status(STAT_STOPPED);
-		LOGI("daphne-libretro: In ldp_vldp::open_and_block, after wait_for_status.  bResult: %d", bResult);
 		if (bResult)
 		{
 			m_cur_mpeg_filename = strFilename;
@@ -721,8 +687,6 @@ bool ldp_vldp::open_and_block(const string &strFilename)
 	}
 
 	blitting_allowed = false;
-
-	LOGI("daphne-libretro: In ldp_vldp::open_and_block, bottom of routine.  bResult: %d", bResult);
 
 	return bResult;
 }
@@ -748,19 +712,13 @@ bool ldp_vldp::precache_and_block(const string &strFilename)
 
 bool ldp_vldp::wait_for_status(unsigned int uStatus)
 {
-	LOGI("daphne-libretro: In ldp_vldp::wait_for_status, top of function.  uStatus: %d  g_vldp_info status: %d", uStatus, g_vldp_info->status);
-
 	bool bResult = false;
 
 	while (g_vldp_info->status == STAT_BUSY)
 	{
-		LOGI("daphne-libretro: In ldp_vldp::wait_for_status, in STAT_BUSY loop.  uStatus: %d  g_vldp_info status: %d", uStatus, g_vldp_info->status);
-
 		// if we got a parse update, then show it ...
 		if (g_bGotParseUpdate)
 		{
-			LOGI("daphne-libretro: In ldp_vldp::wait_for_status, in STAT_BUSY loop.  uStatus: %d  g_vldp_info status: %d  g_bGotParseUpdate: %d", uStatus, g_vldp_info->status, g_bGotParseUpdate);
-
 			// redraw screen blitter before we display it
 			update_parse_meter();
 			vid_blank();
@@ -778,8 +736,6 @@ bool ldp_vldp::wait_for_status(unsigned int uStatus)
 	{
 		bResult = true;
 	}
-
-	LOGI("daphne-libretro: In ldp_vldp::wait_for_status, bottom of function.  bResult: %d", bResult);
 
 	return bResult;
 }
@@ -1498,8 +1454,6 @@ void ldp_vldp::free_vldp_lib()
 // read frame conversions in from LD-frame to mpeg-frame data file
 bool ldp_vldp::read_frame_conversions()
 {
-	LOGI("daphne-libretro: In read_frame_conversions, top of function.");
-
 	struct mpo_io *p_ioFileConvert;
 	string s = "";
 	string frame_string = "";
@@ -1507,23 +1461,19 @@ bool ldp_vldp::read_frame_conversions()
 	string framefile_path;
 	
 	framefile_path = m_framefile;
-	LOGI("daphne-libretro: In read_frame_conversions, framefile_path: %s", framefile_path.c_str());
 
 	p_ioFileConvert = mpo_open(framefile_path.c_str(), MPO_OPEN_READONLY);
 	
 	// if the file was not found in the relative directory, try looking for it in the framefile directory
 	if (!p_ioFileConvert)
 	{
-		LOGI("daphne-libretro: In read_frame_conversions, attempt to open framefile in relative directory failed, framefile_path: %s", framefile_path.c_str());
 		framefile_path = g_homedir.get_framefile(framefile_path);	// add directory to front of path
-		LOGI("daphne-libretro: In read_frame_conversions, attempting framefile directory, framefile_path: %s", framefile_path.c_str());
 		p_ioFileConvert = mpo_open(framefile_path.c_str(), MPO_OPEN_READONLY);
 	}
 	
 	// if the framefile was opened successfully
 	if (p_ioFileConvert)
 	{
-		LOGI("daphne-libretro: In read_frame_conversions, framefile opened successfully.");
 		MPO_BYTES_READ bytes_read = 0;
 		// 2017.12.28 - RJS - Is this ever freed?  Or saved off?
 		char *ff_buf = (char *) MPO_MALLOC((unsigned int) (p_ioFileConvert->size+1));	// add an extra byte to null terminate
@@ -1551,11 +1501,6 @@ bool ldp_vldp::read_frame_conversions()
 						outstr("Framefile parse succeeded. Video/Audio directory is: ");
 						printline(m_mpeg_path.c_str());
 						result = true;
-
-						LOGI("Framefile parse succeeded.  Video/Audio directory is: %s", framefile_path.c_str());
-						LOGI("---BEGIN FRAMEFILE CONTENTS---");
-						LOGI("%s", ff_buf);
-						LOGI("---END FRAMEFILE CONTENTS---");
 					}
 					else
 					{
@@ -1578,12 +1523,10 @@ bool ldp_vldp::read_frame_conversions()
 	}
 	else
 	{
-		LOGI("daphne-libretro: In read_frame_conversions, framefile opened UNsuccessfully.");
 		s = "Could not open framefile : " + m_framefile;
 		printerror(s.c_str());
 	}
 	
-	LOGI("daphne-libretro: In read_frame_conversions, bottom of function.  Boolean result: %d", result);
 	return result;
 }
 
@@ -1781,19 +1724,15 @@ Uint64 ldp_vldp::get_audio_sample_position(unsigned int uTargetMpegFrame)
 //  return frames if they are at the same FPS (which hopefully they are hehe)
 Uint16 ldp_vldp::mpeg_info (string &filename, Uint16 ld_frame)
 {
-	LOGI("In mpeg_info, top of routine, ld_frame: %d", ld_frame);
-
 	unsigned int index = 0;
 	Uint16 mpeg_frame = 0;	// which mpeg frame to seek (assuming mpeg and disc have same FPS)
 	filename = "";	// blank 'filename' means error, so we default to this condition for safety reasons
 	
 	// find the mpeg file that has the LD frame inside of it
-	LOGI("In mpeg_info, before framefile calculation, ld_frame: %d  index+1: %d  m_file_index: %d  m_mpeginfo[index+1]: %d", ld_frame, index+1, m_file_index, m_mpeginfo[index+1].frame);
 	while ((index+1 < m_file_index) && (ld_frame >= m_mpeginfo[index+1].frame))
 	{
 		index = index + 1;
 	}
-	LOGI("In mpeg_info, after framefile calculation, index: %d", index);
 
 	// make sure that the frame they've requested comes after the first frame in our framefile
 	if (ld_frame >= m_mpeginfo[index].frame)
@@ -1813,7 +1752,6 @@ Uint16 ldp_vldp::mpeg_info (string &filename, Uint16 ld_frame)
 	}
 	// else frame is out of range ...
 	
-	LOGI("In mpeg_info, bottom of routine, ld_frame: %d  filename: %s", ld_frame, filename.c_str());
 	return(mpeg_frame);
 }
 
@@ -1998,7 +1936,6 @@ bool ldp_vldp::parse_framefile(const char *pszInBuf, const char *pszFramefileFul
 //******************************************************************************
 int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 {
-	// LOGI("daphne-libretro: In prepare_frame_callback_with_overlay, top of routine.");
 	int result = VLDP_FALSE;
 	
 	void * g_hw_overlay_pixels	= NULL;
@@ -2021,29 +1958,19 @@ int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 		// where the LDP thread will get the Main Threads "screen".  Since I'm unsure, if I use
 		// SWITCH below, that's where I switched from Texture back to origional Surface.  Here goes . . .
 
-		// if (sw_overlay) LOGI("daphne-libretro: In prepare_frame_callback_with_overlay, before get_finished_video_overlay.  g_game: %d  pitch: %d ByPP: %d", (int) g_game, nPitch, SDL_BYTESPERPIXEL(sw_overlay->format));
-		// else  LOGI("daphne-libretro: In prepare_frame_callback_with_overlay, before get_finished_video_overlay.  g_game: %d  pitch: %d sw_overlay: NULLd", (int)g_game, nPitch);
-
 		SDL_Surface *gamevid = g_game->get_finished_video_overlay();	// This could change at any time (double buffering, for example)
 		if (gamevid == NULL)
-		{
-			// LOGI("daphne-libretro: In prepare_frame_callback_with_overlay, gamevid is NULL, you'll likely get a blank screen.");
 			return result;
-		}
-		// LOGI("daphne-libretro: In prepare_frame_callback_with_overlay, gamevid Surface data.  h: %d  w: %d  pitch: %d  addr: %d", gamevid->h, gamevid->w, gamevid->pitch, (int)gamevid->pixels);
-		// LOGI("daphne-libretro: In prepare_frame_callback_with_overlay, gamevid is not NULL.");
 
 		if (nPitch == 0) nPitch = gamevid->w * SDL_BYTESPERPIXEL(gamevid->format->format);
 
 		Uint8 * gamevid_pixels = (Uint8 *)gamevid->pixels;
-		// LOGI("daphne-libretro: In prepare_frame_callback_with_overlay, before overlay size check.  gamevid->w: %d  Lshifted 1: %d  g_hw_overlay_rect.w: %d", gamevid->w, gamevid->w << 1, g_hw_overlay_rect.w);
 
 		if ((gamevid->w << 1) == g_hw_overlay_rect.w)
 		{
 			// adjust for vertical offset
 			// We use _half_ of the requested vertical offset because the mpeg video is twice
 			// the size of the overlay
-			// LOGI("daphne-libretro: In prepare_frame_callback_with_overlay, before adjusting for vertical offset.  gamevid->w: %d  g_vertical_offset: %d  g_vertical_stretch: %d", gamevid->w, g_vertical_offset, g_vertical_stretch);
 			gamevid_pixels = (Uint8 *) gamevid_pixels - (gamevid->w * (g_vertical_offset - g_vertical_stretch));
 			
 			unsigned int row = 0;
@@ -2212,7 +2139,6 @@ int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 		result = VLDP_TRUE;	// we were successful (we return successful even if overlay part failed because we want to render _something_)
 	} // end if locking the overlay was successful
 	
-	// LOGI("daphne-libretro: In prepare_frame_callback_with_overlay, bottom of routine.");
 	return result;
 }
 
@@ -2273,17 +2199,13 @@ void display_frame_callback(struct yuv_buf *buf)
 	// proven.  Out of pure laziness, "texture" will mean the buffer in these new routines.  Also, not sure if this needs to be
 	// added to dynapis.  Function is: SDL_RJS_SW_CopyYUVToRGB
 
-	// LOGI("daphne-libretro: In display_frame_callback, top of routine.  buf: %d", (int)buf);
-
 	int vb_ndx = -1;
 	SDL_SW_YUVTexture * sw_overlay = NULL;
 	sw_overlay = get_vb_filling(&vb_ndx);
 
 	// I'll bet sw_ovelay is NULL here.  Testing code.
-	// LOGI("daphne-libretro: In display_frame_callback, after get_vb_filling.  sw_overlay: %d  buf: %d", (int)sw_overlay, (int)buf);
 	if (sw_overlay == NULL)
 	{
-		LOGI("In display_frame_callback, sw_overlay is NULL!  Should be very, very rare.  Exiting.");
 		return;
 	}
 
@@ -2293,10 +2215,8 @@ void display_frame_callback(struct yuv_buf *buf)
 	full_rect.w = sw_overlay->w;
 	full_rect.h = sw_overlay->h;
 
-	// LOGI("daphne-libretro: In display_frame_callback, before SDL_RJS_SW_CopyYUVToRGB.  sw_overlay: %d  w: %d  h: %d", (int)sw_overlay, sw_overlay->w, sw_overlay->h);
 	SDL_RJS_SW_CopyYUVToRGB(sw_overlay, &full_rect, sw_overlay->target_format, sw_overlay->w, sw_overlay->h, sw_overlay->planes[0], sw_overlay->pitches[0]);
 
-	// LOGI("daphne-libretro: In display_frame_callback, done FILLING.");
 	set_vb_filling_done(vb_ndx);
 }
 
@@ -2417,61 +2337,61 @@ bool g_parsed = false;	// whether we've received any data at all ...
 // this should be called from parent thread
 void update_parse_meter()
 {
-	// if we have some data collected
-	if (g_dPercentComplete01 >= 0)
-	{
-		double elapsed_s = 0;	// how many seconds have elapsed since we began this ...
-		double total_s = 0;	// how many seconds the entire operation is likely to take
-		double remaining_s = 0;	// how many seconds are remaining
-		
-		double percent_complete = g_dPercentComplete01 * 100.0;	// switch it from [0-1] to [0-100]
+   // if we have some data collected
+   if (g_dPercentComplete01 >= 0)
+   {
+      double elapsed_s = 0;	// how many seconds have elapsed since we began this ...
+      double total_s = 0;	// how many seconds the entire operation is likely to take
+      double remaining_s = 0;	// how many seconds are remaining
 
-		elapsed_s = (elapsed_ms_time(g_parse_start_time)) * 0.001;	// compute elapsed seconds
-		double percentage_accomplished = percent_complete - g_parse_start_percentage;	// how much 'percentage' points we've accomplished
+      double percent_complete = g_dPercentComplete01 * 100.0;	// switch it from [0-1] to [0-100]
 
-		total_s = (elapsed_s * 100.0) / percentage_accomplished;	// 100 signifies 100 percent (I got this equation by doing some algebra on paper)
+      elapsed_s = (elapsed_ms_time(g_parse_start_time)) * 0.001;	// compute elapsed seconds
+      double percentage_accomplished = percent_complete - g_parse_start_percentage;	// how much 'percentage' points we've accomplished
 
-		// as long as percent_complete is always 100 or lower, total_s will always be >= elapsed_s, so no checking necessary here
-		remaining_s = total_s - elapsed_s;
+      total_s = (elapsed_s * 100.0) / percentage_accomplished;	// 100 signifies 100 percent (I got this equation by doing some algebra on paper)
 
-		SDL_Surface *screen = get_screen_blitter();	// the main screen that we can draw on ...
+      // as long as percent_complete is always 100 or lower, total_s will always be >= elapsed_s, so no checking necessary here
+      remaining_s = total_s - elapsed_s;
 
-		SDL_FillRect(screen, NULL, 0);	// erase previous stuff on the screen blitter
+      SDL_Surface *screen = get_screen_blitter();	// the main screen that we can draw on ...
 
-		// if we have some progress to report ...
-		if (remaining_s > 0)
-		{
-			char s[160];
-			int half_h = screen->h >> 1;	// calculations to center message on screen ...
-			int half_w = screen->w >> 1;
-			sprintf(s, "Video parsing is %02.f percent complete, %02.f seconds remaining.\n", percent_complete, remaining_s);
-			SDLDrawText(s, screen, FONT_SMALL, (half_w-((strlen(s)/2)*FONT_SMALL_W)), half_h-FONT_SMALL_H);
+      SDL_FillRect(screen, NULL, 0);	// erase previous stuff on the screen blitter
 
-// now draw a little graph thing ...
-SDL_Rect clip = screen->clip_rect;
-const int THICKNESS = 10;	// how thick our little status bar will be
-clip.y = (clip.h - THICKNESS) / 2;	// where to start our little status bar
-clip.h = THICKNESS;
-clip.y += FONT_SMALL_H + 5;	// give us some padding
+      // if we have some progress to report ...
+      if (remaining_s > 0)
+      {
+         char s[160];
+         int half_h = screen->h >> 1;	// calculations to center message on screen ...
+         int half_w = screen->w >> 1;
+         sprintf(s, "Video parsing is %02.f percent complete, %02.f seconds remaining.\n", percent_complete, remaining_s);
+         SDLDrawText(s, screen, FONT_SMALL, (half_w-((strlen(s)/2)*FONT_SMALL_W)), half_h-FONT_SMALL_H);
 
-SDL_FillRect(screen, &clip, SDL_MapRGB(screen->format, 255, 255, 255));	// draw a white bar across the screen ...
+         // now draw a little graph thing ...
+         SDL_Rect clip = screen->clip_rect;
+         const int THICKNESS = 10;	// how thick our little status bar will be
+         clip.y = (clip.h - THICKNESS) / 2;	// where to start our little status bar
+         clip.h = THICKNESS;
+         clip.y += FONT_SMALL_H + 5;	// give us some padding
 
-clip.x++;	// move left boundary in 1 pixel
-clip.y++;	// move upper boundary down 1 pixel
-clip.w -= 2;	// move right boundary in 1 pixel
-clip.h -= 2;	// move lower boundary in 1 pixel
+         SDL_FillRect(screen, &clip, SDL_MapRGB(screen->format, 255, 255, 255));	// draw a white bar across the screen ...
 
-SDL_FillRect(screen, &clip, SDL_MapRGB(screen->format, 0, 0, 0));	// fill inside with black
+         clip.x++;	// move left boundary in 1 pixel
+         clip.y++;	// move upper boundary down 1 pixel
+         clip.w -= 2;	// move right boundary in 1 pixel
+         clip.h -= 2;	// move lower boundary in 1 pixel
 
-clip.w = (Uint16)((screen->w * g_dPercentComplete01) + 0.5) - 1;	// compute how wide our progress bar should be (-1 to take into account left pixel border)
+         SDL_FillRect(screen, &clip, SDL_MapRGB(screen->format, 0, 0, 0));	// fill inside with black
 
-// go from full red (hardly complete) to full green (fully complete)
-SDL_FillRect(screen, &clip, SDL_MapRGB(screen->format,
-	(Uint8)(255 * (1.0 - g_dPercentComplete01)),
-	(Uint8)(255 * g_dPercentComplete01),
-	0));
-		}
-	}
+         clip.w = (Uint16)((screen->w * g_dPercentComplete01) + 0.5) - 1;	// compute how wide our progress bar should be (-1 to take into account left pixel border)
+
+         // go from full red (hardly complete) to full green (fully complete)
+         SDL_FillRect(screen, &clip, SDL_MapRGB(screen->format,
+                  (Uint8)(255 * (1.0 - g_dPercentComplete01)),
+                  (Uint8)(255 * g_dPercentComplete01),
+                  0));
+      }
+   }
 }
 
 // percent_complete is between 0 and 1
@@ -2498,8 +2418,6 @@ extern unsigned int g_draw_width, g_draw_height;
 // this always gets called before the draw_callback and always after report_parse_progress callback
 void report_mpeg_dimensions_callback(int width, int height)
 {
-	LOGI("daphne-libretro: In report_mpeg_dimensions_callback, top of routine.  w: %d  h: %d", width, height);
-
 	unsigned int uTimer = refresh_ms_time();
 
 	// if we haven't blitted this information to the screen, then wait for other thread to do so before we continue ...
@@ -2507,8 +2425,6 @@ void report_mpeg_dimensions_callback(int width, int height)
 	{
 		make_delay(1);
 	}
-
-	LOGI("daphne-libretro: In report_mpeg_dimensions_callback, clip_rect_xy: %d %d  clip_rect_wh: %d %d  draw_wh: %d %d", g_screen_clip_rect->x, g_screen_clip_rect->y, g_screen_clip_rect->w, g_screen_clip_rect->h, g_draw_width, g_draw_height);
 
 	// if draw width is less than the screen width
 	if (g_draw_width < (unsigned int) g_screen_clip_rect->w)
@@ -2573,11 +2489,9 @@ void report_mpeg_dimensions_callback(int width, int height)
 		// v0.01 g_hw_overlay = SDL_RJS_SW_CreateYUVBuffer(SDL_PIXELFORMAT_YUY2, SDL_PIXELFORMAT_RGB565, DAPHNE_VIDEO_W, DAPHNE_VIDEO_H);
 		if (! initialize_vb(SDL_PIXELFORMAT_YUY2, SDL_PIXELFORMAT_RGB565, width, height - (g_vertical_stretch * 4)))
 		{
-			LOGI("daphne-libretro: In report_mpeg_dimensions_callback, g_hw_overlay allocate FAILED!?");
 			printline("ldp-vldp.cpp : YUV overlay creation failed!");
 			set_quitflag();
 		} else {
-			LOGI("daphne-libretro: In report_mpeg_dimensions_callback, g_hw_overlay allocated.");
 			// 2017.09.21 - RJS - used to tell if rendering was SW or HW, this is left to RA
 			// if overlay was successfully created, then indicate in the log whether it is HW accelerated or not
 			string msg = "YUV overlay is done in RetroArch.";
@@ -2586,7 +2500,6 @@ void report_mpeg_dimensions_callback(int width, int height)
 		
 		// we don't need to check whether these buffers have been allocated or not because this is checked for earlier
 		// when we check to see if g_hw_overlay has been allocated
-		LOGI("daphne-libretro: In report_mpeg_dimensions_callback, allocating blank yuv.  w: %d  h: %d", width, height);
 		g_blank_yuv_buf.Y_size = width*height;
 		g_blank_yuv_buf.Y = MPO_MALLOC(g_blank_yuv_buf.Y_size);
 		memset(g_blank_yuv_buf.Y, 0, g_blank_yuv_buf.Y_size);	// blank Y color
@@ -2622,8 +2535,6 @@ void report_mpeg_dimensions_callback(int width, int height)
 		assert(((g_blend_iterations % 8) == 0) && (g_blend_iterations >= 8));	// blend MMX does 8 bytes at a time
 #endif
 	}
-	LOGI("daphne-libretro: In report_mpeg_dimensions_callback, bottom of routine.");
-	
 }
 
 void free_yuv_overlay()
@@ -2644,15 +2555,12 @@ void free_yuv_overlay()
 // makes the laserdisc video black while drawing game's video overlay on top
 void blank_overlay()
 {
-	LOGI("daphne-libretro: In blank_overlay, top of routine.");
-
 	// So the buffers passed into there routines isn't good.  We need to figure out why that is.
 	// It's like the buffer is in YUV when it's being displayed.  Should be hw_overlay onto buffer then
 	// all the RGB-ified.
 
 	// only do this if the HW overlay has already been allocated
 
-	LOGI("daphne-libretro: In blank_overlay, before if.  video_buffer: %d", (int)g_hw_overlay[0].video_buffer);
 	if (g_hw_overlay[0].video_buffer != NULL)
 	{
 		/*
@@ -2661,12 +2569,8 @@ void blank_overlay()
 		memset(g_blank_yuv_buf.V, 127, g_blank_yuv_buf.UV_size);	// blank V color
 		*/
 
-		LOGI("daphne-libretro: In blank_overlay, before prepare_frame.");
 		g_local_info.prepare_frame(&g_blank_yuv_buf);
 
-		LOGI("daphne-libretro: In blank_overlay, before display_frame.");
 		g_local_info.display_frame(&g_blank_yuv_buf);
 	}
-
-	LOGI("daphne-libretro: In blank_overlay, bottom of routine.");
 }
