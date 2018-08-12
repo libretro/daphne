@@ -86,7 +86,6 @@
  */
 
 #include "SDL_video.h"
-#include "SDL_sysvideo.h"
 #include "SDL_blit.h"
 #include "SDL_RLEaccel_c.h"
 
