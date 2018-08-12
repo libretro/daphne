@@ -280,20 +280,7 @@ int vldp_skip(Uint16 frame)
 		g_req_frame = frame;
 		g_req_min_seek_ms = 0;	// just for safety purposes, we want to ensure that there is no minimum skip delay
 		result = vldp_cmd(VLDP_REQ_SKIP);
-#ifdef VLDP_DEBUG
-		if (!result) fprintf(stderr, "vldp_cmd rejected SKIP request!\n");
-#endif
 	}
-
-#ifdef VLDP_DEBUG
-	// remove me once this bug is discovered
-	else
-	{
-		fprintf(stderr, "VLDP skip failed because one of these happened: \n");
-		fprintf(stderr, "p_initialized is %d\n", p_initialized);
-		fprintf(stderr, "g_out_info.status == %d\n", g_out_info.status);
-	}
-#endif // VLDP_DEBUG
 
 	return result;
 }

@@ -257,15 +257,9 @@ int parse_video_stream(FILE *datafile, unsigned int length)
 				case 1:		// I frame
 					g_iframe_count++;
 					fwrite(&g_last_header_pos, sizeof(g_last_header_pos), 1, datafile);	// actual beginning of I frame
-#ifdef VLDP_DEBUG
-//					fprintf(stderr, "Found an I frame at %x\n", g_last_header_pos);
-#endif
 					break;
 				default:	// if it's not an I frame, just write -1
 					fwrite(&minus_one, sizeof(minus_one), 1, datafile);
-#ifdef VLDP_DEBUG
-//					fprintf(stderr, "Found a non I frame at %x\n", g_last_header_pos);
-#endif
 					break;
 				}
 				g_status = IN_NOTHING;	// we got what we came for, now get it :)
@@ -358,9 +352,6 @@ int parse_video_stream(FILE *datafile, unsigned int length)
 				case 0xB8:	// Group of Picture
 					g_goppos = g_last_header_pos;
 					g_gop_count++;
-#ifdef VLDP_DEBUG
-					fprintf(stderr, "Got GOP at %x\n", g_goppos);
-#endif
 					break;
 				default:
 					break;

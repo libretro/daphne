@@ -514,9 +514,6 @@ void ivldp_ack_command()
 
 void ivldp_lock_handler()
 {
-#ifdef VLDP_DEBUG
-	fprintf(stderr, "DBG: VLDP REQ LOCK RECEIVED!!!\n");
-#endif
 	ivldp_ack_command();
 	{
 		VLDP_BOOL bLocked = VLDP_TRUE;
@@ -530,9 +527,6 @@ void ivldp_lock_handler()
 				switch (g_req_cmdORcount & 0xF0)
 				{
 				case VLDP_REQ_UNLOCK:
-#ifdef VLDP_DEBUG
-					fprintf(stderr, "DBG: VLDP REQ UNLOCK RECEIVED!!!\n");
-#endif
 					ivldp_ack_command();
 					bLocked = VLDP_FALSE;
 					break;
@@ -557,10 +551,6 @@ void paused_handler()
 		// reset these vars because otherwise null_draw_frame will loop redundantly for no good reason
 		s_timer = g_in_info->uMsTimer;	// since we have just rendered the frame we searched to, we refresh the timer
 		s_uFramesShownSinceTimer = 1;	// this gives us a little breathing room
-
-#ifdef VLDP_DEBUG
-		printf("paused_handler() : status set to STAT_PAUSED, s_timer set to %u\n", g_in_info->uMsTimer);
-#endif
 	}
 
 	// if we have a new command coming in	
@@ -884,9 +874,6 @@ void idle_handler_open()
 		fprintf(stderr, "VLDP ERROR : Could not open file!\n");
 		g_out_info.status = STAT_ERROR;
 	}
-#ifdef VLDP_DEBUG
-	printf("idle_handler_open returning ...\n");
-#endif
 }
 
 // gets called when the user wants to precache a file ...
@@ -996,9 +983,7 @@ void idle_handler_play()
 void ivldp_respond_req_play()
 {
 	s_timer = g_req_timer;
-#ifdef VLDP_DEBUG
-	fprintf(stderr, "ivldp_respond_req_play() : g_req_timer is %u, and uMstimer is %u\n", g_req_timer, g_in_info->uMsTimer);	// REMOVE ME
-#endif // VLDP_DEBUG
+	//fprintf(stderr, "ivldp_respond_req_play() : g_req_timer is %u, and uMstimer is %u\n", g_req_timer, g_in_info->uMsTimer);	// REMOVE ME
 	s_uFramesShownSinceTimer = PLAY_FRAME_STALL;	// we want to render the currently shown frame for 1 frame before moving on
 	g_out_info.status = STAT_PLAYING;	// we strive for instant response (and catch-up to maintain timing)
 	ivldp_ack_command();	// acknowledge the play command
@@ -1019,10 +1004,7 @@ void ivldp_respond_req_pause_or_step()
 	}
 	// NOTE : by design, our status should not change until paused_handler is called, so we leave it at PLAYING for now
 	ivldp_ack_command();
-#ifdef VLDP_DEBUG
-	printf("VLDP_REQ_PAUSED received when frame is %u, uMsTimer is %u\n", g_out_info.current_frame,
-		g_in_info->uMsTimer);	// DBG REMOVE ME!@
-#endif // VLDP_DEBUG
+	//printf("VLDP_REQ_PAUSED received when frame is %u, uMsTimer is %u\n", g_out_info.current_frame, g_in_info->uMsTimer);	// DBG REMOVE ME!@
 	s_paused = 1;
 	s_blanked = 0;
 }
@@ -1043,19 +1025,9 @@ void ivldp_render()
     Uint8 *end = NULL;
 	int render_finished = 0;
 
-#ifdef VLDP_BENCHMARK
-	Uint32 render_start_time = SDL_GetTicks();	// keep track of when we started
-	Sint16 render_start_frame = g_out_info.current_frame;	// keep track of the frame we started timing stuff on
-	double total_seconds = 0.0;	// used to calculate FPS
-	Sint16 total_frames = 0;	// used to calculate FPS
-	FILE *F = fopen("benchmark.txt", "wt");	// create a little logfile for benchmark results
-#endif
-
 	s_skip_all = 0;	// default value, don't skip frames unless the play or paused handler orders it
 
-#ifdef VLDP_DEBUG
-	printf("s_skip_all skipped %u frames.\n", s_uSkipAllCount);
-#endif // VLDP_DEBUG
+	//printf("s_skip_all skipped %u frames.\n", s_uSkipAllCount);
 
 	// check to make sure a file has been opened
 	if (!io_is_open())
@@ -1110,23 +1082,7 @@ void ivldp_render()
 			} // end switch
 		} // end if they got a new command
     } // end while
-
-#ifdef VLDP_BENCHMARK
-	fprintf(F, "Benchmarking result:\n");
-	total_frames = g_out_info.current_frame - render_start_frame;
-	total_seconds = (SDL_GetTicks() - render_start_time) / 1000.0;
-	fprintf(F, "VLDP displayed %u frames (%d to %d) in %f seconds (%f FPS)\n",
-		total_frames, render_start_frame, g_out_info.current_frame, total_seconds, total_frames / total_seconds);
-	fclose(F);
-#endif
-
 }
-
-#ifdef VLDP_DEBUG
-#ifdef UNIX
-#include <signal.h>	// to break into debugger
-#endif // UNIX
-#endif // VLDP_DEBUG
 
 // searches to any arbitrary frame, be it I, P, or B, and renders it
 // if skip is set, it will do a laserdisc skip instead of a search (ie it will go a frame, resume playback,
@@ -1161,24 +1117,6 @@ void idle_handler_search(int skip)
 
 		// take into account the extra frame we did when playback started
 		uNewFramesShownSinceTimer += PLAY_FRAME_STALL;
-
-#ifdef VLDP_DEBUG
-		// break into debugger if this happens so we can examine what's going on
-		if (uNewFramesShownSinceTimer != s_uFramesShownSinceTimer)
-		{
-			printf("skip timing off: uNewFramesShownSinceTimer is %u, s_uFramesShownSinceTimer is %u\n",
-				   uNewFramesShownSinceTimer, s_uFramesShownSinceTimer);
-
-			// this shouldn't ever happen
-			if (s_uFramesShownSinceTimer > uNewFramesShownSinceTimer)
-			{
-				fprintf(stderr, "!!! s_uFramesShownSinceTimer > uNewFramesShownSinceTimer, this shouldn't happen!\n");
-#ifdef UNIX
-				raise(SIGTRAP);	// we wanna know what's going on ...
-#endif // UNIX
-			}
-		}
-#endif // VLDP_DEBUG
 
 		s_uFramesShownSinceTimer = uNewFramesShownSinceTimer;
 	}
@@ -1240,10 +1178,6 @@ void idle_handler_search(int skip)
 	{
 		proposed_pos = g_frame_position[uAdjustedReqFrame];	// get the proposed position
 
-#ifdef VLDP_DEBUG
-		printf("Initial proposed position is : %x\n", proposed_pos);
-#endif
-
 		s_frames_to_skip = s_frames_to_skip_with_inc = 0;	// the below problem is no longer a problem
 
 		// loop until we find which position in the file to seek to
@@ -1266,20 +1200,16 @@ void idle_handler_search(int skip)
 		  }
 		  else
 		  {
-#ifdef VLDP_DEBUG
 //				printf("We've decided on a position within the file.\n");
 //				printf("skipped_I is %d\n", skipped_I);
 //				printf("s_frames_to_skip is %d\n", s_frames_to_skip);
 //				printf("actual_frame is %d\n", actual_frame);
-#endif
 		  	break;
 		  }
 		}
 
-#ifdef VLDP_DEBUG
-		printf("frames_to_skip is %d, skipped_I is %d\n", s_frames_to_skip, skipped_I);
-		printf("position in mpeg2 stream we are seeking to : %x\n", proposed_pos);
-#endif
+		//printf("frames_to_skip is %d, skipped_I is %d\n", s_frames_to_skip, skipped_I);
+		//printf("position in mpeg2 stream we are seeking to : %x\n", proposed_pos);
 
 		io_seek(proposed_pos);
 //		fseek(g_mpeg_handle, proposed_pos, SEEK_SET);	// go to the place in the stream where the I frame begins
@@ -1307,8 +1237,6 @@ void idle_handler_search(int skip)
 		g_out_info.status = STAT_ERROR;
 	}
 }
-
-
 
 // parses an mpeg video stream to get its frame offsets, or if the parsing had taken place earlier
 VLDP_BOOL ivldp_get_mpeg_frame_offsets(char *mpeg_name)
@@ -1381,19 +1309,10 @@ VLDP_BOOL ivldp_get_mpeg_frame_offsets(char *mpeg_name)
 	{
 		g_totalframes = 0;
 
-#ifdef VLDP_DEBUG
-//		unlink("frame_report.txt");
-#endif
-
 		// read all the frame positions
 		// if we don't read 4 bytes, it means we've hit the EOF and we're done
 		while (fread(&g_frame_position[g_totalframes], 4, 1, data_file) == 1)
 		{
-#ifdef VLDP_DEBUG
-//			FILE *tmp_F = fopen("frame_report.txt", "ab");
-//			fprintf(tmp_F, "Frame %d has offset of %x\n", g_totalframes, g_frame_position[g_totalframes]);
-//			fclose(tmp_F);
-#endif
 			g_totalframes++;
 			
 			// safety check, it is possible to make mpegs with too many frames to fit onto one CAV laserdisc
@@ -1404,10 +1323,8 @@ VLDP_BOOL ivldp_get_mpeg_frame_offsets(char *mpeg_name)
 				break;
 			}
 		}
-#ifdef VLDP_DEBUG
-		printf("*** g_totalframes is %u\n", g_totalframes);
-		printf("And frame 0's offset is %x\n", g_frame_position[0]);
-#endif
+		//printf("*** g_totalframes is %u\n", g_totalframes);
+		//printf("And frame 0's offset is %x\n", g_frame_position[0]);
 	}
 
 	// close any files that are still open
