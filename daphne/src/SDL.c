@@ -368,7 +368,6 @@ SDL_Quit(void)
 
     SDL_ClearHints();
     SDL_AssertionsQuit();
-    SDL_LogResetPriorities();
 
     /* Now that every subsystem has been quit, we reset the subsystem refcount
      * and the list of initialized subsystems.

@@ -22,7 +22,6 @@
 
 /* Simple error handling in SDL */
 
-#include "SDL_log.h"
 #include "SDL_error.h"
 #include "SDL_error_c.h"
 
@@ -109,9 +108,6 @@ SDL_SetError(SDL_PRINTF_FORMAT_STRING const char *fmt, ...)
         }
     }
     va_end(ap);
-
-    /* If we are in debug mode, print out an error message */
-    SDL_LogDebug(SDL_LOG_CATEGORY_ERROR, "%s", SDL_GetError());
 
     return -1;
 }
