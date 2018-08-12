@@ -57,7 +57,6 @@
 #undef HAVE_XINPUT_H
 
 /* Useful headers */
-#undef HAVE_ALLOCA_H
 #undef HAVE_SYS_TYPES_H
 #undef STDC_HEADERS
 #undef HAVE_STDARG_H
@@ -82,7 +81,6 @@
 #undef HAVE_CALLOC
 #undef HAVE_REALLOC
 #undef HAVE_FREE
-#undef HAVE_ALLOCA
 #ifndef __WIN32__ /* Don't use C runtime versions of these on Windows */
 #undef HAVE_GETENV
 #undef HAVE_SETENV

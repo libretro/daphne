@@ -29,7 +29,6 @@
 
 #define SDL_BYTEORDER 1234
 
-#define HAVE_ALLOCA_H 1
 #define HAVE_SYS_TYPES_H 1
 #define STDC_HEADERS 1
 #define HAVE_STDARG_H 1
@@ -46,7 +45,6 @@
 #define HAVE_CALLOC 1
 #define HAVE_REALLOC 1
 #define HAVE_FREE 1
-#define HAVE_ALLOCA 1
 #define HAVE_GETENV 1
 #define HAVE_SETENV 1
 #define HAVE_PUTENV 1

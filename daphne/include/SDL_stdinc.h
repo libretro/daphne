@@ -294,33 +294,7 @@ SDL_COMPILE_TIME_ASSERT(enum, sizeof(SDL_DUMMY_ENUM) == sizeof(int));
 extern "C" {
 #endif
 
-#if defined(HAVE_ALLOCA) && !defined(alloca)
-# if defined(HAVE_ALLOCA_H)
-#  include <alloca.h>
-# elif defined(__GNUC__)
-#  define alloca __builtin_alloca
-# elif defined(_MSC_VER)
-#  include <malloc.h>
-#  define alloca _alloca
-# elif defined(__WATCOMC__)
-#  include <malloc.h>
-# elif defined(__BORLANDC__)
-#  include <malloc.h>
-# elif defined(__DMC__)
-#  include <stdlib.h>
-# elif defined(__AIX__)
-#pragma alloca
-# elif defined(__MRC__)
-void *alloca(unsigned);
-# else
-char *alloca();
-# endif
-#endif
-#ifdef HAVE_ALLOCA
-#define SDL_stack_alloc(type, count)    (type*)alloca(sizeof(type)*(count))
-#else
 #define SDL_stack_alloc(type, count)    (type*)malloc(sizeof(type)*(count))
-#endif
 
 extern DECLSPEC char *SDLCALL SDL_getenv(const char *name);
 extern DECLSPEC int SDLCALL SDL_setenv(const char *name, const char *value, int overwrite);
