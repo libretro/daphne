@@ -186,17 +186,10 @@ enum
 	STAT_ERROR, STAT_BUSY, STAT_STOPPED, STAT_PLAYING, STAT_PAUSED
 };
 
-#ifdef WIN32
-// this is the only function that gets exported by this DLL
-__declspec(dllexport) const struct vldp_out_info *vldp_init(const struct vldp_in_info *in_info);
-#else
-
 // initializes the VLDP
 // 'in_info' contains a few callback functions from parent thread that VLDP needs to use
 // returns a pointer to output functions on success or NULL on failure
 const struct vldp_out_info *vldp_init(const struct vldp_in_info *in_info);
-
-#endif
 
 #ifdef __cplusplus
 }
