@@ -85,7 +85,6 @@ typedef unsigned int uintptr_t;
 /* This is disabled by default to avoid C runtime dependencies and manifest requirements */
 #ifdef HAVE_LIBC
 /* Useful headers */
-#define HAVE_STDIO_H 1
 #define STDC_HEADERS 1
 #define HAVE_STRING_H 1
 #define HAVE_CTYPE_H 1

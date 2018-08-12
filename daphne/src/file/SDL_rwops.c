@@ -299,8 +299,6 @@ windows_file_close(SDL_RWops * context)
 }
 #endif /* __WIN32__ */
 
-#ifdef HAVE_STDIO_H
-
 /* Functions to read/write stdio file pointers */
 
 static Sint64 SDLCALL
@@ -380,7 +378,6 @@ stdio_close(SDL_RWops * context)
     }
     return status;
 }
-#endif /* !HAVE_STDIO_H */
 
 /* Functions to read/write memory pointers */
 
@@ -486,7 +483,6 @@ SDL_RWFromFile(const char *file, const char *mode)
     }
 
 #if defined(__ANDROID__)
-#ifdef HAVE_STDIO_H
     /* Try to open the file on the filesystem first */
 	LOGI("daphne-libretro: In %s, deciding if should open file using relative or absolute path.", __func__);
 	if (*file == '/') {
@@ -517,7 +513,6 @@ SDL_RWFromFile(const char *file, const char *mode)
             }
         }
     }
-#endif /* HAVE_STDIO_H */
 
 	LOGI("daphne-libretro: In %s, no STDIO file open methods worked.", __func__);
 
@@ -536,7 +531,7 @@ SDL_RWFromFile(const char *file, const char *mode)
     rwops->close = windows_file_close;
     rwops->type = SDL_RWOPS_WINFILE;
 
-#elif HAVE_STDIO_H
+#else
     {
         #ifdef __APPLE__
         FILE *fp = SDL_OpenFPFromBundleOrFallback(file, mode);
@@ -552,14 +547,11 @@ SDL_RWFromFile(const char *file, const char *mode)
             rwops = SDL_RWFromFP(fp, 1);
         }
     }
-#else
-    SDL_SetError("SDL not compiled with stdio support");
-#endif /* !HAVE_STDIO_H */
+#endif
 
     return rwops;
 }
 
-#ifdef HAVE_STDIO_H
 SDL_RWops *
 SDL_RWFromFP(FILE * fp, SDL_bool autoclose)
 {
@@ -580,14 +572,6 @@ SDL_RWFromFP(FILE * fp, SDL_bool autoclose)
 	LOGI("daphne-libretro: In %s, bottom of routine, file size: %d", __func__, (int) rwops);
 	return rwops;
 }
-#else
-SDL_RWops *
-SDL_RWFromFP(void * fp, SDL_bool autoclose)
-{
-    SDL_SetError("SDL not compiled with stdio support");
-    return NULL;
-}
-#endif /* HAVE_STDIO_H */
 
 SDL_RWops *
 SDL_RWFromMem(void *mem, int size)

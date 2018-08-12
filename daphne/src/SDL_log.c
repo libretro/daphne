@@ -29,9 +29,7 @@
 #include "SDL_error.h"
 #include "SDL_log.h"
 
-#if HAVE_STDIO_H
 #include <stdio.h>
-#endif
 
 #define DEFAULT_PRIORITY                SDL_LOG_PRIORITY_CRITICAL
 #define DEFAULT_ASSERT_PRIORITY         SDL_LOG_PRIORITY_WARN
@@ -283,40 +281,6 @@ SDL_LogOutput(void *userdata, int category, SDL_LogPriority priority,
         size_t length;
         LPTSTR tstr;
 
-#if !defined(HAVE_STDIO_H) && !defined(__WINRT__)
-        BOOL attachResult;
-        DWORD attachError;
-        unsigned long charsWritten; 
-
-        /* Maybe attach console and get stderr handle */
-        if (consoleAttached == 0) {
-            attachResult = AttachConsole(ATTACH_PARENT_PROCESS);
-            if (!attachResult) {
-                    attachError = GetLastError();
-                    if (attachError == ERROR_INVALID_HANDLE) {
-                        OutputDebugString(TEXT("Parent process has no console\r\n"));
-                        consoleAttached = -1;
-                    } else if (attachError == ERROR_GEN_FAILURE) {
-                         OutputDebugString(TEXT("Could not attach to console of parent process\r\n"));
-                         consoleAttached = -1;
-                    } else if (attachError == ERROR_ACCESS_DENIED) {  
-                         /* Already attached */
-                        consoleAttached = 1;
-                    } else {
-                        OutputDebugString(TEXT("Error attaching console\r\n"));
-                        consoleAttached = -1;
-                    }
-                } else {
-                    /* Newly attached */
-                    consoleAttached = 1;
-                }
-			
-                if (consoleAttached == 1) {
-                        stderrHandle = GetStdHandle(STD_ERROR_HANDLE);
-                }
-        }
-#endif /* !defined(HAVE_STDIO_H) && !defined(__WINRT__) */
-
         length = SDL_strlen(SDL_priority_prefixes[priority]) + 2 + SDL_strlen(message) + 1 + 1 + 1;
         output = SDL_stack_alloc(char, length);
         SDL_snprintf(output, length, "%s: %s\r\n", SDL_priority_prefixes[priority], message);
@@ -325,18 +289,6 @@ SDL_LogOutput(void *userdata, int category, SDL_LogPriority priority,
         /* Output to debugger */
         OutputDebugString(tstr);
        
-#if !defined(HAVE_STDIO_H) && !defined(__WINRT__)
-        /* Screen output to stderr, if console was attached. */
-        if (consoleAttached == 1) {
-                if (!WriteConsole(stderrHandle, tstr, lstrlen(tstr), &charsWritten, NULL)) {
-                    OutputDebugString(TEXT("Error calling WriteConsole\r\n"));
-                    if (GetLastError() == ERROR_NOT_ENOUGH_MEMORY) {
-                        OutputDebugString(TEXT("Insufficient heap memory to write message\r\n"));
-                    }
-                }
-        }
-#endif /* !defined(HAVE_STDIO_H) && !defined(__WINRT__) */
-
         free(tstr);
         free(output);
     }
@@ -363,11 +315,9 @@ SDL_LogOutput(void *userdata, int category, SDL_LogPriority priority,
         fclose (pFile);
     }
 #endif
-#if HAVE_STDIO_H
     fprintf(stderr, "%s: %s\n", SDL_priority_prefixes[priority], message);
 #if __NACL__
     fflush(stderr);
-#endif
 #endif
 }
 

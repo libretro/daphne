@@ -33,9 +33,7 @@
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif
-#ifdef HAVE_STDIO_H
 #include <stdio.h>
-#endif
 #if defined(STDC_HEADERS)
 # include <stdlib.h>
 # include <stddef.h>
