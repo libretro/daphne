@@ -106,51 +106,6 @@ typedef struct SDL_version
 #define SDL_VERSION_ATLEAST(X, Y, Z) \
     (SDL_COMPILEDVERSION >= SDL_VERSIONNUM(X, Y, Z))
 
-/**
- *  \brief Get the version of SDL that is linked against your program.
- *
- *  If you are linking to SDL dynamically, then it is possible that the
- *  current version will be different than the version you compiled against.
- *  This function returns the current version, while SDL_VERSION() is a
- *  macro that tells you what version you compiled with.
- *
- *  \code
- *  SDL_version compiled;
- *  SDL_version linked;
- *
- *  SDL_VERSION(&compiled);
- *  SDL_GetVersion(&linked);
- *  printf("We compiled against SDL version %d.%d.%d ...\n",
- *         compiled.major, compiled.minor, compiled.patch);
- *  printf("But we linked against SDL version %d.%d.%d.\n",
- *         linked.major, linked.minor, linked.patch);
- *  \endcode
- *
- *  This function may be called safely at any time, even before SDL_Init().
- *
- *  \sa SDL_VERSION
- */
-extern DECLSPEC void SDLCALL SDL_GetVersion(SDL_version * ver);
-
-/**
- *  \brief Get the code revision of SDL that is linked against your program.
- *
- *  Returns an arbitrary string (a hash value) uniquely identifying the
- *  exact revision of the SDL library in use, and is only useful in comparing
- *  against other revisions. It is NOT an incrementing number.
- */
-extern DECLSPEC const char *SDLCALL SDL_GetRevision(void);
-
-/**
- *  \brief Get the revision number of SDL that is linked against your program.
- *
- *  Returns a number uniquely identifying the exact revision of the SDL
- *  library in use. It is an incrementing number based on commits to
- *  hg.libsdl.org.
- */
-extern DECLSPEC int SDLCALL SDL_GetRevisionNumber(void);
-
-
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus
 }

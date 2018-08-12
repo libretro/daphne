@@ -166,11 +166,6 @@
 extern "C" {
 #endif
 
-/**
- *  \brief Gets the name of the platform.
- */
-extern DECLSPEC const char * SDLCALL SDL_GetPlatform (void);
-
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus
 }

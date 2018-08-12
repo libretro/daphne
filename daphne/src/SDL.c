@@ -91,11 +91,6 @@ SDL_PrivateShouldQuitSubsystem(Uint32 subsystem) {
     return SDL_SubsystemRefCount[subsystem_index] == 1 || SDL_bInMainQuit;
 }
 
-void
-SDL_SetMainReady(void)
-{
-}
-
 int
 SDL_InitSubSystem(Uint32 flags)
 {
@@ -175,31 +170,6 @@ SDL_QuitSubSystem(Uint32 flags)
 #endif
 }
 
-Uint32
-SDL_WasInit(Uint32 flags)
-{
-    int i;
-    int num_subsystems = SDL_arraysize(SDL_SubsystemRefCount);
-    Uint32 initialized = 0;
-
-    if (!flags) {
-        flags = SDL_INIT_EVERYTHING;
-    }
-
-    num_subsystems = SDL_min(num_subsystems, SDL_MostSignificantBitIndex32(flags) + 1);
-
-    /* Iterate over each bit in flags, and check the matching subsystem. */
-    for (i = 0; i < num_subsystems; ++i) {
-        if ((flags & 1) && SDL_SubsystemRefCount[i] > 0) {
-            initialized |= (1 << i);
-        }
-
-        flags >>= 1;
-    }
-
-    return initialized;
-}
-
 void
 SDL_Quit(void)
 {
@@ -221,88 +191,6 @@ SDL_Quit(void)
     memset( SDL_SubsystemRefCount, 0x0, sizeof(SDL_SubsystemRefCount) );
 
     SDL_bInMainQuit = SDL_FALSE;
-}
-
-/* Get the library version number */
-void
-SDL_GetVersion(SDL_version * ver)
-{
-    SDL_VERSION(ver);
-}
-
-/* Get the library source revision */
-const char *
-SDL_GetRevision(void)
-{
-    return SDL_REVISION;
-}
-
-/* Get the library source revision number */
-int
-SDL_GetRevisionNumber(void)
-{
-    return SDL_REVISION_NUMBER;
-}
-
-/* Get the name of the platform */
-const char *
-SDL_GetPlatform()
-{
-#if __AIX__
-    return "AIX";
-#elif __ANDROID__
-    return "Android";
-#elif __BSDI__
-    return "BSDI";
-#elif __DREAMCAST__
-    return "Dreamcast";
-#elif __EMSCRIPTEN__
-    return "Emscripten";
-#elif __FREEBSD__
-    return "FreeBSD";
-#elif __HAIKU__
-    return "Haiku";
-#elif __HPUX__
-    return "HP-UX";
-#elif __IRIX__
-    return "Irix";
-#elif __LINUX__
-    return "Linux";
-#elif __MINT__
-    return "Atari MiNT";
-#elif __MACOS__
-    return "MacOS Classic";
-#elif __MACOSX__
-    return "Mac OS X";
-#elif __NACL__
-    return "NaCl";
-#elif __NETBSD__
-    return "NetBSD";
-#elif __OPENBSD__
-    return "OpenBSD";
-#elif __OS2__
-    return "OS/2";
-#elif __OSF__
-    return "OSF/1";
-#elif __QNXNTO__
-    return "QNX Neutrino";
-#elif __RISCOS__
-    return "RISC OS";
-#elif __SOLARIS__
-    return "Solaris";
-#elif __WIN32__
-    return "Windows";
-#elif __WINRT__
-    return "WinRT";
-#elif __TVOS__
-    return "tvOS";
-#elif __IPHONEOS__
-    return "iOS";
-#elif __PSP__
-    return "PlayStation Portable";
-#else
-    return "Unknown (see SDL_platform.h)";
-#endif
 }
 
 /* vi: set sts=4 ts=4 sw=4 expandtab: */
