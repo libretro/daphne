@@ -500,14 +500,7 @@ SDL_RWFromFile(const char *file, const char *mode)
 
 #else
     {
-        #ifdef __APPLE__
-        FILE *fp = SDL_OpenFPFromBundleOrFallback(file, mode);
-        #elif __WINRT__
-        FILE *fp = NULL;
-        fopen_s(&fp, file, mode);
-        #else
         FILE *fp = fopen(file, mode);
-        #endif
         if (fp == NULL) {
             SDL_SetError("Couldn't open %s", file);
         } else {

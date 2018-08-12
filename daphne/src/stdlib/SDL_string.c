@@ -410,21 +410,6 @@ SDL_strrev(char *string)
 }
 
 char *
-SDL_strupr(char *string)
-{
-#if defined(HAVE__STRUPR)
-    return _strupr(string);
-#else
-    char *bufp = string;
-    while (*bufp) {
-        *bufp = SDL_toupper((unsigned char) *bufp);
-        ++bufp;
-    }
-    return string;
-#endif /* HAVE__STRUPR */
-}
-
-char *
 SDL_strlwr(char *string)
 {
 #if defined(HAVE__STRLWR)
@@ -1181,7 +1166,7 @@ SDL_PrintString(char *text, size_t maxlen, SDL_FormatInfo *info, const char *str
         if (info->force_case == SDL_CASE_LOWER) {
             SDL_strlwr(text);
         } else if (info->force_case == SDL_CASE_UPPER) {
-            SDL_strupr(text);
+            strupr(text);
         }
     }
     return length;
