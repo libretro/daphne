@@ -36,15 +36,6 @@
 
 #include "../main_android.h"
 
-/* Initialization/Cleanup routines */
-#if !SDL_TIMERS_DISABLED
-extern int SDL_TimerInit(void);
-extern void SDL_TimerQuit(void);
-extern void SDL_TicksInit(void);
-extern void SDL_TicksQuit(void);
-#endif
-
-
 /* The initialized subsystems */
 static SDL_bool SDL_bInMainQuit = SDL_FALSE;
 static Uint8 SDL_SubsystemRefCount[ 32 ];
@@ -107,24 +98,6 @@ SDL_InitSubSystem(Uint32 flags)
         flags |= SDL_INIT_EVENTS;
     }
 
-#if !SDL_TIMERS_DISABLED
-    SDL_TicksInit();
-#endif
-
-    /* Initialize the timer subsystem */
-    if ((flags & SDL_INIT_TIMER)){
-#if !SDL_TIMERS_DISABLED
-        if (SDL_PrivateShouldInitSubsystem(SDL_INIT_TIMER)) {
-            if (SDL_TimerInit() < 0) {
-                return (-1);
-            }
-        }
-        SDL_PrivateSubsystemRefCountIncr(SDL_INIT_TIMER);
-#else
-        return SDL_SetError("SDL not built with timer support");
-#endif
-    }
-
     /* Initialize the audio subsystem */
     if ((flags & SDL_INIT_AUDIO)){
 #if !SDL_AUDIO_DISABLED
@@ -159,15 +132,6 @@ SDL_QuitSubSystem(Uint32 flags)
         SDL_PrivateSubsystemRefCountDecr(SDL_INIT_AUDIO);
     }
 #endif
-
-#if !SDL_TIMERS_DISABLED
-    if ((flags & SDL_INIT_TIMER)) {
-        if (SDL_PrivateShouldQuitSubsystem(SDL_INIT_TIMER)) {
-            SDL_TimerQuit();
-        }
-        SDL_PrivateSubsystemRefCountDecr(SDL_INIT_TIMER);
-    }
-#endif
 }
 
 void
@@ -177,10 +141,6 @@ SDL_Quit(void)
 
     /* Quit all subsystems */
     SDL_QuitSubSystem(SDL_INIT_EVERYTHING);
-
-#if !SDL_TIMERS_DISABLED
-    SDL_TicksQuit();
-#endif
 
     SDL_ClearHints();
     SDL_AssertionsQuit();

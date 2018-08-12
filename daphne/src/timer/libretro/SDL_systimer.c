@@ -146,28 +146,6 @@ SDL_GetTicks(void)
     return (now - start);
 }
 
-Uint64
-SDL_GetPerformanceCounter(void)
-{
-    LARGE_INTEGER counter;
-
-    if (!QueryPerformanceCounter(&counter)) {
-        return SDL_GetTicks();
-    }
-    return counter.QuadPart;
-}
-
-Uint64
-SDL_GetPerformanceFrequency(void)
-{
-    LARGE_INTEGER frequency;
-
-    if (!QueryPerformanceFrequency(&frequency)) {
-        return 1000;
-    }
-    return frequency.QuadPart;
-}
-
 void SDL_Delay(Uint32 ms)
 {
     /* Sleep() is not publicly available to apps in early versions of WinRT.
@@ -184,14 +162,12 @@ void SDL_Delay(Uint32 ms)
      */
 #if defined(__WINRT__) && defined(_MSC_FULL_VER) && (_MSC_FULL_VER <= 180030723)
     static HANDLE mutex = 0;
-    if (!mutex) {
+    if (!mutex)
         mutex = CreateEventEx(0, 0, 0, EVENT_ALL_ACCESS);
-    }
     WaitForSingleObjectEx(mutex, ms, FALSE);
 #else
-    if (!ticks_started) {
+    if (!ticks_started)
         SDL_TicksInit();
-    }
 
     Sleep(ms);
 #endif
@@ -281,173 +257,50 @@ SDL_TicksQuit(void)
 Uint32
 SDL_GetTicks(void)
 {
-	// LOGI("In SDL_GetTicks, top of routine, line: %d", __LINE__);
-	// RJS CHANGE
-    // Uint32 ticks;
 	Uint32 ticks = 0;
-    if (!ticks_started) {
+    if (!ticks_started)
         SDL_TicksInit();
-    }
-	// LOGI("In SDL_GetTicks, line: %d", __LINE__);
 
     if (has_monotonic_time) {
 #if HAVE_CLOCK_GETTIME
-		// LOGI("In SDL_GetTicks, line: %d", __LINE__);
-		struct timespec now;
-        clock_gettime(SDL_MONOTONIC_CLOCK, &now);
-		// LOGI("In SDL_GetTicks, line: %d", __LINE__);
-		ticks = (now.tv_sec - start_ts.tv_sec) * 1000 + (now.tv_nsec -
-                                                 start_ts.tv_nsec) / 1000000;
-		// LOGI("In SDL_GetTicks, line: %d", __LINE__);
-	#elif defined(__APPLE__)
-        uint64_t now = mach_absolute_time();
-        ticks = (Uint32)((((now - start_mach) * mach_base_info.numer) / mach_base_info.denom) / 1000000);
+       struct timespec now;
+       clock_gettime(SDL_MONOTONIC_CLOCK, &now);
+       ticks = (now.tv_sec - start_ts.tv_sec) * 1000 + (now.tv_nsec -
+             start_ts.tv_nsec) / 1000000;
+#elif defined(__APPLE__)
+       uint64_t now = mach_absolute_time();
+       ticks = (Uint32)((((now - start_mach) * mach_base_info.numer) / mach_base_info.denom) / 1000000);
 #else
-        SDL_assert(SDL_FALSE);
-        ticks = 0;
+       SDL_assert(SDL_FALSE);
+       ticks = 0;
 #endif
     } else {
         struct timeval now;
 
-		// LOGI("In SDL_GetTicks, line: %d", __LINE__);
 		gettimeofday(&now, NULL);
-		// LOGI("In SDL_GetTicks, line: %d", __LINE__);
 		ticks = (Uint32)((now.tv_sec - start_tv.tv_sec) * 1000 + (now.tv_usec - start_tv.tv_usec) / 1000);
-		// LOGI("In SDL_GetTicks, line: %d", __LINE__);
 	}
-	// LOGI("In SDL_GetTicks, bottom of routine, line: %d", __LINE__);
 	return (ticks);
 }
 
-Uint64
-SDL_GetPerformanceCounter(void)
-{
-	// RJS CHANGE
-    // Uint64 ticks;
-    Uint64 ticks = 0;
-    if (!ticks_started) {
-        SDL_TicksInit();
-    }
-
-    if (has_monotonic_time) {
-#if HAVE_CLOCK_GETTIME
-        struct timespec now;
-
-        clock_gettime(SDL_MONOTONIC_CLOCK, &now);
-        ticks = now.tv_sec;
-        ticks *= 1000000000;
-        ticks += now.tv_nsec;
-#elif defined(__APPLE__)
-        ticks = mach_absolute_time();
-#else
-        SDL_assert(SDL_FALSE);
-        ticks = 0;
-#endif
-    } else {
-        struct timeval now;
-
-        gettimeofday(&now, NULL);
-        ticks = now.tv_sec;
-        ticks *= 1000000;
-        ticks += now.tv_usec;
-    }
-    return (ticks);
-}
-
-Uint64
-SDL_GetPerformanceFrequency(void)
-{
-    if (!ticks_started) {
-        SDL_TicksInit();
-    }
-
-    if (has_monotonic_time) {
-#if HAVE_CLOCK_GETTIME
-        return 1000000000;
-#elif defined(__APPLE__)
-        Uint64 freq = mach_base_info.denom;
-        freq *= 1000000000;
-        freq /= mach_base_info.numer;
-        return freq;
-#endif
-    } 
-        
-    return 1000000;
-}
-
-/*
 void
 SDL_Delay(Uint32 ms)
 {
-	int was_error;
-
-#if HAVE_NANOSLEEP
-    struct timespec elapsed, tv;
-#else
-    struct timeval tv;
-    Uint32 then, now, elapsed;
-#endif
-
-    // Set the timeout interval
-#if HAVE_NANOSLEEP
-    elapsed.tv_sec = ms / 1000;
-    elapsed.tv_nsec = (ms % 1000) * 1000000;
-#else
-    then = SDL_GetTicks();
-#endif
-    do {
-        errno = 0;
-
-#if HAVE_NANOSLEEP
-        tv.tv_sec = elapsed.tv_sec;
-        tv.tv_nsec = elapsed.tv_nsec;
-        was_error = nanosleep(&tv, &elapsed);
-#else
-        // Calculate the time interval left (in case of interrupt)
-        now = SDL_GetTicks();
-        elapsed = (now - then);
-        then = now;
-        if (elapsed >= ms) {
-            break;
-        }
-        ms -= elapsed;
-        tv.tv_sec = ms / 1000;
-        tv.tv_usec = (ms % 1000) * 1000;
-
-        was_error = select(0, NULL, NULL, NULL, &tv);
-#endif // HAVE_NANOSLEEP
-    } while (was_error && (errno == EINTR));
-}
-*/
-
-void
-SDL_Delay(Uint32 ms)
-{
-	// LOGI("In SDL_Delay, top of routine, input ms: %d", ms);
-
 	int was_error = 0;
 	struct timespec elapsed, tv;
 
 	elapsed.tv_sec = ms / 1000;
 	elapsed.tv_nsec = (ms % 1000) * 1000000;
-	// LOGI("In SDL_Delay, top of routine, elapsed time calculated sec: %ld  nsec: %ld", elapsed.tv_sec, elapsed.tv_nsec);
 
 	do
 	{
-		// LOGI("In SDL_Delay, top of do, was_error: %d  errno: %d", was_error, errno);
-
 		errno = 0;
 
 		tv.tv_sec	= elapsed.tv_sec;
 		tv.tv_nsec	= elapsed.tv_nsec;
-		// LOGI("In SDL_Delay, top of routine, tv time calculated sec: %ld  nsec: %ld", tv.tv_sec, tv.tv_nsec);
 
 		was_error	= nanosleep(&tv, &elapsed);
-
-		// LOGI("In SDL_Delay, bottom of do, was_error: %d  errno: %d", was_error, errno);
 	} while (was_error && (errno == EINTR));
-
-	// LOGI("In SDL_Delay, bottom of routine.");
 }
 
 #endif

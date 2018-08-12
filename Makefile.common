@@ -227,7 +227,6 @@ SOURCES_C += $(DAPHNE_MAIN_DIR)/src/thread/pthread/SDL_syssem.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/thread/pthread/SDL_systhread.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/thread/pthread/SDL_systls.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/thread/SDL_thread.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/timer/SDL_timer.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/timer/libretro/SDL_systimer.c
 
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/video/SDL_blit.c
