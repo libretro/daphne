@@ -130,21 +130,6 @@ SDL_InitSubSystem(Uint32 flags)
 #endif
     }
 
-    /* Initialize the video subsystem */
-    if ((flags & SDL_INIT_VIDEO)){
-#if !SDL_VIDEO_DISABLED
-        if (SDL_PrivateShouldInitSubsystem(SDL_INIT_VIDEO)) {
-			// RJS ADD - logging
-            if (SDL_VideoInit(NULL) < 0) {
-                return (-1);
-            }
-        }
-        SDL_PrivateSubsystemRefCountIncr(SDL_INIT_VIDEO);
-#else
-        return SDL_SetError("SDL not built with video support");
-#endif
-    }
-
     /* Initialize the audio subsystem */
     if ((flags & SDL_INIT_AUDIO)){
 #if !SDL_AUDIO_DISABLED
@@ -156,47 +141,6 @@ SDL_InitSubSystem(Uint32 flags)
         SDL_PrivateSubsystemRefCountIncr(SDL_INIT_AUDIO);
 #else
         return SDL_SetError("SDL not built with audio support");
-#endif
-    }
-
-    /* Initialize the joystick subsystem */
-    if ((flags & SDL_INIT_JOYSTICK)){
-#if !SDL_JOYSTICK_DISABLED
-        if (SDL_PrivateShouldInitSubsystem(SDL_INIT_JOYSTICK)) {
-           if (SDL_JoystickInit() < 0) {
-               return (-1);
-           }
-        }
-        SDL_PrivateSubsystemRefCountIncr(SDL_INIT_JOYSTICK);
-#else
-        return SDL_SetError("SDL not built with joystick support");
-#endif
-    }
-
-    if ((flags & SDL_INIT_GAMECONTROLLER)){
-#if !SDL_JOYSTICK_DISABLED
-        if (SDL_PrivateShouldInitSubsystem(SDL_INIT_GAMECONTROLLER)) {
-            if (SDL_GameControllerInit() < 0) {
-                return (-1);
-            }
-        }
-        SDL_PrivateSubsystemRefCountIncr(SDL_INIT_GAMECONTROLLER);
-#else
-        return SDL_SetError("SDL not built with joystick support");
-#endif
-    }
-
-    /* Initialize the haptic subsystem */
-    if ((flags & SDL_INIT_HAPTIC)){
-#if !SDL_HAPTIC_DISABLED
-        if (SDL_PrivateShouldInitSubsystem(SDL_INIT_HAPTIC)) {
-            if (SDL_HapticInit() < 0) {
-                return (-1);
-            }
-        }
-        SDL_PrivateSubsystemRefCountIncr(SDL_INIT_HAPTIC);
-#else
-        return SDL_SetError("SDL not built with haptic (force feedback) support");
 #endif
     }
 
@@ -212,56 +156,12 @@ SDL_Init(Uint32 flags)
 void
 SDL_QuitSubSystem(Uint32 flags)
 {
-    /* Shut down requested initialized subsystems */
-#if !SDL_JOYSTICK_DISABLED
-    if ((flags & SDL_INIT_GAMECONTROLLER)) {
-        /* game controller implies joystick */
-        flags |= SDL_INIT_JOYSTICK;
-
-        if (SDL_PrivateShouldQuitSubsystem(SDL_INIT_GAMECONTROLLER)) {
-            SDL_GameControllerQuit();
-        }
-        SDL_PrivateSubsystemRefCountDecr(SDL_INIT_GAMECONTROLLER);
-    }
-
-    if ((flags & SDL_INIT_JOYSTICK)) {
-        /* joystick implies events */
-        flags |= SDL_INIT_EVENTS;
-
-        if (SDL_PrivateShouldQuitSubsystem(SDL_INIT_JOYSTICK)) {
-            SDL_JoystickQuit();
-        }
-        SDL_PrivateSubsystemRefCountDecr(SDL_INIT_JOYSTICK);
-    }
-#endif
-
-#if !SDL_HAPTIC_DISABLED
-    if ((flags & SDL_INIT_HAPTIC)) {
-        if (SDL_PrivateShouldQuitSubsystem(SDL_INIT_HAPTIC)) {
-            SDL_HapticQuit();
-        }
-        SDL_PrivateSubsystemRefCountDecr(SDL_INIT_HAPTIC);
-    }
-#endif
-
 #if !SDL_AUDIO_DISABLED
     if ((flags & SDL_INIT_AUDIO)) {
         if (SDL_PrivateShouldQuitSubsystem(SDL_INIT_AUDIO)) {
             SDL_AudioQuit();
         }
         SDL_PrivateSubsystemRefCountDecr(SDL_INIT_AUDIO);
-    }
-#endif
-
-#if !SDL_VIDEO_DISABLED
-    if ((flags & SDL_INIT_VIDEO)) {
-        /* video implies events */
-        flags |= SDL_INIT_EVENTS;
-
-        if (SDL_PrivateShouldQuitSubsystem(SDL_INIT_VIDEO)) {
-            SDL_VideoQuit();
-        }
-        SDL_PrivateSubsystemRefCountDecr(SDL_INIT_VIDEO);
     }
 #endif
 
