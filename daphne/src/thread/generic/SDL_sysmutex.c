@@ -40,14 +40,14 @@ SDL_CreateMutex(void)
     SDL_mutex *mutex;
 
     /* Allocate mutex memory */
-    mutex = (SDL_mutex *) SDL_malloc(sizeof(*mutex));
+    mutex = (SDL_mutex *)malloc(sizeof(*mutex));
     if (mutex) {
         /* Create the mutex semaphore, with initial value 1 */
         mutex->sem = SDL_CreateSemaphore(1);
         mutex->recursive = 0;
         mutex->owner = 0;
         if (!mutex->sem) {
-            SDL_free(mutex);
+            free(mutex);
             mutex = NULL;
         }
     } else {
@@ -64,7 +64,7 @@ SDL_DestroyMutex(SDL_mutex * mutex)
         if (mutex->sem) {
             SDL_DestroySemaphore(mutex->sem);
         }
-        SDL_free(mutex);
+        free(mutex);
     }
 }
 

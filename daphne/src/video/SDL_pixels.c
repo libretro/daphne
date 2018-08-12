@@ -497,13 +497,13 @@ SDL_AllocFormat(Uint32 pixel_format)
     }
 
     /* Allocate an empty pixel format structure, and initialize it */
-    format = SDL_malloc(sizeof(*format));
+    format = malloc(sizeof(*format));
     if (format == NULL) {
         SDL_OutOfMemory();
         return NULL;
     }
     if (SDL_InitFormat(format, pixel_format) < 0) {
-        SDL_free(format);
+        free(format);
         SDL_InvalidParamError("format");
         return NULL;
     }
@@ -609,7 +609,7 @@ SDL_FreeFormat(SDL_PixelFormat *format)
     if (format->palette) {
         SDL_FreePalette(format->palette);
     }
-    SDL_free(format);
+    free(format);
 }
 
 SDL_Palette *
@@ -623,15 +623,15 @@ SDL_AllocPalette(int ncolors)
       return NULL;
     }
 
-    palette = (SDL_Palette *) SDL_malloc(sizeof(*palette));
+    palette = (SDL_Palette *)malloc(sizeof(*palette));
     if (!palette) {
         SDL_OutOfMemory();
         return NULL;
     }
     palette->colors =
-        (SDL_Color *) SDL_malloc(ncolors * sizeof(*palette->colors));
+        (SDL_Color *)malloc(ncolors * sizeof(*palette->colors));
     if (!palette->colors) {
-        SDL_free(palette);
+        free(palette);
         return NULL;
     }
     palette->ncolors = ncolors;
@@ -708,8 +708,8 @@ SDL_FreePalette(SDL_Palette * palette)
     if (--palette->refcount > 0) {
         return;
     }
-    SDL_free(palette->colors);
-    SDL_free(palette);
+    free(palette->colors);
+    free(palette);
 }
 
 /*
@@ -893,7 +893,7 @@ Map1to1(SDL_Palette * src, SDL_Palette * dst, int *identical)
         }
         *identical = 0;
     }
-    map = (Uint8 *) SDL_malloc(src->ncolors);
+    map = (Uint8 *)malloc(src->ncolors);
     if (map == NULL) {
         SDL_OutOfMemory();
         return (NULL);
@@ -917,7 +917,7 @@ Map1toN(SDL_PixelFormat * src, Uint8 Rmod, Uint8 Gmod, Uint8 Bmod, Uint8 Amod,
     SDL_Palette *pal = src->palette;
 
     bpp = ((dst->BytesPerPixel == 3) ? 4 : dst->BytesPerPixel);
-    map = (Uint8 *) SDL_malloc(pal->ncolors * bpp);
+    map = (Uint8 *)malloc(pal->ncolors * bpp);
     if (map == NULL) {
         SDL_OutOfMemory();
         return (NULL);
@@ -955,7 +955,7 @@ SDL_AllocBlitMap(void)
     SDL_BlitMap *map;
 
     /* Allocate the empty map */
-    map = (SDL_BlitMap *) SDL_calloc(1, sizeof(*map));
+    map = (SDL_BlitMap *)calloc(1, sizeof(*map));
     if (map == NULL) {
         SDL_OutOfMemory();
         return (NULL);
@@ -984,7 +984,7 @@ SDL_InvalidateMap(SDL_BlitMap * map)
     map->dst = NULL;
     map->src_palette_version = 0;
     map->dst_palette_version = 0;
-    SDL_free(map->info.table);
+    free(map->info.table);
     map->info.table = NULL;
 }
 
@@ -1079,7 +1079,7 @@ SDL_FreeBlitMap(SDL_BlitMap * map)
 {
     if (map) {
         SDL_InvalidateMap(map);
-        SDL_free(map);
+        free(map);
     }
 }
 

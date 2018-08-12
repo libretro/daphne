@@ -233,7 +233,7 @@ SDL_iconv_open(const char *tocode, const char *fromcode)
         }
     }
     if (src_fmt != ENCODING_UNKNOWN && dst_fmt != ENCODING_UNKNOWN) {
-        SDL_iconv_t cd = (SDL_iconv_t) SDL_malloc(sizeof(*cd));
+        SDL_iconv_t cd = (SDL_iconv_t)malloc(sizeof(*cd));
         if (cd) {
             cd->src_fmt = src_fmt;
             cd->dst_fmt = dst_fmt;
@@ -850,9 +850,8 @@ SDL_iconv(SDL_iconv_t cd,
 int
 SDL_iconv_close(SDL_iconv_t cd)
 {
-    if (cd != (SDL_iconv_t)-1) {
-        SDL_free(cd);
-    }
+    if (cd != (SDL_iconv_t)-1)
+        free(cd);
     return 0;
 }
 
@@ -885,7 +884,7 @@ SDL_iconv_string(const char *tocode, const char *fromcode, const char *inbuf,
     }
 
     stringsize = inbytesleft > 4 ? inbytesleft : 4;
-    string = SDL_malloc(stringsize);
+    string = malloc(stringsize);
     if (!string) {
         SDL_iconv_close(cd);
         return NULL;
@@ -901,7 +900,7 @@ SDL_iconv_string(const char *tocode, const char *fromcode, const char *inbuf,
             {
                 char *oldstring = string;
                 stringsize *= 2;
-                string = SDL_realloc(string, stringsize);
+                string = realloc(string, stringsize);
                 if (!string) {
                     SDL_iconv_close(cd);
                     return NULL;

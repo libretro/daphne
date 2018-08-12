@@ -94,7 +94,7 @@ SDL_LogSetPriority(int category, SDL_LogPriority priority)
     }
 
     /* Create a new entry */
-    entry = (SDL_LogLevel *)SDL_malloc(sizeof(*entry));
+    entry = (SDL_LogLevel *)malloc(sizeof(*entry));
     if (entry) {
         entry->category = category;
         entry->priority = priority;
@@ -133,7 +133,7 @@ SDL_LogResetPriorities(void)
     while (SDL_loglevels) {
         entry = SDL_loglevels;
         SDL_loglevels = entry->next;
-        SDL_free(entry);
+        free(entry);
     }
 
     SDL_default_priority = DEFAULT_PRIORITY;
@@ -260,7 +260,7 @@ SDL_LogMessageV(int category, SDL_LogPriority priority, const char *fmt, va_list
     }
 
     SDL_log_function(SDL_log_userdata, category, priority, message);
-    SDL_stack_free(message);
+    free(message);
 }
 
 #if defined(__WIN32__)
@@ -337,8 +337,8 @@ SDL_LogOutput(void *userdata, int category, SDL_LogPriority priority,
         }
 #endif /* !defined(HAVE_STDIO_H) && !defined(__WINRT__) */
 
-        SDL_free(tstr);
-        SDL_stack_free(output);
+        free(tstr);
+        free(output);
     }
 #elif defined(__APPLE__) && defined(SDL_VIDEO_DRIVER_COCOA)
     /* Technically we don't need SDL_VIDEO_DRIVER_COCOA, but that's where this function is defined for now.
@@ -351,7 +351,7 @@ SDL_LogOutput(void *userdata, int category, SDL_LogPriority priority,
         if (text) {
             SDL_snprintf(text, SDL_MAX_LOG_MESSAGE, "%s: %s", SDL_priority_prefixes[priority], message);
             SDL_NSLog(text);
-            SDL_stack_free(text);
+            free(text);
             return;
         }
     }

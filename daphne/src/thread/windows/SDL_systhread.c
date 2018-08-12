@@ -86,7 +86,7 @@ RunThread(void *data)
     pThreadStartParms pThreadParms = (pThreadStartParms) data;
     pfnSDL_CurrentEndThread pfnEndThread = pThreadParms->pfnCurrentEndThread;
     void *args = pThreadParms->args;
-    SDL_free(pThreadParms);
+    free(pThreadParms);
     SDL_RunThread(args);
     if (pfnEndThread != NULL)
         pfnEndThread(0);
@@ -125,7 +125,7 @@ SDL_SYS_CreateThread(SDL_Thread * thread, void *args)
     pfnSDL_CurrentEndThread pfnEndThread = (pfnSDL_CurrentEndThread)_endthreadex;
 #endif /* SDL_PASSED_BEGINTHREAD_ENDTHREAD */
     pThreadStartParms pThreadParms =
-        (pThreadStartParms) SDL_malloc(sizeof(tThreadStartParms));
+        (pThreadStartParms)malloc(sizeof(tThreadStartParms));
     const DWORD flags = thread->stacksize ? STACK_SIZE_PARAM_IS_A_RESERVATION : 0;
     if (!pThreadParms) {
         return SDL_OutOfMemory();

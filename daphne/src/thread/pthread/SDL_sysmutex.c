@@ -23,6 +23,7 @@
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
+#include <stdlib.h>
 #include <errno.h>
 #include <pthread.h>
 
@@ -49,7 +50,7 @@ SDL_CreateMutex(void)
     pthread_mutexattr_t attr;
 
     /* Allocate the structure */
-    mutex = (SDL_mutex *) SDL_calloc(1, sizeof(*mutex));
+    mutex = (SDL_mutex *)calloc(1, sizeof(*mutex));
     if (mutex) {
         pthread_mutexattr_init(&attr);
 #if SDL_THREAD_PTHREAD_RECURSIVE_MUTEX
@@ -61,7 +62,7 @@ SDL_CreateMutex(void)
 #endif
         if (pthread_mutex_init(&mutex->id, &attr) != 0) {
             SDL_SetError("pthread_mutex_init() failed");
-            SDL_free(mutex);
+            free(mutex);
             mutex = NULL;
         }
     } else {
@@ -75,7 +76,7 @@ SDL_DestroyMutex(SDL_mutex * mutex)
 {
     if (mutex) {
         pthread_mutex_destroy(&mutex->id);
-        SDL_free(mutex);
+        free(mutex);
     }
 }
 

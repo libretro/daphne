@@ -86,7 +86,7 @@ SDL_CreateSemaphore(Uint32 initial_value)
 {
     SDL_sem *sem;
 
-    sem = (SDL_sem *) SDL_malloc(sizeof(*sem));
+    sem = (SDL_sem *)malloc(sizeof(*sem));
     if (!sem) {
         SDL_OutOfMemory();
         return NULL;
@@ -122,7 +122,7 @@ SDL_DestroySemaphore(SDL_sem * sem)
             SDL_UnlockMutex(sem->count_lock);
             SDL_DestroyMutex(sem->count_lock);
         }
-        SDL_free(sem);
+        free(sem);
     }
 }
 

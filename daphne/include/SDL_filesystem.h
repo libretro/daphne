@@ -48,7 +48,7 @@ extern "C" {
  *  end with a path separator ('\\' on Windows, '/' most other places).
  *
  * The pointer returned by this function is owned by you. Please call
- *  SDL_free() on the pointer when you are done with it, or it will be a
+ *  free() on the pointer when you are done with it, or it will be a
  *  memory leak. This is not necessarily a fast call, though, so you should
  *  call this once near startup and save the string if you need it.
  *
@@ -103,7 +103,7 @@ extern DECLSPEC char *SDLCALL SDL_GetBasePath(void);
  *  end with a path separator ('\\' on Windows, '/' most other places).
  *
  * The pointer returned by this function is owned by you. Please call
- *  SDL_free() on the pointer when you are done with it, or it will be a
+ *  free() on the pointer when you are done with it, or it will be a
  *  memory leak. This is not necessarily a fast call, though, so you should
  *  call this once near startup and save the string if you need it.
  *

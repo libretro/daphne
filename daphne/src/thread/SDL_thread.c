@@ -66,7 +66,7 @@ SDL_TLSSet(SDL_TLSID id, const void *value, void (*destructor)(void *))
 
         oldlimit = storage ? storage->limit : 0;
         newlimit = (id + TLS_ALLOC_CHUNKSIZE);
-        storage = (SDL_TLSData *)SDL_realloc(storage, sizeof(*storage)+(newlimit-1)*sizeof(storage->array[0]));
+        storage = (SDL_TLSData *)realloc(storage, sizeof(*storage)+(newlimit-1)*sizeof(storage->array[0]));
         if (!storage) {
             return SDL_OutOfMemory();
         }
@@ -99,7 +99,7 @@ SDL_TLSCleanup()
             }
         }
         SDL_SYS_SetTLSData(NULL);
-        SDL_free(storage);
+        free(storage);
     }
 }
 
@@ -180,14 +180,14 @@ SDL_Generic_SetTLSData(SDL_TLSData *storage)
                 } else {
                     SDL_generic_TLS = entry->next;
                 }
-                SDL_free(entry);
+                free(entry);
             }
             break;
         }
         prev = entry;
     }
     if (!entry) {
-        entry = (SDL_TLSEntry *)SDL_malloc(sizeof(*entry));
+        entry = (SDL_TLSEntry *)malloc(sizeof(*entry));
         if (entry) {
             entry->thread = thread;
             entry->storage = storage;
@@ -242,13 +242,13 @@ SDL_GetErrBuf(void)
     if (!errbuf) {
         /* Mark that we're in the middle of allocating our buffer */
         SDL_TLSSet(tls_errbuf, ALLOCATION_IN_PROGRESS, NULL);
-        errbuf = (SDL_error *)SDL_malloc(sizeof(*errbuf));
+        errbuf = (SDL_error *)malloc(sizeof(*errbuf));
         if (!errbuf) {
             SDL_TLSSet(tls_errbuf, NULL, NULL);
             return &SDL_global_errbuf;
         }
         SDL_zerop(errbuf);
-        SDL_TLSSet(tls_errbuf, errbuf, SDL_free);
+        SDL_TLSSet(tls_errbuf, errbuf, free);
     }
     return errbuf;
 }
@@ -292,9 +292,9 @@ SDL_RunThread(void *data)
         /* Clean up if something already detached us. */
         if (SDL_AtomicCAS(&thread->state, SDL_THREAD_STATE_DETACHED, SDL_THREAD_STATE_CLEANED)) {
             if (thread->name) {
-                SDL_free(thread->name);
+                free(thread->name);
             }
-            SDL_free(thread);
+            free(thread);
         }
     }
 }
@@ -323,15 +323,15 @@ SDL_CreateThreadWithStackSize(int (SDLCALL * fn) (void *),
     int ret;
 
     /* Allocate memory for the thread info structure */
-    thread = (SDL_Thread *) SDL_malloc(sizeof(*thread));
+    thread = (SDL_Thread *)malloc(sizeof(*thread));
     if (thread == NULL) {
         SDL_OutOfMemory();
 		// 2017.02.07 - RJS ADD - Logging.
-		LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, in SDL_malloc returning NULL, exiting.");
+		LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, in malloc returning NULL, exiting.");
         return (NULL);
     }
 	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, after SDL_malloc.  thread: %d", (int) thread);
+	LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, after malloc.  thread: %d", (int) thread);
 
 	SDL_zerop(thread);
     thread->status = -1;
@@ -348,26 +348,22 @@ SDL_CreateThreadWithStackSize(int (SDLCALL * fn) (void *),
         thread->name = SDL_strdup(name);
         if (thread->name == NULL) {
             SDL_OutOfMemory();
-            SDL_free(thread);
-			// 2017.02.07 - RJS ADD - Logging.
-			LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, in thread name is NULL, exiting.");
+            free(thread);
             return (NULL);
         }
     }
 
 	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, before SDL_malloc.");
+	LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, before malloc.");
 
     /* Set up the arguments for the thread */
-    args = (thread_args *) SDL_malloc(sizeof(*args));
+    args = (thread_args *)malloc(sizeof(*args));
     if (args == NULL) {
         SDL_OutOfMemory();
         if (thread->name) {
-            SDL_free(thread->name);
+            free(thread->name);
         }
-        SDL_free(thread);
-		// 2017.02.07 - RJS ADD - Logging.
-		LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, in args is NULL, exiting.");
+        free(thread);
         return (NULL);
     }
     args->func = fn;
@@ -384,12 +380,10 @@ SDL_CreateThreadWithStackSize(int (SDLCALL * fn) (void *),
 
 	if (args->wait == NULL) {
         if (thread->name) {
-            SDL_free(thread->name);
+            free(thread->name);
         }
-        SDL_free(thread);
-        SDL_free(args);
-		// 2017.02.07 - RJS ADD - Logging.
-		LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, in args wait is NULL, exiting.");
+        free(thread);
+        free(args);
         return (NULL);
     }
 
@@ -415,15 +409,13 @@ SDL_CreateThreadWithStackSize(int (SDLCALL * fn) (void *),
     } else {
         /* Oops, failed.  Gotta free everything */
         if (thread->name) {
-            SDL_free(thread->name);
+            free(thread->name);
         }
-        SDL_free(thread);
+        free(thread);
         thread = NULL;
     }
-	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, before SDL_DestroySemaphore.  args wait: %d", (int) args->wait);
     SDL_DestroySemaphore(args->wait);
-    SDL_free(args);
+    free(args);
 
 	// 2017.02.07 - RJS ADD - Logging.
 	LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, bottom of routine, success.");
@@ -517,9 +509,9 @@ SDL_WaitThread(SDL_Thread * thread, int *status)
             *status = thread->status;
         }
         if (thread->name) {
-            SDL_free(thread->name);
+            free(thread->name);
         }
-        SDL_free(thread);
+        free(thread);
     }
 }
 

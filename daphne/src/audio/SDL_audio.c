@@ -129,7 +129,7 @@ free_audio_queue(SDL_AudioBufferQueue *packet)
 {
     while (packet) {
         SDL_AudioBufferQueue *next = packet->next;
-        SDL_free(packet);
+        free(packet);
         packet = next;
     }
 }
@@ -158,7 +158,7 @@ queue_audio_to_device(SDL_AudioDevice *device, const Uint8 *data, Uint32 len)
                 device->buffer_queue_pool = packet->next;
             } else {
                 /* Have to allocate a new one! */
-                packet = (SDL_AudioBufferQueue *) SDL_malloc(sizeof (SDL_AudioBufferQueue));
+                packet = (SDL_AudioBufferQueue *)malloc(sizeof (SDL_AudioBufferQueue));
                 if (packet == NULL) {
                     /* uhoh, reset so we've queued nothing new, free what we can. */
                     if (!origtail) {
@@ -486,7 +486,7 @@ clean_out_device_list(SDL_AudioDeviceItem **devices, int *devCount, SDL_bool *re
             } else {
                 *devices = next;
             }
-            SDL_free(item);
+            free(item);
         }
         item = next;
     }
@@ -575,9 +575,9 @@ close_audio_device(SDL_AudioDevice * device)
 	if (device->mixer_lock != NULL) {
         SDL_DestroyMutex(device->mixer_lock);
     }
-	SDL_free(device->fake_stream);
+	free(device->fake_stream);
 	if (device->convert.needed) {
-        SDL_free(device->convert.buf);
+        free(device->convert.buf);
     }
 	if (device->hidden != NULL) {
         current_audio.impl.CloseDevice(device);
@@ -586,7 +586,7 @@ close_audio_device(SDL_AudioDevice * device)
 	free_audio_queue(device->buffer_queue_head);
     free_audio_queue(device->buffer_queue_pool);
 
-	SDL_free(device);
+	free(device);
 
 }
 
@@ -758,7 +758,7 @@ open_audio_device(const char *devname, int iscapture,
         }
     }
 
-    device = (SDL_AudioDevice *) SDL_calloc(1, sizeof (SDL_AudioDevice));
+    device = (SDL_AudioDevice *)calloc(1, sizeof (SDL_AudioDevice));
     if (device == NULL) {
         SDL_OutOfMemory();
         return 0;
@@ -839,7 +839,7 @@ open_audio_device(const char *devname, int iscapture,
                                          device->convert.len_ratio);
 
             device->convert.buf =
-                (Uint8 *) SDL_malloc(device->convert.len *
+                (Uint8 *)malloc(device->convert.len *
                                             device->convert.len_mult);
             if (device->convert.buf == NULL) {
                 close_audio_device(device);
@@ -855,7 +855,7 @@ open_audio_device(const char *devname, int iscapture,
         const int wantbytes = ((device->convert.needed) ? device->convert.len : device->spec.size) * 2;
         const int wantpackets = (wantbytes / packetlen) + ((wantbytes % packetlen) ? packetlen : 0);
         for (i = 0; i < wantpackets; i++) {
-            SDL_AudioBufferQueue *packet = (SDL_AudioBufferQueue *) SDL_malloc(sizeof (SDL_AudioBufferQueue));
+            SDL_AudioBufferQueue *packet = (SDL_AudioBufferQueue *)malloc(sizeof (SDL_AudioBufferQueue));
             if (packet) { /* don't care if this fails, we'll deal later. */
                 packet->datalen = 0;
                 packet->startpos = 0;
@@ -886,7 +886,7 @@ open_audio_device(const char *devname, int iscapture,
         }
         SDL_assert(stream_len > 0);
 
-        device->fake_stream = (Uint8 *) SDL_malloc(stream_len);
+        device->fake_stream = (Uint8 *)malloc(stream_len);
         if (device->fake_stream == NULL) {
             close_audio_device(device);
             SDL_OutOfMemory();

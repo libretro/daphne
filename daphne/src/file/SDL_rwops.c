@@ -102,7 +102,7 @@ windows_file_open(SDL_RWops * context, const char *filename, const char *mode)
         return -1;              /* failed (invalid call) */
 
     context->hidden.windowsio.buffer.data =
-        (char *) SDL_malloc(READAHEAD_BUFFER_SIZE);
+        (char *)malloc(READAHEAD_BUFFER_SIZE);
     if (!context->hidden.windowsio.buffer.data) {
         return SDL_OutOfMemory();
     }
@@ -116,14 +116,14 @@ windows_file_open(SDL_RWops * context, const char *filename, const char *mode)
                        (w_right) ? 0 : FILE_SHARE_READ, NULL,
                        (must_exist | truncate | a_mode),
                        FILE_ATTRIBUTE_NORMAL, NULL);
-        SDL_free(tstr);
+        free(tstr);
     }
 
     /* restore old behavior */
     SetErrorMode(old_error_mode);
 
     if (h == INVALID_HANDLE_VALUE) {
-        SDL_free(context->hidden.windowsio.buffer.data);
+        free(context->hidden.windowsio.buffer.data);
         context->hidden.windowsio.buffer.data = NULL;
         SDL_SetError("Couldn't open %s", filename);
         return -2;              /* failed (CreateFile) */
@@ -291,7 +291,7 @@ windows_file_close(SDL_RWops * context)
             CloseHandle(context->hidden.windowsio.h);
             context->hidden.windowsio.h = INVALID_HANDLE_VALUE;   /* to be sure */
         }
-        SDL_free(context->hidden.windowsio.buffer.data);
+        free(context->hidden.windowsio.buffer.data);
         context->hidden.windowsio.buffer.data = NULL;
         SDL_FreeRW(context);
     }
@@ -650,7 +650,7 @@ SDL_AllocRW(void)
 {
     SDL_RWops *area;
 
-    area = (SDL_RWops *) SDL_malloc(sizeof *area);
+    area = (SDL_RWops *)malloc(sizeof *area);
     if (area == NULL) {
         SDL_OutOfMemory();
     } else {
@@ -662,7 +662,7 @@ SDL_AllocRW(void)
 void
 SDL_FreeRW(SDL_RWops * area)
 {
-    SDL_free(area);
+    free(area);
 }
 
 /* Functions for dynamically reading and writing endian-specific values */

@@ -94,7 +94,7 @@ SDL_setenv(const char *name, const char *value, int overwrite)
 
     /* This leaks. Sorry. Get a better OS so we don't have to do this. */
     len = SDL_strlen(name) + SDL_strlen(value) + 2;
-    new_variable = (char *) SDL_malloc(len);
+    new_variable = (char *)malloc(len);
     if (!new_variable) {
         return (-1);
     }
@@ -124,7 +124,7 @@ SDL_setenv(const char *name, const char *value, int overwrite)
 
     /* Allocate memory for the variable */
     len = SDL_strlen(name) + SDL_strlen(value) + 2;
-    new_variable = (char *) SDL_malloc(len);
+    new_variable = (char *)malloc(len);
     if (!new_variable) {
         return (-1);
     }
@@ -146,7 +146,7 @@ SDL_setenv(const char *name, const char *value, int overwrite)
         }
         /* If we found it, just replace the entry */
         if (SDL_env[i]) {
-            SDL_free(SDL_env[i]);
+            free(SDL_env[i]);
             SDL_env[i] = new_variable;
             added = 1;
         }
@@ -154,14 +154,14 @@ SDL_setenv(const char *name, const char *value, int overwrite)
 
     /* Didn't find it in the environment, expand and add */
     if (!added) {
-        new_env = SDL_realloc(SDL_env, (i + 2) * sizeof(char *));
+        new_env = realloc(SDL_env, (i + 2) * sizeof(char *));
         if (new_env) {
             SDL_env = new_env;
             SDL_env[i++] = new_variable;
             SDL_env[i++] = (char *) 0;
             added = 1;
         } else {
-            SDL_free(new_variable);
+            free(new_variable);
         }
     }
     return (added ? 0 : -1);
@@ -197,7 +197,7 @@ SDL_getenv(const char *name)
         return NULL;
     }
     if (bufferlen > SDL_envmemlen) {
-        char *newmem = (char *) SDL_realloc(SDL_envmem, bufferlen);
+        char *newmem = (char *) realloc(SDL_envmem, bufferlen);
         if (newmem == NULL) {
             return NULL;
         }

@@ -256,17 +256,17 @@ SDL_TimerQuit(void)
         while (data->timers) {
             timer = data->timers;
             data->timers = timer->next;
-            SDL_free(timer);
+            free(timer);
         }
         while (data->freelist) {
             timer = data->freelist;
             data->freelist = timer->next;
-            SDL_free(timer);
+            free(timer);
         }
         while (data->timermap) {
             entry = data->timermap;
             data->timermap = entry->next;
-            SDL_free(entry);
+            free(entry);
         }
 
         SDL_DestroyMutex(data->timermap_lock);
@@ -298,7 +298,7 @@ SDL_AddTimer(Uint32 interval, SDL_TimerCallback callback, void *param)
     if (timer) {
         SDL_RemoveTimer(timer->timerID);
     } else {
-        timer = (SDL_Timer *)SDL_malloc(sizeof(*timer));
+        timer = (SDL_Timer *)malloc(sizeof(*timer));
         if (!timer) {
             SDL_OutOfMemory();
             return 0;
@@ -311,9 +311,9 @@ SDL_AddTimer(Uint32 interval, SDL_TimerCallback callback, void *param)
     timer->scheduled = SDL_GetTicks() + interval;
     SDL_AtomicSet(&timer->canceled, 0);
 
-    entry = (SDL_TimerMap *)SDL_malloc(sizeof(*entry));
+    entry = (SDL_TimerMap *)malloc(sizeof(*entry));
     if (!entry) {
-        SDL_free(timer);
+        free(timer);
         SDL_OutOfMemory();
         return 0;
     }
@@ -364,7 +364,7 @@ SDL_RemoveTimer(SDL_TimerID id)
             SDL_AtomicSet(&entry->timer->canceled, 1);
             canceled = SDL_TRUE;
         }
-        SDL_free(entry);
+        free(entry);
     }
     return canceled;
 }

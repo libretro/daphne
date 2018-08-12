@@ -28,6 +28,7 @@
 #include <semaphore.h>
 #include <sys/time.h>
 #include <time.h>
+#include <stdlib.h>
 
 #include "SDL_thread.h"
 #include "SDL_timer.h"
@@ -50,31 +51,16 @@ struct SDL_semaphore
 SDL_sem *
 SDL_CreateSemaphore(Uint32 initial_value)
 {
-	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_CreateSemaphore, top of function.");
-
-	SDL_sem *sem = (SDL_sem *) SDL_malloc(sizeof(SDL_sem));
+	SDL_sem *sem = (SDL_sem *)malloc(sizeof(SDL_sem));
     if (sem) {
-		// 2017.02.07 - RJS ADD - Logging.
-		LOGI("daphne-libretro: In SDL_CreateSemaphore, after good sem malloc.  sem: %d", (int) sem);
-
 		if (sem_init(&sem->sem, 0, initial_value) < 0) {
-			// 2017.02.07 - RJS ADD - Logging.
-			LOGI("daphne-libretro: In SDL_CreateSemaphore, after bad sem_init.");
-
 			SDL_SetError("sem_init() failed");
-            SDL_free(sem);
+            free(sem);
             sem = NULL;
         }
-		// 2017.02.07 - RJS ADD - Logging.
     } else {
-		// 2017.02.07 - RJS ADD - Logging.
-		LOGI("daphne-libretro: In SDL_CreateSemaphore, after bad sem malloc.");
         SDL_OutOfMemory();
     }
-
-	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_CreateSemaphore, bottom of function.");
 
 	return sem;
 }
@@ -84,7 +70,7 @@ SDL_DestroySemaphore(SDL_sem * sem)
 {
     if (sem) {
         sem_destroy(&sem->sem);
-        SDL_free(sem);
+        free(sem);
     }
 }
 
@@ -106,28 +92,16 @@ SDL_SemTryWait(SDL_sem * sem)
 int
 SDL_SemWait(SDL_sem * sem)
 {
-	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_SemWait, top of routine.");
-
 	int retval;
 
     if (!sem) {
-		// 2017.02.07 - RJS ADD - Logging.
-		LOGI("daphne-libretro: In SDL_SemWait, NULL sem, exiting.");
         return SDL_SetError("Passed a NULL semaphore");
     }
 
-	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_SemWait, before sem_wait.  sem: %d", (int) sem);
     retval = sem_wait(&sem->sem);
-	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_SemWait, after sem_wait.  retval: %d", retval);
     if (retval < 0) {
         retval = SDL_SetError("sem_wait() failed");
     }
-
-	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_SemWait, bottom of routine.  retval: %d", retval);
 
 	return retval;
 }

@@ -41,14 +41,6 @@ SDL_qsort(void *base, size_t nmemb, size_t size, int (*compare) (const void *, c
 #undef assert
 #endif
 #define assert SDL_assert
-#ifdef malloc
-#undef malloc
-#endif
-#define malloc SDL_malloc
-#ifdef free
-#undef free
-#endif
-#define free SDL_free
 #ifdef memcpy
 #undef memcpy
 #endif

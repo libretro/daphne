@@ -535,7 +535,7 @@ SDL_strdup(const char *string)
     return strdup(string);
 #else
     size_t len = SDL_strlen(string) + 1;
-    char *newstr = SDL_malloc(len);
+    char *newstr = malloc(len);
     if (newstr) {
         SDL_strlcpy(newstr, string, len);
     }

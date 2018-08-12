@@ -42,7 +42,7 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
     (void)flags;
 
     /* Allocate the surface */
-    surface = (SDL_Surface *) SDL_calloc(1, sizeof(*surface));
+    surface = (SDL_Surface *)calloc(1, sizeof(*surface));
     if (surface == NULL) {
         SDL_OutOfMemory();
         return NULL;
@@ -80,7 +80,7 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
 
     /* Get the pixels */
     if (surface->w && surface->h) {
-        surface->pixels = SDL_malloc(surface->h * surface->pitch);
+        surface->pixels = malloc(surface->h * surface->pitch);
         if (!surface->pixels) {
             SDL_FreeSurface(surface);
             SDL_OutOfMemory();
@@ -1175,9 +1175,9 @@ SDL_FreeSurface(SDL_Surface * surface)
         surface->map = NULL;
     }
     if (!(surface->flags & SDL_PREALLOC)) {
-        SDL_free(surface->pixels);
+        free(surface->pixels);
     }
-    SDL_free(surface);
+    free(surface);
 }
 
 /* vi: set ts=4 sw=4 expandtab: */

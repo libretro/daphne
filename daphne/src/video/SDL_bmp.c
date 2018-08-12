@@ -315,7 +315,7 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
             SDL_Color *colors;
             int ncolors = biClrUsed;
             colors =
-                (SDL_Color *) SDL_realloc(palette->colors,
+                (SDL_Color *) realloc(palette->colors,
                                           ncolors *
                                           sizeof(*palette->colors));
             if (!colors) {

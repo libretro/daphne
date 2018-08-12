@@ -326,16 +326,9 @@ char *alloca();
 #endif
 #ifdef HAVE_ALLOCA
 #define SDL_stack_alloc(type, count)    (type*)alloca(sizeof(type)*(count))
-#define SDL_stack_free(data)
 #else
-#define SDL_stack_alloc(type, count)    (type*)SDL_malloc(sizeof(type)*(count))
-#define SDL_stack_free(data)            SDL_free(data)
+#define SDL_stack_alloc(type, count)    (type*)malloc(sizeof(type)*(count))
 #endif
-
-extern DECLSPEC void *SDLCALL SDL_malloc(size_t size);
-extern DECLSPEC void *SDLCALL SDL_calloc(size_t nmemb, size_t size);
-extern DECLSPEC void *SDLCALL SDL_realloc(void *mem, size_t size);
-extern DECLSPEC void SDLCALL SDL_free(void *mem);
 
 extern DECLSPEC char *SDLCALL SDL_getenv(const char *name);
 extern DECLSPEC int SDLCALL SDL_setenv(const char *name, const char *value, int overwrite);
@@ -477,7 +470,7 @@ extern DECLSPEC size_t SDLCALL SDL_iconv(SDL_iconv_t cd, const char **inbuf,
                                          size_t * outbytesleft);
 /**
  *  This function converts a string between encodings in one pass, returning a
- *  string that must be freed with SDL_free() or NULL on error.
+ *  string that must be freed with free() or NULL on error.
  */
 extern DECLSPEC char *SDLCALL SDL_iconv_string(const char *tocode,
                                                const char *fromcode,
@@ -490,10 +483,6 @@ extern DECLSPEC char *SDLCALL SDL_iconv_string(const char *tocode,
 /* force builds using Clang's static analysis tools to use literal C runtime
    here, since there are possibly tests that are ineffective otherwise. */
 #if defined(__clang_analyzer__) && !defined(SDL_DISABLE_ANALYZE_MACROS)
-#define SDL_malloc malloc
-#define SDL_calloc calloc
-#define SDL_realloc realloc
-#define SDL_free free
 #define SDL_memset memset
 #define SDL_memcpy memcpy
 #define SDL_memmove memmove

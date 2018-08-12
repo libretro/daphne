@@ -41,7 +41,7 @@ SDL_CreateMutex(void)
     SDL_mutex *mutex;
 
     /* Allocate mutex memory */
-    mutex = (SDL_mutex *) SDL_malloc(sizeof(*mutex));
+    mutex = (SDL_mutex *)malloc(sizeof(*mutex));
     if (mutex) {
         /* Initialize */
         /* On SMP systems, a non-zero spin count generally helps performance */
@@ -62,7 +62,7 @@ SDL_DestroyMutex(SDL_mutex * mutex)
 {
     if (mutex) {
         DeleteCriticalSection(&mutex->cs);
-        SDL_free(mutex);
+        free(mutex);
     }
 }
 

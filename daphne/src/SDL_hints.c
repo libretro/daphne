@@ -75,7 +75,7 @@ SDL_SetHintWithPriority(const char *name, const char *value,
                     entry->callback(entry->userdata, name, hint->value, value);
                     entry = next;
                 }
-                SDL_free(hint->value);
+                free(hint->value);
                 hint->value = value ? SDL_strdup(value) : NULL;
             }
             hint->priority = priority;
@@ -84,7 +84,7 @@ SDL_SetHintWithPriority(const char *name, const char *value,
     }
 
     /* Couldn't find the hint, add a new one */
-    hint = (SDL_Hint *)SDL_malloc(sizeof(*hint));
+    hint = (SDL_Hint *)malloc(sizeof(*hint));
     if (!hint) {
         return SDL_FALSE;
     }
@@ -163,7 +163,7 @@ SDL_AddHintCallback(const char *name, SDL_HintCallback callback, void *userdata)
 	// 2017.02.17 - RJS ADD - Logging.
 	LOGI("daphne-libretro: In SDL_AddHintCallback, after SDL_DelHintCallback.");
 
-    entry = (SDL_HintWatch *)SDL_malloc(sizeof(*entry));
+    entry = (SDL_HintWatch *)malloc(sizeof(*entry));
     if (!entry) {
 		// 2017.02.17 - RJS ADD - Logging.
 		LOGI("daphne-libretro: In SDL_AddHintCallback, could not malloc entry record, exiting.");
@@ -185,12 +185,12 @@ SDL_AddHintCallback(const char *name, SDL_HintCallback callback, void *userdata)
 
 	if (!hint) {
         /* Need to add a hint entry for this watcher */
-        hint = (SDL_Hint *)SDL_malloc(sizeof(*hint));
+        hint = (SDL_Hint *)malloc(sizeof(*hint));
         if (!hint) {
 			// 2017.02.17 - RJS ADD - Logging.
 			LOGI("daphne-libretro: In SDL_AddHintCallback, could not malloc new hint record, exiting.");
             SDL_OutOfMemory();
-            SDL_free(entry);
+            free(entry);
             return;
         }
         hint->name = SDL_strdup(name);
@@ -233,7 +233,7 @@ SDL_DelHintCallback(const char *name, SDL_HintCallback callback, void *userdata)
                     } else {
                         hint->callbacks = entry->next;
                     }
-                    SDL_free(entry);
+                    free(entry);
                     break;
                 }
                 prev = entry;
@@ -252,14 +252,14 @@ void SDL_ClearHints(void)
         hint = SDL_hints;
         SDL_hints = hint->next;
 
-        SDL_free(hint->name);
-        SDL_free(hint->value);
+        free(hint->name);
+        free(hint->value);
         for (entry = hint->callbacks; entry; ) {
             SDL_HintWatch *freeable = entry;
             entry = entry->next;
-            SDL_free(freeable);
+            free(freeable);
         }
-        SDL_free(hint);
+        free(hint);
     }
 }
 

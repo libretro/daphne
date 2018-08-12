@@ -18,6 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include <stdlib.h>
 #include "../SDL_internal.h"
 
 /* Microsoft WAVE file loading routines */
@@ -133,7 +134,7 @@ MS_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
     *audio_len = (encoded_len / MS_ADPCM_state.wavefmt.blockalign) *
         MS_ADPCM_state.wSamplesPerBlock *
         MS_ADPCM_state.wavefmt.channels * sizeof(Sint16);
-    *audio_buf = (Uint8 *) SDL_malloc(*audio_len);
+    *audio_buf = (Uint8 *)malloc(*audio_len);
     if (*audio_buf == NULL) {
         return SDL_OutOfMemory();
     }
@@ -211,7 +212,7 @@ MS_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
         }
         encoded_len -= MS_ADPCM_state.wavefmt.blockalign;
     }
-    SDL_free(freeable);
+    free(freeable);
     return (0);
 }
 
@@ -358,7 +359,7 @@ IMA_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
     *audio_len = (encoded_len / IMA_ADPCM_state.wavefmt.blockalign) *
         IMA_ADPCM_state.wSamplesPerBlock *
         IMA_ADPCM_state.wavefmt.channels * sizeof(Sint16);
-    *audio_buf = (Uint8 *) SDL_malloc(*audio_len);
+    *audio_buf = (Uint8 *)malloc(*audio_len);
     if (*audio_buf == NULL) {
         return SDL_OutOfMemory();
     }
@@ -399,7 +400,7 @@ IMA_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
         }
         encoded_len -= IMA_ADPCM_state.wavefmt.blockalign;
     }
-    SDL_free(freeable);
+    free(freeable);
     return (0);
 }
 
@@ -451,7 +452,7 @@ SDL_LoadWAV_RW(SDL_RWops * src, int freesrc,
     /* Read the audio data format chunk */
     chunk.data = NULL;
     do {
-        SDL_free(chunk.data);
+        free(chunk.data);
         chunk.data = NULL;
         lenread = ReadChunk(src, &chunk);
         if (lenread < 0) {
@@ -548,7 +549,7 @@ SDL_LoadWAV_RW(SDL_RWops * src, int freesrc,
     /* Read the audio data chunk */
     *audio_buf = NULL;
     do {
-        SDL_free(*audio_buf);
+        free(*audio_buf);
         *audio_buf = NULL;
         lenread = ReadChunk(src, &chunk);
         if (lenread < 0) {
@@ -580,7 +581,7 @@ SDL_LoadWAV_RW(SDL_RWops * src, int freesrc,
     *audio_len &= ~(samplesize - 1);
 
   done:
-    SDL_free(format);
+    free(format);
     if (src) {
         if (freesrc) {
             SDL_RWclose(src);
@@ -601,7 +602,7 @@ SDL_LoadWAV_RW(SDL_RWops * src, int freesrc,
 void
 SDL_FreeWAV(Uint8 * audio_buf)
 {
-    SDL_free(audio_buf);
+    free(audio_buf);
 }
 
 static int
@@ -609,12 +610,12 @@ ReadChunk(SDL_RWops * src, Chunk * chunk)
 {
     chunk->magic = SDL_ReadLE32(src);
     chunk->length = SDL_ReadLE32(src);
-    chunk->data = (Uint8 *) SDL_malloc(chunk->length);
+    chunk->data = (Uint8 *)malloc(chunk->length);
     if (chunk->data == NULL) {
         return SDL_OutOfMemory();
     }
     if (SDL_RWread(src, chunk->data, chunk->length, 1) != 1) {
-        SDL_free(chunk->data);
+        free(chunk->data);
         chunk->data = NULL;
         return SDL_Error(SDL_EFREAD);
     }

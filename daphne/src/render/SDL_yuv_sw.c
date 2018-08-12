@@ -1002,7 +1002,7 @@ SDL_SW_CreateYUVTexture(Uint32 format, int w, int h)
         return NULL;
     }
 
-    swdata = (SDL_SW_YUVTexture *) SDL_calloc(1, sizeof(*swdata));
+    swdata = (SDL_SW_YUVTexture *)calloc(1, sizeof(*swdata));
     if (!swdata) {
         SDL_OutOfMemory();
         return NULL;
@@ -1012,9 +1012,9 @@ SDL_SW_CreateYUVTexture(Uint32 format, int w, int h)
     swdata->target_format = SDL_PIXELFORMAT_UNKNOWN;
     swdata->w = w;
     swdata->h = h;
-    swdata->pixels = (Uint8 *) SDL_malloc(w * h * 2);
-    swdata->colortab = (int *) SDL_malloc(4 * 256 * sizeof(int));
-    swdata->rgb_2_pix = (Uint32 *) SDL_malloc(3 * 768 * sizeof(Uint32));
+    swdata->pixels = (Uint8 *)malloc(w * h * 2);
+    swdata->colortab = (int *)malloc(4 * 256 * sizeof(int));
+    swdata->rgb_2_pix = (Uint32 *)malloc(3 * 768 * sizeof(Uint32));
     if (!swdata->pixels || !swdata->colortab || !swdata->rgb_2_pix) {
         SDL_SW_DestroyYUVTexture(swdata);
         SDL_OutOfMemory();
@@ -1370,12 +1370,12 @@ void
 SDL_SW_DestroyYUVTexture(SDL_SW_YUVTexture * swdata)
 {
     if (swdata) {
-        SDL_free(swdata->pixels);
-        SDL_free(swdata->colortab);
-        SDL_free(swdata->rgb_2_pix);
+        free(swdata->pixels);
+        free(swdata->colortab);
+        free(swdata->rgb_2_pix);
         SDL_FreeSurface(swdata->stretch);
         SDL_FreeSurface(swdata->display);
-        SDL_free(swdata);
+        free(swdata);
     }
 }
 
