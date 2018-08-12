@@ -778,15 +778,15 @@ SDL_strcasecmp(const char *str1, const char *str2)
     char a = 0;
     char b = 0;
     while (*str1 && *str2) {
-        a = SDL_toupper((unsigned char) *str1);
-        b = SDL_toupper((unsigned char) *str2);
+        a = toupper((unsigned char) *str1);
+        b = toupper((unsigned char) *str2);
         if (a != b)
             break;
         ++str1;
         ++str2;
     }
-    a = SDL_toupper(*str1);
-    b = SDL_toupper(*str2);
+    a = toupper(*str1);
+    b = toupper(*str2);
     return (int) ((unsigned char) a - (unsigned char) b);
 #endif /* HAVE_STRCASECMP */
 }
