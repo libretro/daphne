@@ -196,9 +196,7 @@ SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/cpu_state.c
 SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/decode.c
 SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/header.c
 SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/idct.c
-#SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/idct_mmx.c
 SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/motion_comp.c
-#SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/motion_comp_mmx.c
 SOURCES_C += $(DAPHNE_DIR)/vldp2/libmpeg2/slice.c
 SOURCES_C += $(DAPHNE_DIR)/vldp2/vldp/mpegscan.c
 SOURCES_C += $(DAPHNE_DIR)/vldp2/vldp/vldp.c
@@ -207,34 +205,15 @@ SOURCES_C += $(DAPHNE_DIR)/vldp2/libvo/video_out_null.c
 
 SOURCES_CXX += $(DAPHNE_MAIN_DIR)/libretro/libretro.cpp
 
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/main.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/atomic/SDL_atomic.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/atomic/SDL_spinlock.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/android/SDL_androidaudio.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/dummy/SDL_dummyaudio.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audio.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audiocvt.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audiodev.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_audiotypecvt.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/audio/SDL_wave.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/core/android/SDL_android.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/cpuinfo/SDL_cpuinfo.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/dynapi/SDL_dynapi.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/events/SDL_clipboardevents.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/events/SDL_dropevents.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/events/SDL_events.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/events/SDL_gesture.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/events/SDL_keyboard.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/events/SDL_mouse.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/events/SDL_quit.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/events/SDL_touch.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/events/SDL_windowevents.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/file/SDL_rwops.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/haptic/dummy/SDL_syshaptic.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/haptic/SDL_haptic.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/joystick/android/SDL_sysjoystick.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/joystick/SDL_gamecontroller.c
-#SOURCES_C += $(DAPHNE_MAIN_DIR)/src/joystick/SDL_joystick.c
 
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/s_floor.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/e_sqrt.c
@@ -252,18 +231,12 @@ SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/s_scalbn.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/s_sin.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/libm/s_copysign.c
 
-    #<ClCompile Include="src\loadso\dlopen\SDL_sysloadso.c" />
-    #<ClCompile Include="src\main\android\SDL_android_main.c" />
-    #<ClCompile Include="src\power\android\SDL_syspower.c" />
-    #<ClCompile Include="src\power\SDL_power.c" />
-
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/SDL_yuv_sw.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/SDL_error.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/SDL_hints.c
 
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/stdlib/SDL_getenv.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/stdlib/SDL_iconv.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/stdlib/SDL_stdlib.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/stdlib/SDL_string.c
 
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/thread/pthread/SDL_syscond.c
