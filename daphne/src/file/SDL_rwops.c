@@ -34,28 +34,6 @@
 #include "SDL_endian.h"
 #include "SDL_rwops.h"
 
-#ifdef __APPLE__
-#include "cocoa/SDL_rwopsbundlesupport.h"
-#endif /* __APPLE__ */
-
-#ifdef __ANDROID__
-#include "../core/android/SDL_android.h"
-#include "SDL_system.h"
-
-// RJS - 2017.08.10 - Added logging, this really should be in aSDL global .h.
-#include <android/log.h>
-#define LOG_TAG "SDL_android"
-#define LOGI(...)  ((void)__android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__))
-#define LOGE(...)  ((void)__android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__))
-#else
-#define LOGI(...)
-#define LOGE(...)
-#endif
-
-#if __NACL__
-#include "nacl_io/nacl_io.h"
-#endif
-
 #ifdef __WIN32__
 
 /* Functions to read/write Win32 API file pointers */
@@ -474,8 +452,6 @@ mem_close(SDL_RWops * context)
 SDL_RWops *
 SDL_RWFromFile(const char *file, const char *mode)
 {
-	LOGI("daphne-libretro: In %s, top of routine, filename: %s", __func__, file);
-	
 	SDL_RWops *rwops = NULL;
     if (!file || !*file || !mode || !*mode) {
         SDL_SetError("SDL_RWFromFile(): No file or no mode specified");
@@ -484,37 +460,28 @@ SDL_RWFromFile(const char *file, const char *mode)
 
 #if defined(__ANDROID__)
     /* Try to open the file on the filesystem first */
-	LOGI("daphne-libretro: In %s, deciding if should open file using relative or absolute path.", __func__);
 	if (*file == '/') {
-		LOGI("daphne-libretro: In %s, trying to fopen file using absolute path.", __func__);
 		FILE *fp = fopen(file, mode);
         if (fp) {
-			LOGI("daphne-libretro: In %s, trying to fopen file.  Success.  Going to SDL_RWFromFP.", __func__);
 			return SDL_RWFromFP(fp, 1);
         }
     } else {
         /* Try opening it from internal storage if it's a relative path */
-		LOGI("daphne-libretro: In %s, trying to fopen file using relative path.  Allocating memory to hold path.", __func__);
 		char *path;
         FILE *fp;
 
         path = SDL_stack_alloc(char, PATH_MAX);
         if (path) {
 			memset(path, 0, PATH_MAX);
-			LOGI("daphne-libretro: In %s, allocating memory to hold path, success.", __func__);
 			SDL_snprintf(path, PATH_MAX, "%s/%s",
                          SDL_AndroidGetInternalStoragePath(), file);
-			LOGI("daphne-libretro: In %s, trying to fopen file.  Path: %s", __func__, path);
 			fp = fopen(path, mode);
             SDL_stack_free(path);
             if (fp) {
-				LOGI("daphne-libretro: In %s, trying to fopen file.  Suceess.  Going to SDL_RWFromFP.", __func__);
 				return SDL_RWFromFP(fp, 1);
             }
         }
     }
-
-	LOGI("daphne-libretro: In %s, no STDIO file open methods worked.", __func__);
 
 #elif defined(__WIN32__)
     rwops = SDL_AllocRW();
@@ -555,7 +522,6 @@ SDL_RWFromFile(const char *file, const char *mode)
 SDL_RWops *
 SDL_RWFromFP(FILE * fp, SDL_bool autoclose)
 {
-	LOGI("daphne-libretro: In %s, top of routine, file pointer: %d", __func__, (int) fp);
 	SDL_RWops *rwops = NULL;
 
     rwops = SDL_AllocRW();
@@ -569,7 +535,6 @@ SDL_RWFromFP(FILE * fp, SDL_bool autoclose)
         rwops->hidden.stdio.autoclose = autoclose;
         rwops->type = SDL_RWOPS_STDFILE;
     }
-	LOGI("daphne-libretro: In %s, bottom of routine, file size: %d", __func__, (int) rwops);
 	return rwops;
 }
 
