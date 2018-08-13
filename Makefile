@@ -135,8 +135,8 @@ ifeq ($(DEBUG), 1)
    CXXFLAGS += -O0 -g
    CFLAGS += -O0 -g
 else
-   CXXFLAGS += -O3
-   CFLAGS += -O3
+   CXXFLAGS += -O2 -DNDEBUG
+   CFLAGS += -O2 -DNDEBUG
 endif
 
 ifneq (,$(findstring qnx,$(platform)))
