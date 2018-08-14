@@ -49,6 +49,8 @@
 #include "../game/game.h"
 #include "../daphne.h"
 #include "../ldp-out/ldp-vldp.h" // added by JFA for -startsilent
+// grant- ADD - needed for home directory
+#include "../io/homedir.h"
 
 sample_s g_samples[MAX_NUM_SOUNDS] = { { 0 } };
 sample_s g_sample_saveme;	// the special saveme wav which is loaded independently of any game
@@ -233,12 +235,16 @@ int load_waves()
 	Uint32 i = 0;
 	int result = 1;
 	string filename = "";
+        
+	
+	
 	SDL_AudioSpec spec;
 
 	for (; (i < g_game->get_num_sounds()) && result; i++)
 	{
 		filename.clear();
-		filename = "sound/";
+                filename =  g_homedir.get_homedir().c_str();
+		filename += "/sound/";
 		filename += g_game->get_sound_name(i);
 
 		// initialize so that shutting down succeeds
