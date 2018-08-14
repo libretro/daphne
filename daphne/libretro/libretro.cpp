@@ -448,9 +448,14 @@ void retro_run(void)
 	SDL_SW_YUVTexture * sw_overlay	= NULL;
 
 	sw_overlay = get_vb_waiting(&vb_ndx);
-	if (sw_overlay && video_cb)
-      video_cb(sw_overlay->pixels, sw_overlay->w, sw_overlay->h, sw_overlay->w * DAPHNE_VIDEO_ByPP);
+	if (sw_overlay && video_cb) 
+	{
+
+      	video_cb(sw_overlay->pixels, sw_overlay->w, sw_overlay->h, sw_overlay->w * DAPHNE_VIDEO_ByPP);
 	set_vb_rendering_done(vb_ndx);
+	}
+
+	
 }
 
 
