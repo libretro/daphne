@@ -25,10 +25,6 @@
 #ifndef MIX_H
 #define MIX_H
 
-#ifdef MAC_OSX
-#include "mmxdefs.h"
-#endif
-
 #include <SDL.h>	// for datatype defs
 
 struct mix_s

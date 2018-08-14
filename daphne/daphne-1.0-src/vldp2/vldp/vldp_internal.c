@@ -88,18 +88,15 @@ static void vo_null_draw(uint8_t * const * buf, void *id)
 			s_extra_delay_ms = 0;
 
 			// if we are caught up enough that we don't need to skip any frames, then display the frame
-			// LOGI("daphne-libretro: In null_draw_frame, before skip calculation.  actual_elapsed_ms: %d  correct_elapsed_ms: %d  u2milDivFpks: %u  ce_ms + fpks: %d", actual_elapsed_ms, correct_elapsed_ms, g_out_info.u2milDivFpks, (correct_elapsed_ms + g_out_info.u2milDivFpks));
 			if (actual_elapsed_ms < (correct_elapsed_ms + g_out_info.u2milDivFpks))
 			{
 				// this is the potentially expensive callback that gets the hardware overlay
 				// ready to be displayed, so we do this before we sleep
 				// NOTE : if this callback fails, we don't want to display the frame due to double buffering considerations
-				// LOGI("daphne-libretro: In null_draw_frame, before prepare_frame call.  id: %d", (int)id);
 				if (g_in_info->prepare_frame(&g_yuv_buf[(int) id]))
 				{
 				
 					// stall if we are playing too quickly and if we don't have a command waiting for us
-					// LOGI("daphne-libretro: In null_draw_frame, before stall calculation.  uMsTimer - timer: %d  correct_elapsed_ms: %d  uMsTimer: %u  s_timer: %d", (g_in_info->uMsTimer - s_timer), correct_elapsed_ms, g_in_info->uMsTimer, s_timer);
 					while (((Sint32) (g_in_info->uMsTimer - s_timer) < correct_elapsed_ms)
 						&& (!bFrameNotShownDueToCmd))
 					{
@@ -146,9 +143,7 @@ static void vo_null_draw(uint8_t * const * buf, void *id)
 						// draw the frame
 						// we are using the pointer 'id' as an index, kind of risky, but convenient :)
 						// RJS HERE - Display frame callback from null driver.
-						// LOGI("daphne-libretro: In null_draw_frame, before display_frame call.  id: %d", (int) id);
 						g_in_info->display_frame(&g_yuv_buf[(int) id]);
-						// LOGI("daphne-libretro: In null_draw_frame, after display_frame call. s_uFramesShownSinceTimer: %d", s_uFramesShownSinceTimer);
 					} // end if we didn't get a new command to interrupt the frame being displayed
 				} // end if the frame was prepared properly
 				// else maybe we couldn't get a lock on the buffer fast enough, so we'll have to wait ...

@@ -26,10 +26,6 @@
 #ifndef BLEND_H
 #define BLEND_H
 
-#ifdef MAC_OSX
-#include "mmxdefs.h"
-#endif
-
 #include <SDL.h>	// for datatype defs
 
 // TO USE THE BLEND FUNCTIONS:
