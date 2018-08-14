@@ -354,19 +354,12 @@ extern DECLSPEC char *SDLCALL SDL_ulltoa(Uint64 value, char *str, int radix);
 
 extern DECLSPEC int SDLCALL SDL_atoi(const char *str);
 extern DECLSPEC double SDLCALL SDL_atof(const char *str);
-extern DECLSPEC long SDLCALL SDL_strtol(const char *str, char **endp, int base);
-extern DECLSPEC unsigned long SDLCALL SDL_strtoul(const char *str, char **endp, int base);
-extern DECLSPEC Sint64 SDLCALL SDL_strtoll(const char *str, char **endp, int base);
-extern DECLSPEC Uint64 SDLCALL SDL_strtoull(const char *str, char **endp, int base);
-extern DECLSPEC double SDLCALL SDL_strtod(const char *str, char **endp);
 
-extern DECLSPEC int SDLCALL SDL_strcmp(const char *str1, const char *str2);
 extern DECLSPEC int SDLCALL SDL_strncmp(const char *str1, const char *str2, size_t maxlen);
 extern DECLSPEC int SDLCALL SDL_strcasecmp(const char *str1, const char *str2);
 extern DECLSPEC int SDLCALL SDL_strncasecmp(const char *str1, const char *str2, size_t len);
 
 extern DECLSPEC int SDLCALL SDL_sscanf(const char *text, SDL_SCANF_FORMAT_STRING const char *fmt, ...) SDL_SCANF_VARARG_FUNC(2);
-extern DECLSPEC int SDLCALL SDL_vsscanf(const char *text, const char *fmt, va_list ap);
 extern DECLSPEC int SDLCALL SDL_snprintf(SDL_OUT_Z_CAP(maxlen) char *text, size_t maxlen, SDL_PRINTF_FORMAT_STRING const char *fmt, ... ) SDL_PRINTF_VARARG_FUNC(3);
 extern DECLSPEC int SDLCALL SDL_vsnprintf(SDL_OUT_Z_CAP(maxlen) char *text, size_t maxlen, const char *fmt, va_list ap);
 
@@ -436,7 +429,6 @@ extern DECLSPEC char *SDLCALL SDL_iconv_string(const char *tocode,
 #define SDL_strcasecmp strcasecmp
 #define SDL_strncasecmp strncasecmp
 #define SDL_sscanf sscanf
-#define SDL_vsscanf vsscanf
 #define SDL_snprintf snprintf
 #define SDL_vsnprintf vsnprintf
 #endif

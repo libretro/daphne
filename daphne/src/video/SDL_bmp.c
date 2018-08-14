@@ -231,7 +231,7 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
     }
 
     /* Check for read error */
-    if (SDL_strcmp(SDL_GetError(), "") != 0) {
+    if (strcmp(SDL_GetError(), "") != 0) {
         was_error = SDL_TRUE;
         goto done;
     }
@@ -693,7 +693,7 @@ SDL_SaveBMP_RW(SDL_Surface * saveme, SDL_RWops * dst, int freedst)
     if (freedst && dst) {
         SDL_RWclose(dst);
     }
-    return ((SDL_strcmp(SDL_GetError(), "") == 0) ? 0 : -1);
+    return ((strcmp(SDL_GetError(), "") == 0) ? 0 : -1);
 }
 
 /* vi: set ts=4 sw=4 expandtab: */

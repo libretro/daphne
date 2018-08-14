@@ -38,29 +38,14 @@
 
 /* Routines to convert from UTF8 to native Windows text */
 #if UNICODE
-#define WIN_StringToUTF8(S) SDL_iconv_string("UTF-8", "UTF-16LE", (char *)(S), (SDL_wcslen(S)+1)*sizeof(WCHAR))
 #define WIN_UTF8ToString(S) (WCHAR *)SDL_iconv_string("UTF-16LE", "UTF-8", (char *)(S), strlen(S)+1)
 #else
 /* !!! FIXME: UTF8ToString() can just be a SDL_strdup() here. */
-#define WIN_StringToUTF8(S) SDL_iconv_string("UTF-8", "ASCII", (char *)(S), (strlen(S)+1))
 #define WIN_UTF8ToString(S) SDL_iconv_string("ASCII", "UTF-8", (char *)(S), strlen(S)+1)
 #endif
 
-/* Sets an error message based on a given HRESULT */
-extern int WIN_SetErrorFromHRESULT(const char *prefix, HRESULT hr);
-
 /* Sets an error message based on GetLastError(). Always return -1. */
 extern int WIN_SetError(const char *prefix);
-
-/* Wrap up the oddities of CoInitialize() into a common function. */
-extern HRESULT WIN_CoInitialize(void);
-extern void WIN_CoUninitialize(void);
-
-/* Returns SDL_TRUE if we're running on Windows Vista and newer */
-extern BOOL WIN_IsWindowsVistaOrGreater();
-
-/* You need to SDL_free() the result of this call. */
-extern char *WIN_LookupAudioDeviceName(const WCHAR *name, const GUID *guid);
 
 #endif /* _INCLUDED_WINDOWS_H */
 

@@ -185,7 +185,7 @@ getlocale(char *buffer, size_t bufsize)
     if (!lang) {
         lang = SDL_getenv("LANG");
     }
-    if (!lang || !*lang || SDL_strcmp(lang, "C") == 0) {
+    if (!lang || !*lang || strcmp(lang, "C") == 0) {
         lang = "ASCII";
     }
 

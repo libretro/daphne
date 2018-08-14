@@ -414,7 +414,7 @@ SDL_CreateThread(int (SDLCALL * fn) (void *),
     /* If the SDL_HINT_THREAD_STACK_SIZE exists, use it */
     if (stackhint != NULL) {
         char *endp = NULL;
-        const Sint64 hintval = SDL_strtoll(stackhint, &endp, 10);
+        const Sint64 hintval = strtoll(stackhint, &endp, 10);
         if ((*stackhint != '\0') && (*endp == '\0')) {  /* a valid number? */
             if (hintval > 0) {  /* reject bogus values. */
                 stacksize = (size_t) hintval;

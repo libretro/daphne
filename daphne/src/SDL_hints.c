@@ -64,11 +64,11 @@ SDL_SetHintWithPriority(const char *name, const char *value,
     }
 
     for (hint = SDL_hints; hint; hint = hint->next) {
-        if (SDL_strcmp(name, hint->name) == 0) {
+        if (strcmp(name, hint->name) == 0) {
             if (priority < hint->priority) {
                 return SDL_FALSE;
             }
-            if (!hint->value || !value || SDL_strcmp(hint->value, value) != 0) {
+            if (!hint->value || !value || strcmp(hint->value, value) != 0) {
                 for (entry = hint->callbacks; entry; ) {
                     /* Save the next entry in case this one is deleted */
                     SDL_HintWatch *next = entry->next;
@@ -111,7 +111,7 @@ SDL_GetHint(const char *name)
 
     env = SDL_getenv(name);
     for (hint = SDL_hints; hint; hint = hint->next) {
-        if (SDL_strcmp(name, hint->name) == 0) {
+        if (strcmp(name, hint->name) == 0) {
             if (!env || hint->priority == SDL_HINT_OVERRIDE) {
                 return hint->value;
             }
@@ -161,7 +161,7 @@ SDL_AddHintCallback(const char *name, SDL_HintCallback callback, void *userdata)
     entry->userdata = userdata;
 
     for (hint = SDL_hints; hint; hint = hint->next) {
-        if (SDL_strcmp(name, hint->name) == 0) {
+        if (strcmp(name, hint->name) == 0) {
             break;
         }
     }
@@ -198,7 +198,7 @@ SDL_DelHintCallback(const char *name, SDL_HintCallback callback, void *userdata)
     SDL_HintWatch *entry, *prev;
 
     for (hint = SDL_hints; hint; hint = hint->next) {
-        if (SDL_strcmp(name, hint->name) == 0) {
+        if (strcmp(name, hint->name) == 0) {
             prev = NULL;
             for (entry = hint->callbacks; entry; entry = entry->next) {
                 if (callback == entry->callback && userdata == entry->userdata) {
