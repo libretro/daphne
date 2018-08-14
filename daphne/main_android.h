@@ -27,8 +27,6 @@
 **************************************************************************************************/
 #define UNUSED(x) (void)(x)
 
-#define LOGI(...) 
-#define LOGE(...) 
 #define RETRO_RUN_FRAMES_PAUSED_THRESHOLD	100
 
 // Not 0 is for adding 0 where there are spaces, thus always printing.

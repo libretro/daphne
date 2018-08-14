@@ -308,9 +308,6 @@ void ldp_vldp::oggize_path(string &oggpath, string m2vpath)
 // initializes VLDP audio, returns 1 on success or 0 on failure
 bool ldp_vldp::audio_init()
 {
-	// 2017.02.02 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In ldp_vldp::audio_init, top of routine.");
-
 	bool result = false;
 
 #ifdef AUDIO_DEBUG
@@ -319,20 +316,12 @@ bool ldp_vldp::audio_init()
 	g_uCallbackDbgTimer = GET_TICKS();
 #endif
 	
-	// 2017.02.02 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In ldp_vldp::audio_init, before SDL_CreateMutex.");
-
 	// create a mutex to prevent threads from interfering
 	g_ogg_mutex = SDL_CreateMutex();
 	if (g_ogg_mutex)
 	{
 		result = true;
 	}
-	// 2017.02.02 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In ldp_vldp::audio_init, after SDL_CreateMutex.  Result: %d", result);
-
-	// 2017.02.02 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In ldp_vldp::audio_init, bottom of routine.");
 
 	return result;
 }
@@ -533,7 +522,6 @@ void ldp_vldp_audio_callback(Uint8 *stream, int len, int unused)
 	OGG_LOCK;	// make sure nothing changes with any ogg stuff while we decode
 
 	// if audio is ready to be read and if it is playing
-	// LOGI("In ldp_vldp_audio_callback, before audio ready if.  g_audio_ready: %d  g_audio_playing: %d", g_audio_ready, g_audio_playing);
 	if (g_audio_ready && g_audio_playing)
 	{
 		bool audio_caught_up = false;

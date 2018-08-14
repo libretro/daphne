@@ -2441,7 +2441,6 @@ void report_mpeg_dimensions_callback(int width, int height)
 		// SDL2 doesn't let you do surfaces that are not RGB.  You can do textures which means you need a SDL_WINDOW and SDL_RENDERER which are to heavy weight.
 		// If for some reason we need to go back to window/renderer then the "APK" version above is a good starting point.
 		// SURFACE g_hw_overlay = SDL_CreateRGBSurfaceWithFormat(0, width, height - (g_vertical_stretch * 4), DAPHNE_VIDEO_ByPP, SDL_PIXELFORMAT_YUY2);
-		// SURFACE LOGI("daphne-libretro: In report_mpeg_dimensions_callback, SDL_CreateRGBSurfaceWithFormat, with  W: %d  H: %d  BPP: %d  FORMAT: %d", width, height, DAPHNE_VIDEO_ByPP, SDL_PIXELFORMAT_YUY2);
 		// v0.01 g_hw_overlay = SDL_RJS_SW_CreateYUVBuffer(SDL_PIXELFORMAT_YUY2, SDL_PIXELFORMAT_RGB565, DAPHNE_VIDEO_W, DAPHNE_VIDEO_H);
 		if (! initialize_vb(SDL_PIXELFORMAT_YUY2, SDL_PIXELFORMAT_RGB565, width, height - (g_vertical_stretch * 4)))
 		{

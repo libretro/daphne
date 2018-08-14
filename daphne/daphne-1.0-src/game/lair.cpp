@@ -1052,8 +1052,6 @@ Uint8 lair::read_C010()
 
 void lair::input_enable(Uint8 move)
 {
-	LOGI("In LAIR, in input_enable, top of routine.  move: %d", move);
-
 	switch(move)
 	{
 	case SWITCH_UP:
@@ -1113,15 +1111,11 @@ void lair::input_enable(Uint8 move)
 		//printline("Error, bug in Dragon's Lair's input enable");
 		break;
 	}
-
-	LOGI("In LAIR, in input_enable, bottom of routine.");
 }
 
 
 void lair::input_disable(Uint8 move)
 {
-	LOGI("In LAIR, in input_disable, top of routine.  move: %d", move);
-
 	switch(move)
 	{
 	case SWITCH_UP:
@@ -1166,8 +1160,6 @@ void lair::input_disable(Uint8 move)
 		//printline("Error, bug in Dragon's Lair's move disable");
 		break;
 	}
-
-	LOGI("In LAIR, in input_disable, bottom of routine.");
 }
 
 void lair::OnVblank()

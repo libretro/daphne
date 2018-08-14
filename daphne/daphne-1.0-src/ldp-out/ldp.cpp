@@ -110,8 +110,6 @@ ldp::~ldp()
 // or false if the LDP could not be initialized
 bool ldp::pre_init()
 {
-	// 2017.02.01 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In ldp::pre_init, top of routine.");
 	bool result = true;	// assume everything works until we find out otherwise
 	bool temp = true;	// needed to make && work the way we want below
 
@@ -144,8 +142,6 @@ bool ldp::pre_init()
 	m_uFramesToStallPerFrame = 0;
 	m_uStallFrames = 0;
 
-	// 2017.02.01 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In ldp::pre_init, bottom of routine.");
 	return(result);
 
 }
@@ -503,7 +499,6 @@ bool ldp::skip_backward(Uint16 frames_to_skip, Uint16 target_frame)
 // prepares to play the disc
 void ldp::pre_play()
 {
-	// LOGI("daphne-libretro: In pre_play, top of routine.  m_status: %d", m_status);
 	//	Uint32 cpu_hz;	// used to calculate elapsed cycles
 
 	// safety check, if they try to play without checking the search result ...
@@ -511,7 +506,6 @@ void ldp::pre_play()
 	if (m_status == LDP_SEARCHING)
 	{
 		printline("LDP : tried to play without checking to see if we were still seeking! that's bad!");
-		// LOGI("daphne-libretro: In pre_play, tried to play without checking to see if we were still seeking!  That's bad!  Exiting routine.");
 
 		// if this ever happens, it is a bug in Daphne, so log it
 		m_bug_log.push_back("LDP.CPP, pre_play() : tried to play without checking to see if we're still seeking!");
@@ -523,7 +517,6 @@ void ldp::pre_play()
 	// not already playing
 	if (m_status != LDP_PLAYING)
 	{
-		// LOGI("daphne-libretro: In pre_play, in status not playing if.");
 		m_uElapsedMsSincePlay = 0;	// by definition, this must be reset since we are playing
 		m_uBlockedMsSincePlay = 0;	// " " "
 		m_iSkipOffsetSincePlay = 0;	// by definition, this must be reset since we are playing
@@ -533,42 +526,34 @@ void ldp::pre_play()
 		// VLDP needs its timer reset with the rest of these timers before its play command is called.
 		// Otherwise, it will think it's way behind and will try to catch up a bunch of frames.
 		think();
-		// LOGI("daphne-libretro: In pre_play, in status not playing if, after think.");
 
 		// if the disc may need to take a long time to spin up, then pause the cpu timers while the disc spins up
 		if (m_status == LDP_STOPPED)
 		{
-			// LOGI("daphne-libretro: In pre_play, in status not playing if, before pausing cpu, setting play, and unpausing.");
 			cpu_pause();
 			m_play_time = play();
 			cpu_unpause();
 		}
 		else
 		{
-			// LOGI("daphne-libretro: In pre_play, in status not playing if, before setting play.");
 			m_play_time = play();
 		}
 
-		// LOGI("daphne-libretro: In pre_play, after status not playing if.");
 		m_bWaitingForVblankToPlay = true;	// don't start counting frames until the next vsync
 		m_status = LDP_PLAYING;
 	}
 	else
 	{
-		// LOGI("daphne-libretro: In pre_play, disc is already playing, new play command ignored.");
 		printline("LDP : disc is already playing, play command ignored");
 	}
 
 	printline("Play");	// moved to the end of the function so as to not cause lag before play command could be issued
-	// LOGI("daphne-libretro: In pre_play, botom of routine.");
 }
 
 // starts playing the laserdisc
 // returns the timer value that indicates when the playback actually started (used to calculate current frame)
 unsigned int ldp::play()
 {
-	// In Android, this is SDL_GetTicks.
-	LOGI("In play(), top of routine.");
 	return refresh_ms_time();
 }
 

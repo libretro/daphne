@@ -326,22 +326,13 @@ SDL_CreateThreadWithStackSize(int (SDLCALL * fn) (void *),
     thread = (SDL_Thread *)malloc(sizeof(*thread));
     if (thread == NULL) {
         SDL_OutOfMemory();
-		// 2017.02.07 - RJS ADD - Logging.
-		LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, in malloc returning NULL, exiting.");
         return (NULL);
     }
-	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, after malloc.  thread: %d", (int) thread);
 
 	SDL_zerop(thread);
     thread->status = -1;
-	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, after SDL_zerop.");
 
     SDL_AtomicSet(&thread->state, SDL_THREAD_STATE_ALIVE);
-
-	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, after SDL_AtomicSet.  name: %s", name);
 
     /* Set up the arguments for the thread */
     if (name != NULL) {
@@ -352,9 +343,6 @@ SDL_CreateThreadWithStackSize(int (SDLCALL * fn) (void *),
             return (NULL);
         }
     }
-
-	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, before malloc.");
 
     /* Set up the arguments for the thread */
     args = (thread_args *)malloc(sizeof(*args));
@@ -370,14 +358,8 @@ SDL_CreateThreadWithStackSize(int (SDLCALL * fn) (void *),
     args->data = data;
     args->info = thread;
 	
-	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, before SDL_CreateSemaphore.");
-
 	args->wait = SDL_CreateSemaphore(0);
 	
-	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, after SDL_CreateSemaphore. arg wait: %d", (int) args->wait);
-
 	if (args->wait == NULL) {
         if (thread->name) {
             free(thread->name);
@@ -393,19 +375,11 @@ SDL_CreateThreadWithStackSize(int (SDLCALL * fn) (void *),
 #ifdef SDL_PASSED_BEGINTHREAD_ENDTHREAD
     ret = SDL_SYS_CreateThread(thread, args, pfnBeginThread, pfnEndThread);
 #else
-	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, before SDL_SYS_CreateThread.");
     ret = SDL_SYS_CreateThread(thread, args);
-	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, after SDL_SYS_CreateThread.  ret: %d", ret);
 #endif
     if (ret >= 0) {
         /* Wait for the thread function to use arguments */
-		// 2017.02.07 - RJS ADD - Logging.
-		LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, after SDL_SYS_CreateThread, in good ret, before SDL_SemWait.  ret: %d  args wait: %d", ret, (int) args->wait);
         SDL_SemWait(args->wait);
-		// 2017.02.07 - RJS ADD - Logging.
-		LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, after SDL_SYS_CreateThread, in good ret, after SDL_SemWait.  ret: %d  args wait: %d", ret, (int) args->wait);
     } else {
         /* Oops, failed.  Gotta free everything */
         if (thread->name) {
@@ -416,9 +390,6 @@ SDL_CreateThreadWithStackSize(int (SDLCALL * fn) (void *),
     }
     SDL_DestroySemaphore(args->wait);
     free(args);
-
-	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_CreateThreadWithStackSize, bottom of routine, success.");
 
     /* Everything is running now */
     return (thread);
@@ -436,9 +407,6 @@ SDL_CreateThread(int (SDLCALL * fn) (void *),
                  const char *name, void *data)
 #endif
 {
-	// 2017.02.07 - RJS ADD - Logging.
-	LOGI("daphne-libretro: In SDL_CreateThread, top of routine.");
-
 	/* !!! FIXME: in 2.1, just make stackhint part of the usual API. */
     const char *stackhint = SDL_GetHint(SDL_HINT_THREAD_STACK_SIZE);
     size_t stacksize = 0;

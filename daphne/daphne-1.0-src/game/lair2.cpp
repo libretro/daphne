@@ -1012,7 +1012,6 @@ bool lair2::set_bank(unsigned char which_bank, unsigned char value)
 
 void lair2::input_enable(Uint8 move)
 {
-	LOGI("In input_enable, move: %d", move);
 	switch(move)
 	{
 	case SWITCH_UP:

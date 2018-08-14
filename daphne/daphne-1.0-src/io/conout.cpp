@@ -174,7 +174,6 @@ void addlog(const char *s, bool fCreateFile)
 
 		if (fCreateFile)	io = mpo_open(logname.c_str(), MPO_OPEN_CREATE);
 		else				io = mpo_open(logname.c_str(), MPO_OPEN_APPEND);
-		LOGI("Logfile name: %s", logname.c_str());
 
 		if (io)
 		{

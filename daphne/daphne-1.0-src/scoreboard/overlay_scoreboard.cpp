@@ -80,8 +80,6 @@ void OverlayScoreboard::update_player_score (SDL_Surface *pSurface, int player, 
 	// by different MPEG widths (640x480, 720x480 known so far).
 	x += (player == 0 ? 65 : pSurface->w - 7 * OVERLAY_LED_WIDTH);
 
-	// LOGI("In OverlayScoreboard::update_player_score.  P: %d  Digits: %d%d%d%d%d%d", player, values[start_digit + 0], values[start_digit + 1], values[start_digit + 2], values[start_digit + 3], values[start_digit + 4], values[start_digit + 5]);
-
 	draw_overlay_leds(values, num_digits, x, 0, pSurface);
 }
 

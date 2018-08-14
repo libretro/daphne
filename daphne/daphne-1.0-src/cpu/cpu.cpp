@@ -269,14 +269,12 @@ void cpu_recalc()
 void cpu_init()
 {
 	struct cpudef *cur = g_head;
-	LOGI("In cpu_init, top of routine, cpu g_head: %d", (int)cur);
 
 	while (cur)
 	{
 		g_active_cpu = cur->id;
-		LOGI("In cpu_init, initializing cpu id: %d", cur->id);
-	#ifdef CPU_DIAG
-		cd_old_time[g_active_cpu] = refresh_ms_time();
+#ifdef CPU_DIAG
+      cd_old_time[g_active_cpu] = refresh_ms_time();
 #endif
 
 		cpu_recalc();
@@ -329,7 +327,6 @@ void cpu_init()
 	reset_ldv1000();	// calculate strobe stuff, most games won't need this but it doesn't hurt
 	reset_ldp1000();	// calculate ACK latency stuff, most games won't need this but it doesn't hurt
 	reset_vp931();
-	LOGI("In cpu_init, bottom of routine.");
 }
 
 // shutdown all cpu's
@@ -402,13 +399,8 @@ void cpu_execute_loop()
 		// 2017.11.08 - RJS - Check for a paused retro_run and emit pause if so.
 		if (retro_run_frames == retro_run_frames_previous)	retro_run_frames_delta++;
 		else												retro_run_frames_delta = 0;
-		// LOGI("rrf: %d  rrf_prev: %d  rrf_delta: %d", retro_run_frames, retro_run_frames_previous, retro_run_frames_delta);
-
-		if (retro_run_frames_delta >= RETRO_RUN_FRAMES_PAUSED_THRESHOLD)
-		{
-			LOGI("rrf: %d  rrf_prev: %d  rrf_delta: %d  -  Should be PAUSEing.", retro_run_frames, retro_run_frames_previous, retro_run_frames_delta);
-			input_pause(true);
-		}
+      if (retro_run_frames_delta >= RETRO_RUN_FRAMES_PAUSED_THRESHOLD)
+         input_pause(true);
 
 		retro_run_frames_previous = retro_run_frames;
 
@@ -714,7 +706,6 @@ void cpu_execute_loop()
 			}
 		} while (g_cpu_paused && !get_quitflag());	// the only time this should loop is if the user pauses the game
 	} // end while quitflag is not true
-	LOGI("In cpu_execute_loop: cpuThread should be EXITing!");
 }
 
 

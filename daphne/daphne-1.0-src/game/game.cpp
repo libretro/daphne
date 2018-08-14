@@ -155,12 +155,10 @@ bool game::pre_init()
 {
 	// compute integer values that we will actually use in practice
 	// (floating point is too expensive on GP2X so we're eliminating it for recurring computations)
-	LOGI("In game::pre_init, before frame calc.  disc_fps: %f  FPKS: %u", m_disc_fps, m_uDiscFPKS);
 	if (m_disc_fps != 0.0)
 	{
 		m_uDiscFPKS = (unsigned int) ((m_disc_fps * 1000.0) + 0.5);	// frames per kilosecond (same precision, but an int instead of a float)
 	}
-	LOGI("In game::pre_init, after frame calc.  disc_fps: %f  FPKS: %u", m_disc_fps, m_uDiscFPKS);
 
 	// if we have nvram that we need to load
 	if (m_nvram_size > 0)
@@ -186,9 +184,7 @@ bool game::pre_init()
 bool game::init()
 {
 	bool result = true;
-	LOGI("In game::init, before cpu_init.");
 	cpu_init();
-	LOGI("In game::init, after cpu_init.");
 	return result;
 }
 
@@ -199,8 +195,6 @@ void game::start()
 	// cpu_execute();
 	SDL_Thread * cpuThread = NULL;
 	cpuThread = SDL_CreateThread(cpu_execute, "cpuThread", NULL);
-	if (cpuThread == NULL) LOGI("CPU THREAD bringup FAILED!");
-	else LOGI("CPU THREAD bringup SUCCESS.");
 }
 
 // call this instead of shutdown directly
@@ -375,8 +369,6 @@ void game::OnLDV1000LineChange(bool bIsStatus, bool bIsEnabled)
 // It is good to use generic video init and shutdown functions because then we minimize the possibility of errors such as forgetting to call palette_shutdown
 bool game::video_init()
 {
-	LOGI("daphne-libretro: In game::video_init, top of routine.");
-
 	bool result = false;
 	int index = 0;
 	int w;
@@ -396,7 +388,6 @@ bool game::video_init()
     // if this particular game uses video overlay (most do)
 	if (m_game_uses_video_overlay)
 	{
-		LOGI("daphne-libretro: In game::video_init, overlay vars check.  m_video_overlay_width: %d  m_video_overlay_height: %d  m_palette_color_count: %d", m_video_overlay_width, m_video_overlay_height, m_palette_color_count);
 		// safety check, make sure variables are initialized like we expect them to be ...
 		if ((m_video_overlay_width != 0) && (m_video_overlay_height != 0) && (m_palette_color_count != 0))
 		{
@@ -479,7 +470,6 @@ bool game::video_init()
 		result = true;
 	}
 
-	LOGI("daphne-libretro: In game::video_init, bottom of routine. Returning: %d", result);
 	return(result);
 }
 
@@ -1059,9 +1049,7 @@ SDL_Surface *game::get_active_video_overlay()
 // gets last surface to be completely drawn (so it can be displayed without worrying about tearing or flickering)
 SDL_Surface *game::get_finished_video_overlay()
 {
-	// LOGI("daphne-libretro: In get_finished_video_overlay, top of routine. m_finished_video_overlay: %d", m_finished_video_overlay);
 	SDL_Surface * overlay = m_video_overlay[m_finished_video_overlay];
-	// LOGI("daphne-libretro: In get_finished_video_overlay, bottom of routine. Returning overlay: %d", (int) overlay);
 	return overlay;
 }
 
@@ -1135,7 +1123,6 @@ void game::toggle_game_pause()
 	// if the game is already paused ...
 	if (m_game_paused)
 	{
-		LOGI("*** UNPAUSED");
 		cpu_unpause();
 		g_ldp->pre_play();
 		m_game_paused = false;
@@ -1147,7 +1134,6 @@ void game::toggle_game_pause()
 //		char frame[6];
 //		Uint16 cur_frame = g_ldp->get_current_frame();
 
-		LOGI("*** PAUSED");
 		cpu_pause();
 		g_ldp->pre_pause();
 
