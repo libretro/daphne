@@ -45,7 +45,7 @@ const char CRLF[3] = { 13, 10, 0 };	// carriage return / linefeed combo, for the
 // notifies the user of an error that has occurred
 void printerror(const char *s)
 {
-//	SDL_Rect region = { 0, 180, get_video_width(), (Uint16)(get_video_height() >> 1) };
+/*	SDL_Rect region = { 0, 180, get_video_width(), (Uint16)(get_video_height() >> 1) };
 
 	addlog(s);
 	addlog(CRLF);
@@ -98,14 +98,15 @@ void printerror(const char *s)
 #else
 		printf("%s\n",s);
 #endif
-	}	
+ 	}	*/
+printf("%s\n",s);
 }
 
 // notifies user that the game does not work correctly and gives a reason
 // this should be called after video has successfully been initialized
 void printnowookin(const char *s)
 {
-	if (true)
+/*	if (true)
 	{
 		SDL_Surface *srfScreen = get_screen_blitter();
 
@@ -120,11 +121,16 @@ void printnowookin(const char *s)
 		// repaint the disrupted overlay (ie Dragon's Lair Scoreboard when using a real LDP)
 		display_repaint();
 	}
+*/
+printf("%s\n",s);
 }
 
 // prints a notice to the screen
 void printnotice(const char *s)
 {
+printf("%s\n",s);
+
+/* no screen to draw on 
 	if (true)
 	{
 		char ch = 0;
@@ -142,4 +148,5 @@ void printnotice(const char *s)
 			set_quitflag();
 #endif
 	}
+*/
 }

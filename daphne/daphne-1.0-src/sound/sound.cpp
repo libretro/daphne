@@ -281,9 +281,15 @@ int load_waves()
 	}
 	
 	// load "saveme" sound in
-	if (!SDL_LoadWAV("sound/saveme.wav", &spec, &g_sample_saveme.pu8Buf, &g_sample_saveme.uLength))
+        filename.clear();
+        filename =  g_homedir.get_homedir().c_str();
+        filename += "/sound/saveme.wav";
+          
+
+	if (!SDL_LoadWAV(filename.c_str(), &spec, &g_sample_saveme.pu8Buf, &g_sample_saveme.uLength))
 	{
-		printline("Loading 'saveme.wav' failed...");
+   	        outstr("ERROR: Could not open sample file ");
+		printline(filename.c_str());
 		result = 0;
 	}
 
