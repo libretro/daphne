@@ -57,7 +57,7 @@
 #include <be/kernel/OS.h>
 #endif
 
-#include "SDL_assert.h"
+#include "assert.h"
 
 static void *
 RunThread(void *data)
@@ -123,7 +123,7 @@ SDL_SYS_SetupThread(const char *name)
 {
     if (name != NULL) {
         #if defined(__APPLE__) || defined(__LINUX__)
-        SDL_assert(checked_setname);
+        assert(checked_setname);
         if (ppthread_setname_np != NULL) {
             #if defined(__APPLE__)
             ppthread_setname_np(name);

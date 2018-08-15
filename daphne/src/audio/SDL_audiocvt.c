@@ -25,7 +25,7 @@
 #include "SDL_audio.h"
 #include "SDL_audio_c.h"
 
-#include "SDL_assert.h"
+#include "assert.h"
 
 /* #define DEBUG_CONVERT */
 
@@ -917,9 +917,9 @@ SDL_FindFrequencyMultiple(const int src_rate, const int dst_rate)
     int lo, hi;
     int div;
 
-    SDL_assert(src_rate != 0);
-    SDL_assert(dst_rate != 0);
-    SDL_assert(src_rate != dst_rate);
+    assert(src_rate != 0);
+    assert(dst_rate != 0);
+    assert(src_rate != dst_rate);
 
     if (src_rate < dst_rate) {
         lo = src_rate;

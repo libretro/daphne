@@ -1,3 +1,4 @@
+DEBUG=1
 ifeq ($(platform),)
 	platform = unix
 	ifeq ($(shell uname -a),)
@@ -132,8 +133,9 @@ else
 endif
 
 ifeq ($(DEBUG), 1)
-   CXXFLAGS += -O0 
-   CFLAGS += -O0 
+   CXXFLAGS += -O0 -g
+   CFLAGS += -O0 -g
+   LDFLAGS += -g
 else
    CXXFLAGS += -O2 -DNDEBUG
    CFLAGS += -O2 -DNDEBUG

@@ -183,7 +183,7 @@ void SDL_Delay(Uint32 ms)
 #include <errno.h>
 
 #include "SDL_timer.h"
-#include "SDL_assert.h"
+#include "assert.h"
 
 #include "../../../main_android.h"
 
@@ -271,7 +271,7 @@ SDL_GetTicks(void)
        uint64_t now = mach_absolute_time();
        ticks = (Uint32)((((now - start_mach) * mach_base_info.numer) / mach_base_info.denom) / 1000000);
 #else
-       SDL_assert(SDL_FALSE);
+       assert(SDL_FALSE);
        ticks = 0;
 #endif
     } else {

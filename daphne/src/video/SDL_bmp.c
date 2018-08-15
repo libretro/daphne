@@ -34,7 +34,7 @@
 
 #include "SDL_hints.h"
 #include "SDL_video.h"
-#include "SDL_assert.h"
+#include "assert.h"
 #include "SDL_endian.h"
 #include "SDL_pixels_c.h"
 
@@ -252,8 +252,8 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
     switch (biCompression) {
     case BI_RGB:
         /* If there are no masks, use the defaults */
-        SDL_assert(!haveRGBMasks);
-        SDL_assert(!haveAlphaMask);
+        assert(!haveRGBMasks);
+        assert(!haveAlphaMask);
         /* Default values for the BMP format */
         switch (biBitCount) {
         case 15:
@@ -307,7 +307,7 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
     /* Load the palette, if any */
     palette = (surface->format)->palette;
     if (palette) {
-        SDL_assert(biBitCount <= 8);
+        assert(biBitCount <= 8);
         if (biClrUsed == 0) {
             biClrUsed = 1 << biBitCount;
         }
