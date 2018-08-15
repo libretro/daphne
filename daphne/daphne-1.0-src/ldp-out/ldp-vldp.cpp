@@ -121,8 +121,7 @@ VIDEO_BUFFER g_hw_overlay[VIDEO_BUFFER_AMOUNT] = { { VB_STATE_USEABLE, NULL }, {
 
 #define LOGVBSYS(STRIN)
 
-// ********************************************************************************************************************************
-// ********************************************************************************************************************************
+
 bool initialize_vb(Uint32 format, Uint32 target_format, int w, int h)
 {
 	LOGVBSYS("INITIALIZATION, top.");
@@ -144,8 +143,6 @@ bool initialize_vb(Uint32 format, Uint32 target_format, int w, int h)
 	return true;
 }
 
-// ********************************************************************************************************************************
-// ********************************************************************************************************************************
 void teardown_vb()
 {
 	LOGVBSYS("TEARDOWN, top.");
@@ -166,8 +163,7 @@ void teardown_vb()
 	LOGVBSYS("TEARDOWN, bottom.");
 }
 
-// ********************************************************************************************************************************
-// ********************************************************************************************************************************
+
 SDL_SW_YUVTexture * get_vb_next_usable(int * vb_ndx)
 {
 	LOGVBSYS("getUSABLE, top, before RECLAIM.");
@@ -233,8 +229,7 @@ SDL_SW_YUVTexture * get_vb_next_usable(int * vb_ndx)
 	return(g_hw_overlay[vb_next].video_buffer);
 }
 
-// ********************************************************************************************************************************
-// ********************************************************************************************************************************
+
 SDL_SW_YUVTexture * get_vb_filling(int * vb_ndx)
 {
 	LOGVBSYS("getFILLING, top.");
@@ -260,8 +255,7 @@ SDL_SW_YUVTexture * get_vb_filling(int * vb_ndx)
 	return(g_hw_overlay[g_vb_filling_queue].video_buffer);
 }
 
-// ********************************************************************************************************************************
-// ********************************************************************************************************************************
+
 void set_vb_filling_done(int vb_ndx)
 {
 	LOGVBSYS("setFILLING_DONE, top.");
@@ -314,8 +308,7 @@ void set_vb_filling_done(int vb_ndx)
 	LOGVBSYS("setFILLING_DONE, bottom.");
 }
 
-// ********************************************************************************************************************************
-// ********************************************************************************************************************************
+
 SDL_SW_YUVTexture * get_vb_waiting(int * vb_ndx)
 {
 	LOGVBSYS("getWAITING, top.");
@@ -354,8 +347,6 @@ SDL_SW_YUVTexture * get_vb_waiting(int * vb_ndx)
 	return(vb_rendering);
 }
 
-// ********************************************************************************************************************************
-// ********************************************************************************************************************************
 void set_vb_rendering_done(int vb_ndx)
 {
 	LOGVBSYS("setRENDERING_DONE, top.");
@@ -1888,8 +1879,7 @@ bool ldp_vldp::parse_framefile(const char *pszInBuf, const char *pszFramefileFul
 
 
 // RJS HERE - prepare frame
-//******************************************************************************
-//******************************************************************************
+
 int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 {
 	int result = VLDP_FALSE;
@@ -2098,8 +2088,7 @@ int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 	return result;
 }
 
-//******************************************************************************
-//******************************************************************************
+
 int prepare_frame_callback_without_overlay(struct yuv_buf *buf)
 {
 	int result = VLDP_FALSE;
@@ -2128,8 +2117,6 @@ int prepare_frame_callback_without_overlay(struct yuv_buf *buf)
 	return result;
 }
 
-//*********************************************************************************************************************************
-//*********************************************************************************************************************************
 // displays the frame as fast as possible
 // RJS NOTE - *** video frames ***
 extern "C" {
@@ -2176,8 +2163,6 @@ void display_frame_callback(struct yuv_buf *buf)
 	set_vb_filling_done(vb_ndx);
 }
 
-//*********************************************************************************************************************************
-//*********************************************************************************************************************************
 // This function converts the YV12-formatted 'src' to a YUY2-formatted overlay (which Xbox-Daphne may be using)
 // copies the contents of src into dst
 // assumes destination overlay is locked and *IMPORTANT* assumes src and dst are the same resolution
