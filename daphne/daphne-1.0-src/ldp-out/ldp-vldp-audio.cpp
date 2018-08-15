@@ -24,6 +24,7 @@
 // by Matt Ownby
 
 // handles the audio portion of VLDP (using Ogg Vorbis)
+#include <stdint.h>
 
 #ifdef WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -116,10 +117,6 @@ size_t mmread (void *ptr, size_t size, size_t nmemb, void *datasource)
 	
 	return (bytes_to_read);
 }
-
-#ifdef WIN32
-#define int64_t __int64
-#endif
 
 int mmseek (void *datasource, int64_t offset, int whence)
 {
