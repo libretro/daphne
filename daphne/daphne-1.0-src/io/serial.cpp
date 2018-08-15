@@ -78,7 +78,7 @@ bool serial_init(int port, int baudrate)
 	int i = 0;
 	char portname[5] = { 0 };
 
-	ZeroMemory(&ov,sizeof(ov));
+	memset(&ov,0,sizeof(ov));
 
 	char s[81] = { 0 };
 	sprintf(s, "Opening serial port %d at %d baud", port, baudrate);
@@ -359,7 +359,7 @@ bool serial_init(int port, int baudrate)
 		// preserve current settings
 		if (tcgetattr(fd, &oldterm) != -1)
 		{
-			bzero(&newterm, sizeof(newterm)); // clear structure
+			memset(&newterm, 0, sizeof(newterm)); // clear structure
 			newterm.c_cflag = baud_symbol | CRTSCTS | CS8 | CLOCAL | CREAD;
 			newterm.c_iflag = IGNPAR | ICRNL;
 			newterm.c_oflag = 0;

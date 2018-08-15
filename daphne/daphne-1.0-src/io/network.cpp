@@ -314,7 +314,7 @@ char *get_video_description()
     // Try calling GetVersionEx using the OSVERSIONINFOEX structure.
     // If that fails, try using the OSVERSIONINFO structure.
 
-    ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
+    memset(&osvi,0, sizeof(OSVERSIONINFOEX));
     osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
 
     if( !(bOsVersionInfoEx = GetVersionEx ((OSVERSIONINFO *) &osvi)) )
@@ -343,7 +343,7 @@ char *get_video_description()
 			pEnumDisplayDevices = (infoproc) GetProcAddress(hInstUser32, "EnumDisplayDevicesA");
 			if (pEnumDisplayDevices)
 			{
-				ZeroMemory(&DispDev, sizeof(DISPLAY_DEVICE));
+				memset(&DispDev, 0, sizeof(DISPLAY_DEVICE));
 				DispDev.cb = sizeof(DISPLAY_DEVICE);
 				if ((*pEnumDisplayDevices)(NULL, 0, &DispDev, 0))
 				{

@@ -233,11 +233,7 @@ void ldp_vldp::disable_audio2()
 // mute audio data
 void *audiocopy_mute(void *dest, const void *src, size_t bytes_to_copy)
 {
-#ifdef WIN32
-	ZeroMemory(dest, bytes_to_copy);
-#else
-	bzero(dest, bytes_to_copy);
-#endif
+   memset(dest, 0,bytes_to_copy);
 	return NULL;
 }
 
@@ -668,11 +664,7 @@ void ldp_vldp_audio_callback(Uint8 *stream, int len, int unused)
 	else
 	{
 		// fill audio stream with silence since it will be expecting to get something back from us
-#ifdef WIN32
-		ZeroMemory(stream, len);
-#else
-		bzero(stream, len);
-#endif
+      memset(stream, 0,len);
 
 		g_leftover_samples = 0;
 	}

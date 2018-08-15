@@ -72,7 +72,7 @@ mpo_io *mpo_open(const char *filename, int flags)
 	io = (mpo_io *) malloc(sizeof(mpo_io));
 
 #ifdef WIN32
-	ZeroMemory(io, sizeof(mpo_io));
+   memset(io, 0, sizeof(mpo_io));
 	io->handle = INVALID_HANDLE_VALUE;
 
 	if (flags == MPO_OPEN_READONLY)
