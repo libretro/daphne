@@ -1,4 +1,4 @@
-DEBUG=1
+#DEBUG=1
 ifeq ($(platform),)
 	platform = unix
 	ifeq ($(shell uname -a),)
