@@ -45,108 +45,22 @@ const char CRLF[3] = { 13, 10, 0 };	// carriage return / linefeed combo, for the
 // notifies the user of an error that has occurred
 void printerror(const char *s)
 {
-/*	SDL_Rect region = { 0, 180, get_video_width(), (Uint16)(get_video_height() >> 1) };
-
 	addlog(s);
 	addlog(CRLF);
-
-	// if video has been initialized
-	// FIXME: if bmp hasn't been loaded this might blow up
-	if (true)
-	{
-		SDL_Surface *srfScreen = get_screen_blitter();
-		unsigned int uXOffset = 0;
-
-		vid_blank();	// needed for opengl
-
-		// only draw this graphic if our width is at least 640 (it can be smaller on handheld)
-		if (srfScreen->w >= 640)
-		{
-			uXOffset = 80;	// shift to the right to compensate for graphic
-			draw_othergfx(B_DAPHNE_SAVEME, 0, 180);
-		}
-
-		// make sure text is centered
-		SDLDrawText(s, srfScreen, FONT_SMALL, ((srfScreen->w >> 1) + uXOffset -((strlen(s) >> 1)*6)), (srfScreen->h >> 1)-13);
-		SDLDrawText(instr, srfScreen, FONT_SMALL, ((srfScreen->w >> 1) + uXOffset -((strlen(instr) >> 1)*6)), (srfScreen->h >> 1));
-
-		vid_blit(srfScreen, 0, 0);
-		vid_flip();
-
-		// play a 'save me' sound if we've got sound
-		if (get_sound_initialized())
-		{
-			sound_play_saveme();
-		}
-		
-		//con_getkey();	// wait for keypress
-
-		vid_blank();
-		vid_flip();
-
-		// MATT : we can't call video_repaint because the video might not have been initialized
-		// yet.  We can either comment this out, or add safety checks in video_repaint (which
-		// is kind of a hassle right now since we have a bunch of redundant copies everywhere)
-
-	} // end if video has been initialized
-
-	// if video has not been initialized, print an error any way that we can
-	else
-	{
-#ifdef WIN32
-	MessageBox(NULL, s, "DAPHNE encountered an error", MB_OK | MB_ICONERROR);
-#else
-		printf("%s\n",s);
-#endif
- 	}	*/
-printf("%s\n",s);
 }
 
 // notifies user that the game does not work correctly and gives a reason
 // this should be called after video has successfully been initialized
 void printnowookin(const char *s)
 {
-/*	if (true)
-	{
-		SDL_Surface *srfScreen = get_screen_blitter();
-
-		vid_blank();
-		// don't draw 'no wookin' graphic if display is too small (can happen on handheld)
-		if (srfScreen->w >= 640) draw_othergfx(B_GAMENOWOOK, 0, 180);
-		SDLDrawText(s, srfScreen, FONT_SMALL, ((srfScreen->w >> 1) -((strlen(s) >> 1)*6)), (srfScreen->h >> 1));
-		vid_blit(srfScreen, 0, 0);
-		vid_flip();
-		//con_getkey();	// wait for keypress
-
-		// repaint the disrupted overlay (ie Dragon's Lair Scoreboard when using a real LDP)
-		display_repaint();
-	}
-*/
-printf("%s\n",s);
+	addlog(s);
+	addlog(CRLF);
 }
 
 // prints a notice to the screen
 void printnotice(const char *s)
 {
-printf("%s\n",s);
+	addlog(s);
+	addlog(CRLF);
 
-/* no screen to draw on 
-	if (true)
-	{
-		char ch = 0;
-		SDL_Surface *srfScreen = get_screen_blitter();
-
-		SDL_FillRect(srfScreen, NULL, 0);	// draw black background first
-		SDLDrawText(s, srfScreen, FONT_SMALL, ((srfScreen->w >> 1)-((strlen(s) >> 1)*6)), (srfScreen->h >> 1));
-
-		vid_blank();	// needed by opengl
-		vid_blit(srfScreen, 0, 0);
-		vid_flip();
-
-#if 0
-      if (con_getkey() == SDL_SCANCODE_ESCAPE)
-			set_quitflag();
-#endif
-	}
-*/
 }
