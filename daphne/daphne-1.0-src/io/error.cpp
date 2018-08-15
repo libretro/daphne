@@ -125,6 +125,9 @@ void printnowookin(const char *s)
 // prints a notice to the screen
 void printnotice(const char *s)
 {
+printf("%s\n",s);
+
+/* no screen to draw on 
 	if (true)
 	{
 		char ch = 0;
@@ -142,4 +145,5 @@ void printnotice(const char *s)
 			set_quitflag();
 #endif
 	}
+*/
 }
