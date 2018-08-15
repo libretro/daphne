@@ -22,5 +22,4 @@
 
 
 void printerror (const char *);
-void printnowookin(const char *s);
 void printnotice(const char *s);

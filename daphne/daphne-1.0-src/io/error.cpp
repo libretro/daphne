@@ -49,18 +49,8 @@ void printerror(const char *s)
 	addlog(CRLF);
 }
 
-// notifies user that the game does not work correctly and gives a reason
-// this should be called after video has successfully been initialized
-void printnowookin(const char *s)
-{
-	addlog(s);
-	addlog(CRLF);
-}
-
 // prints a notice to the screen
 void printnotice(const char *s)
 {
-	addlog(s);
-	addlog(CRLF);
-
+   printerror(s);
 }
