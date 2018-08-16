@@ -25,7 +25,7 @@
 #include "SDL_cpuinfo.h"
 #include "SDL_blit.h"
 
-#include "SDL_assert.h"
+#include <assert.h>
 
 #define GetBlitFeatures() (0)
 

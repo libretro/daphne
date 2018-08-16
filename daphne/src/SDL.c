@@ -26,10 +26,11 @@
 
 /* Initialization code for SDL */
 
+#include <assert.h>
+
 #include "SDL.h"
 #include "SDL_bits.h"
 #include "SDL_revision.h"
-#include "SDL_assert_c.h"
 #include "events/SDL_events_c.h"
 #include "haptic/SDL_haptic_c.h"
 #include "joystick/SDL_joystick_c.h"
@@ -45,7 +46,7 @@ static void
 SDL_PrivateSubsystemRefCountIncr(Uint32 subsystem)
 {
     int subsystem_index = SDL_MostSignificantBitIndex32(subsystem);
-    SDL_assert(SDL_SubsystemRefCount[subsystem_index] < 255);
+    assert(SDL_SubsystemRefCount[subsystem_index] < 255);
     ++SDL_SubsystemRefCount[subsystem_index];
 }
 
@@ -64,7 +65,7 @@ static SDL_bool
 SDL_PrivateShouldInitSubsystem(Uint32 subsystem)
 {
     int subsystem_index = SDL_MostSignificantBitIndex32(subsystem);
-    SDL_assert(SDL_SubsystemRefCount[subsystem_index] < 255);
+    assert(SDL_SubsystemRefCount[subsystem_index] < 255);
     return (SDL_SubsystemRefCount[subsystem_index] == 0);
 }
 
