@@ -54,51 +54,6 @@ static int UTF8_TrailingBytes(unsigned char c)
 }
 
 size_t
-SDL_wcslen(const wchar_t * string)
-{
-#if defined(HAVE_WCSLEN)
-    return wcslen(string);
-#else
-    size_t len = 0;
-    while (*string++) {
-        ++len;
-    }
-    return len;
-#endif /* HAVE_WCSLEN */
-}
-
-size_t
-SDL_wcslcpy(SDL_OUT_Z_CAP(maxlen) wchar_t *dst, const wchar_t *src, size_t maxlen)
-{
-#if defined(HAVE_WCSLCPY)
-    return wcslcpy(dst, src, maxlen);
-#else
-    size_t srclen = SDL_wcslen(src);
-    if (maxlen > 0) {
-        size_t len = SDL_min(srclen, maxlen - 1);
-        memcpy(dst, src, len * sizeof(wchar_t));
-        dst[len] = '\0';
-    }
-    return srclen;
-#endif /* HAVE_WCSLCPY */
-}
-
-size_t
-SDL_wcslcat(SDL_INOUT_Z_CAP(maxlen) wchar_t *dst, const wchar_t *src, size_t maxlen)
-{
-#if defined(HAVE_WCSLCAT)
-    return wcslcat(dst, src, maxlen);
-#else
-    size_t dstlen = SDL_wcslen(dst);
-    size_t srclen = SDL_wcslen(src);
-    if (dstlen < maxlen) {
-        SDL_wcslcpy(dst + dstlen, src, maxlen - dstlen);
-    }
-    return dstlen + srclen;
-#endif /* HAVE_WCSLCAT */
-}
-
-size_t
 SDL_strlcpy(SDL_OUT_Z_CAP(maxlen) char *dst, const char *src, size_t maxlen)
 {
 #if defined(HAVE_STRLCPY)

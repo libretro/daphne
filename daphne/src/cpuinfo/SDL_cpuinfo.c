@@ -18,11 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#ifdef TEST_MAIN
-#include "SDL_config.h"
-#else
 #include "../SDL_internal.h"
-#endif
 
 #if defined(__WIN32__)
 #include "../core/windows/SDL_windows.h"
