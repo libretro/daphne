@@ -82,7 +82,7 @@
  * SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
 
-#include "SDL_assert.h"
+#include "assert.h"
 #include "SDL_video.h"
 #include "SDL_cpuinfo.h"
 #include "SDL_yuv_sw_c.h"
@@ -1055,7 +1055,7 @@ SDL_SW_CreateYUVTexture(Uint32 format, int w, int h)
         swdata->planes[0] = swdata->pixels;
         break;
     default:
-        SDL_assert(0 && "We should never get here (caught above)");
+        assert(0 && "We should never get here (caught above)");
         break;
     }
 

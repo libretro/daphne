@@ -22,7 +22,7 @@
 
 /* System independent thread management routines for SDL */
 
-#include "SDL_assert.h"
+#include "assert.h"
 #include "SDL_thread.h"
 #include "SDL_thread_c.h"
 #include "SDL_systhread.h"
@@ -501,7 +501,7 @@ SDL_DetachThread(SDL_Thread * thread)
         } else if (thread_state == SDL_THREAD_STATE_ZOMBIE) {
             SDL_WaitThread(thread, NULL);  /* already done, clean it up. */
         } else {
-            SDL_assert(0 && "Unexpected thread state");
+            assert(0 && "Unexpected thread state");
         }
     }
 }
