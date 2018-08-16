@@ -214,7 +214,6 @@ SOURCES_C += $(DAPHNE_MAIN_DIR)/src/file/SDL_rwops.c
 
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/render/SDL_yuv_sw.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/SDL_error.c
-SOURCES_C += $(DAPHNE_MAIN_DIR)/src/SDL_hints.c
 
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/stdlib/SDL_getenv.c
 SOURCES_C += $(DAPHNE_MAIN_DIR)/src/stdlib/SDL_iconv.c

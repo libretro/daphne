@@ -39,7 +39,6 @@
 #include "SDL_filesystem.h"
 #include "SDL_joystick.h"
 #include "SDL_gamecontroller.h"
-#include "SDL_hints.h"
 #include "SDL_loadso.h"
 #include "SDL_mutex.h"
 #include "SDL_render.h"
