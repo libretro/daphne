@@ -35,15 +35,12 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #endif
-#if defined(__MACOSX__) && (defined(__ppc__) || defined(__ppc64__))
+#if defined(__APPLE__) && (defined(__ppc__) || defined(__ppc64__))
 #include <sys/sysctl.h>         /* For AltiVec check */
 #elif defined(__OpenBSD__) && defined(__powerpc__)
 #include <sys/param.h>
 #include <sys/sysctl.h> /* For AltiVec check */
 #include <machine/cpu.h>
-#elif SDL_ALTIVEC_BLITTERS && HAVE_SETJMP
-#include <signal.h>
-#include <setjmp.h>
 #endif
 
 #define CPU_HAS_RDTSC   0x00000001
@@ -56,18 +53,6 @@
 #define CPU_HAS_SSE42   0x00000200
 #define CPU_HAS_AVX     0x00000400
 #define CPU_HAS_AVX2    0x00000800
-
-#if SDL_ALTIVEC_BLITTERS && HAVE_SETJMP && !__MACOSX__ && !__OpenBSD__
-/* This is the brute force way of detecting instruction sets...
-   the idea is borrowed from the libmpeg2 library - thanks!
- */
-static jmp_buf jmpbuf;
-static void
-illegal_instruction(int sig)
-{
-    longjmp(jmpbuf, 1);
-}
-#endif /* HAVE_SETJMP */
 
 static int
 CPU_haveCPUID(void)
@@ -236,30 +221,7 @@ CPU_haveRDTSC(void)
 static int
 CPU_haveAltiVec(void)
 {
-    volatile int altivec = 0;
-#ifndef SDL_CPUINFO_DISABLED
-#if (defined(__MACOSX__) && (defined(__ppc__) || defined(__ppc64__))) || (defined(__OpenBSD__) && defined(__powerpc__))
-#ifdef __OpenBSD__
-    int selectors[2] = { CTL_MACHDEP, CPU_ALTIVEC };
-#else
-    int selectors[2] = { CTL_HW, HW_VECTORUNIT };
-#endif
-    int hasVectorUnit = 0;
-    size_t length = sizeof(hasVectorUnit);
-    int error = sysctl(selectors, 2, &hasVectorUnit, &length, NULL, 0);
-    if (0 == error)
-        altivec = (hasVectorUnit != 0);
-#elif SDL_ALTIVEC_BLITTERS && HAVE_SETJMP
-    void (*handler) (int sig);
-    handler = signal(SIGILL, illegal_instruction);
-    if (setjmp(jmpbuf) == 0) {
-        asm volatile ("mtspr 256, %0\n\t" "vand %%v0, %%v0, %%v0"::"r" (-1));
-        altivec = 1;
-    }
-    signal(SIGILL, handler);
-#endif
-#endif
-    return altivec;
+    return 0;
 }
 
 static int
@@ -335,9 +297,6 @@ SDL_GetCPUFeatures(void)
         if (CPU_haveRDTSC()) {
             SDL_CPUFeatures |= CPU_HAS_RDTSC;
         }
-        if (CPU_haveAltiVec()) {
-            SDL_CPUFeatures |= CPU_HAS_ALTIVEC;
-        }
         if (CPU_haveSSE()) {
             SDL_CPUFeatures |= CPU_HAS_SSE;
         }
@@ -369,9 +328,6 @@ SDL_HasRDTSC(void)
 SDL_bool
 SDL_HasAltiVec(void)
 {
-    if (SDL_GetCPUFeatures() & CPU_HAS_ALTIVEC) {
-        return SDL_TRUE;
-    }
     return SDL_FALSE;
 }
 

@@ -66,26 +66,6 @@
 #define __ANDROID__ 1
 #endif
 
-#if defined(__APPLE__)
-/* lets us know what version of Mac OS X we're compiling on */
-#include "AvailabilityMacros.h"
-#include "TargetConditionals.h"
-#if TARGET_OS_TV
-#undef __TVOS__
-#define __TVOS__ 1
-#endif
-#if TARGET_OS_IPHONE
-/* if compiling for iOS */
-#undef __IPHONEOS__
-#define __IPHONEOS__ 1
-#undef __MACOSX__
-#else
-/* if not compiling for iOS */
-#undef __MACOSX__
-#define __MACOSX__  1
-#endif /* TARGET_OS_IPHONE */
-#endif /* defined(__APPLE__) */
-
 #if defined(__NetBSD__)
 #undef __NETBSD__
 #define __NETBSD__  1

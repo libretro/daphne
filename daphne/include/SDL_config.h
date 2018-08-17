@@ -35,10 +35,10 @@
 #include "SDL_config_windows.h"
 #elif defined(__WINRT__)
 #include "SDL_config_winrt.h"
-#elif defined(__MACOSX__)
-#include "SDL_config_macosx.h"
 #elif defined(IOS)
 #include "SDL_config_iphoneos.h"
+#elif defined(__APPLE__)
+#include "SDL_config_macosx.h"
 #elif defined(__ANDROID__)
 #include "SDL_config_android.h"
 #else

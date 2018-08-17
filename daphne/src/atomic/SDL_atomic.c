@@ -27,7 +27,7 @@
 #define HAVE_MSC_ATOMICS 1
 #endif
 
-#if defined(__MACOSX__)  /* !!! FIXME: should we favor gcc atomics? */
+#if defined(__APPLE__) && !defined(IOS)  /* !!! FIXME: should we favor gcc atomics? */
 #include <libkern/OSAtomic.h>
 #endif
 
@@ -58,7 +58,11 @@
   Contributed by Bob Pendleton, bob@pendleton.com
 */
 
-#if !defined(HAVE_MSC_ATOMICS) && !defined(HAVE_GCC_ATOMICS) && !defined(__MACOSX__) && !defined(__SOLARIS__)
+#if !defined(HAVE_MSC_ATOMICS) && !defined(HAVE_GCC_ATOMICS) && !defined(__APPLE__) && !defined(__SOLARIS__)
+#define EMULATE_CAS 1
+#endif
+
+#if defined(IOS)
 #define EMULATE_CAS 1
 #endif
 
@@ -88,7 +92,7 @@ SDL_AtomicCAS(SDL_atomic_t *a, int oldval, int newval)
 {
 #ifdef HAVE_MSC_ATOMICS
     return (_InterlockedCompareExchange((long*)&a->value, (long)newval, (long)oldval) == (long)oldval);
-#elif defined(__MACOSX__)  /* !!! FIXME: should we favor gcc atomics? */
+#elif defined(__APPLE__) && !defined(IOS)  /* !!! FIXME: should we favor gcc atomics? */
     return (SDL_bool) OSAtomicCompareAndSwap32Barrier(oldval, newval, &a->value);
 #elif defined(HAVE_GCC_ATOMICS)
     return (SDL_bool) __sync_bool_compare_and_swap(&a->value, oldval, newval);
@@ -119,9 +123,9 @@ SDL_AtomicCASPtr(void **a, void *oldval, void *newval)
     return (_InterlockedCompareExchange((long*)a, (long)newval, (long)oldval) == (long)oldval);
 #elif defined(HAVE_MSC_ATOMICS) && (!_M_IX86)
     return (_InterlockedCompareExchangePointer(a, newval, oldval) == oldval);
-#elif defined(__MACOSX__) && defined(__LP64__)   /* !!! FIXME: should we favor gcc atomics? */
+#elif defined(__APPLE__) && defined(__LP64__)   /* !!! FIXME: should we favor gcc atomics? */
     return (SDL_bool) OSAtomicCompareAndSwap64Barrier((int64_t)oldval, (int64_t)newval, (int64_t*) a);
-#elif defined(__MACOSX__) && !defined(__LP64__)  /* !!! FIXME: should we favor gcc atomics? */
+#elif defined(__APPLE__) && !defined(__LP64__)  /* !!! FIXME: should we favor gcc atomics? */
     return (SDL_bool) OSAtomicCompareAndSwap32Barrier((int32_t)oldval, (int32_t)newval, (int32_t*) a);
 #elif defined(HAVE_GCC_ATOMICS)
     return __sync_bool_compare_and_swap(a, oldval, newval);
