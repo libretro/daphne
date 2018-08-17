@@ -102,15 +102,6 @@
 #define HAVE_ACOS 1
 #define HAVE_ASIN 1
 
-/* Enable various audio drivers */
-#define SDL_AUDIO_DRIVER_COREAUDIO  1
-#define SDL_AUDIO_DRIVER_DISK   1
-#define SDL_AUDIO_DRIVER_DUMMY  1
-
-/* Enable various input drivers */
-#define SDL_JOYSTICK_IOKIT  1
-#define SDL_HAPTIC_IOKIT    1
-
 /* Enable various shared object loading systems */
 #define SDL_LOADSO_DLOPEN   1
 
