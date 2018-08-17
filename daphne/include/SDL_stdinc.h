@@ -350,26 +350,6 @@ extern DECLSPEC int SDLCALL SDL_snprintf(SDL_OUT_Z_CAP(maxlen) char *text, size_
 #endif
 #endif
 
-extern DECLSPEC double SDLCALL SDL_acos(double x);
-extern DECLSPEC double SDLCALL SDL_asin(double x);
-extern DECLSPEC double SDLCALL SDL_atan(double x);
-extern DECLSPEC double SDLCALL SDL_atan2(double x, double y);
-extern DECLSPEC double SDLCALL SDL_ceil(double x);
-extern DECLSPEC double SDLCALL SDL_copysign(double x, double y);
-extern DECLSPEC double SDLCALL SDL_cos(double x);
-extern DECLSPEC float SDLCALL SDL_cosf(float x);
-extern DECLSPEC double SDLCALL SDL_fabs(double x);
-extern DECLSPEC double SDLCALL SDL_floor(double x);
-extern DECLSPEC double SDLCALL SDL_log(double x);
-extern DECLSPEC double SDLCALL SDL_pow(double x, double y);
-extern DECLSPEC double SDLCALL SDL_scalbn(double x, int n);
-extern DECLSPEC double SDLCALL SDL_sin(double x);
-extern DECLSPEC float SDLCALL SDL_sinf(float x);
-extern DECLSPEC double SDLCALL SDL_sqrt(double x);
-extern DECLSPEC float SDLCALL SDL_sqrtf(float x);
-extern DECLSPEC double SDLCALL SDL_tan(double x);
-extern DECLSPEC float SDLCALL SDL_tanf(float x);
-
 /* The SDL implementation of iconv() returns these error codes */
 #define SDL_ICONV_ERROR     (size_t)-1
 #define SDL_ICONV_E2BIG     (size_t)-2
@@ -403,7 +383,6 @@ extern DECLSPEC char *SDLCALL SDL_iconv_string(const char *tocode,
 #define SDL_strchr strchr
 #define SDL_strrchr strrchr
 #define SDL_strstr strstr
-#define SDL_strcmp strcmp
 #define SDL_strncmp strncmp
 #define SDL_strcasecmp strcasecmp
 #define SDL_strncasecmp strncasecmp
