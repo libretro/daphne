@@ -101,11 +101,7 @@ void SDLDrawText(const char *string, SDL_Surface *surface, int FontType, int x, 
 	int			loop;
 	int			characters;
 	SDL_Rect	SourceRect, DestRect;
-	BitFont		*CurrentFont;
-	
-	CurrentFont = FontPointer(FontType);
-	// RJS ADD - doc'd out initially
-	// if (CurrentFont == NULL) return;
+	BitFont		*CurrentFont = FontPointer(FontType);
 
 	/* see how many characters can fit on the screen */
 	if(x>surface->w || y>surface->h) return;
