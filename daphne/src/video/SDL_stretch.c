@@ -33,121 +33,6 @@
    into the general blitting mechanism.
 */
 
-#if ((defined(_MFC_VER) && defined(_M_IX86)) || \
-     defined(__WATCOMC__) || \
-     (defined(__GNUC__) && defined(__i386__))) && SDL_ASSEMBLY_ROUTINES
-/* There's a bug with gcc 4.4.1 and -O2 where srcp doesn't get the correct
- * value after the first scanline.  FIXME? */
-/* #define USE_ASM_STRETCH */
-#endif
-
-#ifdef USE_ASM_STRETCH
-
-#ifdef HAVE_MPROTECT
-#include <sys/types.h>
-#include <sys/mman.h>
-#endif
-#ifdef __GNUC__
-#define PAGE_ALIGNED __attribute__((__aligned__(4096)))
-#else
-#define PAGE_ALIGNED
-#endif
-
-#if defined(_M_IX86) || defined(i386)
-#define PREFIX16    0x66
-#define STORE_BYTE  0xAA
-#define STORE_WORD  0xAB
-#define LOAD_BYTE   0xAC
-#define LOAD_WORD   0xAD
-#define RETURN      0xC3
-#else
-#error Need assembly opcodes for this architecture
-#endif
-
-static unsigned char copy_row[4096] PAGE_ALIGNED;
-
-static int
-generate_rowbytes(int src_w, int dst_w, int bpp)
-{
-    static struct
-    {
-        int bpp;
-        int src_w;
-        int dst_w;
-        int status;
-    } last;
-
-    int i;
-    int pos, inc;
-    unsigned char *eip, *fence;
-    unsigned char load, store;
-
-    /* See if we need to regenerate the copy buffer */
-    if ((src_w == last.src_w) && (dst_w == last.dst_w) && (bpp == last.bpp)) {
-        return (last.status);
-    }
-    last.bpp = bpp;
-    last.src_w = src_w;
-    last.dst_w = dst_w;
-    last.status = -1;
-
-    switch (bpp) {
-    case 1:
-        load = LOAD_BYTE;
-        store = STORE_BYTE;
-        break;
-    case 2:
-    case 4:
-        load = LOAD_WORD;
-        store = STORE_WORD;
-        break;
-    default:
-        return SDL_SetError("ASM stretch of %d bytes isn't supported\n", bpp);
-    }
-#ifdef HAVE_MPROTECT
-    /* Make the code writeable */
-    if (mprotect(copy_row, sizeof(copy_row), PROT_READ | PROT_WRITE) < 0) {
-        return SDL_SetError("Couldn't make copy buffer writeable");
-    }
-#endif
-    pos = 0x10000;
-    inc = (src_w << 16) / dst_w;
-    eip = copy_row;
-    fence = copy_row + sizeof(copy_row)-2;
-    for (i = 0; i < dst_w; ++i) {
-        while (pos >= 0x10000L) {
-            if (eip == fence) {
-                return -1;
-            }
-            if (bpp == 2) {
-                *eip++ = PREFIX16;
-            }
-            *eip++ = load;
-            pos -= 0x10000L;
-        }
-        if (eip == fence) {
-            return -1;
-        }
-        if (bpp == 2) {
-            *eip++ = PREFIX16;
-        }
-        *eip++ = store;
-        pos += inc;
-    }
-    *eip++ = RETURN;
-
-#ifdef HAVE_MPROTECT
-    /* Make the code executable but not writeable */
-    if (mprotect(copy_row, sizeof(copy_row), PROT_READ | PROT_EXEC) < 0) {
-        return SDL_SetError("Couldn't make copy buffer executable");
-    }
-#endif
-    last.status = 0;
-    return (0);
-}
-
-#endif /* USE_ASM_STRETCH */
-
 #define DEFINE_COPY_ROW(name, type)         \
 static void name(type *src, int src_w, type *dst, int dst_w)    \
 {                                           \
@@ -212,12 +97,6 @@ SDL_SoftStretch(SDL_Surface * src, const SDL_Rect * srcrect,
     Uint8 *dstp;
     SDL_Rect full_src;
     SDL_Rect full_dst;
-#ifdef USE_ASM_STRETCH
-    SDL_bool use_asm = SDL_TRUE;
-#ifdef __GNUC__
-    int u1, u2;
-#endif
-#endif /* USE_ASM_STRETCH */
     const int bpp = dst->format->BytesPerPixel;
 
     if (src->format->format != dst->format->format) {
@@ -278,13 +157,6 @@ SDL_SoftStretch(SDL_Surface * src, const SDL_Rect * srcrect,
     src_row = srcrect->y;
     dst_row = dstrect->y;
 
-#ifdef USE_ASM_STRETCH
-    /* Write the opcodes for this stretch */
-    if ((bpp == 3) || (generate_rowbytes(srcrect->w, dstrect->w, bpp) < 0)) {
-        use_asm = SDL_FALSE;
-    }
-#endif
-
     /* Perform the stretch blit */
     for (dst_maxrow = dst_row + dstrect->h; dst_row < dst_maxrow; ++dst_row) {
         dstp = (Uint8 *) dst->pixels + (dst_row * dst->pitch)
@@ -295,32 +167,6 @@ SDL_SoftStretch(SDL_Surface * src, const SDL_Rect * srcrect,
             ++src_row;
             pos -= 0x10000L;
         }
-#ifdef USE_ASM_STRETCH
-        if (use_asm) {
-#ifdef __GNUC__
-            __asm__ __volatile__("call *%4":"=&D"(u1), "=&S"(u2)
-                                 :"0"(dstp), "1"(srcp), "r"(copy_row)
-                                 :"memory");
-#elif defined(_MSC_VER) || defined(__WATCOMC__)
-            /* *INDENT-OFF* */
-            {
-                void *code = copy_row;
-                __asm {
-                    push edi
-                    push esi
-                    mov edi, dstp
-                    mov esi, srcp
-                    call dword ptr code
-                    pop esi
-                    pop edi
-                }
-            }
-            /* *INDENT-ON* */
-#else
-#error Need inline assembly for this compiler
-#endif
-        } else
-#endif
             switch (bpp) {
             case 1:
                 copy_row1(srcp, srcrect->w, dstp, dstrect->w);
