@@ -39,10 +39,6 @@
 
 #include "../../main_android.h"
 
-#ifdef DEBUG
-#include <assert.h>	// this may include an extra .DLL in windows that I don't want to rely on
-#endif
-
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
@@ -77,12 +73,6 @@ Uint32 g_playing_timer = 0;	// the time at which we began playing audio
 Uint32 g_samples_played = 0;	// how many samples have played since we've been timing
 bool g_audio_left_muted = false;	// left audio channel enabled
 bool g_audio_right_muted = false;	// right audio channel enabled
-
-#ifdef AUDIO_DEBUG
-Uint64 g_u64CallbackByteCount = 0;
-unsigned int g_uCallbackFloodTimer = 0;
-unsigned int g_uCallbackDbgTimer = 0;
-#endif
 
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -237,9 +227,6 @@ void *audiocopy_mute(void *dest, const void *src, size_t bytes_to_copy)
 // copies left-channel audio data to right-channel
 void *audiocopy_left_only(void *dest, const void *src, size_t bytes_to_copy)
 {
-#ifdef DEBUG
-	assert(bytes_to_copy % 4 == 0);	// stereo 16-bit audio should always be divisible by 4
-#endif
 	Uint32 *dst32 = (Uint32 *) dest;
 	Uint16 *src16_L = (Uint16 *) src;	// point to first bit of left-channel data
 
@@ -256,10 +243,6 @@ void *audiocopy_left_only(void *dest, const void *src, size_t bytes_to_copy)
 // copies right-channel audio data to left-channel
 void *audiocopy_right_only(void *dest, const void *src, size_t bytes_to_copy)
 {
-#ifdef DEBUG
-	assert(bytes_to_copy % 4 == 0);	// stereo 16-bit audio should always be divisible by 4
-#endif
-
 	Uint32 *dst32 = (Uint32 *) dest;
 	Uint16 *src16_R = (Uint16 *) src + 1;	// point to the first bit of data that occurs on the right channel
 
@@ -303,12 +286,6 @@ bool ldp_vldp::audio_init()
 {
 	bool result = false;
 
-#ifdef AUDIO_DEBUG
-	g_u64CallbackByteCount = 0;
-	g_uCallbackFloodTimer = 0;
-	g_uCallbackDbgTimer = GET_TICKS();
-#endif
-	
 	// create a mutex to prevent threads from interfering
 	g_ogg_mutex = SDL_CreateMutex();
 	if (g_ogg_mutex)
@@ -434,16 +411,6 @@ bool ldp_vldp::open_audio_stream(const string &strFilename)
 		}
 			
 	} // end if we could open file
-	else
-	{
-		// don't show this message to end-users, a surprising number of them report this as a bug and it's really getting annoying :)
-#ifdef DEBUG
-		string s;
-		s = "No audio file (" + strFilename + ") was found to go with the opened video file";
-		printline(s.c_str());
-		printline("NOTE : This is not necessarily a problem, some video doesn't have audio!");
-#endif
-	}
 
 	OGG_UNLOCK;
 		
@@ -501,17 +468,6 @@ int g_leftover_samples = 0;
 // our audio callback
 void ldp_vldp_audio_callback(Uint8 *stream, int len, int unused)
 {
-#ifdef AUDIO_DEBUG
-	g_u64CallbackByteCount += len;
-	unsigned int uFloodTimer = (GET_TICKS() - g_uCallbackDbgTimer) / 1000;
-	if (uFloodTimer != g_uCallbackFloodTimer)
-	{
-		g_uCallbackFloodTimer = uFloodTimer;
-		string s = "audio callback frequency is: " + numstr::ToStr((g_u64CallbackByteCount / uFloodTimer) >> 2);
-		printline(s.c_str());
-	}
-#endif
-
 	OGG_LOCK;	// make sure nothing changes with any ogg stuff while we decode
 
 	// if audio is ready to be read and if it is playing
