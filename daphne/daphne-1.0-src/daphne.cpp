@@ -41,9 +41,9 @@
 #define _CRT_NONSTDC_NO_DEPRECATE 1
 #endif
 
+#include <stdio.h>
 #include <string>
 #include <string.h>
-#include "io/my_stdio.h"
 
 using namespace std;
 

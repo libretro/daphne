@@ -39,8 +39,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../io/numstr.h"
 #include "../io/serial.h"
-#include "../io/my_stdio.h"
 #include "ldp.h"
 #include "../timer/timer.h"
 #include "../io/conout.h"

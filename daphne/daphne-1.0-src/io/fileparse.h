@@ -21,8 +21,9 @@
  */
 
 #include <stdio.h>
-#include "my_stdio.h"
 #include <string>
+
+#include "mpo_fileio.h"
 
 using namespace std;
 
