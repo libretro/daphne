@@ -55,17 +55,9 @@ static nes6502_memwrite NESWriteHandler[] =
 
 NES_6502::NES_6502() 
 {
-  // RJS CHANGE no code change, but needed to allow exceptions in compiler for try/catch/throw
-  if(NES_6502_nes) throw "error: multiple NES_6502's";
+   NES_6502_nes = this;
 
-  try {
-    NES_6502_nes = this;
-
-    Init();
-  } catch(...) {
-    NES_6502_nes = NULL;
-    throw;
-  }
+   Init();
 }
 
 NES_6502::~NES_6502()
