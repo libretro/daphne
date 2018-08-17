@@ -332,21 +332,11 @@ SDL_FORCE_INLINE void SDL_memset4(void *dst, Uint32 val, size_t dwords)
 }
 
 extern DECLSPEC size_t SDLCALL SDL_strlcpy(SDL_OUT_Z_CAP(maxlen) char *dst, const char *src, size_t maxlen);
-extern DECLSPEC char *SDLCALL SDL_strrev(char *str);
-extern DECLSPEC char *SDLCALL SDL_strlwr(char *str);
 extern DECLSPEC char *SDLCALL SDL_strchr(const char *str, int c);
 extern DECLSPEC char *SDLCALL SDL_strrchr(const char *str, int c);
 extern DECLSPEC char *SDLCALL SDL_strstr(const char *haystack, const char *needle);
 
-extern DECLSPEC char *SDLCALL SDL_itoa(int value, char *str, int radix);
-extern DECLSPEC char *SDLCALL SDL_uitoa(unsigned int value, char *str, int radix);
-extern DECLSPEC char *SDLCALL SDL_ltoa(long value, char *str, int radix);
-extern DECLSPEC char *SDLCALL SDL_ultoa(unsigned long value, char *str, int radix);
-extern DECLSPEC char *SDLCALL SDL_lltoa(Sint64 value, char *str, int radix);
-extern DECLSPEC char *SDLCALL SDL_ulltoa(Uint64 value, char *str, int radix);
-
 extern DECLSPEC int SDLCALL SDL_atoi(const char *str);
-extern DECLSPEC double SDLCALL SDL_atof(const char *str);
 
 extern DECLSPEC int SDLCALL SDL_strncmp(const char *str1, const char *str2, size_t maxlen);
 extern DECLSPEC int SDLCALL SDL_strcasecmp(const char *str1, const char *str2);

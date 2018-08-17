@@ -116,7 +116,6 @@ typedef unsigned int uintptr_t;
 #define HAVE_STRLEN 1
 #define HAVE__STRREV 1
 #define HAVE__STRUPR 1
-//#define HAVE__STRLWR 1	// TODO, WinRT: consider using _strlwr_s instead
 #define HAVE_STRCHR 1
 #define HAVE_STRRCHR 1
 #define HAVE_STRSTR 1

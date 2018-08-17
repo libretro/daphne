@@ -34,25 +34,6 @@
 
 #include "SDL_stdinc.h"
 
-
-#define SDL_isupperhex(X)   (((X) >= 'A') && ((X) <= 'F'))
-#define SDL_islowerhex(X)   (((X) >= 'a') && ((X) <= 'f'))
-
-#define UTF8_IsLeadByte(c) ((c) >= 0xC0 && (c) <= 0xF4)
-#define UTF8_IsTrailingByte(c) ((c) >= 0x80 && (c) <= 0xBF)
-
-static int UTF8_TrailingBytes(unsigned char c)
-{
-    if (c >= 0xC0 && c <= 0xDF)
-        return 1;
-    else if (c >= 0xE0 && c <= 0xEF)
-        return 2;
-    else if (c >= 0xF0 && c <= 0xF4)
-        return 3;
-    else
-        return 0;
-}
-
 size_t
 SDL_strlcpy(SDL_OUT_Z_CAP(maxlen) char *dst, const char *src, size_t maxlen)
 {
@@ -67,40 +48,6 @@ SDL_strlcpy(SDL_OUT_Z_CAP(maxlen) char *dst, const char *src, size_t maxlen)
     }
     return srclen;
 #endif /* HAVE_STRLCPY */
-}
-
-char *
-SDL_strrev(char *string)
-{
-#if defined(HAVE__STRREV)
-    return _strrev(string);
-#else
-    size_t len = strlen(string);
-    char *a = &string[0];
-    char *b = &string[len - 1];
-    len /= 2;
-    while (len--) {
-        char c = *a;
-        *a++ = *b;
-        *b-- = c;
-    }
-    return string;
-#endif /* HAVE__STRREV */
-}
-
-char *
-SDL_strlwr(char *string)
-{
-#if defined(HAVE__STRLWR)
-    return _strlwr(string);
-#else
-    char *bufp = string;
-    while (*bufp) {
-        *bufp = tolower((unsigned char) *bufp);
-        ++bufp;
-    }
-    return string;
-#endif /* HAVE__STRLWR */
 }
 
 char *
@@ -157,124 +104,6 @@ SDL_strstr(const char *haystack, const char *needle)
 #endif /* HAVE_STRSTR */
 }
 
-#if !defined(HAVE__LTOA) || !defined(HAVE__I64TOA) || \
-    !defined(HAVE__ULTOA) || !defined(HAVE__UI64TOA)
-static const char ntoa_table[] = {
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-    'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
-    'U', 'V', 'W', 'X', 'Y', 'Z'
-};
-#endif /* ntoa() conversion table */
-
-char *
-SDL_itoa(int value, char *string, int radix)
-{
-#ifdef HAVE_ITOA
-    return itoa(value, string, radix);
-#else
-    return SDL_ltoa((long)value, string, radix);
-#endif /* HAVE_ITOA */
-}
-
-char *
-SDL_uitoa(unsigned int value, char *string, int radix)
-{
-#ifdef HAVE__UITOA
-    return _uitoa(value, string, radix);
-#else
-    return SDL_ultoa((unsigned long)value, string, radix);
-#endif /* HAVE__UITOA */
-}
-
-char *
-SDL_ltoa(long value, char *string, int radix)
-{
-#if defined(HAVE__LTOA)
-    return _ltoa(value, string, radix);
-#else
-    char *bufp = string;
-
-    if (value < 0) {
-        *bufp++ = '-';
-        SDL_ultoa(-value, bufp, radix);
-    } else {
-        SDL_ultoa(value, bufp, radix);
-    }
-
-    return string;
-#endif /* HAVE__LTOA */
-}
-
-char *
-SDL_ultoa(unsigned long value, char *string, int radix)
-{
-#if defined(HAVE__ULTOA)
-    return _ultoa(value, string, radix);
-#else
-    char *bufp = string;
-
-    if (value) {
-        while (value > 0) {
-            *bufp++ = ntoa_table[value % radix];
-            value /= radix;
-        }
-    } else {
-        *bufp++ = '0';
-    }
-    *bufp = '\0';
-
-    /* The numbers went into the string backwards. :) */
-    SDL_strrev(string);
-
-    return string;
-#endif /* HAVE__ULTOA */
-}
-
-char *
-SDL_lltoa(Sint64 value, char *string, int radix)
-{
-#if defined(HAVE__I64TOA)
-    return _i64toa(value, string, radix);
-#else
-    char *bufp = string;
-
-    if (value < 0) {
-        *bufp++ = '-';
-        SDL_ulltoa(-value, bufp, radix);
-    } else {
-        SDL_ulltoa(value, bufp, radix);
-    }
-
-    return string;
-#endif /* HAVE__I64TOA */
-}
-
-char *
-SDL_ulltoa(Uint64 value, char *string, int radix)
-{
-#if defined(HAVE__UI64TOA)
-    return _ui64toa(value, string, radix);
-#else
-    char *bufp = string;
-
-    if (value) {
-        while (value > 0) {
-            *bufp++ = ntoa_table[value % radix];
-            value /= radix;
-        }
-    } else {
-        *bufp++ = '0';
-    }
-    *bufp = '\0';
-
-    /* The numbers went into the string backwards. :) */
-    SDL_strrev(string);
-
-    return string;
-#endif /* HAVE__UI64TOA */
-}
-
 int SDL_atoi(const char *string)
 {
 #ifdef HAVE_ATOI
@@ -282,15 +111,6 @@ int SDL_atoi(const char *string)
 #else
     return strtol(string, NULL, 0);
 #endif /* HAVE_ATOI */
-}
-
-double SDL_atof(const char *string)
-{
-#ifdef HAVE_ATOF
-    return (double) atof(string);
-#else
-    return strtod(string, NULL);
-#endif /* HAVE_ATOF */
 }
 
 int
