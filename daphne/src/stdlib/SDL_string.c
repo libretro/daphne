@@ -87,23 +87,6 @@ SDL_strrchr(const char *string, int c)
 #endif /* HAVE_STRRCHR */
 }
 
-char *
-SDL_strstr(const char *haystack, const char *needle)
-{
-#if defined(HAVE_STRSTR)
-    return SDL_const_cast(char*,strstr(haystack, needle));
-#else
-    size_t length = strlen(needle);
-    while (*haystack) {
-        if (strncmp(haystack, needle, length) == 0) {
-            return (char *) haystack;
-        }
-        ++haystack;
-    }
-    return NULL;
-#endif /* HAVE_STRSTR */
-}
-
 int
 SDL_strcasecmp(const char *str1, const char *str2)
 {
