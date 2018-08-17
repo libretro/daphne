@@ -68,25 +68,6 @@ SDL_strchr(const char *string, int c)
 #endif /* HAVE_STRCHR */
 }
 
-char *
-SDL_strrchr(const char *string, int c)
-{
-#ifdef HAVE_STRRCHR
-    return SDL_const_cast(char*,strrchr(string, c));
-#elif defined(HAVE_RINDEX)
-    return SDL_const_cast(char*,rindex(string, c));
-#else
-    const char *bufp = string + strlen(string) - 1;
-    while (bufp >= string) {
-        if (*bufp == c) {
-            return (char *) bufp;
-        }
-        --bufp;
-    }
-    return NULL;
-#endif /* HAVE_STRRCHR */
-}
-
 int
 SDL_strcasecmp(const char *str1, const char *str2)
 {
