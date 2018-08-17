@@ -104,15 +104,6 @@ SDL_strstr(const char *haystack, const char *needle)
 #endif /* HAVE_STRSTR */
 }
 
-int SDL_atoi(const char *string)
-{
-#ifdef HAVE_ATOI
-    return atoi(string);
-#else
-    return strtol(string, NULL, 0);
-#endif /* HAVE_ATOI */
-}
-
 int
 SDL_strncmp(const char *str1, const char *str2, size_t maxlen)
 {

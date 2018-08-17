@@ -69,7 +69,7 @@ SDL_TimerResolutionChanged(void *userdata, const char *name, const char *oldValu
 
     /* Unless the hint says otherwise, let's have good sleep precision */
     if (hint && *hint) {
-        uPeriod = SDL_atoi(hint);
+        uPeriod = atoi(hint);
     } else {
         uPeriod = 1;
     }
