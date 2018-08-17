@@ -135,27 +135,6 @@ typedef struct
    IN assertion: the stream s has been sucessfully opened for reading.
 */
 
-
-/*
-local int unzlocal_getByte(FILE *fin, int *pi)
-{
-    unsigned char c;
-	int err = fread(&c, 1, 1, fin);
-    if (err==1)
-    {
-        *pi = (int)c;
-        return UNZ_OK;
-    }
-    else
-    {
-        if (ferror(fin)) 
-            return UNZ_ERRNO;
-        else
-            return UNZ_EOF;
-    }
-}
-*/
-
 // MPO rewrote this function to use mpo_io
 local int unzlocal_getByte(mpo_io *fin, int *pi)
 {

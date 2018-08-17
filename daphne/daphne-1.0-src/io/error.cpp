@@ -34,17 +34,11 @@
 #include "conout.h"
 #include "input.h"
 #include "../game/game.h"
-#include "../sound/sound.h"
-#include "../video/video.h"
-#include "../video/SDL_DrawText.h"
-
-const char *instr = "Read daphne_log.txt for help";
-
-const char CRLF[3] = { 13, 10, 0 };	// carriage return / linefeed combo, for the addlog statements in this file
 
 // notifies the user of an error that has occurred
 void printerror(const char *s)
 {
+   static const char CRLF[3] = { 13, 10, 0 };	// carriage return / linefeed combo, for the addlog statements in this file
 	addlog(s);
 	addlog(CRLF);
 }
