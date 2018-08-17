@@ -112,26 +112,6 @@
 /* Enable the stub timer support (src/timer/psp/\*.c) */
 #define SDL_TIMERS_PSP  1
 
-/* Enable the stub joystick driver (src/joystick/psp/\*.c) */
-#define SDL_JOYSTICK_PSP        1
-
-/* Enable the stub audio driver (src/audio/psp/\*.c) */
-#define SDL_AUDIO_DRIVER_PSP    1
-
-/* PSP video dirver */
-#define SDL_VIDEO_DRIVER_PSP   1
-
-/* PSP render dirver */
-#define SDL_VIDEO_RENDER_PSP   1
-
-#define SDL_POWER_PSP          1
-
-/* !!! FIXME: what does PSP do for filesystem stuff? */
-#define SDL_FILESYSTEM_DUMMY   1
-
-/* PSP doesn't have haptic device (src/haptic/dummy/\*.c) */
-#define SDL_HAPTIC_DISABLED    1
-
 /* PSP can't load shared object (src/loadso/dummy/\*.c) */
 #define SDL_LOADSO_DISABLED    1
 

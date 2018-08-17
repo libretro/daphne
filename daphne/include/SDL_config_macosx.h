@@ -24,9 +24,6 @@
 
 #include "SDL_platform.h"
 
-/* This gets us MAC_OS_X_VERSION_MIN_REQUIRED... */
-#include <AvailabilityMacros.h>
-
 /* This is a set of defines to configure the SDL features */
 
 #ifdef __LP64__
@@ -123,62 +120,5 @@
 
 /* Enable various timer systems */
 #define SDL_TIMER_UNIX  1
-
-/* Enable various video drivers */
-#define SDL_VIDEO_DRIVER_COCOA  1
-#define SDL_VIDEO_DRIVER_DUMMY  1
-#undef SDL_VIDEO_DRIVER_X11
-#define SDL_VIDEO_DRIVER_X11_DYNAMIC "/usr/X11R6/lib/libX11.6.dylib"
-#define SDL_VIDEO_DRIVER_X11_DYNAMIC_XEXT "/usr/X11R6/lib/libXext.6.dylib"
-#define SDL_VIDEO_DRIVER_X11_DYNAMIC_XINERAMA "/usr/X11R6/lib/libXinerama.1.dylib"
-#define SDL_VIDEO_DRIVER_X11_DYNAMIC_XINPUT2 "/usr/X11R6/lib/libXi.6.dylib"
-#define SDL_VIDEO_DRIVER_X11_DYNAMIC_XRANDR "/usr/X11R6/lib/libXrandr.2.dylib"
-#define SDL_VIDEO_DRIVER_X11_DYNAMIC_XSS "/usr/X11R6/lib/libXss.1.dylib"
-#define SDL_VIDEO_DRIVER_X11_DYNAMIC_XVIDMODE "/usr/X11R6/lib/libXxf86vm.1.dylib"
-#define SDL_VIDEO_DRIVER_X11_XDBE 1
-#define SDL_VIDEO_DRIVER_X11_XINERAMA 1
-#define SDL_VIDEO_DRIVER_X11_XRANDR 1
-#define SDL_VIDEO_DRIVER_X11_XSCRNSAVER 1
-#define SDL_VIDEO_DRIVER_X11_XSHAPE 1
-#define SDL_VIDEO_DRIVER_X11_XVIDMODE 1
-#define SDL_VIDEO_DRIVER_X11_HAS_XKBKEYCODETOKEYSYM 1
-
-#ifdef MAC_OS_X_VERSION_10_8
-/*
- * No matter the versions targeted, this is the 10.8 or later SDK, so you have
- *  to use the external Xquartz, which is a more modern Xlib. Previous SDKs
- *  used an older Xlib.
- */
-#define SDL_VIDEO_DRIVER_X11_XINPUT2 1
-#define SDL_VIDEO_DRIVER_X11_SUPPORTS_GENERIC_EVENTS 1
-#define SDL_VIDEO_DRIVER_X11_CONST_PARAM_XEXTADDDISPLAY 1
-#endif
-
-#ifndef SDL_VIDEO_RENDER_OGL
-#define SDL_VIDEO_RENDER_OGL    1
-#endif
-
-/* Enable OpenGL support */
-#ifndef SDL_VIDEO_OPENGL
-#define SDL_VIDEO_OPENGL    1
-#endif
-#ifndef SDL_VIDEO_OPENGL_CGL
-#define SDL_VIDEO_OPENGL_CGL    1
-#endif
-#ifndef SDL_VIDEO_OPENGL_GLX
-#define SDL_VIDEO_OPENGL_GLX    1
-#endif
-
-/* Enable system power support */
-#define SDL_POWER_MACOSX 1
-
-/* enable filesystem support */
-#define SDL_FILESYSTEM_COCOA   1
-
-/* Enable assembly routines */
-#define SDL_ASSEMBLY_ROUTINES   1
-#ifdef __ppc__
-#define SDL_ALTIVEC_BLITTERS    1
-#endif
 
 #endif /* _SDL_config_macosx_h */

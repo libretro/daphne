@@ -92,10 +92,6 @@ typedef unsigned int uintptr_t;
 #endif
 
 /* Useful headers */
-#define HAVE_DXGI_H 1
-#if WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP
-#define HAVE_XINPUT_H 1
-#endif
 #define STDC_HEADERS 1
 #define HAVE_STRING_H 1
 #define HAVE_MATH_H 1
@@ -155,20 +151,6 @@ typedef unsigned int uintptr_t;
 #define HAVE_TANF 1
 #define HAVE__FSEEKI64 1
 
-/* Enable various audio drivers */
-#define SDL_AUDIO_DRIVER_XAUDIO2	1
-#define SDL_AUDIO_DRIVER_DISK	1
-#define SDL_AUDIO_DRIVER_DUMMY	1
-
-/* Enable various input drivers */
-#if WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP
-#define SDL_JOYSTICK_DISABLED 1
-#define SDL_HAPTIC_DISABLED	1
-#else
-#define SDL_JOYSTICK_XINPUT 1
-#define SDL_HAPTIC_XINPUT   1
-#endif
-
 /* Enable various shared object loading systems */
 #define SDL_LOADSO_WINDOWS	1
 
@@ -182,28 +164,5 @@ typedef unsigned int uintptr_t;
 
 /* Enable various timer systems */
 #define SDL_TIMER_WINDOWS	1
-
-/* Enable various video drivers */
-#define SDL_VIDEO_DRIVER_WINRT	1
-#define SDL_VIDEO_DRIVER_DUMMY  1
-
-/* Enable OpenGL ES 2.0 (via a modified ANGLE library) */
-#define SDL_VIDEO_OPENGL_ES2 1
-#define SDL_VIDEO_OPENGL_EGL 1
-
-/* Enable appropriate renderer(s) */
-#define SDL_VIDEO_RENDER_D3D11  1
-
-#if SDL_VIDEO_OPENGL_ES2
-#define SDL_VIDEO_RENDER_OGL_ES2 1
-#endif
-
-/* Enable system power support */
-#define SDL_POWER_WINRT 1
-
-/* Enable assembly routines (Win64 doesn't have inline asm) */
-#ifndef _WIN64
-#define SDL_ASSEMBLY_ROUTINES	1
-#endif
 
 #endif /* _SDL_config_winrt_h */

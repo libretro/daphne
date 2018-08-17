@@ -103,17 +103,6 @@
 #define HAVE_SYSCONF    1
 #define HAVE_SYSCTLBYNAME 1
 
-/* enable iPhone version of Core Audio driver */
-#define SDL_AUDIO_DRIVER_COREAUDIO 1
-/* Enable the dummy audio driver (src/audio/dummy/\*.c) */
-#define SDL_AUDIO_DRIVER_DUMMY  1
-
-/* Enable the stub haptic driver (src/haptic/dummy/\*.c) */
-#define SDL_HAPTIC_DUMMY 1
-
-/* Enable MFi joystick support */
-#define SDL_JOYSTICK_MFI 1
-
 /* Enable Unix style SO loading */
 #define SDL_LOADSO_DLOPEN 1
 
@@ -123,32 +112,5 @@
 
 /* Enable various timer systems */
 #define SDL_TIMER_UNIX  1
-
-/* Supported video drivers */
-#define SDL_VIDEO_DRIVER_UIKIT  1
-#define SDL_VIDEO_DRIVER_DUMMY  1
-
-/* enable OpenGL ES */
-#define SDL_VIDEO_OPENGL_ES2 1
-#define SDL_VIDEO_OPENGL_ES 1
-#define SDL_VIDEO_RENDER_OGL_ES 1
-#define SDL_VIDEO_RENDER_OGL_ES2    1
-
-/* Enable system power support */
-#define SDL_POWER_UIKIT 1
-
-/* enable iPhone keyboard support */
-#define SDL_IPHONE_KEYBOARD 1
-
-/* enable iOS extended launch screen */
-#define SDL_IPHONE_LAUNCHSCREEN 1
-
-/* Set max recognized G-force from accelerometer
-   See src/joystick/uikit/SDL_sysjoystick.m for notes on why this is needed
- */
-#define SDL_IPHONE_MAX_GFORCE 5.0
-
-/* enable filesystem support */
-#define SDL_FILESYSTEM_COCOA   1
 
 #endif /* _SDL_config_iphoneos_h */

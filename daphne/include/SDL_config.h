@@ -37,12 +37,10 @@
 #include "SDL_config_winrt.h"
 #elif defined(__MACOSX__)
 #include "SDL_config_macosx.h"
-#elif defined(__IPHONEOS__)
+#elif defined(IOS)
 #include "SDL_config_iphoneos.h"
 #elif defined(__ANDROID__)
 #include "SDL_config_android.h"
-#elif defined(__PSP__)
-#include "SDL_config_psp.h"
 #else
 /* This is a minimal configuration just to get SDL running on new platforms */
 #include "SDL_config_minimal.h"
