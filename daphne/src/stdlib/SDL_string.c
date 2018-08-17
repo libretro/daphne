@@ -95,33 +95,13 @@ SDL_strstr(const char *haystack, const char *needle)
 #else
     size_t length = strlen(needle);
     while (*haystack) {
-        if (SDL_strncmp(haystack, needle, length) == 0) {
+        if (strncmp(haystack, needle, length) == 0) {
             return (char *) haystack;
         }
         ++haystack;
     }
     return NULL;
 #endif /* HAVE_STRSTR */
-}
-
-int
-SDL_strncmp(const char *str1, const char *str2, size_t maxlen)
-{
-#if defined(HAVE_STRNCMP)
-    return strncmp(str1, str2, maxlen);
-#else
-    while (*str1 && *str2 && maxlen) {
-        if (*str1 != *str2)
-            break;
-        ++str1;
-        ++str2;
-        --maxlen;
-    }
-    if (!maxlen) {
-        return 0;
-    }
-    return (int) ((unsigned char) *str1 - (unsigned char) *str2);
-#endif /* HAVE_STRNCMP */
 }
 
 int

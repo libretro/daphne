@@ -137,7 +137,7 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
         was_error = SDL_TRUE;
         goto done;
     }
-    if (SDL_strncmp(magic, "BM", 2) != 0) {
+    if (strncmp(magic, "BM", 2) != 0) {
         SDL_SetError("File is not a Windows BMP file");
         was_error = SDL_TRUE;
         goto done;

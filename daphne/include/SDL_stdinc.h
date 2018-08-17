@@ -336,7 +336,6 @@ extern DECLSPEC char *SDLCALL SDL_strchr(const char *str, int c);
 extern DECLSPEC char *SDLCALL SDL_strrchr(const char *str, int c);
 extern DECLSPEC char *SDLCALL SDL_strstr(const char *haystack, const char *needle);
 
-extern DECLSPEC int SDLCALL SDL_strncmp(const char *str1, const char *str2, size_t maxlen);
 extern DECLSPEC int SDLCALL SDL_strcasecmp(const char *str1, const char *str2);
 extern DECLSPEC int SDLCALL SDL_strncasecmp(const char *str1, const char *str2, size_t len);
 
@@ -381,7 +380,6 @@ extern DECLSPEC char *SDLCALL SDL_iconv_string(const char *tocode,
 #define SDL_strchr strchr
 #define SDL_strrchr strrchr
 #define SDL_strstr strstr
-#define SDL_strncmp strncmp
 #define SDL_strcasecmp strcasecmp
 #define SDL_strncasecmp strncasecmp
 #define SDL_snprintf snprintf

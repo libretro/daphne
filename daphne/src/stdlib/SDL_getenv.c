@@ -140,7 +140,7 @@ SDL_setenv(const char *name, const char *value, int overwrite)
         /* Check to see if it's already there... */
         len = (value - name);
         for (; SDL_env[i]; ++i) {
-            if (SDL_strncmp(SDL_env[i], name, len) == 0) {
+            if (strncmp(SDL_env[i], name, len) == 0) {
                 break;
             }
         }
@@ -223,7 +223,7 @@ SDL_getenv(const char *name)
     if (SDL_env) {
         len = strlen(name);
         for (i = 0; SDL_env[i] && !value; ++i) {
-            if ((SDL_strncmp(SDL_env[i], name, len) == 0) &&
+            if ((strncmp(SDL_env[i], name, len) == 0) &&
                 (SDL_env[i][len] == '=')) {
                 value = &SDL_env[i][len + 1];
             }
