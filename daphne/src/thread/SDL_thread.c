@@ -22,7 +22,9 @@
 
 /* System independent thread management routines for SDL */
 
-#include "assert.h"
+#include <assert.h>
+#include <string.h>
+
 #include "SDL_thread.h"
 #include "SDL_thread_c.h"
 #include "SDL_systhread.h"
@@ -335,7 +337,7 @@ SDL_CreateThreadWithStackSize(int (SDLCALL * fn) (void *),
 
     /* Set up the arguments for the thread */
     if (name != NULL) {
-        thread->name = SDL_strdup(name);
+        thread->name = strdup(name);
         if (thread->name == NULL) {
             SDL_OutOfMemory();
             free(thread);
