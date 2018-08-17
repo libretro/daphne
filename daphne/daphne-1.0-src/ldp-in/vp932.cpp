@@ -26,7 +26,7 @@
 // this code is to emulate the Phillips serial command set as used on the 
 // 22vp932 and 22vp380 as used in Euro Dragon's Lair and Euro Dragon's Lair 2
 // respectively
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 

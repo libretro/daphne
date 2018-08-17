@@ -23,11 +23,6 @@
 #include "sound.h"	// for get frequency stuff
 #include <string.h>	// for memset
 
-#ifdef DEBUG
-#include "../io/conout.h"
-#include <assert.h>
-#endif
-
 // how many beepers have been created
 unsigned int g_uBeeperCount = 0;
 
@@ -56,13 +51,6 @@ unsigned int g_uSamplesPerHalfCycle = 0;
 // init callback
 int beeper_init(Uint32 unused)
 {
-
-#ifdef DEBUG
-	// a couple of assumptions...
-	assert(AUDIO_CHANNELS == 2);
-	assert(AUDIO_BYTES_PER_SAMPLE == 4);
-#endif
-
 	// we only support 1 beeper for the time being
 	if (g_uBeeperCount == 0)
 	{
@@ -70,9 +58,6 @@ int beeper_init(Uint32 unused)
 		return 0;
 	}
 
-#ifdef DEBUG
-	assert(false);	// force dev to deal with this problem
-#endif
 	return -1;	// we only support 1 beeper for the time being
 }
 
@@ -98,11 +83,6 @@ void beeper_ctrl_data(unsigned int uPort, unsigned int uByte, int internal_id)
 			// Compute how many samples for half a cycle
 			// >> 1 because it's half a cycle (divide by 2)
 			g_uSamplesPerHalfCycle = (AUDIO_FREQ / g_uBeeperFreq) >> 1;
-#ifdef DEBUG
-			char s[320];
-			sprintf(s, "PC BEEPER : freq %u requested", g_uBeeperFreq);
-			printline(s);
-#endif
 		}
 		break;
 	case 0x43:	// audio control prep
@@ -120,10 +100,6 @@ void beeper_ctrl_data(unsigned int uPort, unsigned int uByte, int internal_id)
 // called from sound mixer to get audio stream
 void beeper_get_stream(Uint8 *stream, int length, int internal_id)
 {
-#ifdef DEBUG
-	// make sure this is in the proper format (stereo 16-bit)
-	assert((length % AUDIO_BYTES_PER_SAMPLE) == 0);
-#endif
 
 	if (g_uBeeperEnabled)
 	{

@@ -27,8 +27,6 @@
 
 #include "assert.h"
 
-/* #define DEBUG_CONVERT */
-
 /* Effectively mix right and left channels into a single channel */
 static void SDLCALL
 SDL_ConvertMono(SDL_AudioCVT * cvt, SDL_AudioFormat format)
@@ -36,9 +34,6 @@ SDL_ConvertMono(SDL_AudioCVT * cvt, SDL_AudioFormat format)
     int i;
     Sint32 sample;
 
-#ifdef DEBUG_CONVERT
-    fprintf(stderr, "Converting to mono\n");
-#endif
 	switch (format & (SDL_AUDIO_MASK_SIGNED |
                       SDL_AUDIO_MASK_BITSIZE |
                       SDL_AUDIO_MASK_DATATYPE)) {
@@ -196,10 +191,6 @@ SDL_ConvertStrip(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
 
-#ifdef DEBUG_CONVERT
-    fprintf(stderr, "Converting down from 6 channels to stereo\n");
-#endif
-
 #define strip_chans_6_to_2(type) \
     { \
         const type *src = (const type *) cvt->buf; \
@@ -239,10 +230,6 @@ static void SDLCALL
 SDL_ConvertStrip_2(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-
-#ifdef DEBUG_CONVERT
-    fprintf(stderr, "Converting 6 down to quad\n");
-#endif
 
 #define strip_chans_6_to_4(type) \
     { \
@@ -286,10 +273,6 @@ SDL_ConvertStereo(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
 
-#ifdef DEBUG_CONVERT
-    fprintf(stderr, "Converting to stereo\n");
-#endif
-
 #define dup_chans_1_to_2(type) \
     { \
         const type *src = (const type *) (cvt->buf + cvt->len_cvt); \
@@ -328,10 +311,6 @@ static void SDLCALL
 SDL_ConvertSurround(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-
-#ifdef DEBUG_CONVERT
-    fprintf(stderr, "Converting stereo to surround\n");
-#endif
 
     switch (format & (SDL_AUDIO_MASK_SIGNED  |
                       SDL_AUDIO_MASK_BITSIZE |
@@ -587,10 +566,6 @@ static void SDLCALL
 SDL_ConvertSurround_4(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-
-#ifdef DEBUG_CONVERT
-    fprintf(stderr, "Converting stereo to quad\n");
-#endif
 
     switch (format & (SDL_AUDIO_MASK_SIGNED |
                       SDL_AUDIO_MASK_BITSIZE |
@@ -1027,10 +1002,6 @@ SDL_BuildAudioCVT(SDL_AudioCVT * cvt,
     if ((src_rate == 0) || (dst_rate == 0)) {
         return SDL_SetError("Source or destination rate is zero");
     }
-#ifdef DEBUG_CONVERT
-    printf("Build format %04x->%04x, channels %u->%u, rate %d->%d\n",
-           src_fmt, dst_fmt, src_channels, dst_channels, src_rate, dst_rate);
-#endif
 
     /* Start off with no conversion necessary */
     SDL_zerop(cvt);

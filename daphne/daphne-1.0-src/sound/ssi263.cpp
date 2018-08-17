@@ -47,10 +47,6 @@
 #include "../io/conout.h"
 #include "ssi263.h"
 
-#ifdef SSI_REG_DEBUG
-#include <stdio.h>
-#endif
-
 // This code attempts to emulate the SSI263 speech chip used in the game Thayer's Quest
 
 // SSI-263 Control flag.
@@ -77,13 +73,6 @@ void ssi263_reg0(unsigned char value, Uint8 *irq_status)
 {
     static char phones_text[SSI_PHRASE_BUF_LEN];  // Holds rsynth phonemes.
     static int phones_len = 0;
-
-#if defined(SSI_DEBUG) || defined(SSI_REG_DEBUG)
-	char s[SSI_PHRASE_BUF_LEN] = {0};
-#endif
-#ifdef SSI_DEBUG
-    static char ssi263_phoneme_text[SSI_PHRASE_BUF_LEN]; // Phonemes sent to the SSI-263.
-#endif
 
 #define NUM_PHONEMES 64
 
@@ -163,9 +152,6 @@ void ssi263_reg0(unsigned char value, Uint8 *irq_status)
 		// 0xC0 starts the speech chip requesting phonemes in control mode
 		if (value == 0xC0)
 		{
-#ifdef SSI_REG_DEBUG
-            printline("ssi263_reg0: SSI263 enabled");
-#endif
             if (m_speech_enabled)
             {
                 // Speech synthesis option active, so reset everything so
@@ -182,9 +168,6 @@ void ssi263_reg0(unsigned char value, Uint8 *irq_status)
 		// Zero stops the speech chip requesting phonemes (stops raising IRQs).
 		else if (value == 0)
 		{
-#ifdef SSI_REG_DEBUG
-            printline("ssi263_reg0: SSI263 disabled");
-#endif
             // Call into the thayer class to display the speech text buffer,
             // as it has the game's RAM memory. Besides, it's controlling the
             // video overlay anyway...
@@ -195,15 +178,6 @@ void ssi263_reg0(unsigned char value, Uint8 *irq_status)
                 // Done concatenating phonemes, so speak if have something to say.
                 if (phones_len)
                 {
-#ifdef SSI_DEBUG
-                    sprintf(s, "SSI-263 phonemes: %s", ssi263_phoneme_text);
-                    printline(s);
-
-                    sprintf(s, "Rsynth phonemes: %s", phones_text);
-                    printline(s);
-
-                    ssi263_phoneme_text[0] = '\0';
-#endif
                     // Since the speech output will likely a while,
 					// the cpu timer is 'paused' here
 
@@ -223,26 +197,16 @@ void ssi263_reg0(unsigned char value, Uint8 *irq_status)
 	// We are receiving phoneme/duration data.
 	else
 	{
-#ifdef SSI_REG_DEBUG
-		unsigned char duration = static_cast<unsigned char>((value & 0xC0) >> 6);
-#endif
 		unsigned char phoneme = static_cast<unsigned char>(value & 0x3F);
 
 		switch (phoneme)
 		{
 		case 0:
     		// Some form of pause.
-#ifdef SSI_REG_DEBUG
-            sprintf(s, "ssi263_reg0: Pause duration 0x%x", duration);
-			printline(s);
-#endif
             if (m_speech_enabled)
             {
                 // The rsynth pause "phoneme" is the space character. Check to make
                 // sure we're not just concatenating spaces and wasting CPU cycles.
-#ifdef SSI_DEBUG
-                strcat(ssi263_phoneme_text, " ");
-#endif
                 if (phones_len && phones_text[phones_len - 1] != ' ')
                 {
                     phones_text[phones_len++] = ' ';
@@ -262,9 +226,6 @@ void ssi263_reg0(unsigned char value, Uint8 *irq_status)
                 const char *p_start;
 		const char *p_end;
 
-#ifdef SSI_DEBUG
-                strcat(ssi263_phoneme_text, phoneme_xlate[phoneme].ssi263_phoneme);
-#endif
                 // The SSI-263 appears to have some very short duration phonemes
                 // that are repeated to stretch the sound out. The rsynth
                 // phonemes are of longer duration, so eliminate any duplicate
@@ -308,10 +269,6 @@ void ssi263_reg0(unsigned char value, Uint8 *irq_status)
                 }
             }
 
-#ifdef SSI_REG_DEBUG
-            sprintf(s, "ssi263_reg0: Phoneme 0x%x, duration 0x%x", phoneme, duration);
-			printline(s);
-#endif
 			break;
 		}
     }
@@ -320,10 +277,6 @@ void ssi263_reg0(unsigned char value, Uint8 *irq_status)
 // INFLECT
 void ssi263_reg1(unsigned char value)
 {
-#ifdef SSI_REG_DEBUG
-	char s[81] = { 0 };
-#endif
-
 	switch (value)
 	{
 	    case 0x46:
@@ -334,17 +287,9 @@ void ssi263_reg1(unsigned char value)
         case 0x6E:
 	    case 0x76:
 	    case 0x8E:
-#ifdef SSI_REG_DEBUG
-            sprintf(s, "ssi263_reg1: Inflection byte, 0x%x", value);
-            printline(s);
-#endif
 		    break;
 
     	default:
-#ifdef SSI_REG_DEBUG
-            sprintf(s, "ssi263_reg1: Unknown inflection byte, %x", value);
-		    printline(s);
-#endif
 		    break;
 	}
 }
@@ -355,21 +300,10 @@ void ssi263_reg2(unsigned char value)
 	switch (value)
 	{
 	case 0x98:
-#ifdef SSI_REG_DEBUG
-        printline("ssi263_reg2: Speech rate set to low");
-#endif
 		break;
 	case 0xA8:
-#ifdef SSI_REG_DEBUG
-        printline("ssi263_reg2: Speech rate set to high");
-#endif
 		break;
 	default:
-#ifdef SSI_REG_DEBUG
-		char s[81] = { 0 };
-        sprintf(s, "ssi263_reg2: Unknown speech rate byte, 0x%x", value);
-		printline(s);
-#endif
 		break;
 	}
 }
@@ -381,16 +315,10 @@ void ssi263_reg3(unsigned char value)
 	{
         // High bit set puts SSI-263 into control mode. 
 		m_ssi_control = true;
-#ifdef SSI_REG_DEBUG
-        printline("ssi263_reg3: Control mode enabled");
-#endif
 	}
 	else if (value & 0x70)
 	{
 		m_ssi_control = false;
-#ifdef SSI_REG_DEBUG
-        printline("ssi263_reg3: Control mode disabled");
-#endif
     }
     else
     {
@@ -403,12 +331,6 @@ void ssi263_reg3(unsigned char value)
 	            break;
 
             default:
-#ifdef SSI_REG_DEBUG
-                char s[81] = { 0 };
-
-                sprintf(s, "ssi263_reg3: Unknown amplitude code, 0x%x", value);
-                printline(s);
-#endif
                 break;
 		}
 	}
@@ -420,22 +342,10 @@ void ssi263_reg4(unsigned char value)
 	switch (value)
 	{
 	case 0xE6:
-#ifdef SSI_REG_DEBUG
-        printline("ssi263_reg4: Filter frequency set to low");
-#endif
 		break;
 	case 0xE7:
-#ifdef SSI_REG_DEBUG
-        printline("ssi263_reg4: Filter frequency set to high");
-#endif
 		break;
 	default:
-#ifdef SSI_REG_DEBUG
-        char s[81] = {0};
-
-        sprintf(s, "ssi263_reg4: Unknown filter frequency value, 0x%x", value);
-        printline(s);
-#endif
 		break;
 	}
 }

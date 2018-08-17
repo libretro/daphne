@@ -24,10 +24,6 @@
 // DAPHNE
 // The sound code in this file uses SDL
 
-#ifdef DEBUG
-#include <assert.h>
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -498,9 +494,6 @@ bool delete_soundchip(unsigned int id)
 
 void init_soundchip()
 {
-#ifdef DEBUG
-	assert(is_sound_enabled());
-#endif
 	if (g_soundchip_head)
 	{
 		struct sounddef *cur = g_soundchip_head;
@@ -544,9 +537,6 @@ void mixNone(Uint8 *stream, int length)
 // USED WHEN: there are more than 1 sound chip, but all volumes are maximum
 void mixWithMaxVolume(Uint8 *stream, int length)
 {
-#ifdef DEBUG
-	assert(g_soundchip_head);
-#endif // DEBUG
 
 	// this is a dangerous trick (casting one struct to another) in order to get us extra speed
 	g_pMixBufs = (struct mix_s *) g_soundchip_head;
@@ -622,9 +612,6 @@ void audio_callback ( void *data, Uint8 *stream, int length )
 	// fill remaining buffer space for each sound chip
 	while (cur)
 	{
-#ifdef DEBUG
-		assert(cur->stream_callback != NULL);	// every sound chip will have to supply this
-#endif
 		cur->stream_callback(cur->buffer_pointer, cur->bytes_left, cur->internal_id);
 		cur->buffer_pointer = cur->buffer;
 		cur->bytes_left = g_uSoundChipBufSize;
@@ -803,9 +790,6 @@ void update_soundchip_volumes()
 
 void shutdown_soundchip()
 {
-#ifdef DEBUG
-	assert(g_sound_initialized);
-#endif
 	struct sounddef *cur = g_soundchip_head;
 	while (cur)
 	{

@@ -20,9 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-// undefine this to get rid of debug messages, or 1 to view them
-//#define TMS_DEBUG 1
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
@@ -173,10 +171,6 @@ void tms9128nl_write_port1(unsigned char value)
 {
 	static int tempindex = 0;
 
-#ifdef TMS_DEBUG
-	char s[81] = { 0 };	// just a temp string
-#endif
-	
     if (toggleflag==0)
     {
         wvidindex=0;
@@ -209,9 +203,6 @@ void tms9128nl_write_port1(unsigned char value)
 					g_vidmode = 2;
 					if(prevg_vidmode != g_vidmode)	// Barbadel: if we're switching video modes, clear the overlay
 					{
-#ifdef TMS_DEBUG
-						printline("TMS: mode 2");
-#endif
 						tms9128nl_clear_overlay();
 						prevg_vidmode = g_vidmode;
 					}
@@ -219,15 +210,9 @@ void tms9128nl_write_port1(unsigned char value)
 				// if the B&W bit is set, flag an error
 				if (lowbyte & 1)
 				{
-#ifdef TMS_DEBUG
-					printline("TMS: B&W bit set, unsupported");
-#endif
 				}
 				else
 				{
-					#ifdef TMS_DEBUG
-						printline("TMS : B&W bit cleared");
-					#endif
 				}
 				break;
 
@@ -236,24 +221,14 @@ void tms9128nl_write_port1(unsigned char value)
 				// if bit 0 is set, MAG
 				if (lowbyte & 1)
 				{
-#ifdef TMS_DEBUG
-					printline("TMS: double sprite size not supported");
-#endif
 				}
 
 				// if bit 1 is set, 16x16 sprites is what we use, else 8x8
 				if (lowbyte & 2)
 				{
-#ifdef TMS_DEBUG
-					printline("TMS: 16x16 sprites requested");
-#endif
 				}
 				else
 				{
-#ifdef TMS_DEBUG
-					//printline("TMS: 8x8 sprites requested");
-					// don't print anything since this is what we expect
-#endif
 				}
 
 				// bit 3 set == mode 3
@@ -262,9 +237,6 @@ void tms9128nl_write_port1(unsigned char value)
 					g_vidmode=3;
 					if(prevg_vidmode != g_vidmode)	// Barbadel: if we're switching video modes, clear the overlay
 					{
-#ifdef TMS_DEBUG
-						printline("TMS: mode 3");
-#endif
 						tms9128nl_clear_overlay();
 						prevg_vidmode = g_vidmode;
 					}
@@ -275,9 +247,6 @@ void tms9128nl_write_port1(unsigned char value)
 					g_vidmode=1;
 					if(prevg_vidmode != g_vidmode)	// Barbadel: if we're switching video modes, clear the overlay
 					{
-#ifdef TMS_DEBUG
-						printline("TMS: mode 1");
-#endif
 						tms9128nl_clear_overlay();
 						prevg_vidmode = g_vidmode;
 					}
@@ -289,9 +258,6 @@ void tms9128nl_write_port1(unsigned char value)
 					g_vidmode=0;
 					if(prevg_vidmode != g_vidmode)	// Barbadel: if we're switching video modes, clear the overlay
 					{
-						#ifdef TMS_DEBUG
-							printline("TMS: g_vidmode 0 special");
-						#endif
 						tms9128nl_clear_overlay();
 						prevg_vidmode = g_vidmode;
 					}
@@ -299,25 +265,11 @@ void tms9128nl_write_port1(unsigned char value)
 				// bit 5 set == generate interrupts
 				if (lowbyte & 0x20)
 				{
-					#ifdef TMS_DEBUG
-						// if they weren't previously enabled
-						if (!g_tms_interrupt_enabled)
-						{
-							printline("TMS: Generate interrupts enabled");
-						}
-					#endif
 					// don't print anything since this is what we expect
 					g_tms_interrupt_enabled = 1;
 				}
 				else
 				{
-					#ifdef TMS_DEBUG
-						// only notify us if they weren't already disabled
-						if (g_tms_interrupt_enabled)
-						{
-							printline("TMS: Generate interrupts disabled");
-						}
-					#endif
 					g_tms_interrupt_enabled = 0;
 				}
 					
@@ -332,118 +284,46 @@ void tms9128nl_write_port1(unsigned char value)
 	                viddisp=0; // disable video display (blank screen)
 
 					tms9128nl_clear_overlay();
-					#ifdef TMS_DEBUG
-						printline("TMS: VIDEO DISPLAY TO BE BLANKED!");
-					#endif
 				}
 
 				// bit 7 set == select 16K ram, else 4K ram
 				if (lowbyte & 0x80)
 				{
-					#ifdef TMS_DEBUG
-						// printline("TMS: 16K ram selected");
-					#endif
 					// don't print anything since this is what we expect
 				}
 				else
 				{
-					#ifdef TMS_DEBUG
-						printline("TMS: 4k ram selected, unsupported");
-					#endif
 				}
 				break;
 
 			// register #2 sets address for pattern name table
 			case 2:
-				#ifdef TMS_DEBUG
-				{
-					unsigned char temp = (unsigned char) (lowbyte & 0xF); // only lowest 4 bits
-					if (temp != g_tms_pnt_addr)
-					{
-						sprintf(s, "TMS: Pattern Name Table Address changed to %x", g_tms_pnt_addr);
-						printline(s);
-					}
-				}
-				#endif
 				g_tms_pnt_addr = (unsigned char) (lowbyte & 0xF); // only lowest 4 bits
 				break;
 			// register #3 sets address for color table
 			case 3:
-				#ifdef TMS_DEBUG
-					if (lowbyte != g_tms_ct_addr)
-					{
-						sprintf(s, "TMS: Color Table Address changed to %x", g_tms_ct_addr);
-						printline(s);
-					}
-				#endif
 
 				g_tms_ct_addr = lowbyte;
 				break;
 
 			// register #4 sets address for pattern generation table
 			case 4:
-				#ifdef TMS_DEBUG
-				{
-					unsigned char temp = (unsigned char) (lowbyte & 7);
-					if (temp != g_tms_pgt_addr)
-					{
-						sprintf(s, "TMS: Pattern Generation Table changed to %x", g_tms_pgt_addr);
-						printline(s);
-					}
-				}
-				#endif
 				
 				g_tms_pgt_addr = (unsigned char) (lowbyte & 7); // only lowest 3 bits
 				break;
 
 			// register #5 sets address for sprite attribute table
 			case 5:
-				#ifdef TMS_DEBUG
-					{
-						unsigned char temp = (unsigned char) (lowbyte & 0x7F);
-						if (temp != g_tms_sat_addr)
-						{
-							sprintf(s, "TMS: Sprite Attribute Table address changed to %x", g_tms_sat_addr);
-							printline(s);
-						}
-					}
-				#endif
 				g_tms_sat_addr = (unsigned char) (lowbyte & 0x7F); // discard high bit
 				break;
 				
 			// register #6 sets address for sprite generation table
 			case 6:
-				#ifdef TMS_DEBUG
-					{
-						unsigned char temp = (unsigned char) (lowbyte & 0x7);
-						if (temp != g_tms_sgt_addr)
-						{
-							sprintf(s, "TMS: Sprite Generator Table address changed to %x", g_tms_sgt_addr);
-							printline(s);
-						}
-					}
-				#endif
 				g_tms_sgt_addr = (unsigned char) (lowbyte & 0x7);	// only lowest 3 bits
 				break;
 
 			// register #7 sets foreground and background colors
 			case 7:
-				#ifdef TMS_DEBUG
-				{
-					unsigned char t1 = (unsigned char) ((lowbyte & 0xF0) >> 4);
-					unsigned char t2 = (unsigned char) (lowbyte & 0x0F);
-					if (t1 != g_tms_foreground_color)
-					{
-						sprintf(s, "TMS : Foreground color changed to %x", g_tms_foreground_color);
-						printline(s);
-					}
-					if (t2 != g_tms_background_color)
-					{
-						sprintf(s, "TMS : Background color changed to %x", g_tms_background_color);
-						printline(s);
-					}
-				}
-				#endif
 				
 				g_tms_foreground_color = (unsigned char) ((lowbyte & 0xF0) >> 4);
 				g_tms_background_color = (unsigned char) (lowbyte & 0x0F);
@@ -451,10 +331,6 @@ void tms9128nl_write_port1(unsigned char value)
 				break;
 
 			default:
-				#ifdef TMS_DEBUG
-					sprintf(s,"TMS: Register %d was written to (unsupported)", which_reg);
-					printline(s);
-				#endif
 				break;
 			} //end switch
 		} //end if bit 7 is set (and we're writing to a register)
@@ -463,21 +339,6 @@ void tms9128nl_write_port1(unsigned char value)
 		// instead, we are modifying the video memory address
 		else
 		{
-			#ifdef TMS_DEBUG
-				// NOTE : we don't currently keep track of whether we're in memory read/write mode
-				// this seems to work fine for now but it may be an issue later
-				
-				// if bit 6 is set it means we're in memory write mode
-				if (highbyte & 0x40)
-				{
-	//				printline("Memory write mode requested");
-				}
-				// otherwise we're in memory read mode
-				else
-				{
-					printline("Memory read mode requested");
-				}
-			#endif
 			
 			highbyte = (unsigned char) (highbyte & 0x3f); //strip top 2 bits
 			tempindex = (highbyte << 8) | lowbyte;

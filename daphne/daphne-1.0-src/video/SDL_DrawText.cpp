@@ -11,7 +11,7 @@
 #include "SDL_DrawText.h"
 
 
-#ifdef WIN32
+#ifdef _WIN32
 #pragma warning (disable:4244)	// disable the warning about possible loss of data
 #endif
 

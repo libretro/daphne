@@ -26,10 +26,6 @@
 #include "../io/mpo_mem.h"
 #include "mix.h"
 
-#ifdef DEBUG
-#include <assert.h>
-#endif
-
 struct mix_s *g_pMixBufs = NULL;
 Uint8 *g_pSampleDst = 0;
 unsigned int g_uBytesToMix = 0;

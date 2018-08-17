@@ -6,10 +6,6 @@
 #include <string.h>	// for memset
 #include "samples.h"
 
-#ifdef DEBUG
-#include <assert.h>
-#endif
-
 //using namespace std;
 
 struct sample_data_s
@@ -69,10 +65,6 @@ void samples_shutdown(int unused)
 // called from sound mixer to get audio stream
 void samples_get_stream(Uint8 *stream, int length, int unused)
 {
-#ifdef DEBUG
-	assert (length % 4 == 0);	// make sure it's divisible by 4
-#endif
-
 	// (each sample is 4 bytes, which is why we divide length by 4)
 	unsigned int uTotalSamples = length >> 2;
 

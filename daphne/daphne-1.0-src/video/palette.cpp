@@ -26,10 +26,6 @@
 #include "rgb2yuv.h"
 #include "../video/video.h"
 
-#ifdef DEBUG
-#include <assert.h>
-#endif
-
 unsigned int g_palette_size = 0;
 SDL_Color *g_rgb_palette = NULL;
 
@@ -92,11 +88,6 @@ bool palette_initialize (unsigned int num_colors)
 
 void palette_set_transparency(unsigned int uColorIndex, bool transparent)
 {
-#ifdef DEBUG
-	// sanity check
-	assert(uColorIndex < g_palette_size);
-#endif
-
 	g_yuv_palette[uColorIndex].transparent = transparent;
 
 	if (transparent)
@@ -112,11 +103,6 @@ void palette_set_transparency(unsigned int uColorIndex, bool transparent)
 // call this function when a color has changed
 void palette_set_color (unsigned int color_num, SDL_Color color_value)
 {
-
-#ifdef DEBUG
-	assert (color_num < g_palette_size);
-#endif
-
 	// make sure the color has really been modified because the RGB2YUV calculations are expensive
 	if ((g_rgb_palette[color_num].r != color_value.r) || (g_rgb_palette[color_num].g != color_value.g) || (g_rgb_palette[color_num].b != color_value.b))
 	{

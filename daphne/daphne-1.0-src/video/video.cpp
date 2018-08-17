@@ -47,13 +47,8 @@
 using namespace std;
 
 unsigned int g_vid_width = 640, g_vid_height = 480;	// default video width and video height
-#ifdef DEBUG
-const Uint16 cg_normalwidths[] = { 320, 640, 800, 1024, 1280, 1280, 1600 };
-const Uint16 cg_normalheights[]= { 240, 480, 600, 768, 960, 1024, 1200 };
-#else
 const Uint16 cg_normalwidths[] = { 640, 800, 1024, 1280, 1280, 1600 };
 const Uint16 cg_normalheights[]= { 480, 600, 768, 960, 1024, 1200 };
-#endif // DEBUG
 
 // the dimensions that we draw (may differ from g_vid_width/height if aspect ratio is enforced)
 unsigned int g_draw_width = 640, g_draw_height = 480;

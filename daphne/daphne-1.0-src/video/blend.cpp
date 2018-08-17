@@ -24,10 +24,6 @@
 
 #include "blend.h"
 
-#ifdef DEBUG
-#include <assert.h>
-#endif
-
 Uint8 *g_blend_line1 = 0;
 Uint8 *g_blend_line2 = 0;
 Uint8 *g_blend_dest = 0;

@@ -24,14 +24,6 @@
 #include <string.h>	// for memset
 #include "../io/mpo_mem.h"
 
-#ifdef DEBUG
-#include "../io/conout.h"
-#include "../io/mpo_fileio.h"
-#include "../cpu/cpu.h"
-#include "../io/numstr.h"
-#include <assert.h>
-#endif
-
 // how many DACs have been created
 unsigned int g_uDACCount = 0;
 
@@ -66,33 +58,9 @@ double g_dSamplesPerCycle = 0.0;
 
 /////////////////////////////////////////////////////////////
 
-//#define OUT_RAW 1
-
-#ifdef OUT_RAW
-const char *STREAM_NAME = "stream.raw";
-const char *SAMPLE_NAME = "sample.raw";
-
-mpo_io *stream_io = NULL;
-mpo_io *sample_io = NULL;
-
-#endif
-
 // init callback
 int dac_init(unsigned int uCpuFreq)
 {
-
-#ifdef DEBUG
-	// a couple of assumptions...
-	assert(AUDIO_CHANNELS == 2);
-	assert(AUDIO_BYTES_PER_SAMPLE == 4);
-	assert(g_uDACCount == 0);	// not designed to handle more than 1 DAC
-#endif
-
-#ifdef OUT_RAW
-	stream_io = mpo_open(STREAM_NAME, MPO_OPEN_CREATE);
-	sample_io = mpo_open(SAMPLE_NAME, MPO_OPEN_CREATE);
-#endif
-
 	for (int i = 0; i < 256; i++)
 	{
 //		g_DACTable[i] = (i - 128) * 256;
@@ -109,14 +77,6 @@ int dac_init(unsigned int uCpuFreq)
 
 void dac_ctrl_data(unsigned int uCyclesSinceLastChange, unsigned int u8Byte, int internal_id)
 {
-#ifdef DEBUG
-	assert(u8Byte <= 255);	// make sure it is really 8-bit
-#endif
-
-#ifdef OUT_RAW
-	if (sample_io) mpo_write(&u8Byte, 1, NULL, sample_io);
-#endif
-
 	// if this is a recent update to the DAC, then we need to buffer it
 	if (uCyclesSinceLastChange < g_uCyclesPerInterval)
 	{
@@ -125,9 +85,6 @@ void dac_ctrl_data(unsigned int uCyclesSinceLastChange, unsigned int u8Byte, int
 		// calculate how many samples we should have at this point ...
 		unsigned int uCorrectSampleCount = (unsigned int) ((g_uCyclesUsedThisInterval * g_dSamplesPerCycle) + 0.5);
 
-#ifdef DEBUG
-		assert(uCorrectSampleCount > g_uSampleCountThisInterval);
-#endif
 		// the # of samples we will be storing depends on how many we've already stored
 		unsigned int uSamplesToStore = uCorrectSampleCount - g_uSampleCountThisInterval;
 
@@ -157,11 +114,6 @@ void dac_ctrl_data(unsigned int uCyclesSinceLastChange, unsigned int u8Byte, int
 // called from sound mixer to get audio stream
 void dac_get_stream(Uint8 *stream, int length, int internal_id)
 {
-#ifdef DEBUG
-	// make sure this is in the proper format (stereo 16-bit)
-	assert((length % AUDIO_BYTES_PER_SAMPLE) == 0);
-#endif
-
 	/*
 	if (g_uDACSampleCount > 45)
 	{
@@ -195,10 +147,6 @@ void dac_get_stream(Uint8 *stream, int length, int internal_id)
 
 		Uint32 uSample = (Uint32) ((((Uint16) mono_sample) << 16) | (Uint16) mono_sample);	// convert to stereo
 
-#ifdef OUT_RAW
-		if (stream_io) mpo_write(&uSample, sizeof(uSample), NULL, stream_io);
-#endif
-
 		STORE_LIL_UINT32(stream + pos, uSample);	// store to audio stream
 		pos += 4;
 	}
@@ -209,16 +157,10 @@ void dac_get_stream(Uint8 *stream, int length, int internal_id)
 	// if we have leftover samples
 	if (g_uDACSampleCount > total_samples)
 	{
-#ifdef DEBUG
-		unsigned char cNewFront = g_u8SampleBuf[total_samples];
-#endif
 		g_uDACSampleCount -= total_samples;
 		
 		// move leftover samples to beginning of buffer
 		memmove(g_u8SampleBuf, g_u8SampleBuf + total_samples, g_uDACSampleCount);
-#ifdef DEBUG
-		assert(g_u8SampleBuf[0] == cNewFront);	// make sure we crafted memmove command correctly
-#endif
 	}
 	// else, no leftovers...
 	else g_uDACSampleCount = 0;

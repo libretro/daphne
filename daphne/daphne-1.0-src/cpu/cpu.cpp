@@ -23,12 +23,8 @@
 // cpu
 // by Matt Ownby
 // Designed to do all of the universal CPU functions needed for the emulator
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
-#endif
-
-#ifdef DEBUG
-#include <assert.h>
 #endif
 
 #include "cpu.h"
@@ -438,10 +434,6 @@ void cpu_execute_loop()
 
 				if (u64ExpectedCycles > cpu->total_cycles_executed)
 				{
-#ifdef DEBUG
-					// make sure this will fit in a 32-bit number
-					assert((u64ExpectedCycles - cpu->total_cycles_executed) < (unsigned int) (1 << 31));
-#endif
 					// calculate # of cycles to execute
 					cycles_to_execute = (Uint32) (u64ExpectedCycles - cpu->total_cycles_executed);
 
@@ -479,9 +471,6 @@ void cpu_execute_loop()
 								cd_cycle_count[g_active_cpu] += elapsed_cycles;
 #endif // CPU_DIAG
 	
-#ifdef DEBUG
-								assert(cycles_to_execute >= uCyclesTilEvent);
-#endif // DEBUG
 								cycles_to_execute -= uCyclesTilEvent;	// NOTE : we can't subtract elapsed_cycles because it may be greater than cycles_to_execute
 								cpu->uEventCyclesEnd = 0;	// event has been fired, we're done ...
 	
@@ -568,20 +557,9 @@ void cpu_execute_loop()
 						if (!nmi_asserted)
 						{
 							g_game->do_irq(i);
-#ifdef DEBUG
-							assert(cpu->pending_irq_count[i] > 0);
-#endif
 							--cpu->pending_irq_count[i];
 							break;	// break out of for loop because we only want to assert 1 IRQ per loop
 						}
-#ifdef DEBUG
-						// make sure NMI's aren't smothering IRQ's
-						else if (cpu->pending_irq_count[i] > 5)
-						{
-							printline("cpu.cpp WARNING : IRQ's are piling up and not having a chance to get used");
-						}
-						// else nothing ...
-#endif
 					}
 				} // end for loop
 				// END CHECK FOR IRQ
@@ -680,14 +658,6 @@ void cpu_execute_loop()
 		
 		// END FORCING CPU TO RUN AT PROPER SPEED
 
-#ifdef DEBUG
-		// the cpu should ideally not be paused at this point because if it is, it will
-		// lead to inaccuracies.  It would be better to have a boolean that requests
-		// for the cpu to be paused, and then if that boolean is true, to pause the
-		// cpu at this point.  That would be more accurate.
-		assert(!g_cpu_paused);
-#endif
-
 		do
 		{
 			// limit checks for input events to every 16 ms
@@ -784,10 +754,6 @@ void cpu_execute_one_cycle()
 
 				if (u64ExpectedCycles > cpu->total_cycles_executed)
 				{
-#ifdef DEBUG
-					// make sure this will fit in a 32-bit number
-					assert((u64ExpectedCycles - cpu->total_cycles_executed) < (unsigned int)(1 << 31));
-#endif
 					// calculate # of cycles to execute
 					cycles_to_execute = (Uint32)(u64ExpectedCycles - cpu->total_cycles_executed);
 
@@ -825,9 +791,6 @@ void cpu_execute_one_cycle()
 								cd_cycle_count[g_active_cpu] += elapsed_cycles;
 #endif // CPU_DIAG
 
-#ifdef DEBUG
-								assert(cycles_to_execute >= uCyclesTilEvent);
-#endif // DEBUG
 								cycles_to_execute -= uCyclesTilEvent;	// NOTE : we can't subtract elapsed_cycles because it may be greater than cycles_to_execute
 								cpu->uEventCyclesEnd = 0;	// event has been fired, we're done ...
 
@@ -914,20 +877,9 @@ void cpu_execute_one_cycle()
 						if (!nmi_asserted)
 						{
 							g_game->do_irq(i);
-#ifdef DEBUG
-							assert(cpu->pending_irq_count[i] > 0);
-#endif
 							--cpu->pending_irq_count[i];
 							break;	// break out of for loop because we only want to assert 1 IRQ per loop
 						}
-#ifdef DEBUG
-						// make sure NMI's aren't smothering IRQ's
-						else if (cpu->pending_irq_count[i] > 5)
-						{
-							printline("cpu.cpp WARNING : IRQ's are piling up and not having a chance to get used");
-						}
-						// else nothing ...
-#endif
 					}
 				} // end for loop
 				  // END CHECK FOR IRQ
@@ -1026,13 +978,6 @@ void cpu_execute_one_cycle()
 
 		// END FORCING CPU TO RUN AT PROPER SPEED
 
-#ifdef DEBUG
-		// the cpu should ideally not be paused at this point because if it is, it will
-		// lead to inaccuracies.  It would be better to have a boolean that requests
-		// for the cpu to be paused, and then if that boolean is true, to pause the
-		// cpu at this point.  That would be more accurate.
-		assert(!g_cpu_paused);
-#endif
 		// 2017.08.18 - RJS - Single input check done here.  There is a lot of flotsam in this cpp.
 		// If this core will live on, it should be eliminated for search  ease.
 		SDL_check_input();	// check for input events (keyboard, joystick, etc)
@@ -1123,9 +1068,6 @@ void cpu_pause()
 {
 	g_cpu_paused_timer.push(refresh_ms_time());
 	g_cpu_paused = true;
-#ifdef DEBUG
-//	printline("CPU paused...");
-#endif
 }
 
 // Recursively unpauses cpu execution
@@ -1145,10 +1087,6 @@ void cpu_unpause()
 			g_cpu_paused = false;
 		}
 		// else we are still paused because our stack isn't empty
-
-#ifdef DEBUG
-//		printline("CPU unpaused...");
-#endif
 	}
 	else
 	{
@@ -1258,25 +1196,13 @@ void cpu_generate_nmi(Uint8 cpu_id)
 {
 	struct cpudef *cpu = get_cpu_struct(cpu_id);
 
-#ifdef DEBUG
-	assert(cpu);
-#endif
-
 	cpu->pending_nmi_count++;
 }
 
 void cpu_change_irq(Uint8 id, unsigned int which_irq, double new_period)
 {
-#ifdef DEBUG
-	assert(which_irq < MAX_IRQS);
-#endif
-
 	struct cpudef *cpu = get_cpu_struct(id);
 	
-#ifdef DEBUG
-	assert(cpu);
-#endif
-
 	cpu->irq_period[which_irq] = new_period;
 	cpu_recalc();
 //	cpu->cycles_per_irq[which_irq] = (Uint32) (cpu->cycles_per_ms * cpu->irq_period[which_irq]);
@@ -1286,15 +1212,8 @@ void cpu_change_irq(Uint8 id, unsigned int which_irq, double new_period)
 
 void cpu_generate_irq(Uint8 cpu_id, unsigned int which_irq)
 {
-#ifdef DEBUG
-	assert(which_irq < MAX_IRQS);
-#endif
 
 	struct cpudef *cpu = get_cpu_struct(cpu_id);
-
-#ifdef DEBUG
-	assert (cpu);
-#endif
 
 	cpu->pending_irq_count[which_irq]++;
 }
