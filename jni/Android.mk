@@ -16,5 +16,5 @@ LOCAL_MODULE    := retro
 LOCAL_SRC_FILES := $(SOURCES_CXX) $(SOURCES_C)
 LOCAL_CXXFLAGS  := $(COREFLAGS) $(INCFLAGS)
 LOCAL_CFLAGS    := $(INCFLAGS)
-LOCAL_LDFLAGS   := -Wl,-version-script=$(LIBRETRO_DIR)/link.T
+LOCAL_LDFLAGS   := -Wl,-version-script=$(CORE_DIR)/link.T
 include $(BUILD_SHARED_LIBRARY)
