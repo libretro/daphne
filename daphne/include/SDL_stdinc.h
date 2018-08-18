@@ -265,20 +265,6 @@ SDL_COMPILE_TIME_ASSERT(sint64, sizeof(Sint64) == 8);
    This is "-b" for Borland C/C++ and "-ei" for Watcom C/C++ (v11).
 */
 
-/** \cond */
-#ifndef DOXYGEN_SHOULD_IGNORE_THIS
-#if !defined(__ANDROID__)
-   /* TODO: include/SDL_stdinc.h:174: error: size of array 'SDL_dummy_enum' is negative */
-typedef enum
-{
-    DUMMY_ENUM_VALUE
-} SDL_DUMMY_ENUM;
-
-SDL_COMPILE_TIME_ASSERT(enum, sizeof(SDL_DUMMY_ENUM) == sizeof(int));
-#endif
-#endif /* DOXYGEN_SHOULD_IGNORE_THIS */
-/** \endcond */
-
 #include "begin_code.h"
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
