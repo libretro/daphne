@@ -13,10 +13,10 @@
 #pragma warning (disable:4100) // disable warning about unreferenced parameter
 #endif
 
-Uint8 *g_cpumem = NULL;	// where this cpu's memory begins
+uint8_t *g_cpumem = NULL;	// where this cpu's memory begins
 
 // MATT : sets where the memory begins for the cpu core
-void m6809_set_memory(Uint8 *cpumem)
+void m6809_set_memory(uint8_t *cpumem)
 {
 	g_cpumem = cpumem;
 }

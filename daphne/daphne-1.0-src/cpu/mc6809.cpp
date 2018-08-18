@@ -42,7 +42,7 @@
 *               suppression d'un inline inutile
 *  version 2.7: nouvelle interface de manipulation de l'état du MC6809E
 */
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
@@ -60,8 +60,6 @@
 // RJS TEMP
 // #include "../io/conout.h"
 // static char s[81] = { 0 };
-// #define LOGPC(STRIN) if (pc == 64758) { sprintf(s, "PC VALUE 64758 HIT: "STRIN); printline(s); }
-#define LOGPC(STRIN)
 
 INT_MC taille[] =
 { 2,2,1,2,2,1,2,2,2,2,2,1,2,2,2,2
@@ -363,7 +361,6 @@ static INT_MC ind1x()
 {
 	CHAR_MC    del = op[1];
 	pc++; pc &= 0xffff;
-	LOGPC("in ind1x");
 	cpu_clock++;
 	return ((*(regist[((*op) & 0x60) >> 5])) + del) & 0xffff;
 }
@@ -372,7 +369,6 @@ static INT_MC ind2x()
 {
 	INT_MC     del = ((op[1] & 255) << 8) + (op[2] & 255);
 	pc += 2; pc &= 0xffff;
-	LOGPC("in ind2x");
 	cpu_clock += 4;
 	return ((*(regist[((*op) & 0x60) >> 5])) + del) & 0xffff;
 }
@@ -388,7 +384,6 @@ static INT_MC ind1p()
 {
 	CHAR_MC    del = op[1];
 	pc++; pc &= 0xffff;
-	LOGPC("in ind1p");
 	cpu_clock++;
 	return (pc + del) & 0xffff;
 }
@@ -397,7 +392,6 @@ static INT_MC ind2p()
 {
 	INT_MC     del = ((op[1] & 255) << 8) + (op[2] & 255);
 	pc += 2; pc &= 0xffff;
-	LOGPC("in ind2p");
 	cpu_clock += 5;
 	return (pc + del) & 0xffff;
 }
@@ -405,7 +399,6 @@ static INT_MC ind2p()
 static INT_MC indad()
 {
 	pc += 2; pc &= 0xffff;
-	LOGPC("in indad");
 	cpu_clock += 2;
 	return ((op[1] & 255) << 8) + (op[2] & 255);
 }
@@ -575,7 +568,6 @@ static void tstm()             /* NxZxV0 */
 static void jmpm()
 {
 	pc = (*adresl[ad])();
-	LOGPC("in jmpm");
 }
 
 static void jsrm()
@@ -585,7 +577,6 @@ static void jsrm()
 	sr = (sr - 2) & 0xffff;
 	StoreWord(sr, pc);
 	pc = k;
-	LOGPC("in jsrm");
 }
 
 static void clrm()     /* N0Z1V0C0 */
@@ -607,7 +598,6 @@ static void synm()
 static void lbra()
 {
 	pc = (pc + ((*op) << 8) + (op[1] & 255)) & 0xffff;
-	LOGPC("in lbra");
 }
 
 static void lbsr()
@@ -615,7 +605,6 @@ static void lbsr()
 	sr = (sr - 2) & 0xffff;
 	StoreWord(sr, pc);
 	pc = (pc + ((*op) << 8) + (op[1] & 255)) & 0xffff;
-	LOGPC("in lbsr");
 }
 
 static void daam()     /* NxZxV?Cx */
@@ -702,7 +691,6 @@ static void tfrm()
 static void bras()
 {
 	pc += op[0];
-	LOGPC("in bras");
 }
 static void brns()
 {
@@ -711,80 +699,66 @@ static void brns()
 static void bhis()     /* c|z=0 */
 {
 	if ((!(res & 0x100)) && (res & 0xff)) pc += op[0];
-	LOGPC("in bhis");
 }
 static void blss()     /* c|z=1 */
 {
 	if ((res & 0x100) || (!(res & 0xff))) pc += op[0];
-	LOGPC("in blss");
 }
 
 static void bccs()     /* c=0 */
 {
 	if (!(res & 0x100)) pc += op[0];
-	LOGPC("in bccs");
 }
 static void blos()     /* c=1 */
 {
 	if (res & 0x100) pc += op[0];
-	LOGPC("in blos");
 }
 
 static void bnes()     /* z=0 */
 {
 	if (res & 0xff) pc += op[0];
-	LOGPC("in bnes");
 }
 static void beqs()     /* z=1 */
 {
 	if (!(res & 0xff)) pc += op[0];
-	LOGPC("in beqs");
 }
 
 static void bvcs()     /* v=0 */
 {
 	if (((m1^m2) & 0x80) || (!((m1^ovfl) & 0x80))) pc += op[0];
-	LOGPC("in bvcs");
 }
 static void bvss()     /* v=1 */
 {
 	if ((!((m1^m2) & 0x80)) && ((m1^ovfl) & 0x80)) pc += op[0];
-	LOGPC("in bvss");
 }
 
 static void bpls()     /* n=0 */
 {
 	if (!(sign & 0x80)) pc += op[0];
-	LOGPC("in bpls");
 }
 static void bmis()     /* n=1 */
 {
 	if (sign & 0x80) pc += op[0];
-	LOGPC("in bmis");
 }
 
 static void bges()     /* n^v=0 */
 {
 	if (!((sign ^ ((~(m1^m2))&(m1^ovfl))) & 0x80)) pc += op[0];
-	LOGPC("in bges");
 }
 static void blts()     /* n^v=1 */
 {
 	if ((sign ^ ((~(m1^m2))&(m1^ovfl))) & 0x80) pc += op[0];
-	LOGPC("in blts");
 }
 
 static void bgts()     /* z|(n^v)=0 */
 {
 	if ((res & 0xff)
 		&& (!((sign ^ ((~(m1^m2))&(m1^ovfl))) & 0x80))) pc += op[0];
-	LOGPC("in bgts");
 }
 static void bles()     /* z|(n^v)=1 */
 {
 	if ((!(res & 0xff))
 		|| ((sign ^ ((~(m1^m2))&(m1^ovfl))) & 0x80)) pc += op[0];
-	LOGPC("in bles");
 }
 
 
@@ -898,7 +872,6 @@ static void pulsr(INT_MC i)
 	}
 	if (i & 0x80) {
 		pc = LoadWord(sr);
-		LOGPC("in pulsr");
 		sr = (sr + 2) & 0xffff;
 		cpu_clock += 2;
 	}
@@ -996,7 +969,6 @@ static void pulu()
 	}
 	if (i & 0x80) {
 		pc = LoadWord(ur);
-		LOGPC("in pulu");
 		ur = (ur + 2) & 0xffff;
 		cpu_clock += 2;
 	}
@@ -1005,7 +977,6 @@ static void pulu()
 static void rtsm()
 {
 	pc = LoadWord(sr);
-	LOGPC("in rtsmr");
 	sr = (sr + 2) & 0xffff;
 }
 
@@ -1041,7 +1012,6 @@ static void swim()
 	pshsr(0xff);
 	ccrest |= 0x50;
 	pc = LoadWord(0xFFFA);
-	LOGPC("in swim");
 }
 
 static void nega()             /* H?NxZxVxCx */
@@ -1352,7 +1322,6 @@ static void bsrm()
 	sr = (sr - 2) & 0xffff;
 	StoreWord(sr, pc);
 	pc = (pc + op[0]) & 0xffff;
-	LOGPC("in bsrm");
 }
 
 static void ldxm()     /* NxZxV0 */
@@ -1531,7 +1500,6 @@ static void lbhi()     /* c|z=0 */
 	if ((!(res & 0x100)) && (res & 0xff))
 	{
 		pc = (pc + (op[0] << 8) + (op[1] & 255)) & 0xffff;
-		LOGPC("in lbhi");
 		cpu_clock++;
 	}
 }
@@ -1541,7 +1509,6 @@ static void lbls()     /* c|z=1 */
 	if ((res & 0x100) || (!(res & 0xff)))
 	{
 		pc = (pc + (op[0] << 8) + (op[1] & 255)) & 0xffff;
-		LOGPC("in lbls");
 		cpu_clock++;
 	}
 }
@@ -1551,7 +1518,6 @@ static void lbcc()     /* c=0 */
 	if (!(res & 0x100))
 	{
 		pc = (pc + (op[0] << 8) + (op[1] & 255)) & 0xffff;
-		LOGPC("in lbcc");
 		cpu_clock++;
 	}
 }
@@ -1561,7 +1527,6 @@ static void lblo()     /* c=1 */
 	if (res & 0x100)
 	{
 		pc = (pc + (op[0] << 8) + (op[1] & 255)) & 0xffff;
-		LOGPC("in lblo");
 		cpu_clock++;
 	}
 }
@@ -1571,7 +1536,6 @@ static void lbne()     /* z=0 */
 	if (res & 0xff)
 	{
 		pc = (pc + (op[0] << 8) + (op[1] & 255)) & 0xffff;
-		LOGPC("in lbne");
 		cpu_clock++;
 	}
 }
@@ -1581,7 +1545,6 @@ static void lbeq()     /* z=1 */
 	if (!(res & 0xff))
 	{
 		pc = (pc + (op[0] << 8) + (op[1] & 255)) & 0xffff;
-		LOGPC("in lbeq");
 		cpu_clock++;
 	}
 }
@@ -1591,7 +1554,6 @@ static void lbvc()     /* v=0 */
 	if (((m1^m2) & 0x80) || (!((m1^ovfl) & 0x80)))
 	{
 		pc = (pc + (op[0] << 8) + (op[1] & 255)) & 0xffff;
-		LOGPC("in lbvc");
 		cpu_clock++;
 	}
 }
@@ -1601,7 +1563,6 @@ static void lbvs()     /* v=1 */
 	if ((!((m1^m2) & 0x80)) && ((m1^ovfl) & 0x80))
 	{
 		pc = (pc + (op[0] << 8) + (op[1] & 255)) & 0xffff;
-		LOGPC("in lbvs");
 		cpu_clock++;
 	}
 }
@@ -1611,7 +1572,6 @@ static void lbpl()     /* n=0 */
 	if (!(sign & 0x80))
 	{
 		pc = (pc + (op[0] << 8) + (op[1] & 255)) & 0xffff;
-		LOGPC("in lbpl");
 		cpu_clock++;
 	}
 }
@@ -1621,7 +1581,6 @@ static void lbmi()     /* n=1 */
 	if (sign & 0x80)
 	{
 		pc = (pc + (op[0] << 8) + (op[1] & 255)) & 0xffff;
-		LOGPC("in lbmi");
 		cpu_clock++;
 	}
 }
@@ -1631,7 +1590,6 @@ static void lbge()     /* n^v=0 */
 	if (!((sign ^ ((~(m1^m2))&(m1^ovfl))) & 0x80))
 	{
 		pc = (pc + (op[0] << 8) + (op[1] & 255)) & 0xffff;
-		LOGPC("in lbge");
 		cpu_clock++;
 	}
 }
@@ -1641,7 +1599,6 @@ static void lblt()     /* n^v=1 */
 	if ((sign ^ ((~(m1^m2))&(m1^ovfl))) & 0x80)
 	{
 		pc = (pc + (op[0] << 8) + (op[1] & 255)) & 0xffff;
-		LOGPC("in lblt");
 		cpu_clock++;
 	}
 }
@@ -1651,7 +1608,6 @@ static void lbgt()     /* z|(n^v)=0 */
 	if ((res & 0xff) && (!((sign ^ ((~(m1^m2))&(m1^ovfl))) & 0x80)))
 	{
 		pc = (pc + (op[0] << 8) + (op[1] & 255)) & 0xffff;
-		LOGPC("in lbgt");
 		cpu_clock++;
 	}
 }
@@ -1661,7 +1617,6 @@ static void lble()     /* z|(n^v)=1 */
 	if ((!(res & 0xff)) || ((sign ^ ((~(m1^m2))&(m1^ovfl))) & 0x80))
 	{
 		pc = (pc + (op[0] << 8) + (op[1] & 255)) & 0xffff;
-		LOGPC("in lble");
 		cpu_clock++;
 	}
 }
@@ -1671,7 +1626,6 @@ static void swi2()
 	ccrest |= 0x80;
 	pshsr(0xff);
 	pc = LoadWord(0xFFF4);
-	LOGPC("in swi2");
 }
 
 static void swi3()
@@ -1679,7 +1633,6 @@ static void swi3()
 	ccrest |= 0x80;
 	pshsr(0xff);
 	pc = LoadWord(0xFFF2);
-	LOGPC("in swi3");
 }
 
 static void cmpd()             /* NxZxVxCx */
@@ -1825,7 +1778,6 @@ static void trap()
 	ad = adr[r];
 	cpu_clock += cpu_cycles[r];
 	pc += taille[r] - 1;
-	LOGPC("in trap");
 
 	(*code[r])();
 }
@@ -1837,7 +1789,6 @@ static void cd10()
 	ad = adr[r];
 	cpu_clock += cpu_cycles[r];
 	pc += taille[r];
-	LOGPC("in cd10");
 
 	(*code[r])();
 }
@@ -1849,7 +1800,6 @@ static void cd11()
 	ad = adr[r];
 	cpu_clock += cpu_cycles[r];
 	pc += taille[r];
-	LOGPC("in cd11");
 
 	(*code[r])();
 }
@@ -1862,7 +1812,6 @@ static void do_nmi(void)
 	ccrest |= 0x50;
 	cpu_clock += 7;  /* 2 + 5 pour pshsr */
 	pc = LoadWord(0xFFFC);
-	LOGPC("in do_nmi");
 
 	mc6809_nmi = 0;
 }
@@ -1877,7 +1826,6 @@ static void do_irq(void)
 		ccrest |= 0x10;
 		cpu_clock += 7;  /* 2 + 5 pour pshsr */
 		pc = LoadWord(0xFFF8);
-		LOGPC("in do_irq");
 
 		mc6809_irq = 0;
 	}
@@ -1893,7 +1841,6 @@ static void do_firq(void)
 		ccrest |= 0x50;
 		cpu_clock += 7;  /* 2 + 5 pour pshsr */
 		pc = LoadWord(0xFFF6);
-		LOGPC("in firq");
 
 		mc6809_firq = 0;
 	}
@@ -1986,7 +1933,6 @@ void mc6809_Reset(void)
 	dp = 0;
 	ccrest |= 0x50;
 	pc = LoadWord(0xFFFE);
-	LOGPC("in mc6809_reset");
 	mc6809_irq = 0;
 	mc6809_nmi = 0;
 	mc6809_firq = 0;
@@ -2050,12 +1996,10 @@ UINT_MC mc6809_StepExec(UINT_MC ncycles)
 	#endif // CPU_DEBUG
 		// end MPO
 
-		LOGPC("in SE 1998");
 		if (cpu_clock >= cpu_timer)
 			TimerCallback(timer_data);
 
 		// the priority for the external interrupts is NMI, FIRQ, and IRQ
-		LOGPC("in SE 2002");
 		if (mc6809_nmi)
 			do_nmi();
 		else if (mc6809_firq)
@@ -2069,7 +2013,6 @@ UINT_MC mc6809_StepExec(UINT_MC ncycles)
 	#endif
 
 		/* on remplit le buffer de fetch */
-		LOGPC("at FI call 01");
 		FetchInstr(pc, fetch_buffer);
 		op = (CHAR_MC *)fetch_buffer;
 
@@ -2078,7 +2021,6 @@ UINT_MC mc6809_StepExec(UINT_MC ncycles)
 		ad = adr[r];
 		cpu_clock += cpu_cycles[r];
 		pc += taille[r];
-		LOGPC("in SE 2026");
 
 		/* on éxécute l'instruction */
 		(*code[r])();
@@ -2107,7 +2049,6 @@ INT_MC mc6809_TimeExec(mc6809_clock_t time_limit)
 		if (cpu_clock >= cpu_timer)
 			TimerCallback(timer_data);
 
-		LOGPC("in TE 2075");
 		if (mc6809_irq)
 			do_irq();
 
@@ -2117,7 +2058,6 @@ INT_MC mc6809_TimeExec(mc6809_clock_t time_limit)
 	#endif
 
 		/* on remplit le buffer de fetch */
-		LOGPC("at FI call 02");
 		FetchInstr(pc, fetch_buffer);
 		op = (CHAR_MC *)fetch_buffer;
 
@@ -2127,7 +2067,6 @@ INT_MC mc6809_TimeExec(mc6809_clock_t time_limit)
 		ad = adr[r];
 		cpu_clock += cpu_cycles[r];
 		pc += taille[r];
-		LOGPC("in TE 2074");
 
 		/* on éxécute l'instruction */
 		(*code[r])();

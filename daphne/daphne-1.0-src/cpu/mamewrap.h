@@ -11,21 +11,20 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stddef.h>
-#include <SDL.h>		// need SDL to get data types (Uint8, etc)
 
 extern int mame_debug;	// declare mame_debug somewhere
 
 ///////////////////////////////////////////
 // from osd_cpu.h
 
-typedef Uint8		UINT8;
-typedef Uint8		BYTE;
+typedef uint8_t		UINT8;
+typedef uint8_t		BYTE;
 typedef uint16_t		UINT16;
 typedef uint16_t		WORD;
-typedef Uint32		UINT32;
-typedef Sint8 		INT8;
-typedef Sint16		INT16;
-typedef Sint32		INT32;
+typedef uint32_t		UINT32;
+typedef int8_t 		INT8;
+typedef int16_t		INT16;
+typedef int32_t		INT32;
 
 /* Combine to 32-bit integers into a 64-bit integer */
 #define COMBINE_64_32_32(A,B)     ((((UINT64)(A))<<32) | (UINT32)(B))
@@ -263,11 +262,11 @@ void state_load_INT16(void *state, const char *module,int instance,
 void set_amask(offs_t amask_val);	// for overriding the default address mask
 
 int generic_z80_irq_callback(int irqline);
-Sint32 generic_m80_irq_callback(int);
-Sint32 generic_m80_nmi_callback();
+int32_t generic_m80_irq_callback(int);
+int32_t generic_m80_nmi_callback();
 void generic_z80_reset();
-void mw_z80_set_mem(Uint8 *mem);
-void mw_i86_set_mem(Uint8 *mem);
+void mw_z80_set_mem(uint8_t *mem);
+void mw_i86_set_mem(uint8_t *mem);
 
 /////////////////////////////
 
@@ -276,9 +275,9 @@ void mw_i86_set_mem(Uint8 *mem);
 
 // MPO : changed all of these to macros to eliminate (possible) function call overhead in case compiler doesn't inline functions
 #define cpu_readmem16(addr) g_game->cpu_mem_read(static_cast<uint16_t>(addr))
-#define cpu_readmem20(addr) g_game->cpu_mem_read(static_cast<Uint32>(addr))
+#define cpu_readmem20(addr) g_game->cpu_mem_read(static_cast<uint32_t>(addr))
 #define cpu_writemem16(addr,value) g_game->cpu_mem_write(static_cast<uint16_t>(addr), value)
-#define cpu_writemem20(addr,value) g_game->cpu_mem_write(static_cast<Uint32>(addr), value)
+#define cpu_writemem20(addr,value) g_game->cpu_mem_write(static_cast<uint32_t>(addr), value)
 #define cpu_readport16(port) g_game->port_read(port)
 #define cpu_writeport16(port,value) g_game->port_write(port, value)
 #define change_pc16(new_pc) g_game->update_pc(new_pc)

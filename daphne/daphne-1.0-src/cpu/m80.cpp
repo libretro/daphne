@@ -48,21 +48,22 @@
 #include "m80tables.h"
 #include "m80daa.h"
 #include "../io/conout.h"
-#ifdef WIN32
+
+#ifdef _WIN32
 #pragma warning (disable:4244)	// disable the warning about possible loss of data
 #endif
 
 struct m80_context g_context;	/* full context for the cpu */
-Uint32	g_cycles_executed = 0;	/* how many cycles we've executed this time around */
-Uint32	g_cycles_to_execute = 0;	/* how many cycles we're supposed to execute */
-Sint32 (*g_irq_callback)(int nothing) = 0;	/* function that gets called when we activate our IRQ */
-Sint32 (*g_nmi_callback)() = 0;	/* function that gets called when we activate our NMI */
+uint32_t	g_cycles_executed = 0;	/* how many cycles we've executed this time around */
+uint32_t	g_cycles_to_execute = 0;	/* how many cycles we're supposed to execute */
+int32_t (*g_irq_callback)(int nothing) = 0;	/* function that gets called when we activate our IRQ */
+int32_t (*g_nmi_callback)() = 0;	/* function that gets called when we activate our NMI */
 char s2[81] = "";
-Uint8 *opcode_base = 0;
+uint8_t *opcode_base = 0;
 
 // # of cycles used per opcode assuming conditions fail in conditional instructions
 // CB, DD, ED, and FD all get 0 cycles in this table because we add that in other tables
-const Uint8 op_cycles[256] =
+const uint8_t op_cycles[256] =
 {
 	4,10, 7, 6, 4, 4, 7, 4, 4,11, 7, 6, 4, 4, 7, 4,
 	8,10, 7, 6, 4, 4, 7, 4,12,11, 7, 6, 4, 4, 7, 4,
@@ -83,7 +84,7 @@ const Uint8 op_cycles[256] =
 };
 
 // # of cycles used per CB opcode
-const Uint8 cb_cycles[256] =
+const uint8_t cb_cycles[256] =
 {
 	8, 8, 8, 8, 8, 8,15, 8, 8, 8, 8, 8, 8, 8,15, 8,
 	8, 8, 8, 8, 8, 8,15, 8, 8, 8, 8, 8, 8, 8,15, 8,
@@ -104,7 +105,7 @@ const Uint8 cb_cycles[256] =
 };
 
 // # of cycles used per ED instruction
-const Uint8 ed_cycles[256] =
+const uint8_t ed_cycles[256] =
 {
 	8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
 	8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
@@ -127,7 +128,7 @@ const Uint8 ed_cycles[256] =
 // # of cycles used in IX and IY instructions (DD and FD)
 // If an instruction is undefined (which many of these are), it gets treated as a NOP (4 cycles)
 // CB gets 0 cycles because it is defined in another table
-const Uint8 ddfd_cycles[256] =
+const uint8_t ddfd_cycles[256] =
 {
 	4, 4, 4, 4, 4, 4, 4, 4, 4,15, 4, 4, 4, 4, 4, 4,
 	4, 4, 4, 4, 4, 4, 4, 4, 4,15, 4, 4, 4, 4, 4, 4,
@@ -148,7 +149,7 @@ const Uint8 ddfd_cycles[256] =
 };
 
 // # of cycles used if a DDCB or FDCB instruction is called
-const Uint8 ddfd_cb_cycles[256] =
+const uint8_t ddfd_cb_cycles[256] =
 {
 	23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,
 	23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,
@@ -170,7 +171,7 @@ const Uint8 ddfd_cb_cycles[256] =
 
 /* indicates where in memory the z80's 64k of RAM begins */
 /* This function MUST BE CALLED to initialize the z80 */
-void m80_set_opcode_base(Uint8 *address)
+void m80_set_opcode_base(uint8_t *address)
 {
 	opcode_base = address;
 
@@ -211,7 +212,7 @@ void m80_reset()
 /* executes ONE ED-prefixed instruction, incrementing PC and g_cycles_executed variable appropriately */
 #define M80_EXEC_ED	\
 {	\
-	Uint8 opcode = M80_GET_ARG;	/* get opcode and increment PC */	\
+	uint8_t opcode = M80_GET_ARG;	/* get opcode and increment PC */	\
 	uint16_t temp_word;	/* a temp word for storing temp variables :) */ \
 	g_cycles_executed += ed_cycles[opcode];	\
 	M80_INC_R;	/* for each DE instruction, increase R again */ \
@@ -240,7 +241,7 @@ void m80_reset()
 	case 0x74:	\
 	case 0x7C:	\
 		{	\
-			Uint8 temp = A;	\
+			uint8_t temp = A;	\
 			A = 0;	\
 			M80_SUB_FROM_A(temp);	\
 		}	\
@@ -358,7 +359,7 @@ void m80_reset()
 		/* Rotates (HL) right 4 times.  The lower 4 bits of A replace the newly undefined bits in (HL) */	\
 		/* and the lower 4 bits of (HL) that rotated out go into the lower 4 bits of A */	\
 		{	\
-			Uint8 val = M80_READ_BYTE(HL);	\
+			uint8_t val = M80_READ_BYTE(HL);	\
 			M80_WRITE_BYTE(HL, (val >> 4) | (A << 4));	\
 			A = (A & 0xF0) | (val & 0x0F);	\
 			FLAGS &= C_FLAG;	\
@@ -385,7 +386,7 @@ void m80_reset()
 	case 0x6F:	/* RLD */	\
 		/* Rotates (HL) left 4 times.  See rules for RRD */	\
 		{	\
-			Uint8 val = M80_READ_BYTE(HL);	\
+			uint8_t val = M80_READ_BYTE(HL);	\
 			M80_WRITE_BYTE(HL, (val << 4) | (A & 0x0F));	\
 			A = (A & 0xF0) | (val >> 4);	\
 			FLAGS &= C_FLAG;	\
@@ -520,8 +521,8 @@ void m80_reset()
 /* executes all of the 0xCB instructions that are part of the DD/FD instruction set */
 #define M80_EXEC_DDFD_CB(IXIY)	\
 {	\
-	Uint8 offset = M80_GET_ARG;	/* on all of these instructions, the offset comes first */	\
-	Uint8 opcode = M80_GET_ARG;	/* get opcode and increment PC */	\
+	uint8_t offset = M80_GET_ARG;	/* on all of these instructions, the offset comes first */	\
+	uint8_t opcode = M80_GET_ARG;	/* get opcode and increment PC */	\
 	g_cycles_executed += ddfd_cb_cycles[opcode];	\
 	\
 	/* the R count does NOT increase for these instructions */	\
@@ -548,7 +549,7 @@ void m80_reset()
 		break;	\
 	case 6:	/* RLC (IXIY + d) */	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_RLC(val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -576,7 +577,7 @@ void m80_reset()
 		break;	\
 	case 0x0E:	/* RRC	(IXIY + offset) */	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_RRC(val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -604,7 +605,7 @@ void m80_reset()
 		break;	\
 	case 0x16:	/* RL (IXIY + offset, IXIY) */	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_RL(val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -632,7 +633,7 @@ void m80_reset()
 		break;	\
 	case 0x1E:	/* RR (IXIY + offset) */	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_RR(val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -660,7 +661,7 @@ void m80_reset()
 		break;	\
 	case 0x26:	/* SLA (IXIY + offset, IXIY) */	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_SLA(val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -688,7 +689,7 @@ void m80_reset()
 		break;	\
 	case 0x2E:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_SRA(val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -716,7 +717,7 @@ void m80_reset()
 		break;	\
 	case 0x36:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_SLIA(val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -744,7 +745,7 @@ void m80_reset()
 		break;	\
 	case 0x3E:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_SRL(val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -868,7 +869,7 @@ void m80_reset()
 		break;	\
 	case 0x86:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_RES(0, val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -896,7 +897,7 @@ void m80_reset()
 		break;	\
 	case 0x8E:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_RES(1, val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -924,7 +925,7 @@ void m80_reset()
 		break;	\
 	case 0x96:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_RES(2, val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -952,7 +953,7 @@ void m80_reset()
 		break;	\
 	case 0x9E:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_RES(3, val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -980,7 +981,7 @@ void m80_reset()
 		break;	\
 	case 0xA6:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_RES(4, val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -1008,7 +1009,7 @@ void m80_reset()
 		break;	\
 	case 0xAE:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_RES(5, val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -1036,7 +1037,7 @@ void m80_reset()
 		break;	\
 	case 0xB6:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_RES(6, val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -1064,7 +1065,7 @@ void m80_reset()
 		break;	\
 	case 0xBE:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_RES(7, val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -1092,7 +1093,7 @@ void m80_reset()
 		break;	\
 	case 0xC6:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_SET(0, val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -1120,7 +1121,7 @@ void m80_reset()
 		break;	\
 	case 0xCE:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_SET(1, val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -1148,7 +1149,7 @@ void m80_reset()
 		break;	\
 	case 0xD6:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_SET(2, val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -1176,7 +1177,7 @@ void m80_reset()
 		break;	\
 	case 0xDE:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_SET(3, val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -1204,7 +1205,7 @@ void m80_reset()
 		break;	\
 	case 0xE6:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_SET(4, val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -1232,7 +1233,7 @@ void m80_reset()
 		break;	\
 	case 0xEE:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_SET(5, val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -1260,7 +1261,7 @@ void m80_reset()
 		break;	\
 	case 0xF6:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_SET(6, val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -1288,7 +1289,7 @@ void m80_reset()
 		break;	\
 	case 0xFE:	\
 		{	\
-			Uint8 val = M80_READ_BYTE(IXIY + offset);	\
+			uint8_t val = M80_READ_BYTE(IXIY + offset);	\
 			M80_SET(7, val);	\
 			M80_WRITE_BYTE(IXIY + offset, val);	\
 		}	\
@@ -1334,7 +1335,7 @@ void m80_reset()
 /* handles DD/FD prefixed instructions */
 #define M80_EXEC_DDFD(IXIY)	\
 {	\
-	Uint8 opcode = M80_GET_ARG;	/* get opcode and increment PC */	\
+	uint8_t opcode = M80_GET_ARG;	/* get opcode and increment PC */	\
 	uint16_t temp_word;	/* temporary word to move data around with */	\
 	g_cycles_executed += ddfd_cycles[opcode];	\
 	M80_INC_R;	/* for each DD/FD instruction, increase R at least once */ \
@@ -1504,14 +1505,14 @@ void m80_reset()
 		break;	\
 	case 0x34:	/* INC (IXIY + d) */	\
 		{	\
-			Uint8 temp = M80_READ_BYTE(IXIY_OFFSET_PEEK(IXIY));	\
+			uint8_t temp = M80_READ_BYTE(IXIY_OFFSET_PEEK(IXIY));	\
 			M80_INC_REG8(temp);	\
 			M80_WRITE_BYTE(IXIY_OFFSET(IXIY), temp);	\
 		}	\
 		break;	\
 	case 0x35:	/* DEC (IXIY + d) */	\
 		{	\
-			Uint8 temp = M80_READ_BYTE(IXIY_OFFSET_PEEK(IXIY));	\
+			uint8_t temp = M80_READ_BYTE(IXIY_OFFSET_PEEK(IXIY));	\
 			M80_DEC_REG8(temp);	\
 			M80_WRITE_BYTE(IXIY_OFFSET(IXIY), temp);	\
 		}	\
@@ -2161,7 +2162,7 @@ void m80_reset()
 /* executes ONE instruction, incrementing PC and g_cycles_executed variable appropriately */
 #define M80_EXEC_CUR_INSTR	\
 {	\
-	Uint8 opcode = M80_GET_ARG;	/* get opcode and increment PC */	\
+	uint8_t opcode = M80_GET_ARG;	/* get opcode and increment PC */	\
 	uint16_t temp_word;	\
 	g_cycles_executed += op_cycles[opcode];	\
 	M80_INC_R;	/* for each instruction, increase R at least once */ \
@@ -2331,14 +2332,14 @@ void m80_reset()
 		break;	\
 	case 0x34:	/* INC (HL) */	\
 		{	\
-			Uint8 temp = M80_READ_BYTE(HL);	\
+			uint8_t temp = M80_READ_BYTE(HL);	\
 			M80_INC_REG8(temp);	\
 			M80_WRITE_BYTE(HL, temp);	\
 		}	\
 		break;	\
 	case 0x35:	/* DEC (HL) */	\
 		{	\
-			Uint8 temp = M80_READ_BYTE(HL);	\
+			uint8_t temp = M80_READ_BYTE(HL);	\
 			M80_DEC_REG8(temp);	\
 			M80_WRITE_BYTE(HL, temp);	\
 		}	\
@@ -2975,7 +2976,7 @@ void m80_reset()
 
 
 /* attempts to the number of cycles specified.  Returns the number of cycles actually executed. */
-Uint32 m80_execute(Uint32 cycles_to_execute)
+uint32_t m80_execute(uint32_t cycles_to_execute)
 {
 	g_cycles_executed = 0;	/* we haven't executed any yet this time around */
 	g_cycles_to_execute = cycles_to_execute;
@@ -3020,7 +3021,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 /*__inline__*/ void m80_exec_cb()
 {
 
-	Uint8 opcode = M80_GET_ARG;	/* get opcode and increment PC */
+	uint8_t opcode = M80_GET_ARG;	/* get opcode and increment PC */
 	g_cycles_executed += cb_cycles[opcode];
 
 	M80_INC_R;	/* R needs to increase again with CB instructions */
@@ -3047,7 +3048,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 6:	/* RLC	(HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_RLC(val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3075,7 +3076,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0x0E:	/* RRC	(HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_RRC(val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3103,7 +3104,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0x16:	/* RL (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_RL(val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3131,7 +3132,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0x1E:	/* RR (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_RR(val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3159,7 +3160,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0x26:	/* SLA (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_SLA(val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3187,7 +3188,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0x2E:	/* SRA (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_SRA(val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3215,7 +3216,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0x36:	/* SLIA (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_SLIA(val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3243,7 +3244,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0x3E:	/* SRL (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_SRL(val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3463,7 +3464,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0x86:	/* RES	0, (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_RES(0, val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3491,7 +3492,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0x8E:	/* RES	1, (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_RES(1, val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3519,7 +3520,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0x96:	/* RES	2, (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_RES(2, val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3547,7 +3548,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0x9E:	/* RES	3, (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_RES(3, val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3575,7 +3576,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0xA6:	/* RES	4, (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_RES(4, val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3603,7 +3604,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0xAE:	/* RES	5, (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_RES(5, val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3631,7 +3632,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0xB6:	/* RES	6, (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_RES(6, val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3659,7 +3660,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0xBE:	/* RES	7, (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_RES(7, val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3688,7 +3689,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0xC6:	/* SET	0, (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_SET(0, val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3716,7 +3717,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0xCE:	/* SET	1, (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_SET(1, val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3744,7 +3745,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0xD6:	/* SET	2, (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_SET(2, val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3772,7 +3773,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0xDE:	/* SET	3, (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_SET(3, val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3800,7 +3801,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0xE6:	/* SET	4, (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_SET(4, val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3828,7 +3829,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0xEE:	/* SET	5, (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_SET(5, val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3856,7 +3857,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0xF6:	/* SET	6, (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_SET(6, val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3884,7 +3885,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 		break;
 	case 0xFE:	/* SET	7, (HL) */
 		{
-			Uint8 val = M80_READ_BYTE(HL);
+			uint8_t val = M80_READ_BYTE(HL);
 			M80_SET(7, val);
 			M80_WRITE_BYTE(HL, val);
 		}
@@ -3898,7 +3899,7 @@ Uint32 m80_execute(Uint32 cycles_to_execute)
 /* call this when you want to change the state of the NMI line */
 /* If you want to assert the NMI, use ASSERT_LINE */
 /* If you want to clear the NMI, use CLEAR_LINE */
-void m80_set_nmi_line(Uint8 new_nmi_state)
+void m80_set_nmi_line(uint8_t new_nmi_state)
 {
 	g_context.nmi_state = new_nmi_state;
 }
@@ -3907,7 +3908,7 @@ void m80_set_nmi_line(Uint8 new_nmi_state)
 /* To assert the IRQ, use ASSERT_LINE */
 /* To clear the IRQ, use CLEAR_LINE */
 /* You need to have an IRQ callback defined before asserting the IRQ line */
-void m80_set_irq_line(Uint8 irq_state)
+void m80_set_irq_line(uint8_t irq_state)
 {
 	g_context.irq_state = irq_state;
 }
@@ -3933,7 +3934,7 @@ void m80_activate_irq()
 {
 	/* IRQ ENABLED HERE */
 
-	Uint32 bus_value = (*g_irq_callback)(0);
+	uint32_t bus_value = (*g_irq_callback)(0);
 
 	M80_INC_R;	/* increase R register by 1 */
 	M80_STOP_HALT;	/* get out of halt mode, if we were in it */
@@ -3947,7 +3948,7 @@ void m80_activate_irq()
 	case 0:	/* mode 0 (the instruction on the bus is executed) */
 #ifdef CPU_DEBUG
 		{
-			static Uint8 warned = 0;
+			static uint8_t warned = 0;
 			if (!warned)
 			{
 				fprintf(stderr, "Z80 warning: interrupt mode 0 is being used which isn't well supported!\n");
@@ -3986,9 +3987,9 @@ void m80_activate_irq()
 }
 
 /* returns the current program counter */
-Uint32 m80_get_pc()
+uint32_t m80_get_pc()
 {
-	return (Uint32) PC;
+	return (uint32_t) PC;
 }
 
 /* returns the current stack pointer */
@@ -4007,7 +4008,7 @@ void m80_set_reg(int index, uint16_t value)
 	g_context.m80_regs[index].w = value;
 }
 
-void m80_set_pc(Uint32 value)
+void m80_set_pc(uint32_t value)
 {
 	PC = (uint16_t) value;
 }
@@ -4017,24 +4018,24 @@ void m80_set_sp(uint16_t value)
 	SP = value;
 }
 
-void m80_set_irq_callback(Sint32 (*callback)(int nothing))
+void m80_set_irq_callback(int32_t (*callback)(int nothing))
 {
 	g_irq_callback = callback;	
 }
 
-void m80_set_nmi_callback(Sint32 (*callback)())
+void m80_set_nmi_callback(int32_t (*callback)())
 {
 	g_nmi_callback = callback;
 }
 
 // returns how many cycles we've executed since the last loop (NOT the total # of cycles executed!!!!!)
-Uint32 m80_get_cycles_executed()
+uint32_t m80_get_cycles_executed()
 {
 	return g_cycles_executed;
 }
 
 // copies m80's context into 'context' and returns size (in bytes) of the context
-Uint32 m80_get_context(void *context)
+uint32_t m80_get_context(void *context)
 {
 	memcpy(context, &g_context, sizeof(struct m80_context));
 	return sizeof(g_context);

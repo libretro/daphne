@@ -25,8 +25,6 @@
 
 #include <stdint.h>
 
-#include <SDL.h>	// for Uint definitions
-
 enum { CPU_UNDEFINED, CPU_Z80, CPU_X86, CPU_M6809, CPU_M6502, CPU_COP421, CPU_I88, CPU_COUNT };	// cpu's supported by daphne now, leave CPU_COUNT at the end
 
 #define CPU_MEM_SIZE	0x100000	// 1 meg for I86
@@ -40,24 +38,24 @@ struct cpudef
 {
 	// these may all be modified externally
 	int type;	// which kind of cpu it is
-	Uint32 hz;	// how many cycles per second the cpu is to run
-	Uint32 initial_pc;	// the initial program counter for the cpu
+	uint32_t hz;	// how many cycles per second the cpu is to run
+	uint32_t initial_pc;	// the initial program counter for the cpu
 	bool must_copy_context;	// whether THIS core will be used to emulate two or more cpu's OF THIS SAME TYPE
 	double nmi_period;	// how often the NMI ticks (in milliseconds, not seconds)
 	double irq_period[MAX_IRQS];	// how often the IRQs tick (in milliseconds, not seconds)
-	Uint8 *mem;	// where the cpu's memory begins
+	uint8_t *mem;	// where the cpu's memory begins
 
 	// these should not be modified externally
-	Uint8 id;	// which we are adding
+	uint8_t id;	// which we are adding
 	void (*init_callback)();	// callback to initialize the cpu
 	void (*shutdown_callback)();	// callback to shutdown the cpu
-	void (*setmemory_callback)(Uint8 *);	// the callback to set the location of the RAM/ROM for the CPU core
-	Uint32 (*execute_callback)(Uint32);	// callback to execute cycles for this particular cpu
-	Uint32 (*getcontext_callback)(void *);	// callback to get a cpu's context
+	void (*setmemory_callback)(uint8_t *);	// the callback to set the location of the RAM/ROM for the CPU core
+	uint32_t (*execute_callback)(uint32_t);	// callback to execute cycles for this particular cpu
+	uint32_t (*getcontext_callback)(void *);	// callback to get a cpu's context
 	void (*setcontext_callback)(void *);	// callback to set a cpu's context
-	Uint32 (*getpc_callback)();	// callback to get the program counter
-	void (*setpc_callback)(Uint32);	// callback to set the program counter
-	Uint32 (*elapsedcycles_callback)();	// callback to get the # of elapsed cycles
+	uint32_t (*getpc_callback)();	// callback to get the program counter
+	void (*setpc_callback)(uint32_t);	// callback to set the program counter
+	uint32_t (*elapsedcycles_callback)();	// callback to get the # of elapsed cycles
 	void (*reset_callback)();	// callback to reset the CPU
 	const char *(*ascii_info_callback)(void *context, int regnum);	// callback to get CPU info (for debugging purposes), returns empty string if no info is available
 	unsigned int (*dasm_callback)( char *buffer, unsigned pc );	// callback to disassemble code at a specified location
@@ -77,7 +75,7 @@ struct cpudef
 	unsigned int uEventCyclesEnd;	// when event tracking ends and optional event fires (0 if no event)
 	void (*event_callback)(void *data);	// callback we call when optional event fires
 	void *event_data;	// whatever data we are supposed to pass back to the event callback
-	Uint8 context[MAX_CONTEXT_SIZE];	// the cpu's context (in case we were forced to copy it out)
+	uint8_t context[MAX_CONTEXT_SIZE];	// the cpu's context (in case we were forced to copy it out)
 	struct cpudef *next_cpu;	// pointer to the next cpu in this linked list
 };
 
@@ -94,34 +92,34 @@ void cpu_set_event(unsigned int uCpuID, unsigned int uCyclesTilEvent, void (*eve
 
 void cpu_pause();
 void cpu_unpause();
-Uint32 get_cpu_timer();
-uint64_t get_total_cycles_executed(Uint8 cpu_id);
-struct cpudef * get_cpu_struct(Uint8 cpu_id);
+uint32_t get_cpu_timer();
+uint64_t get_total_cycles_executed(uint8_t cpu_id);
+struct cpudef * get_cpu_struct(uint8_t cpu_id);
 unsigned char cpu_getactivecpu();
-Uint8 *get_cpu_mem(Uint8 cpu_id);
-Uint32 get_cpu_hz(Uint8 cpu_id);
+uint8_t *get_cpu_mem(uint8_t cpu_id);
+uint32_t get_cpu_hz(uint8_t cpu_id);
 
-void cpu_change_nmi(Uint8 cpu_id, double new_period);
+void cpu_change_nmi(uint8_t cpu_id, double new_period);
 
 // Generates an NMI at the next possible opportunity for the indicated cpu.
 // Used when a CPU does not have a regularly timed NMI (such as in multi-cpu situations).
-void cpu_generate_nmi(Uint8 cpu_id);
+void cpu_generate_nmi(uint8_t cpu_id);
 
-void cpu_change_irq(Uint8 cpu_id, unsigned int which_irq, double new_period);
+void cpu_change_irq(uint8_t cpu_id, unsigned int which_irq, double new_period);
 
 // Generates an IRQ (indicated by 'which_irq') at the next possible opportunity for the indicated cpu.
 // Used when a CPU does not have a regularly timed IRQ (such as in multi-cpu situations).
-void cpu_generate_irq(Uint8 cpu_id, unsigned int which_irq);
-void cpu_change_interleave(Uint32);
+void cpu_generate_irq(uint8_t cpu_id, unsigned int which_irq);
+void cpu_change_interleave(uint32_t);
 
 void generic_6502_init();
 void generic_6502_shutdown();
 void generic_6502_reset();
-void generic_6502_setmemory(Uint8 *buf);
-Uint32 generic_6502_getcontext(void *context_buf);
+void generic_6502_setmemory(uint8_t *buf);
+uint32_t generic_6502_getcontext(void *context_buf);
 void generic_6502_setcontext(void *context_buf);
 const char *generic_6502_info(void *context, int regnum);
-Uint32 generic_cpu_elapsedcycles_stub();
+uint32_t generic_cpu_elapsedcycles_stub();
 const char *generic_ascii_info_stub(void *, int);
 unsigned int generic_dasm_stub( char *buffer, unsigned pc );
 void reset_cpu_globals();

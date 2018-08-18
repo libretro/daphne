@@ -24,27 +24,25 @@
 #define M80_H
 
 #include <stdint.h>
-// for Uint32, Uint8, etc definitions
-#include <SDL.h>
 
-void m80_set_opcode_base(Uint8 *address);
+void m80_set_opcode_base(uint8_t *address);
 void m80_reset();
-Uint32 m80_execute(Uint32 cycles_to_execute);
+uint32_t m80_execute(uint32_t cycles_to_execute);
 /*__inline__*/ void m80_exec_cb();
-void m80_set_nmi_line(Uint8);
-void m80_set_irq_line(Uint8);
+void m80_set_nmi_line(uint8_t);
+void m80_set_irq_line(uint8_t);
 void m80_activate_nmi();
 void m80_activate_irq();
-Uint32 m80_get_pc();
-void m80_set_pc(Uint32);
+uint32_t m80_get_pc(void);
+void m80_set_pc(uint32_t);
 uint16_t m80_get_sp();
 void m80_set_sp(uint16_t idx);
 uint16_t m80_get_reg(int index);
 void m80_set_reg(int index, uint16_t val);
-void m80_set_irq_callback(Sint32 (*callback)(int));
-void m80_set_nmi_callback(Sint32 (*callback)());
-Uint32 m80_get_cycles_executed();
-Uint32 m80_get_context(void *context);
+void m80_set_irq_callback(int32_t (*callback)(int));
+void m80_set_nmi_callback(int32_t (*callback)());
+uint32_t m80_get_cycles_executed();
+uint32_t m80_get_context(void *context);
 void m80_set_context(void *context);
 unsigned int m80_dasm( char *buffer, unsigned pc );
 const char *m80_info(void *context, int regnum);

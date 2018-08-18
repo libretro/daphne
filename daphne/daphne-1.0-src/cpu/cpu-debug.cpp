@@ -27,6 +27,7 @@
 
 #ifdef CPU_DEBUG
 
+#include <stdint.h>
 #include <stdio.h>
 #include <ctype.h>
 #include "mamewrap.h"
@@ -41,7 +42,7 @@
 #include "cpu-debug.h"
 
 unsigned char g_cpu_trace = 0;	// whether we are stopping at each instruction
-UINT32	g_breakpoint = 0;	// address to break at
+uint32_t	g_breakpoint = 0;	// address to break at
 unsigned char g_break = 0;	// whether to break at breakpoint or not
 unsigned int g_which_cpu = 0;	// which CPU to debug (since we now support multiple CPU's)
 

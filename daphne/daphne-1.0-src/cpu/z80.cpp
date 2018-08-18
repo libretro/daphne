@@ -68,9 +68,11 @@
  *		to a detailed description by Sean Young which can be found at:
  *		http://www.msxnet.org/tech/Z80/z80undoc.txt
  *****************************************************************************/
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
+
+#include <stdint.h>
 
 //#include "driver.h"
 //#include "cpuintrf.h"

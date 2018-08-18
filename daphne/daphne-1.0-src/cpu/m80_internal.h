@@ -28,10 +28,6 @@
 // NOTE : This should not be #included by any other file than m80.cpp
 
 #include <stdint.h>
-#include <SDL.h>
-// SDL.h is used to determine endianness and define some variable types
-// No actual SDL functions are used, so you can redefine your own variables
-// if you choose.
 
 /* if we are integrating with daphne, define this */
 #define INTEGRATE 1
@@ -349,7 +345,7 @@ struct m80_context
 #define M80_RLA	\
 {	\
 	/* use a temp variable greater than 8 bits so we can find out if there was a carry */	\
-	Uint32 result = ((A << 1) | (FLAGS & C_FLAG));	\
+	uint32_t result = ((A << 1) | (FLAGS & C_FLAG));	\
 	FLAGS &= (S_FLAG | Z_FLAG | P_FLAG);	\
 	FLAGS |= (result & (U5_FLAG | U3_FLAG));	\
 	FLAGS |= (result >> 8);	/* set carry flag if bit 8 of result is set */	\
@@ -359,7 +355,7 @@ struct m80_context
 // Rotate Left - Hi bit goes into carry, carry goes into bit 0
 #define M80_RL(which_reg)	\
 	{	\
-		Uint32 temp = (which_reg << 1) | (FLAGS & C_FLAG);	\
+		uint32_t temp = (which_reg << 1) | (FLAGS & C_FLAG);	\
 		which_reg = (Uint8) temp;	\
 		FLAGS = m80_sz53p_flags[which_reg];	/* set carry to 0 and get S, Z and P flags */	\
 		FLAGS |= (temp >> 8); /* set carry to the value of the hi bit */	\
@@ -569,8 +565,8 @@ struct m80_context
 #else
 #define M80_ADD_REGS16(dest_reg, source_reg) \
 {	\
-	Uint32 result = dest_reg + source_reg;	\
-	Uint32 cbits = (dest_reg ^ source_reg ^ result) >> 8;	\
+	uint32_t result = dest_reg + source_reg;	\
+	uint32_t cbits = (dest_reg ^ source_reg ^ result) >> 8;	\
 	dest_reg = (uint16_t) result;	\
 	AF = (AF & (0xFF00 | S_FLAG | Z_FLAG | V_FLAG)) |	\
 		((result >> 8) & (U3_FLAG | U5_FLAG)) |	\
@@ -611,8 +607,8 @@ struct m80_context
 // Subtract with carry for two 16-bit registers (dest_reg = dest_reg - source-reg - Carry)
 #define M80_SBC_REGS16(dest_reg, source_reg)	\
 {	\
-	Uint32 result = dest_reg - source_reg - (AF & C_FLAG);	\
-	Uint32 cbits = (dest_reg ^ source_reg ^ result) >> 8;	\
+	uint32_t result = dest_reg - source_reg - (AF & C_FLAG);	\
+	uint32_t cbits = (dest_reg ^ source_reg ^ result) >> 8;	\
 	dest_reg = result;	\
 	AF = (AF & ~0xff) | ((result >> 8) & 0xa8) |	\
 		(((result & 0xffff) == 0) << 6) |	\
@@ -651,8 +647,8 @@ struct m80_context
 #else
 #define M80_ADC_REGS16(dest_reg, source_reg) \
 {	\
-	Uint32 result = dest_reg + source_reg + (AF & C_FLAG);	\
-	Uint32 cbits = (dest_reg ^ source_reg ^ result) >> 8;	\
+	uint32_t result = dest_reg + source_reg + (AF & C_FLAG);	\
+	uint32_t cbits = (dest_reg ^ source_reg ^ result) >> 8;	\
 	dest_reg = result;	\
 	AF = (AF & ~0xff) | ((result >> 8) & 0xa8) |	\
 		(((result & 0xffff) == 0) << 6) |	/* Z_FLAG */	\
@@ -686,7 +682,7 @@ struct m80_context
 #else
 #define M80_ADD_TO_A(which_reg)	\
 {	\
-	Uint32 sum = which_reg + A;	\
+	uint32_t sum = which_reg + A;	\
 		/* Overflow can only occur in addition if the signs of the operands are the same */	\
 		/* If new A's sign is different from old A's, and if the signs of the operands are the same, set V */	\
 	FLAGS = ((((sum ^ A) & (which_reg ^ A ^ 0x80)) >> 5) & V_FLAG);	/* clear N flag */ \
@@ -722,7 +718,7 @@ struct m80_context
 #else
 #define M80_ADC_TO_A(which_reg)	\
 {	\
-	Uint32 sum = which_reg + A + (FLAGS & C_FLAG);	\
+	uint32_t sum = which_reg + A + (FLAGS & C_FLAG);	\
 		/* Overflow can only occur in addition if the signs of the operands are the same */	\
 		/* If new A's sign is different from old A's, and if the signs of the operands are the same, set V */	\
 	FLAGS = ((((sum ^ A) & (which_reg ^ A ^ 0x80)) >> 5) & V_FLAG);	/* clear N flag */ \
@@ -756,7 +752,7 @@ struct m80_context
 #else
 #define M80_SUB_FROM_A(which_reg)	\
 {	\
-	Uint32 diff = A - which_reg;	\
+	uint32_t diff = A - which_reg;	\
 	FLAGS = N_FLAG;	/* N_FLAG always gets set when subtracting */	\
 		/* Overflow can only occur in subtraction if the signs of the operands are different */	\
 		/* If new A's sign is different from old A's, and if the signs of the operands are different, set V */	\
@@ -792,7 +788,7 @@ struct m80_context
 #else
 #define M80_SBC_FROM_A(which_reg)	\
 {	\
-	Uint32 diff = A - which_reg - (FLAGS & C_FLAG);	\
+	uint32_t diff = A - which_reg - (FLAGS & C_FLAG);	\
 	FLAGS = N_FLAG;	/* N_FLAG always gets set when subtracting */	\
 		/* Overflow can only occur in subtraction if the signs of the operands are different */	\
 		/* If new A's sign is different from old A's, and if the signs of the operands are different, set V */	\
@@ -825,8 +821,8 @@ struct m80_context
 #else
 #define M80_COMPARE_WITH_A(which_reg)	\
 {	\
-	Uint32 sum = A - which_reg;	\
-	Uint32 cbits = A ^ which_reg ^ sum;	\
+	uint32_t sum = A - which_reg;	\
+	uint32_t cbits = A ^ which_reg ^ sum;	\
 		AF = (AF & ~0xff) | (sum & 0x80) |	\
 			(((sum & 0xff) == 0) << 6) | (which_reg & 0x28) |	\
 			(((cbits >> 6) ^ (cbits >> 5)) & 4) | 2 |	\
@@ -994,8 +990,8 @@ struct m80_context
 // macro for the CPI instruction
 #define M80_CPI \
 	{	\
-		Uint32 temp = M80_READ_BYTE(HL);	\
-		Uint32 cbits, sum;	\
+		uint32_t temp = M80_READ_BYTE(HL);	\
+		uint32_t cbits, sum;	\
 		++HL;	\
 		sum = A - temp;	\
 		cbits = A ^ temp ^ sum;	\
@@ -1009,8 +1005,8 @@ struct m80_context
 
 #define M80_CPIR	\
 {	\
-	Uint32 acu = A;	\
-	Uint32 temp, op, sum, cbits;	\
+	uint32_t acu = A;	\
+	uint32_t temp, op, sum, cbits;	\
 	BC &= 0xffff;	\
 	do {	\
 		temp = M80_READ_BYTE(HL); ++HL;	\
@@ -1040,10 +1036,10 @@ struct m80_context
 
 #define M80_CPDR	\
 {	\
-	Uint32 temp;	\
-	Uint32 op;	\
-	Uint32 sum;	\
-	Uint32 cbits;	\
+	uint32_t temp;	\
+	uint32_t op;	\
+	uint32_t sum;	\
+	uint32_t cbits;	\
 	do {	\
 		temp = M80_READ_BYTE(HL);	\
 		--HL;	\
