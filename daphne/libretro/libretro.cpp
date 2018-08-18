@@ -625,11 +625,9 @@ bool retro_load_game_get_path(const struct retro_game_info *in_game)
 	gstr_rom_name[sizeof(gstr_rom_name) - 1]			= '\0';
 	gstr_rom_path[sizeof(gstr_rom_path) - 1]			= '\0';
 
-#ifndef __ANDROID__
 	for (int i = 0; gstr_rom_name[i]; i++) {
 		gstr_rom_name[i] = tolower(gstr_rom_name[i]);
 	}
-#endif
 
 	if (log_cb)
       log_cb(RETRO_LOG_INFO, "daphne-libretro: In retro_load_game_get_path, final file. Path: %s  Name: %s  Ext: %s\n", gstr_rom_path, gstr_rom_name, gstr_rom_extension);
@@ -645,40 +643,35 @@ bool retro_load_game_get_path(const struct retro_game_info *in_game)
 /*
 DAPHNE_GAME_TYPE retro_load_game_get_game_type(char * pstr_shortgamename)
 {
-	if (strcasecmp(pstr_shortgamename, "lair") == 0)			return(DAPHNE_GAME_TYPE_LAIR);
-	if (strcasecmp(pstr_shortgamename, "lair2") == 0)			return(DAPHNE_GAME_TYPE_LAIR2);
-	if (strcasecmp(pstr_shortgamename, "ace") == 0)				return(DAPHNE_GAME_TYPE_ACE);
-	if (strcasecmp(pstr_shortgamename, "ace") == 0)				return(DAPHNE_GAME_TYPE_ACE91);
-	if (strcasecmp(pstr_shortgamename, "cliff") == 0)			return(DAPHNE_GAME_TYPE_CLIFF);
-	if (strcasecmp(pstr_shortgamename, "gtg") == 0)				return(DAPHNE_GAME_TYPE_GTG);
-	if (strcasecmp(pstr_shortgamename, "sdq") == 0)				return(DAPHNE_GAME_TYPE_SUPERD);
-	if (strcasecmp(pstr_shortgamename, "tq") == 0)				return(DAPHNE_GAME_TYPE_THAYERS);
-	if (strcasecmp(pstr_shortgamename, "astron") == 0)			return(DAPHNE_GAME_TYPE_ASTRON);
-	if (strcasecmp(pstr_shortgamename, "galaxy") == 0)			return(DAPHNE_GAME_TYPE_GALAXY);
-	if (strcasecmp(pstr_shortgamename, "esh") == 0)				return(DAPHNE_GAME_TYPE_ESH);
-	if (strcasecmp(pstr_shortgamename, "laireuro") == 0)		return(DAPHNE_GAME_TYPE_LAIREURO);
-	if (strcasecmp(pstr_shortgamename, "badlands") == 0)		return(DAPHNE_GAME_TYPE_BADLANDS);
-	if (strcasecmp(pstr_shortgamename, "starrider") == 0)		return(DAPHNE_GAME_TYPE_STARRIDER);
-	if (strcasecmp(pstr_shortgamename, "bega") == 0)			return(DAPHNE_GAME_TYPE_BEGA);
-	if (strcasecmp(pstr_shortgamename, "interstellar") == 0)	return(DAPHNE_GAME_TYPE_INTERSTELLAR);
-	if (strcasecmp(pstr_shortgamename, "sae") == 0)				return(DAPHNE_GAME_TYPE_SAE);
-	if (strcasecmp(pstr_shortgamename, "mach3") == 0)			return(DAPHNE_GAME_TYPE_MACH3);
-	if (strcasecmp(pstr_shortgamename, "uvt") == 0)				return(DAPHNE_GAME_TYPE_UVT);
-	if (strcasecmp(pstr_shortgamename, "badlands") == 0)		return(DAPHNE_GAME_TYPE_BADLANDP);
-	if (strcasecmp(pstr_shortgamename, "dle11") == 0)			return(DAPHNE_GAME_TYPE_DLE1);
-	if (strcasecmp(pstr_shortgamename, "dle21") == 0)			return(DAPHNE_GAME_TYPE_DLE2);
-	if (strcasecmp(pstr_shortgamename, "gpworld") == 0)			return(DAPHNE_GAME_TYPE_GPWORLD);
-	if (strcasecmp(pstr_shortgamename, "cobraab") == 0)			return(DAPHNE_GAME_SUBTYPE_ASTRON_COBRA);
-	if (strcasecmp(pstr_shortgamename, "roadblaster") == 0)		return(DAPHNE_GAME_SUBTYPE_BEGA_ROADBLASTER);
+	if (strcmp(pstr_shortgamename, "lair") == 0)			return(DAPHNE_GAME_TYPE_LAIR);
+	if (strcmp(pstr_shortgamename, "lair2") == 0)			return(DAPHNE_GAME_TYPE_LAIR2);
+	if (strcmp(pstr_shortgamename, "ace") == 0)				return(DAPHNE_GAME_TYPE_ACE);
+	if (strcmp(pstr_shortgamename, "ace") == 0)				return(DAPHNE_GAME_TYPE_ACE91);
+	if (strcmp(pstr_shortgamename, "cliff") == 0)			return(DAPHNE_GAME_TYPE_CLIFF);
+	if (strcmp(pstr_shortgamename, "gtg") == 0)				return(DAPHNE_GAME_TYPE_GTG);
+	if (strcmp(pstr_shortgamename, "sdq") == 0)				return(DAPHNE_GAME_TYPE_SUPERD);
+	if (strcmp(pstr_shortgamename, "tq") == 0)				return(DAPHNE_GAME_TYPE_THAYERS);
+	if (strcmp(pstr_shortgamename, "astron") == 0)			return(DAPHNE_GAME_TYPE_ASTRON);
+	if (strcmp(pstr_shortgamename, "galaxy") == 0)			return(DAPHNE_GAME_TYPE_GALAXY);
+	if (strcmp(pstr_shortgamename, "esh") == 0)				return(DAPHNE_GAME_TYPE_ESH);
+	if (strcmp(pstr_shortgamename, "laireuro") == 0)		return(DAPHNE_GAME_TYPE_LAIREURO);
+	if (strcmp(pstr_shortgamename, "badlands") == 0)		return(DAPHNE_GAME_TYPE_BADLANDS);
+	if (strcmp(pstr_shortgamename, "starrider") == 0)		return(DAPHNE_GAME_TYPE_STARRIDER);
+	if (strcmp(pstr_shortgamename, "bega") == 0)			return(DAPHNE_GAME_TYPE_BEGA);
+	if (strcmp(pstr_shortgamename, "interstellar") == 0)	return(DAPHNE_GAME_TYPE_INTERSTELLAR);
+	if (strcmp(pstr_shortgamename, "sae") == 0)				return(DAPHNE_GAME_TYPE_SAE);
+	if (strcmp(pstr_shortgamename, "mach3") == 0)			return(DAPHNE_GAME_TYPE_MACH3);
+	if (strcmp(pstr_shortgamename, "uvt") == 0)				return(DAPHNE_GAME_TYPE_UVT);
+	if (strcmp(pstr_shortgamename, "badlands") == 0)		return(DAPHNE_GAME_TYPE_BADLANDP);
+	if (strcmp(pstr_shortgamename, "dle11") == 0)			return(DAPHNE_GAME_TYPE_DLE1);
+	if (strcmp(pstr_shortgamename, "dle21") == 0)			return(DAPHNE_GAME_TYPE_DLE2);
+	if (strcmp(pstr_shortgamename, "gpworld") == 0)			return(DAPHNE_GAME_TYPE_GPWORLD);
+	if (strcmp(pstr_shortgamename, "cobraab") == 0)			return(DAPHNE_GAME_SUBTYPE_ASTRON_COBRA);
+	if (strcmp(pstr_shortgamename, "roadblaster") == 0)		return(DAPHNE_GAME_SUBTYPE_BEGA_ROADBLASTER);
 
 	return DAPHNE_GAME_TYPE_UNDEFINED;
 }
 */
-
-#ifndef __ANDROID__
-#define strcasecmp strcmp
-#define strncasecmp strncmp
-#endif
 
 bool retro_load_game_fill_framefile(char * pstr_framefile, int str_framefile_sz)
 {
@@ -688,271 +681,271 @@ bool retro_load_game_fill_framefile(char * pstr_framefile, int str_framefile_sz)
 	strcat(str_default_framefile, ".txt");
 	strcpy(pstr_framefile, str_default_framefile);
 
-	if ((strcasecmp(gstr_rom_name, "ace")		== 0) ||
-		(strcasecmp(gstr_rom_name, "ace_a2")	== 0) ||
-		(strcasecmp(gstr_rom_name, "ace_a")		== 0))
+	if ((strcmp(gstr_rom_name, "ace")		== 0) ||
+		(strcmp(gstr_rom_name, "ace_a2")	== 0) ||
+		(strcmp(gstr_rom_name, "ace_a")		== 0))
 	{
 		strcpy(pstr_framefile, "ace.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "ace91")			== 0) ||
-		(strcasecmp(gstr_rom_name, "ace91_euro")	== 0))
+	if ((strcmp(gstr_rom_name, "ace91")			== 0) ||
+		(strcmp(gstr_rom_name, "ace91_euro")	== 0))
 	{
 		strcpy(pstr_framefile, "ace.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "aceeuro") == 0))
+	if ((strcmp(gstr_rom_name, "aceeuro") == 0))
 	{
 		strcpy(pstr_framefile, "ace.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "astron")	== 0) ||
-		(strcasecmp(gstr_rom_name, "astronp")	== 0))
+	if ((strcmp(gstr_rom_name, "astron")	== 0) ||
+		(strcmp(gstr_rom_name, "astronp")	== 0))
 	{
 		strcpy(pstr_framefile, "astron.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "badlandp") == 0) ||
-		(strcasecmp(gstr_rom_name, "badlands") == 0))
+	if ((strcmp(gstr_rom_name, "badlandp") == 0) ||
+		(strcmp(gstr_rom_name, "badlands") == 0))
 	{
 		strcpy(pstr_framefile, "badlands.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "bega")		== 0) ||
-		(strcasecmp(gstr_rom_name, "begar1")	== 0))
+	if ((strcmp(gstr_rom_name, "bega")		== 0) ||
+		(strcmp(gstr_rom_name, "begar1")	== 0))
 	{
 		strcpy(pstr_framefile, "bega.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "benchmark") == 0))
+	if ((strcmp(gstr_rom_name, "benchmark") == 0))
 	{
 		strcpy(pstr_framefile, "");
 		return false;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "blazer") == 0))
+	if ((strcmp(gstr_rom_name, "blazer") == 0))
 	{
 		strcpy(pstr_framefile, "blazer.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "cliff")		== 0) ||
-		(strcasecmp(gstr_rom_name, "cliffalt")	== 0) ||
-		(strcasecmp(gstr_rom_name, "cliffalt2")	== 0))
+	if ((strcmp(gstr_rom_name, "cliff")		== 0) ||
+		(strcmp(gstr_rom_name, "cliffalt")	== 0) ||
+		(strcmp(gstr_rom_name, "cliffalt2")	== 0))
 	{
 		strcpy(pstr_framefile, "cliff.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "cobra")		== 0) ||
-		(strcasecmp(gstr_rom_name, "cobraab")	== 0) ||
-		(strcasecmp(gstr_rom_name, "cobram3")	== 0))
+	if ((strcmp(gstr_rom_name, "cobra")		== 0) ||
+		(strcmp(gstr_rom_name, "cobraab")	== 0) ||
+		(strcmp(gstr_rom_name, "cobram3")	== 0))
 	{
 		strcpy(pstr_framefile, "cobra.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "cobraconv") == 0))
+	if ((strcmp(gstr_rom_name, "cobraconv") == 0))
 	{
 		strcpy(pstr_framefile, "cobraconv.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "cputest") == 0))
+	if ((strcmp(gstr_rom_name, "cputest") == 0))
 	{
 		strcpy(pstr_framefile, "");
 		return false;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "dle11")	== 0) ||
-		(strcasecmp(gstr_rom_name, "dle2")	== 0) ||
-		(strcasecmp(gstr_rom_name, "dle20")	== 0) ||
-		(strcasecmp(gstr_rom_name, "dle21")	== 0))
+	if ((strcmp(gstr_rom_name, "dle11")	== 0) ||
+		(strcmp(gstr_rom_name, "dle2")	== 0) ||
+		(strcmp(gstr_rom_name, "dle20")	== 0) ||
+		(strcmp(gstr_rom_name, "dle21")	== 0))
 	{
 		strcpy(pstr_framefile, "lair.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "esh")		== 0) ||
-		(strcasecmp(gstr_rom_name, "eshalt")	== 0) ||
-		(strcasecmp(gstr_rom_name, "eshalt2")	== 0))
+	if ((strcmp(gstr_rom_name, "esh")		== 0) ||
+		(strcmp(gstr_rom_name, "eshalt")	== 0) ||
+		(strcmp(gstr_rom_name, "eshalt2")	== 0))
 	{
 		strcpy(pstr_framefile, "esh.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "firefox")	== 0) ||
-		(strcasecmp(gstr_rom_name, "firefoxa")	== 0))
+	if ((strcmp(gstr_rom_name, "firefox")	== 0) ||
+		(strcmp(gstr_rom_name, "firefoxa")	== 0))
 	{
 		strcpy(pstr_framefile, "firefox.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "ffr") == 0))
+	if ((strcmp(gstr_rom_name, "ffr") == 0))
 	{
 		strcpy(pstr_framefile, "ffr.txt");
 		return false;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "galaxy")	== 0) ||
-		(strcasecmp(gstr_rom_name, "galaxyp")	== 0))
+	if ((strcmp(gstr_rom_name, "galaxy")	== 0) ||
+		(strcmp(gstr_rom_name, "galaxyp")	== 0))
 	{
 		strcpy(pstr_framefile, "galaxy.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "gpworld") == 0))
+	if ((strcmp(gstr_rom_name, "gpworld") == 0))
 	{
 		strcpy(pstr_framefile, "gpworld.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "gtg") == 0))
+	if ((strcmp(gstr_rom_name, "gtg") == 0))
 	{
 		strcpy(pstr_framefile, "gtg.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "interstellar") == 0))
+	if ((strcmp(gstr_rom_name, "interstellar") == 0))
 	{
 		strcpy(pstr_framefile, "interstellar.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "lair")		== 0) ||
-		(strcasecmp(gstr_rom_name, "lair_f")	== 0) ||
-		(strcasecmp(gstr_rom_name, "lair_e")	== 0) ||
-		(strcasecmp(gstr_rom_name, "lair_d")	== 0) ||
-		(strcasecmp(gstr_rom_name, "lair_c")	== 0) ||
-		(strcasecmp(gstr_rom_name, "lair_b")	== 0) ||
-		(strcasecmp(gstr_rom_name, "lair_a")	== 0) ||
-		(strcasecmp(gstr_rom_name, "lair_n1")	== 0) ||
-		(strcasecmp(gstr_rom_name, "lair_x")	== 0) ||
-		(strcasecmp(gstr_rom_name, "lair_alt")	== 0) ||
-		(strcasecmp(gstr_rom_name, "laireuro")	== 0) ||
-		(strcasecmp(gstr_rom_name, "lair_ita")	== 0) ||
-		(strcasecmp(gstr_rom_name, "lair_d2")	== 0))
+	if ((strcmp(gstr_rom_name, "lair")		== 0) ||
+		(strcmp(gstr_rom_name, "lair_f")	== 0) ||
+		(strcmp(gstr_rom_name, "lair_e")	== 0) ||
+		(strcmp(gstr_rom_name, "lair_d")	== 0) ||
+		(strcmp(gstr_rom_name, "lair_c")	== 0) ||
+		(strcmp(gstr_rom_name, "lair_b")	== 0) ||
+		(strcmp(gstr_rom_name, "lair_a")	== 0) ||
+		(strcmp(gstr_rom_name, "lair_n1")	== 0) ||
+		(strcmp(gstr_rom_name, "lair_x")	== 0) ||
+		(strcmp(gstr_rom_name, "lair_alt")	== 0) ||
+		(strcmp(gstr_rom_name, "laireuro")	== 0) ||
+		(strcmp(gstr_rom_name, "lair_ita")	== 0) ||
+		(strcmp(gstr_rom_name, "lair_d2")	== 0))
 	{
 		strcpy(pstr_framefile, "lair.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "lair2")				== 0) ||
-		(strcasecmp(gstr_rom_name, "lair2_319_euro")	== 0) ||
-		(strcasecmp(gstr_rom_name, "lair2_319_span")	== 0) ||
-		(strcasecmp(gstr_rom_name, "lair2_318")			== 0) ||
-		(strcasecmp(gstr_rom_name, "lair2_316_euro")	== 0) ||
-		(strcasecmp(gstr_rom_name, "lair2_315")			== 0) ||
-		(strcasecmp(gstr_rom_name, "lair2_314")			== 0) ||
-		(strcasecmp(gstr_rom_name, "lair2_300")			== 0) ||
-		(strcasecmp(gstr_rom_name, "lair2_211")			== 0))
+	if ((strcmp(gstr_rom_name, "lair2")				== 0) ||
+		(strcmp(gstr_rom_name, "lair2_319_euro")	== 0) ||
+		(strcmp(gstr_rom_name, "lair2_319_span")	== 0) ||
+		(strcmp(gstr_rom_name, "lair2_318")			== 0) ||
+		(strcmp(gstr_rom_name, "lair2_316_euro")	== 0) ||
+		(strcmp(gstr_rom_name, "lair2_315")			== 0) ||
+		(strcmp(gstr_rom_name, "lair2_314")			== 0) ||
+		(strcmp(gstr_rom_name, "lair2_300")			== 0) ||
+		(strcmp(gstr_rom_name, "lair2_211")			== 0))
 	{
 		strcpy(pstr_framefile, "lair2.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "lgp") == 0))
+	if ((strcmp(gstr_rom_name, "lgp") == 0))
 	{
 		strcpy(pstr_framefile, "lgp.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "mach3") == 0))
+	if ((strcmp(gstr_rom_name, "mach3") == 0))
 	{
 		strcpy(pstr_framefile, "mach3.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "mcputest") == 0))
+	if ((strcmp(gstr_rom_name, "mcputest") == 0))
 	{
 		strcpy(pstr_framefile, "");
 		return false;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "releasetest") == 0))
+	if ((strcmp(gstr_rom_name, "releasetest") == 0))
 	{
 		strcpy(pstr_framefile, "");
 		return false;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "roadblaster") == 0))
+	if ((strcmp(gstr_rom_name, "roadblaster") == 0))
 	{
 		strcpy(pstr_framefile, "roadblaster.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "sae") == 0))
+	if ((strcmp(gstr_rom_name, "sae") == 0))
 	{
 		strcpy(pstr_framefile, "ace.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "seektest") == 0))
+	if ((strcmp(gstr_rom_name, "seektest") == 0))
 	{
 		strcpy(pstr_framefile, "");
 		return false;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "singe") == 0))
+	if ((strcmp(gstr_rom_name, "singe") == 0))
 	{
 		strcpy(pstr_framefile, "singe.txt");  // ??
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "speedtest") == 0))
+	if ((strcmp(gstr_rom_name, "speedtest") == 0))
 	{
 		strcpy(pstr_framefile, "");
 		return false;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "sdq")			== 0) ||
-		(strcasecmp(gstr_rom_name, "sdqshort")		== 0) ||
-		(strcasecmp(gstr_rom_name, "sdqshortalt")	== 0))
+	if ((strcmp(gstr_rom_name, "sdq")			== 0) ||
+		(strcmp(gstr_rom_name, "sdqshort")		== 0) ||
+		(strcmp(gstr_rom_name, "sdqshortalt")	== 0))
 	{
 		strcpy(pstr_framefile, "sdq.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "starrider") == 0))
+	if ((strcmp(gstr_rom_name, "starrider") == 0))
 	{
 		strcpy(pstr_framefile, "starrider.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "superdon") == 0))
+	if ((strcmp(gstr_rom_name, "superdon") == 0))
 	{
 		strcpy(pstr_framefile, "superdon.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "timetrav") == 0))
+	if ((strcmp(gstr_rom_name, "timetrav") == 0))
 	{
 		strcpy(pstr_framefile, "timetrav.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "test_sb") == 0))
+	if ((strcmp(gstr_rom_name, "test_sb") == 0))
 	{
 		strcpy(pstr_framefile, "");
 		return false;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "tq")		== 0) ||
-		(strcasecmp(gstr_rom_name, "tq_alt")	== 0) ||
-		(strcasecmp(gstr_rom_name, "tq_swear")	== 0))
+	if ((strcmp(gstr_rom_name, "tq")		== 0) ||
+		(strcmp(gstr_rom_name, "tq_alt")	== 0) ||
+		(strcmp(gstr_rom_name, "tq_swear")	== 0))
 	{
 		gf_isThayers = true;
 		strcpy(pstr_framefile, "tq.txt");
 		return true;
 	}
 
-	if ((strcasecmp(gstr_rom_name, "uvt") == 0))
+	if ((strcmp(gstr_rom_name, "uvt") == 0))
 	{
 		strcpy(pstr_framefile, "uvt.txt");
 		return true;
@@ -1029,14 +1022,14 @@ bool retro_load_game(const struct retro_game_info *in_game)
 	pstr_args[num_args] = str_args[num_args];
 	num_args++;
 
-	if (((strncasecmp(gstr_rom_name, "lair2", 5)	!= 0) &&
-		 (strncasecmp(gstr_rom_name, "aceeuro", 7)	!= 0))
+	if (((strncmp(gstr_rom_name, "lair2", 5)	!= 0) &&
+		 (strncmp(gstr_rom_name, "aceeuro", 7)	!= 0))
 		&&
-		((strncasecmp(gstr_rom_name, "lair", 4)	== 0) ||
-		(strncasecmp(gstr_rom_name, "dle", 3)	== 0) ||
-		(strncasecmp(gstr_rom_name, "ace", 3)	== 0) ||
-		(strncasecmp(gstr_rom_name, "sae", 3)	== 0) ||
-		(strncasecmp(gstr_rom_name, "tq", 2)	== 0)))
+		((strncmp(gstr_rom_name, "lair", 4)	== 0) ||
+		(strncmp(gstr_rom_name, "dle", 3)	== 0) ||
+		(strncmp(gstr_rom_name, "ace", 3)	== 0) ||
+		(strncmp(gstr_rom_name, "sae", 3)	== 0) ||
+		(strncmp(gstr_rom_name, "tq", 2)	== 0)))
 	{
 		strcpy(str_args[num_args], "-useoverlaysb");
 		pstr_args[num_args] = str_args[num_args];
@@ -1047,24 +1040,24 @@ bool retro_load_game(const struct retro_game_info *in_game)
 		num_args++;
 	}
 
-	if ((strncasecmp(gstr_rom_name, "cobra", 5)		== 0) ||
-		(strncasecmp(gstr_rom_name, "cobraab", 7)	== 0) ||
-		(strncasecmp(gstr_rom_name, "cobraconv", 9)	== 0) ||
-		(strncasecmp(gstr_rom_name, "cobram3", 7)	== 0) ||
-		(strncasecmp(gstr_rom_name, "astron", 6)	== 0) ||
-		(strncasecmp(gstr_rom_name, "astronp", 7)	== 0) ||
-		(strncasecmp(gstr_rom_name, "galaxy", 6)	== 0) ||
-		(strncasecmp(gstr_rom_name, "galaxyp", 7)	== 0) ||
-		(strncasecmp(gstr_rom_name, "mach3", 7)		== 0) ||
-		(strncasecmp(gstr_rom_name, "uvt", 3)		== 0))
+	if ((strncmp(gstr_rom_name, "cobra", 5)		== 0) ||
+		(strncmp(gstr_rom_name, "cobraab", 7)	== 0) ||
+		(strncmp(gstr_rom_name, "cobraconv", 9)	== 0) ||
+		(strncmp(gstr_rom_name, "cobram3", 7)	== 0) ||
+		(strncmp(gstr_rom_name, "astron", 6)	== 0) ||
+		(strncmp(gstr_rom_name, "astronp", 7)	== 0) ||
+		(strncmp(gstr_rom_name, "galaxy", 6)	== 0) ||
+		(strncmp(gstr_rom_name, "galaxyp", 7)	== 0) ||
+		(strncmp(gstr_rom_name, "mach3", 7)		== 0) ||
+		(strncmp(gstr_rom_name, "uvt", 3)		== 0))
 	{
 		strcpy(str_args[num_args], "-invertctrl");
 		pstr_args[num_args] = str_args[num_args];
 		num_args++;
 	}
 
-	if ((strncasecmp(gstr_rom_name, "badlands", 8) == 0) ||
-		(strncasecmp(gstr_rom_name, "badlandp", 8) == 0))
+	if ((strncmp(gstr_rom_name, "badlands", 8) == 0) ||
+		(strncmp(gstr_rom_name, "badlandp", 8) == 0))
 	{
 		strcpy(str_args[num_args], "-bank");
 		pstr_args[num_args] = str_args[num_args];
@@ -1086,7 +1079,7 @@ bool retro_load_game(const struct retro_game_info *in_game)
 		num_args++;
 	}
 			/*
-	if (strncasecmp(gstr_rom_name, "aceeuro", 7) == 0)
+	if (strncmp(gstr_rom_name, "aceeuro", 7) == 0)
 	{
 		strcpy(str_args[num_args], "-x");
 		pstr_args[num_args] = str_args[num_args];
