@@ -51,12 +51,12 @@ typedef union
 #ifndef MSB_FIRST
 	struct
 	{
-		Uint8 l,h;
+		uint8_t l,h;
 	} b;
 #else
 	struct
 	{
-		Uint8 h, l;
+		uint8_t h, l;
 	} b;
 #endif
 	uint16_t w;
@@ -67,13 +67,13 @@ typedef union
 struct m80_context
 {
 	m80_pair m80_regs[M80_REG_COUNT];	/* for quick access by m80_get_reg */
-	Uint8 halted;		/* whether the CPU is halted, waiting for an interrupt */
-	Uint8 interrupt_mode;	/* which IM we're in */
-	Uint8 IFF1;	/* interrupt flip-flop 1 */
-	Uint8 IFF2;	/* interrupt flip-flop 2 */
-	Uint8 irq_state;	/* whether IRQ line is asserted or cleared */
-	Uint8 nmi_state;	/* whether NMI line is asserted or cleared */
-	Uint8 got_EI;
+	uint8_t halted;		/* whether the CPU is halted, waiting for an interrupt */
+	uint8_t interrupt_mode;	/* which IM we're in */
+	uint8_t IFF1;	/* interrupt flip-flop 1 */
+	uint8_t IFF2;	/* interrupt flip-flop 2 */
+	uint8_t irq_state;	/* whether IRQ line is asserted or cleared */
+	uint8_t nmi_state;	/* whether NMI line is asserted or cleared */
+	uint8_t got_EI;
 	/* if this flag is true, no interrupts will be issued until after the next instruction */
 	/* EI masks all interrupts for the proceeding instruction */
 	/* (see Sean Young's undocumented z80 document for explanation of this behavior) */
@@ -161,7 +161,7 @@ struct m80_context
 
 // peek a word but don't advance PC
 #ifndef MSB_FIRST
-#define M80_PEEK_WORD	*( (uint16_t *) ( (Uint8 *) (opcode_base + PC)))
+#define M80_PEEK_WORD	*( (uint16_t *) ( (uint8_t *) (opcode_base + PC)))
 #endif
 
 // Interrupt check macro
@@ -349,14 +349,14 @@ struct m80_context
 	FLAGS &= (S_FLAG | Z_FLAG | P_FLAG);	\
 	FLAGS |= (result & (U5_FLAG | U3_FLAG));	\
 	FLAGS |= (result >> 8);	/* set carry flag if bit 8 of result is set */	\
-	A = (Uint8) result;	\
+	A = (uint8_t) result;	\
 }
 
 // Rotate Left - Hi bit goes into carry, carry goes into bit 0
 #define M80_RL(which_reg)	\
 	{	\
 		uint32_t temp = (which_reg << 1) | (FLAGS & C_FLAG);	\
-		which_reg = (Uint8) temp;	\
+		which_reg = (uint8_t) temp;	\
 		FLAGS = m80_sz53p_flags[which_reg];	/* set carry to 0 and get S, Z and P flags */	\
 		FLAGS |= (temp >> 8); /* set carry to the value of the hi bit */	\
 	}
@@ -364,7 +364,7 @@ struct m80_context
 /* does an RL on (IXIY + d) and on a register (undocumented instruction) */
 #define M80_RL_COMBO(reg, addr)	\
 {	\
-	Uint8 val = M80_READ_BYTE(addr);	\
+	uint8_t val = M80_READ_BYTE(addr);	\
 	M80_RL(val);	\
 	M80_WRITE_BYTE(addr, val);	\
 	reg = val;	\
@@ -373,17 +373,17 @@ struct m80_context
 // Rotate Right Accumulator - flags are different from RR A
 #define M80_RRA	\
 {	\
-	Uint8 result = (A >> 1) | (FLAGS << 7);	\
+	uint8_t result = (A >> 1) | (FLAGS << 7);	\
 	FLAGS &= (S_FLAG | Z_FLAG | P_FLAG);	\
 	FLAGS |= (A & 1);	\
 	FLAGS |= (result & (U5_FLAG | U3_FLAG));	\
-	A = (Uint8) result;	\
+	A = (uint8_t) result;	\
 }
 
 // Rotate Right - Bit 0 goes into carry, carry goes into Hi bit
 #define M80_RR(which_reg)	\
 	{	\
-		Uint8 new_carry = which_reg & C_FLAG;	\
+		uint8_t new_carry = which_reg & C_FLAG;	\
 		which_reg = (which_reg >> 1) | (FLAGS << 7);	\
 		FLAGS = m80_sz53p_flags[which_reg];	/* set carry to 0 and get S, Z and P flags */	\
 		FLAGS |= new_carry;	\
@@ -392,7 +392,7 @@ struct m80_context
 /* does an RR on (IXIY + d) and on a register (undocumented instruction) */
 #define M80_RR_COMBO(reg, addr)	\
 {	\
-	Uint8 val = M80_READ_BYTE(addr);	\
+	uint8_t val = M80_READ_BYTE(addr);	\
 	M80_RR(val);	\
 	M80_WRITE_BYTE(addr, val);	\
 	reg = val;	\
@@ -413,7 +413,7 @@ struct m80_context
 /* does an RLC on (IXIY + d) and on a register (undocumented instruction) */
 #define M80_RLC_COMBO(reg, addr)	\
 {	\
-	Uint8 val = M80_READ_BYTE(addr);	\
+	uint8_t val = M80_READ_BYTE(addr);	\
 	M80_RLC(val);	\
 	M80_WRITE_BYTE(addr, val);	\
 	reg = val;	\
@@ -424,7 +424,7 @@ struct m80_context
 	FLAGS &= (S_FLAG | Z_FLAG | P_FLAG);	\
 	FLAGS |= (A & C_FLAG);	\
 	A = (A << 7) | (A >> 1);	\
-	FLAGS |= (Uint8) (A & (U5_FLAG | U3_FLAG));	\
+	FLAGS |= (uint8_t) (A & (U5_FLAG | U3_FLAG));	\
 
 // Rotate Right Circular - Carry gets low-bit but is otherwise irrelevant to this operation
 #define M80_RRC(src_reg)	\
@@ -435,7 +435,7 @@ struct m80_context
 /* does an RRC on (IXIY + d) and on a register (undocumented instruction) */
 #define M80_RRC_COMBO(reg, addr)	\
 {	\
-	Uint8 val = M80_READ_BYTE(addr);	\
+	uint8_t val = M80_READ_BYTE(addr);	\
 	M80_RRC(val);	\
 	M80_WRITE_BYTE(addr, val);	\
 	reg = val;	\
@@ -450,7 +450,7 @@ struct m80_context
 /* does an SLA on (IXIY + d) and on a register (undocumented instruction) */
 #define M80_SLA_COMBO(reg, addr)	\
 {	\
-	Uint8 val = M80_READ_BYTE(addr);	\
+	uint8_t val = M80_READ_BYTE(addr);	\
 	M80_SLA(val);	\
 	M80_WRITE_BYTE(addr, val);	\
 	reg = val;	\
@@ -465,7 +465,7 @@ struct m80_context
 /* does an SLIA on (IXIY + d) and on a register (undocumented instruction) */
 #define M80_SLIA_COMBO(reg, addr)	\
 {	\
-	Uint8 val = M80_READ_BYTE(addr);	\
+	uint8_t val = M80_READ_BYTE(addr);	\
 	M80_SLIA(val);	\
 	M80_WRITE_BYTE(addr, val);	\
 	reg = val;	\
@@ -479,7 +479,7 @@ struct m80_context
 
 #define M80_SRA_COMBO(reg, addr)	\
 {	\
-	Uint8 val = M80_READ_BYTE(addr);	\
+	uint8_t val = M80_READ_BYTE(addr);	\
 	M80_SRA(val);	\
 	M80_WRITE_BYTE(addr, val);	\
 	reg = val;	\
@@ -494,7 +494,7 @@ struct m80_context
 /* does an SRL on (IXIY + d) and on a register (undocumented instruction) */
 #define M80_SRL_COMBO(reg, addr)	\
 {	\
-	Uint8 val = M80_READ_BYTE(addr);	\
+	uint8_t val = M80_READ_BYTE(addr);	\
 	M80_SRL(val);	\
 	M80_WRITE_BYTE(addr, val);	\
 	reg = val;	\
@@ -525,7 +525,7 @@ struct m80_context
 // a combo version of the reset instruction, for IXIY + d
 #define M80_RES_COMBO(bit, reg, addr)	\
 {	\
-	Uint8 val = M80_READ_BYTE(addr);	\
+	uint8_t val = M80_READ_BYTE(addr);	\
 	M80_RES(bit, val);	\
 	M80_WRITE_BYTE(addr, val);	\
 	reg = val;	\
@@ -537,7 +537,7 @@ struct m80_context
 /* an IXIY combo version of the set instruction */
 #define M80_SET_COMBO(bit, reg, addr)	\
 {	\
-	Uint8 val = M80_READ_BYTE(addr);	\
+	uint8_t val = M80_READ_BYTE(addr);	\
 	M80_SET(bit, val);	\
 	M80_WRITE_BYTE(addr, val);	\
 	reg = val;	\
@@ -546,23 +546,6 @@ struct m80_context
 
 // macros for 16-bit register addition
 
-#ifdef GCC_X86_ASM
-#define M80_ADD_REGS16(dest_reg, source_reg)	\
-	__asm__ __volatile__(	\
-	"addb	%%bl, %%cl\n\t"	/* the actual addition is here */ \
-	/* pipeline stall, can anyone fix? */	\
-	"adcb	%%bh, %%ch\n\t"	/* 16-bit add does NOT work because Aux Carry (HC) flag is wrong */ \
-	"lahf	\n\t"	/* put flags into ah register */	\
-	"movb	%%ch, %%bh\n\t"	/* prepare to get flags 3/5 (we can't modify %ch) */	\
-	"andb	$0x11, %%ah\n\t"	/* isolate carry and auxiliary carry flags */	\
-	"andb	$0x28, %%bh\n\t"	/* get bits 3 and 5 from upper byte ot result */	\
-	"andb	$196, %%al\n\t"	/* preserve S, Z, and V flags */	\
-	"orb	%%ah, %%al\n\t"	/* put carry and auxiliary carry into Z80 flags */	\
-	"orb	%%bh, %%al\n\t"	/* adds bits 3 and 5 to the FLAGS register */	\
-	:"=c" (dest_reg), "=a" (FLAGS)	\
-	:"c" (dest_reg), "a" (FLAGS), "b" (source_reg)	\
-	);
-#else
 #define M80_ADD_REGS16(dest_reg, source_reg) \
 {	\
 	uint32_t result = dest_reg + source_reg;	\
@@ -573,37 +556,7 @@ struct m80_context
 		(cbits & H_FLAG) |	\
 		((cbits >> 8) & C_FLAG);	\
 }
-#endif
 
-#ifdef GCC_X86_ASM
-// We unfortunately could not use a 16-bit subtraction because the x86 Aux Carry flag would
-// be different from the z80's.  However, with 8-bit, it is the same.  This subtraction is
-// further complicated because we have to change the Z flag, which means we have to AND
-// the Z flag result from both 8-bit addtions.
-// This assembly is optimized for pipe-lining.  See if you can do better (the last 3 lines will stall)
-#define M80_SBC_REGS16(dest_reg, source_reg)	\
-	__asm__ __volatile__(	\
-	"shrb	$1, %%al\n\t"	/* put z80 carry flag into x86 carry flag, we don't need to preserve flags */	\
-	"sbbb	%%bl, %%cl\n\t"	/* subtract lower bytes */ \
-	"lahf	\n\t"	/* we need to capture the Z flag from the lower result */	\
-	"sbbb	%%bh, %%ch\n\t"	/* subtract upper bytes */ \
-	"movb	%%ah, %%bl\n\t"	/* store lower flags into bl (which we can safely clobber) */	\
-	"lahf	\n\t"	/* put upper x86 flags into ah register */	\
-	"movb	%%ch, %%bh\n\t"	/* prepare to get 3/5 flags, we can't modify %ch */	\
-	"setob	%%al\n\t"	/* if overflow is true, set it (we're starting new flags here) */	\
-	"andb	$0x40, %%bl\n\t"	/* isolate Z flag from lower operation */	\
-	"shlb	$2, %%al\n\t"	/* shift overflow flag to its proper spot */	\
-	"orb	$0xBF, %%bl\n\t"	/* set all the other lower bits to prepare for an AND merge with the upper */	\
-	"andb	$0xD1, %%ah\n\t"	/* isolate S/Z/H and C x86 flags from upper operation */	\
-	"andb	$0x28, %%bh\n\t"	/* get bits 3 and 5 from upper byte ot result */	\
-	"orb	$2, %%al\n\t"	/* set N flag, which is always set in subtraction */	\
-	"andb	%%ah, %%bl\n\t"	/* merge lower bits and upper, taking the AND of the Z flag */	\
-	"orb	%%bh, %%al\n\t"	/* adds bits 3 and 5 to the FLAGS register */	\
-	"orb	%%bl, %%al\n\t"	/* merge bits and V_FLAG */	\
-	:"=c" (dest_reg), "=a" (FLAGS)	\
-	:"c" (dest_reg), "a" (FLAGS), "b" (source_reg)	\
-	);
-#else
 // Subtract with carry for two 16-bit registers (dest_reg = dest_reg - source-reg - Carry)
 #define M80_SBC_REGS16(dest_reg, source_reg)	\
 {	\
@@ -615,36 +568,8 @@ struct m80_context
 		(((cbits >> 6) ^ (cbits >> 5)) & 4) |	\
 		(cbits & 0x10) | 2 | ((cbits >> 8) & 1);	\
 }
-#endif
 
 // Add with carry for two 16-bit registers (dest_reg = dest_reg + source_reg + Carry)
-#ifdef GCC_X86_ASM
-// We unfortunately could not use a 16-bit addition because the x86 Aux Carry flag would
-// be different from the z80's.  However, with 8-bit, it is the same.  This addition is
-// further complicated because we have to change the Z flag, which means we have to AND
-// the Z flag result from both 8-bit addtions.
-#define M80_ADC_REGS16(dest_reg, source_reg)	\
-	__asm__ __volatile__(	\
-	"shrb	$1, %%al\n\t"	/* put z80 carry flag into x86 carry flag, we don't need to preserve flags */	\
-	"adcb	%%bl, %%cl\n\t"	/* add lower bytes */ \
-	"lahf	\n\t"	/* we need to capture the Z flag from the lower result */	\
-	"adcb	%%bh, %%ch\n\t"	/* add upper bytes */ \
-	"movb	%%ah, %%bl\n\t"	/* store lower flags into bl (which we can safely clobber) */	\
-	"lahf	\n\t"	/* put upper x86 flags into ah register */	\
-	"movb	%%ch, %%bh\n\t"	/* prepare to get 3/5 flags, we can't modify %ch */	\
-	"setob	%%al\n\t"	/* if overflow is true, set it (we're starting new flags here) */	\
-	"andb	$0x40, %%bl\n\t"	/* isolate Z flag from lower operation */	\
-	"shlb	$2, %%al\n\t"	/* shift overflow flag to its proper spot */	\
-	"orb	$0xBF, %%bl\n\t"	/* set all the other lower bits to prepare for an AND merge with the upper */	\
-	"andb	$0xD1, %%ah\n\t"	/* isolate S/Z/H and C x86 flags from upper operation */	\
-	"andb	$0x28, %%bh\n\t"	/* get bits 3 and 5 from upper byte ot result */	\
-	"andb	%%ah, %%bl\n\t"	/* merge lower bits and upper, taking the AND of the Z flag */	\
-	"orb	%%bh, %%al\n\t"	/* adds bits 3 and 5 to the FLAGS register */	\
-	"orb	%%bl, %%al\n\t"	/* merge bits and V_FLAG */	\
-	:"=c" (dest_reg), "=a" (FLAGS)	\
-	:"c" (dest_reg), "a" (FLAGS), "b" (source_reg)	\
-	);
-#else
 #define M80_ADC_REGS16(dest_reg, source_reg) \
 {	\
 	uint32_t result = dest_reg + source_reg + (AF & C_FLAG);	\
@@ -655,31 +580,9 @@ struct m80_context
 		(((cbits >> 6) ^ (cbits >> 5)) & 4) |	\
 		(cbits & 0x10) | ((cbits >> 8) & 1);	\
 }
-#endif
 
 #define X	printf("Instruction executed that is not implemented yet!\n")
 
-#ifdef GCC_X86_ASM
-// NOTE: I optimized this assembly for pipe-lining.  see if you can improve it!
-#define M80_ADD_TO_A(which_reg)	\
-	__asm__ __volatile__ (	\
-	"addb %2,%0	\n\t" /* do the addition */	\
-	"lahf	\n\t" /* put intel flags (which are almost the same as z80) into ah */	\
-	"setob %1	\n\t" /* set flags reg to 1 if intel overflow flag is set */	\
-	"andb $0xd1,%%ah	\n\t" /* strip out non-common intel flags, preserve S,Z,HC, and C */ \
-	"shlb $2,%1 	\n\t"	/* shift left twice so overflow flag is in correct position (1 cycle on Pentium) */	\
-	"movb %0,%%al	\n\t" /* move addition result into %%al so we can get X/Y z80 flags */	\
-	/* stall */	\
-	"orb %%ah,%1	\n\t" /* merge overflow bit with the rest of the intel flags */	\
-	/* stall */ \
-	"andb $0x28,%%al	\n\t" /* isolate X/Y flags */	\
-	/* stall */ \
-	"orb %%al,%1	\n\t" /* merge them in with the other flags */	\
-	:"=r" (A), "=r" (FLAGS)	\
-	:"q" (which_reg), "0" (A), "1" (FLAGS)	\
-	: "cc", "ah", "al"	\
-	);
-#else
 #define M80_ADD_TO_A(which_reg)	\
 {	\
 	uint32_t sum = which_reg + A;	\
@@ -688,34 +591,11 @@ struct m80_context
 	FLAGS = ((((sum ^ A) & (which_reg ^ A ^ 0x80)) >> 5) & V_FLAG);	/* clear N flag */ \
 	FLAGS |= ((sum ^ A ^ which_reg) & H_FLAG);	/* H_FLAG is set if 1 or all of the bit 4's are set */	\
 	FLAGS |= ((sum >> 8) & C_FLAG); /* if bit 8 of sum is set, set carry flag */	\
-	A = (Uint8) sum;	\
+	A = (uint8_t) sum;	\
 	FLAGS |= m80_sz53_flags[A];	/* set S, Z, 5 and 3 flags */	\
 }
-#endif
 
 
-#ifdef GCC_X86_ASM
-// optimized for pipelining, see if you can improve it!
-#define M80_ADC_TO_A(which_reg)	\
-	__asm__ __volatile__ (	\
-	"shrb  $1,%1	\n\t"	/* copy Z80 carry flag into Intel carry flag */	\
-	"adcb %2,%0	\n\t" /* do the addition, including the carry */	\
-	"lahf	\n\t" /* put intel flags (which are almost the same as z80) into ah */	\
-	"setob %1	\n\t" /* set flags reg to 1 if intel overflow flag is set */	\
-	"andb $0xd1,%%ah	\n\t" /* strip out non-common intel flags, preserve S,Z,HC, and C */ \
-	"shlb $2,%1 	\n\t"	/* shift left twice so overflow flag is in correct position (1 cycle on Pentium) */	\
-	"movb %0,%%al	\n\t" /* move addition result into %%al so we can get X/Y z80 flags */	\
-	/* stall */	\
-	"orb %%ah,%1	\n\t" /* merge overflow bit with the rest of the intel flags */	\
-	/* stall */	\
-	"andb $0x28,%%al	\n\t" /* isolate X/Y flags */	\
-	/* stall */	\
-	"orb %%al,%1	\n\t" /* merge them in with the other flags */	\
-	:"=r" (A), "=r" (FLAGS)	\
-	:"q" (which_reg), "0" (A), "1" (FLAGS)	\
-	: "cc", "ah", "al" \
-	);
-#else
 #define M80_ADC_TO_A(which_reg)	\
 {	\
 	uint32_t sum = which_reg + A + (FLAGS & C_FLAG);	\
@@ -724,32 +604,11 @@ struct m80_context
 	FLAGS = ((((sum ^ A) & (which_reg ^ A ^ 0x80)) >> 5) & V_FLAG);	/* clear N flag */ \
 	FLAGS |= ((sum ^ A ^ which_reg) & H_FLAG);	/* H_FLAG is set if 1 or all of the bit 4's are set */	\
 	FLAGS |= ((sum >> 8) & C_FLAG); /* if bit 8 of sum is set, set carry flag */	\
-	A = (Uint8) sum;	\
+	A = (uint8_t) sum;	\
 	FLAGS |= m80_sz53_flags[A];	/* set S, Z, Y and X flags */	\
 }
-#endif
 
 
-#ifdef GCC_X86_ASM
-#define M80_SUB_FROM_A(which_reg)	\
-	__asm__ __volatile__ (	\
-	"subb %2,%1	\n\t" /* do the subtraction (1 cycle) */	\
-	"lahf	\n\t" /* put intel flags (which are almost the same as z80) into ah (2 cycles) */	\
-	"setob %0	\n\t" /* set flags reg to 1 if intel overflow flag is set (1 or 2 cycles) */	\
-	"andb $0xd1,%%ah	\n\t" /* strip out non-common intel flags (1 cycle) */ \
-	"shlb $2,%0 	\n\t"	/* shift left twice so overflow flag is in correct position (1 cycle on Pentium) */	\
-	"movb %1,%%al	\n\t" /* move subtraction result into available reg for X/Y z80 flags (1 cycle) */	\
-	"orb $2, %0	\n\t" /* set N_FLAG in the flags register (1 cycle) */	\
-	"andb $0x28,%%al	\n\t" /* isolate X/Y flags (1 cycle) */	\
-	/* stall */	\
-	"orb %%ah,%0	\n\t" /* merge overflow bit with the rest of the intel flags (1 cycle) */	\
-	/* stall */	\
-	"orb %%al,%0	\n\t" /* merge them in with the other flags (1 cycle) */	\
-	:"=r" (FLAGS), "=r" (A)	\
-	:"q" (which_reg), "0" (FLAGS), "1" (A)	\
-	: "cc", "ah", "al" \
-	);
-#else
 #define M80_SUB_FROM_A(which_reg)	\
 {	\
 	uint32_t diff = A - which_reg;	\
@@ -759,33 +618,11 @@ struct m80_context
 	FLAGS |= ((((diff ^ A) & (which_reg ^ A)) >> 5) & V_FLAG);	\
 	FLAGS |= ((diff ^ A ^ which_reg) & H_FLAG);	/* H_FLAG is set if 1 or all of the bit 4's are set */	\
 	FLAGS |= ((diff >> 8) & C_FLAG); /* if bit 8 of diff is set, set carry flag */	\
-	A = (Uint8) diff;	\
+	A = (uint8_t) diff;	\
 	FLAGS |= m80_sz53_flags[A];	/* set S, Z, Y and X flags */	\
 }
-#endif
 
 
-#ifdef GCC_X86_ASM
-#define M80_SBC_FROM_A(which_reg)	\
-	__asm__ __volatile__ (	\
-	"shrb $1,%0	\n\t" /* copy z80 carry flag into intel carry flag */	\
-	"sbbb %2,%1	\n\t" /* do the subtraction w/ carry (1 cycle) */	\
-	"lahf	\n\t" /* put intel flags (which are almost the same as z80) into ah (2 cycles) */	\
-	"setob %0	\n\t" /* set flags reg to 1 if intel overflow flag is set (1 or 2 cycles) */	\
-	"andb $0xd1,%%ah	\n\t" /* strip out non-common intel flags (1 cycle) */ \
-	"shlb $2,%0 	\n\t"	/* shift left twice so overflow flag is in correct position (1 cycle on Pentium) */	\
-	"movb %1,%%al	\n\t" /* move subtraction result into available reg for X/Y z80 flags (1 cycle) */	\
-	"orb $2, %0	\n\t" /* set N_FLAG in the flags register (1 cycle) */	\
-	"andb $0x28,%%al	\n\t" /* isolate X/Y flags (1 cycle) */	\
-	/* stall */	\
-	"orb %%ah,%0	\n\t" /* merge overflow bit with the rest of the intel flags (1 cycle) */	\
-	/* stall */	\
-	"orb %%al,%0	\n\t" /* merge them in with the other flags (1 cycle) */	\
-	:"=r" (FLAGS), "=r" (A)	\
-	:"q" (which_reg), "0" (FLAGS), "1" (A)	\
-	: "cc", "ah", "al"	\
-	);
-#else
 #define M80_SBC_FROM_A(which_reg)	\
 {	\
 	uint32_t diff = A - which_reg - (FLAGS & C_FLAG);	\
@@ -795,30 +632,10 @@ struct m80_context
 	FLAGS |= ((((diff ^ A) & (which_reg ^ A)) >> 5) & V_FLAG);	\
 	FLAGS |= ((diff ^ A ^ which_reg) & H_FLAG);	/* H_FLAG is set if 1 or all of the bit 4's are set */	\
 	FLAGS |= ((diff >> 8) & C_FLAG); /* if bit 8 of diff is set, set carry flag */	\
-	A = (Uint8) diff;	\
+	A = (uint8_t) diff;	\
 	FLAGS |= m80_sz53_flags[A];	/* set S, Z, 5 and 3 flags */	\
 }
-#endif
 
-#ifdef GCC_X86_ASM
-#define M80_COMPARE_WITH_A(which_reg)	\
-	__asm__ __volatile__ (	\
-	"cmpb %1,%2	\n\t" /* do the comparison */	\
-	"lahf	\n\t" /* put intel flags (which are almost the same as z80) into ah (2 cycles) */	\
-	"setob %0	\n\t" /* set flags reg to 1 if intel overflow flag is set (1 or 2 cycles) */	\
-	"andb $0xd1,%%ah	\n\t" /* strip out non-common intel flags (1 cycle) */ \
-	"shlb $2,%0 	\n\t"	/* shift left twice so overflow flag is in correct position (1 cycle on Pentium) */	\
-	"andb $0x28,%1	\n\t" /* isolate X/Y flags from operand (1 cycle) */	\
-	"orb $2, %0	\n\t" /* set N_FLAG in the flags register (1 cycle) */	\
-	/* stall */	\
-	"orb %%ah,%0	\n\t" /* merge overflow bit with the rest of the intel flags (1 cycle) */	\
-	/* stall */	\
-	"orb %1,%0	\n\t" /* merge them in with the other flags (1 cycle) */	\
-	: "=r" (FLAGS)	\
-	: "r" (which_reg), "r" (A), "0" (FLAGS)	\
-	: "%ah"	\
-	);
-#else
 #define M80_COMPARE_WITH_A(which_reg)	\
 {	\
 	uint32_t sum = A - which_reg;	\
@@ -828,7 +645,6 @@ struct m80_context
 			(((cbits >> 6) ^ (cbits >> 5)) & 4) | 2 |	\
 			(cbits & 0x10) | ((cbits >> 8) & 1);	\
 }
-#endif
 
 // FIXME: I think the above COMPARE is broken.  According to Sean Young, flags 5 and 3 are
 // from the operand, not the result.  Of course this is very minor, but it's still a bug that needs fixing.
@@ -867,17 +683,17 @@ struct m80_context
 
 // compliment A
 #define M80_CPL	\
-	A = (Uint8) (A ^ 0xFF);	\
-	FLAGS &= (Uint8) (S_FLAG | Z_FLAG | P_FLAG | C_FLAG );	\
-	FLAGS |= (Uint8) (H_FLAG | N_FLAG);	\
-	FLAGS |= (Uint8) (A & (U5_FLAG | U3_FLAG));	\
+	A = (uint8_t) (A ^ 0xFF);	\
+	FLAGS &= (uint8_t) (S_FLAG | Z_FLAG | P_FLAG | C_FLAG );	\
+	FLAGS |= (uint8_t) (H_FLAG | N_FLAG);	\
+	FLAGS |= (uint8_t) (A & (U5_FLAG | U3_FLAG));	\
 	/* see Sean Young's z80 doc for more info about how CPL behaves */
 
 // set carry flag
 #define M80_SCF	\
-	FLAGS &= (Uint8) (S_FLAG | Z_FLAG | P_FLAG);	\
+	FLAGS &= (uint8_t) (S_FLAG | Z_FLAG | P_FLAG);	\
 	FLAGS |= C_FLAG;	\
-	FLAGS |= (Uint8) (A & (U5_FLAG | U3_FLAG));
+	FLAGS |= (uint8_t) (A & (U5_FLAG | U3_FLAG));
 
 // compliment carry flag
 #define M80_CCF	\
@@ -972,7 +788,7 @@ struct m80_context
 
 #define M80_LDI	\
 	{	\
-		Uint8 temp = M80_READ_BYTE(HL);	\
+		uint8_t temp = M80_READ_BYTE(HL);	\
 		M80_WRITE_BYTE(DE, temp);	\
 		DE++;	\
 		HL++;	\
@@ -1023,8 +839,8 @@ struct m80_context
 }
 
 #define M80_CPD {													\
-	Uint8 val = M80_READ_BYTE(HL);										\
-	Uint8 res = A - val;										\
+	uint8_t val = M80_READ_BYTE(HL);										\
+	uint8_t res = A - val;										\
 	HL--; BC--;												\
 	FLAGS = (FLAGS & C_FLAG) | (m80_sz53_flags[res] & ~(U5_FLAG|U3_FLAG))	\
 		| ((A ^ val ^ res) & H_FLAG) | N_FLAG;  \
@@ -1058,7 +874,7 @@ struct m80_context
 // macro for LDD instruction
 #define M80_LDD	\
 {	\
-	Uint8 acu = M80_READ_BYTE(HL);	\
+	uint8_t acu = M80_READ_BYTE(HL);	\
 	--HL;	\
 	M80_WRITE_BYTE(DE, acu);	\
 	--DE;	\
@@ -1070,7 +886,7 @@ struct m80_context
 // macro for LDDR instruction
 #define M80_LDDR	\
 {	\
-	Uint8 acu;	\
+	uint8_t acu;	\
 	BC &= 0xffff;	\
 	do	\
 	{	\
