@@ -151,29 +151,6 @@ SDL_CreateRGBSurfaceFrom(void *pixels,
     return surface;
 }
 
-/*
- * Create an RGB surface from an existing memory buffer using the given given
- * enum SDL_PIXELFORMAT_* format
- */
-SDL_Surface *
-SDL_CreateRGBSurfaceWithFormatFrom(void *pixels,
-                         int width, int height, int depth, int pitch,
-                         Uint32 format)
-{
-    SDL_Surface *surface;
-
-    surface = SDL_CreateRGBSurfaceWithFormat(0, 0, 0, depth, format);
-    if (surface != NULL) {
-        surface->flags |= SDL_PREALLOC;
-        surface->pixels = pixels;
-        surface->w = width;
-        surface->h = height;
-        surface->pitch = pitch;
-        SDL_SetClipRect(surface, NULL);
-    }
-    return surface;
-}
-
 int
 SDL_SetSurfacePalette(SDL_Surface * surface, SDL_Palette * palette)
 {

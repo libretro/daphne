@@ -129,8 +129,6 @@ extern DECLSPEC SDL_Surface *SDLCALL SDL_CreateRGBSurfaceFrom(void *pixels,
                                                               Uint32 Gmask,
                                                               Uint32 Bmask,
                                                               Uint32 Amask);
-extern DECLSPEC SDL_Surface *SDLCALL SDL_CreateRGBSurfaceWithFormatFrom
-    (void *pixels, int width, int height, int depth, int pitch, Uint32 format);
 extern DECLSPEC void SDLCALL SDL_FreeSurface(SDL_Surface * surface);
 
 /**
