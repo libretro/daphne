@@ -218,14 +218,14 @@ void ldp_vldp::disable_audio2()
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 // mute audio data
-void *audiocopy_mute(void *dest, const void *src, size_t bytes_to_copy)
+static void *audiocopy_mute(void *dest, const void *src, size_t bytes_to_copy)
 {
    memset(dest, 0,bytes_to_copy);
 	return NULL;
 }
 
 // copies left-channel audio data to right-channel
-void *audiocopy_left_only(void *dest, const void *src, size_t bytes_to_copy)
+static void *audiocopy_left_only(void *dest, const void *src, size_t bytes_to_copy)
 {
 	Uint32 *dst32 = (Uint32 *) dest;
 	Uint16 *src16_L = (Uint16 *) src;	// point to first bit of left-channel data
@@ -241,7 +241,7 @@ void *audiocopy_left_only(void *dest, const void *src, size_t bytes_to_copy)
 }
 
 // copies right-channel audio data to left-channel
-void *audiocopy_right_only(void *dest, const void *src, size_t bytes_to_copy)
+static void *audiocopy_right_only(void *dest, const void *src, size_t bytes_to_copy)
 {
 	Uint32 *dst32 = (Uint32 *) dest;
 	Uint16 *src16_R = (Uint16 *) src + 1;	// point to the first bit of data that occurs on the right channel
