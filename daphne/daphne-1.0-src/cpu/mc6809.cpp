@@ -1856,11 +1856,6 @@ INT_MC mc6809_irq;
 INT_MC mc6809_nmi;
 INT_MC mc6809_firq;
 
-#ifdef DEBUG
-FILE *mc6809_ftrace = NULL;
-#endif
-
-
 mc6809_clock_t mc6809_clock(void)
 {
 	return cpu_clock;
@@ -2007,11 +2002,6 @@ UINT_MC mc6809_StepExec(UINT_MC ncycles)
 		else if (mc6809_irq)
 			do_irq();
 
-	#ifdef DEBUG
-		if (mc6809_ftrace)
-			fprintf(mc6809_ftrace, "pc: %04X\n", pc);
-	#endif
-
 		/* on remplit le buffer de fetch */
 		FetchInstr(pc, fetch_buffer);
 		op = (CHAR_MC *)fetch_buffer;
@@ -2051,11 +2041,6 @@ INT_MC mc6809_TimeExec(mc6809_clock_t time_limit)
 
 		if (mc6809_irq)
 			do_irq();
-
-	#ifdef DEBUG
-		if (mc6809_ftrace)
-			fprintf(mc6809_ftrace, "pc: %04X\n", pc);
-	#endif
 
 		/* on remplit le buffer de fetch */
 		FetchInstr(pc, fetch_buffer);

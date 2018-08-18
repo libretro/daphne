@@ -34,11 +34,6 @@
 #define strcasecmp stricmp
 #endif
 
-
-#ifdef DEBUG
-#include <assert.h>
-#endif
-
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -668,13 +663,9 @@ bool ldp_vldp::nonblocking_search(char *frame)
 		
 		// if we're seeking forward
 		if (target_ld_frame > cur_frame)
-		{
 			frame_delta = target_ld_frame - cur_frame;
-		}
 		else
-		{
 			frame_delta = cur_frame - target_ld_frame;
-		}
 		
 		seek_delay_ms = (unsigned int) (frame_delta / m_seek_frames_per_ms);
 
@@ -838,10 +829,6 @@ unsigned int ldp_vldp::play()
 	// we need to keep this separate in case an mpeg is already opened
 	if (bOK)
 	{
-#ifdef DEBUG
-		// we always expect this to be true, because we've just played :)
-		assert(m_uElapsedMsSincePlay == 0);
-#endif
 		audio_play(0);
 		if (g_vldp_info->play(0))
 		{
@@ -922,11 +909,6 @@ bool ldp_vldp::skip_forward(uint16_t frames_to_skip, uint16_t target_frame)
 
 void ldp_vldp::pause()
 {
-#ifdef DEBUG
-	string s = "ldp_vldp::pause() : g_vldp_info's current frame is " + numstr::ToStr(g_vldp_info->current_frame) +
-		" (" + numstr::ToStr(m_cur_ldframe_offset + g_vldp_info->current_frame) + " adjusted)";
-	printline(s.c_str());
-#endif
 	g_vldp_info->pause();
 	audio_pause();
 }
@@ -2413,9 +2395,6 @@ void report_mpeg_dimensions_callback(int width, int height)
 		g_hw_overlay_w = DAPHNE_VIDEO_W;
 
 		g_blend_iterations = g_hw_overlay_w << 1;
-#ifdef DEBUG
-		assert(((g_blend_iterations % 8) == 0) && (g_blend_iterations >= 8));	// blend MMX does 8 bytes at a time
-#endif
 	}
 }
 

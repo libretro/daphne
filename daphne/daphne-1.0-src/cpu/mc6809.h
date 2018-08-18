@@ -46,12 +46,6 @@
 #ifndef MC6809_H
 #define MC6809_H
 
-#ifdef DEBUG
-#include <stdio.h>
-
-extern FILE *mc6809_ftrace;
-#endif
-
 // RJS MC
 #include <stdint.h>
 #define UINT8_MC	uint8_t

@@ -51,9 +51,6 @@
 #include "../io/conout.h"
 #include "../io/numstr.h"
 #include "../ldp-out/ldp.h"
-#ifdef DEBUG
-#include <assert.h>
-#endif
 
 #define LDV1000_STACKSIZE 10
 unsigned char g_ldv1000_output_stack[LDV1000_STACKSIZE];
@@ -616,37 +613,22 @@ void ldv1000_event_callback(void *eventType)
 	switch ((uintptr_t) eventType)
 	{
 	case LDV1000_EVENT_VSYNC_END:
-#ifdef DEBUG
-		assert (ldv1000_is_vsync_active() == false);
-#endif
 		cpu_set_event(0, g_ldv1000_until_status_start, ldv1000_event_callback, (void *) LDV1000_EVENT_STATUS_START);
 		break;
 	case LDV1000_EVENT_STATUS_START:
 		g_game->OnLDV1000LineChange(true, true);
-#ifdef DEBUG
-		assert(ldv1000_is_status_strobe_active() == true);
-#endif
 		cpu_set_event(0, g_ldv1000_until_status_end, ldv1000_event_callback, (void *) LDV1000_EVENT_STATUS_END);
 		break;
 	case LDV1000_EVENT_STATUS_END:
 		g_game->OnLDV1000LineChange(true, false);
-#ifdef DEBUG
-		assert(ldv1000_is_status_strobe_active() == false);
-#endif
 		cpu_set_event(0, g_ldv1000_until_command_start, ldv1000_event_callback, (void *) LDV1000_EVENT_COMMAND_START);
 		break;
 	case LDV1000_EVENT_COMMAND_START:
 		g_game->OnLDV1000LineChange(false, true);
-#ifdef DEBUG
-		assert(ldv1000_is_command_strobe_active() == true);
-#endif
 		cpu_set_event(0, g_ldv1000_until_command_end, ldv1000_event_callback, (void *) LDV1000_EVENT_COMMAND_END);
 		break;
 	case LDV1000_EVENT_COMMAND_END:
 		g_game->OnLDV1000LineChange(false, false);
-#ifdef DEBUG
-		assert(ldv1000_is_command_strobe_active() == false);
-#endif
 		// no more events until next vsync
 		break;
 	default:
@@ -661,9 +643,6 @@ void ldv1000_event_callback(void *eventType)
 void ldv1000_report_vsync()
 {
 	g_ldv1000_last_event = LDV1000_EVENT_VSYNC_START;
-#ifdef DEBUG
-	assert (ldv1000_is_vsync_active() == true);
-#endif
 	cpu_set_event(0, g_ldv1000_until_vsync_end, ldv1000_event_callback, (void *) LDV1000_EVENT_VSYNC_END);
 	g_ldv1000_last_event = 0;
 }

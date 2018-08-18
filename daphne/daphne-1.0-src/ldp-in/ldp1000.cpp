@@ -525,9 +525,6 @@ void ldp1000_think()
 			// if we're waiting for a search to complete
 			if (g_uLDP1000State == LDP1000_STATE_SEARCHING)
 			{
-#ifdef DEBUG
-				printline("LDP1000: Search Complete");
-#endif
 				ldp1000_queue_push(1);	// search complete
 			}
 			// else the search has aborted, so we don't want to return a '1'

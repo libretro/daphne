@@ -36,13 +36,8 @@
 #include "../game/game.h"
 #include "vp931.h"
 #include "../io/conout.h"
-#include "../io/numstr.h"	// for DEBUG
 #include "../ldp-out/ldp.h"
 #include "../cpu/cpu-debug.h"
-
-#ifdef DEBUG
-#include <assert.h>
-#endif // DEBUG
 
 // True means it's active, which means data is available to be read
 // False means it's inactive, which means data has been read
@@ -81,15 +76,7 @@ unsigned char read_vp931()
 
 	// safety check
 	if (g_uVP931OutBufIdx < OUTBUF_SIZE)
-	{
 		u8Result = g_VP931OutBuf[g_uVP931OutBufIdx];
-
-#ifdef DEBUG
-		// DEBUG
-		//string strMsg = "read_vp931 returned " + numstr::ToStr(u8Result, 16);
-		//printline(strMsg.c_str());
-#endif
-	}
 	else
 	{
 //		printline("VP931 ERROR: read_vp931 called when there is nothing to be read");
@@ -113,11 +100,6 @@ unsigned int vp931_get_cmd_num(unsigned int uDigits)
 {
 	unsigned int uResult = 0;
 	unsigned int u = 0;
-
-#ifdef DEBUG
-	// we only handle 5 and 3 digit cases
-	assert((uDigits == 5) || (uDigits == 3));
-#endif // DEBUG
 
 	// if we're only doing 3 digits, then start 1 digit ahead
 	if (uDigits == 3)
@@ -153,11 +135,6 @@ void process_vp931_cmd (unsigned char value)
 	// we've got a complete command so process it
 	if (g_uVP931CurrentByte == 3)
 	{
-#ifdef DEBUG
-//		sprintf(s, "VP931 CMD: %x %x %x", command_byte[0], command_byte[1], command_byte[2]);
-//		printline(s);
-#endif // DEBUG
-
 		g_uVP931CurrentByte = 0;
 
 		if (command_byte[0] == 0x00)
@@ -193,9 +170,6 @@ void process_vp931_cmd (unsigned char value)
 			{
 				sprintf(s,"Unsupported VP931 Command Received: %x %x %x", command_byte[0], command_byte[1], command_byte[2]);
 				printline(s);
-#ifdef DEBUG
-				set_cpu_trace(1);
-#endif
 			}
 		}
 		else if (command_byte[0] == 0x02)
@@ -205,9 +179,6 @@ void process_vp931_cmd (unsigned char value)
 		else if ((command_byte[0] & 0xf0) == 0xd0)
 		{
 			printline("VP931: Search and Halt command: Implement Me!");
-#ifdef DEBUG
-			set_cpu_trace(1);
-#endif
 		}
 
 		// search and play?
@@ -239,8 +210,6 @@ void process_vp931_cmd (unsigned char value)
 				// If we are searching forward, then do a forward skip
 				if (uCurFrame < uFrameMin1)
 				{
-					string s = "VP931: Search and Play (skip) to frame " + numstr::ToStr(uFrame);
-					printline(s.c_str());
 					g_ldp->pre_skip_forward(uFrameMin1 - uCurFrame);
 				}
 				// else take the easy way out until we find a ROM that actually uses this functionality
@@ -256,9 +225,6 @@ void process_vp931_cmd (unsigned char value)
 		{
 			sprintf(s,"Unsupported VP931 Command Received: %x %x %x", command_byte[0], command_byte[1], command_byte[2]);
 			printline(s);
-#ifdef DEBUG
-			set_cpu_trace(1);
-#endif
 		}
 	}
 
@@ -390,10 +356,6 @@ void vp931_report_vsync()
 		uBCD |= (uCurFrame % 10) << 12;	// get least significant digit and put it high enough that we won't lose it
 		uCurFrame /= 10;	// move decimal number to the right one digit
 	}
-
-#ifdef DEBUG
-	assert(uCurFrame <= 9);
-#endif
 
 	g_VP931OutBuf[0] |= uCurFrame;	// add first digit to first byte (uCurFrame & 0xF is implied here)
 	g_VP931OutBuf[1] = (uBCD >> 8) & 0xFF;
