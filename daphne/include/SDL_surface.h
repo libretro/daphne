@@ -346,17 +346,6 @@ extern DECLSPEC SDL_Surface *SDLCALL SDL_ConvertSurfaceFormat
     (SDL_Surface * src, Uint32 pixel_format, Uint32 flags);
 
 /**
- * \brief Copy a block of pixels of one format to another format
- *
- *  \return 0 on success, or -1 if there was an error
- */
-extern DECLSPEC int SDLCALL SDL_ConvertPixels(int width, int height,
-                                              Uint32 src_format,
-                                              const void * src, int src_pitch,
-                                              Uint32 dst_format,
-                                              void * dst, int dst_pitch);
-
-/**
  *  Performs a fast fill of the given rectangle with \c color.
  *
  *  If \c rect is NULL, the whole surface will be filled with \c color.
