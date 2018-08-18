@@ -25,6 +25,8 @@
 #ifndef CLIFF_H
 #define CLIFF_H
 
+#include <stdint.h>
+
 #include "game.h"
 #include "../ldp-out/ldp.h"	// for FRAME_ARRAY_SIZE definition
 

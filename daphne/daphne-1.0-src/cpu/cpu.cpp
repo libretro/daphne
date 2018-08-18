@@ -429,7 +429,7 @@ void cpu_execute_loop()
 
 				// NOTE: if g_uInterleavePerMs is 1, then this calculation is the same as
 				//  (g_expected_elapsed_ms * cpu->hz) / 1000
-				Uint64 u64ExpectedCycles = (( ((Uint64) (g_expected_elapsed_ms - 1)) * cpu->hz) / 1000) +
+				uint64_t u64ExpectedCycles = (( ((uint64_t) (g_expected_elapsed_ms - 1)) * cpu->hz) / 1000) +
 					(cpu->uCyclesPerInterleave * uInterleaveCount);
 
 				if (u64ExpectedCycles > cpu->total_cycles_executed)
@@ -512,7 +512,7 @@ void cpu_execute_loop()
 					{
 						++cpu->pending_nmi_count;
 						++cpu->uNMITickCount;
-						cpu->uNMITickBoundaryMs = (Uint32) (( ((Uint64) (cpu->uNMITickCount + 1)) * cpu->uNMIMicroPeriod) / 1000);
+						cpu->uNMITickBoundaryMs = (Uint32) (( ((uint64_t) (cpu->uNMITickCount + 1)) * cpu->uNMIMicroPeriod) / 1000);
 #ifdef CPU_DIAG
 						++cd_nmi_count[cpu->id];
 #endif
@@ -541,7 +541,7 @@ void cpu_execute_loop()
 						{
 							++cpu->pending_irq_count[i];
 							++cpu->uIRQTickCount[i];
-							cpu->uIRQTickBoundaryMs[i] = (Uint32) (( ((Uint64) (cpu->uIRQTickCount[i] + 1)) *
+							cpu->uIRQTickBoundaryMs[i] = (Uint32) (( ((uint64_t) (cpu->uIRQTickCount[i] + 1)) *
 								cpu->uIRQMicroPeriod[i]) / 1000);
 #ifdef CPU_DIAG
 							++cd_irq_count[cpu->id][i];
@@ -749,7 +749,7 @@ void cpu_execute_one_cycle()
 
 				// NOTE: if g_uInterleavePerMs is 1, then this calculation is the same as
 				//  (g_expected_elapsed_ms * cpu->hz) / 1000
-				Uint64 u64ExpectedCycles = ((((Uint64)(g_expected_elapsed_ms - 1)) * cpu->hz) / 1000) +
+				uint64_t u64ExpectedCycles = ((((uint64_t)(g_expected_elapsed_ms - 1)) * cpu->hz) / 1000) +
 					(cpu->uCyclesPerInterleave * uInterleaveCount);
 
 				if (u64ExpectedCycles > cpu->total_cycles_executed)
@@ -832,7 +832,7 @@ void cpu_execute_one_cycle()
 					{
 						++cpu->pending_nmi_count;
 						++cpu->uNMITickCount;
-						cpu->uNMITickBoundaryMs = (Uint32)((((Uint64)(cpu->uNMITickCount + 1)) * cpu->uNMIMicroPeriod) / 1000);
+						cpu->uNMITickBoundaryMs = (Uint32)((((uint64_t)(cpu->uNMITickCount + 1)) * cpu->uNMIMicroPeriod) / 1000);
 #ifdef CPU_DIAG
 						++cd_nmi_count[cpu->id];
 #endif
@@ -861,7 +861,7 @@ void cpu_execute_one_cycle()
 						{
 							++cpu->pending_irq_count[i];
 							++cpu->uIRQTickCount[i];
-							cpu->uIRQTickBoundaryMs[i] = (Uint32)((((Uint64)(cpu->uIRQTickCount[i] + 1)) *
+							cpu->uIRQTickBoundaryMs[i] = (Uint32)((((uint64_t)(cpu->uIRQTickCount[i] + 1)) *
 								cpu->uIRQMicroPeriod[i]) / 1000);
 #ifdef CPU_DIAG
 							++cd_irq_count[cpu->id][i];
@@ -1107,15 +1107,13 @@ Uint32 get_cpu_timer()
 // WARNING : flush_cpu_timers will reset the total_cycles_executed so you must always check
 // for this by making sure latest result is greater than previous result
 // Failure to check for this will result in some very puzzling and frustrating bugs
-Uint64 get_total_cycles_executed(Uint8 id)
+uint64_t get_total_cycles_executed(Uint8 id)
 {
-	Uint64 result = 0;	
+	uint64_t result = 0;	
 	struct cpudef *cpu = get_cpu_struct(id);
 	
 	if (cpu)
-	{
 		result = cpu->total_cycles_executed + (cpu->elapsedcycles_callback)();
-	}
 	return result;
 }
 

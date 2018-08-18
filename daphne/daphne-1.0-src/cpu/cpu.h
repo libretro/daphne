@@ -23,6 +23,8 @@
 #ifndef CPU_H
 #define CPU_H
 
+#include <stdint.h>
+
 #include <SDL.h>	// for Uint definitions
 
 enum { CPU_UNDEFINED, CPU_Z80, CPU_X86, CPU_M6809, CPU_M6502, CPU_COP421, CPU_I88, CPU_COUNT };	// cpu's supported by daphne now, leave CPU_COUNT at the end
@@ -70,7 +72,7 @@ struct cpudef
 	unsigned int uIRQTickBoundaryMs[MAX_IRQS];	// same as NMI
 	unsigned pending_nmi_count;	// how many NMI's we have queued up to do
 	unsigned int pending_irq_count[MAX_IRQS];	// how many IRQ's we have queued up to do
-	Uint64 total_cycles_executed;	// any cycles we've tracked so far
+	uint64_t total_cycles_executed;	// any cycles we've tracked so far
 	unsigned int uEventCyclesExecuted;	// how many cycles we've executed since the optional event tracking started
 	unsigned int uEventCyclesEnd;	// when event tracking ends and optional event fires (0 if no event)
 	void (*event_callback)(void *data);	// callback we call when optional event fires
@@ -93,7 +95,7 @@ void cpu_set_event(unsigned int uCpuID, unsigned int uCyclesTilEvent, void (*eve
 void cpu_pause();
 void cpu_unpause();
 Uint32 get_cpu_timer();
-Uint64 get_total_cycles_executed(Uint8 cpu_id);
+uint64_t get_total_cycles_executed(Uint8 cpu_id);
 struct cpudef * get_cpu_struct(Uint8 cpu_id);
 unsigned char cpu_getactivecpu();
 Uint8 *get_cpu_mem(Uint8 cpu_id);

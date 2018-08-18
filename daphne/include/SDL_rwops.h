@@ -29,6 +29,7 @@
 #ifndef _SDL_rwops_h
 #define _SDL_rwops_h
 
+#include <stdint.h>
 #include "SDL_stdinc.h"
 #include "SDL_error.h"
 
@@ -178,7 +179,7 @@ extern DECLSPEC void SDLCALL SDL_FreeRW(SDL_RWops * area);
 /* @{ */
 extern DECLSPEC Uint16 SDLCALL SDL_ReadLE16(SDL_RWops * src);
 extern DECLSPEC Uint32 SDLCALL SDL_ReadLE32(SDL_RWops * src);
-extern DECLSPEC Uint64 SDLCALL SDL_ReadLE64(SDL_RWops * src);
+extern DECLSPEC uint64_t SDLCALL SDL_ReadLE64(SDL_RWops * src);
 /* @} *//* Read endian functions */
 
 /* Ends C function definitions when using C++ */

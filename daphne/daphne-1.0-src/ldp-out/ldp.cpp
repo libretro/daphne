@@ -727,7 +727,7 @@ void ldp::pre_think()
 		++m_uVblankCount;
 
 		// compute the next boundary
-		m_uMsVblankBoundary = (unsigned int) ((((Uint64) (m_uVblankCount+1)) * 1000000) / VBLANKS_PER_KILOSECOND);
+		m_uMsVblankBoundary = (unsigned int) ((((uint64_t) (m_uVblankCount+1)) * 1000000) / VBLANKS_PER_KILOSECOND);
 
 		// only increment the mini count if we aren't waiting for vblank to start counting frames
 		if (!m_bWaitingForVblankToPlay)
@@ -782,7 +782,7 @@ void ldp::pre_think()
 			increment_current_frame();
 
 			// compute the next boundary
-			m_uMsFrameBoundary = (unsigned int) ((((Uint64) (m_uCurrentOffsetFrame+1)) * 1000000) / uDiscFPKS);
+			m_uMsFrameBoundary = (unsigned int) ((((uint64_t) (m_uCurrentOffsetFrame+1)) * 1000000) / uDiscFPKS);
 		}
 	}
 	// otherwise the disc is idle, so we need not change the current frame

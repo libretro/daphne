@@ -24,6 +24,7 @@
 #ifndef LDP_VLDP_H
 #define LDP_VLDP_H
 
+#include <stdint.h>
 #include <SDL.h>
 
 #include <string>
@@ -116,7 +117,7 @@ private:
 	// Gets the position in the audio stream to seak (in samples), using the
 	//  target mpeg frame as input.  (The target mpeg frame is relative to the beginning
 	//  of the mpeg, which is not necessarily the same as the laserdisc frame)
-	Uint64 get_audio_sample_position(unsigned int uTargetMpegFrame);
+	uint64_t get_audio_sample_position(unsigned int uTargetMpegFrame);
 
 	// NOTE : 'filename' does not include the prefix path
 	Uint16 mpeg_info (string &filename, Uint16 ld_frame);
@@ -164,7 +165,7 @@ private:
 	void audio_shutdown();
 	void close_audio_stream();
 	bool open_audio_stream(const string &strFilename);
-	bool seek_audio(Uint64 u64Samples);
+	bool seek_audio(uint64_t u64Samples);
 	void audio_play(Uint32);
 	void audio_pause();
 };

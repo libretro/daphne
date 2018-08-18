@@ -40,6 +40,7 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -76,7 +77,7 @@ char ldv1000_frame[FRAME_ARRAY_SIZE] = {0}; // holds the digits sent to the LD-V
 unsigned char g_ldv1000_output = 0xFC;	// LD-V1000 is PARK'd and READY
 
 bool g_ldv1000_search_pending = false;	// whether the LD-V1000 is currently in the middle of a search operation or not (NOT USED WITH BLOCKING SEEKING)
-Uint64 g_ldv1000_search_begin_cycles = 0;	// the current cycle count when LD-V1000 began searching (used to force it to be busy for a certain period of time)
+uint64_t g_ldv1000_search_begin_cycles = 0;	// the current cycle count when LD-V1000 began searching (used to force it to be busy for a certain period of time)
 Uint32 g_ldv1000_cycles_per_search = 0;	// how many cycles a read operation should last (some games require a simulated delay)
 double g_ldv1000_seconds_per_search = 0.5;	// minimum # of seconds that a search operation should last
 
@@ -591,7 +592,7 @@ void clear(void)
 // To get accurate strobe values, simply call ldv1000_report_vsync on every vsync pulse
 // Then you can query the other two strobe functions and always get the status of the strobe
 
-//Uint64 g_ldv1000_vsync_timer = 0;
+//uint64_t g_ldv1000_vsync_timer = 0;
 Uint32 g_ldv1000_until_vsync_end = 0;	// # of cpu cycles until vsync ends
 Uint32 g_ldv1000_until_status_start = 0;	// # of cpu cycles until status strobe begins
 Uint32 g_ldv1000_until_status_end = 0;	// # of cpu cycles u ntil status strobe ends

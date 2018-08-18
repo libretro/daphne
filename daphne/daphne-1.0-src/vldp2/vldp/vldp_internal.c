@@ -1113,9 +1113,9 @@ void idle_handler_search(int skip)
 		//  g_in_info->uMsTimer value in order to display the correct frames.
 		// NOTE : this _must_ happen before we acknowledge the command, because we need g_in_info->uMsTimer to be constant while
 		//  we recalculate s_uFramesShownSinceTimer
-		// NOTE 2 : we must use Uint64 here because otherwise this will overflow sometime after 2 minutes which DOES happen
+		// NOTE 2 : we must use uint64_t here because otherwise this will overflow sometime after 2 minutes which DOES happen
 		//  on Astron Belt if 'infinite timer' is enabled (it doesn't do any searches, just skips)
-		unsigned int uNewFramesShownSinceTimer = (unsigned int) ((((Uint64) (g_in_info->uMsTimer - s_timer)) * g_out_info.uFpks) / 1000000);
+		unsigned int uNewFramesShownSinceTimer = (unsigned int) ((((uint64_t) (g_in_info->uMsTimer - s_timer)) * g_out_info.uFpks) / 1000000);
 
 		// take into account the extra frame we did when playback started
 		uNewFramesShownSinceTimer += PLAY_FRAME_STALL;

@@ -23,6 +23,8 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#include <stdint.h>
+
 enum
 {
 	SWITCH_UP,
@@ -63,7 +65,7 @@ struct coin_input
 {
 	bool coin_enabled;	//	whether the coin was enabled or disabled
 	Uint8 coin_val;	// either SWITCH_COIN1 or SWITCH_COIN2
-	Uint64 cycles_when_to_enable;	// the cycle count that we must have surpassed in order to be able to enable the coin
+	uint64_t cycles_when_to_enable;	// the cycle count that we must have surpassed in order to be able to enable the coin
 };
 
 ////////////////////////

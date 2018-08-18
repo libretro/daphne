@@ -598,10 +598,9 @@ SDL_ReadLE32(SDL_RWops * src)
     return SDL_SwapLE32(value);
 }
 
-Uint64
-SDL_ReadLE64(SDL_RWops * src)
+uint64_t SDL_ReadLE64(SDL_RWops * src)
 {
-    Uint64 value = 0;
+    uint64_t value = 0;
 
     SDL_RWread(src, &value, sizeof (value), 1);
     return SDL_SwapLE64(value);

@@ -419,7 +419,7 @@ bool ldp_vldp::open_audio_stream(const string &strFilename)
 
 // seeks to a sample position in the audio stream
 // returns true if successful or false if failed
-bool ldp_vldp::seek_audio(Uint64 u64Samples)
+bool ldp_vldp::seek_audio(uint64_t u64Samples)
 {
 	bool result = false;
 
@@ -561,7 +561,7 @@ void ldp_vldp_audio_callback(Uint8 *stream, int len, int unused)
 			// if our timer is set to the current time or some previous time
 			if (g_playing_timer < cur_time)
 			{
-				static const Uint64 uBYTES_PER_S = AUDIO_FREQ * AUDIO_BYTES_PER_SAMPLE;	// needs to be uint64 to prevent overflow from subsequent math
+				static const uint64_t uBYTES_PER_S = AUDIO_FREQ * AUDIO_BYTES_PER_SAMPLE;	// needs to be uint64 to prevent overflow from subsequent math
 				correct_samples = (unsigned int) ((uBYTES_PER_S * (cur_time - g_playing_timer)) / 1000);
 				// how many samples should have played
 				// 176.4 = 44.1 samples per millisecond * 2 for stereo * 2 for 16-bit

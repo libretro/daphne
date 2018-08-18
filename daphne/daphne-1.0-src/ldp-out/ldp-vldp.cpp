@@ -652,7 +652,7 @@ bool ldp_vldp::nonblocking_search(char *frame)
 	string filename = "";
 	string oggname = "";
 	Uint16 target_ld_frame = (Uint16) atoi(frame);
-	Uint64 u64AudioTargetPos = 0;	// position in audio to seek to (in samples)
+	uint64_t u64AudioTargetPos = 0;	// position in audio to seek to (in samples)
 	unsigned int seek_delay_ms = 0;	// how many ms this seek must be delayed (to simulate laserdisc lag)
 	
 	audio_pause();	// pause the audio before we seek so we don't have overrun
@@ -884,8 +884,8 @@ bool ldp_vldp::skip_forward(Uint16 frames_to_skip, Uint16 target_frame)
 			// if we have an audio file opened
 			if (m_audio_file_opened)
 			{
-				//Uint64 u64AudioTargetPos = (((Uint64) target_frame) * FREQ1000) / uDiscFPKS;
-				Uint64 u64AudioTargetPos = get_audio_sample_position(target_frame);
+				//uint64_t u64AudioTargetPos = (((uint64_t) target_frame) * FREQ1000) / uDiscFPKS;
+				uint64_t u64AudioTargetPos = get_audio_sample_position(target_frame);
 	
 				// seek and play if seeking was successful
 				if (seek_audio(u64AudioTargetPos))
@@ -947,7 +947,7 @@ bool ldp_vldp::change_speed(unsigned int uNumerator, unsigned int uDenominator)
 
 		// calculate where our audio position should be
 		unsigned int target_mpegframe = mpeg_info(filename, get_current_frame());
-		Uint64 u64AudioTargetPos = get_audio_sample_position(target_mpegframe);
+		uint64_t u64AudioTargetPos = get_audio_sample_position(target_mpegframe);
 
 		// try to get the audio playing again
 		if (seek_audio(u64AudioTargetPos))
@@ -1585,20 +1585,20 @@ bool ldp_vldp::precache_all_video()
 	return bResult;
 }
 
-Uint64 ldp_vldp::get_audio_sample_position(unsigned int uTargetMpegFrame)
+uint64_t ldp_vldp::get_audio_sample_position(unsigned int uTargetMpegFrame)
 {
-	Uint64 u64AudioTargetPos = 0;
+	uint64_t u64AudioTargetPos = 0;
 
 	if (!need_frame_conversion())
 	{
-		u64AudioTargetPos = (((Uint64) uTargetMpegFrame) * FREQ1000) / g_game->get_disc_fpks();
+		u64AudioTargetPos = (((uint64_t) uTargetMpegFrame) * FREQ1000) / g_game->get_disc_fpks();
 		// # of samples to seek to in the audio stream
 	}
 	// If we are already doing a frame conversion elsewhere, we don't want to do it here again twice
 	//  but we do need to set the audio to the correct time
 	else
 	{
-		u64AudioTargetPos = (((Uint64) uTargetMpegFrame) * FREQ1000) / get_frame_conversion_fpks();
+		u64AudioTargetPos = (((uint64_t) uTargetMpegFrame) * FREQ1000) / get_frame_conversion_fpks();
 	}
 
 	return u64AudioTargetPos;

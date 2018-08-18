@@ -439,15 +439,15 @@ void outcommand(char *s) //dangit Matt, stop ripping out my useful routines =]
 // process a blip for the PR-8210
 void cliff::cliff_do_blip()
 {
-	static Uint64 total_cycles = 0;
+	static uint64_t total_cycles = 0;
 
 	Uint8 blip_value = 0;
-	Uint64 cur_total_cycles = get_total_cycles_executed(0);
+	uint64_t cur_total_cycles = get_total_cycles_executed(0);
 	
 	// check to make sure flush_cpu_timers was not called
 	if (cur_total_cycles > total_cycles)
 	{
-		Uint64 ec = cur_total_cycles - total_cycles;
+		uint64_t ec = cur_total_cycles - total_cycles;
 
 		//printf("ec is %u\n", ec);	// for debugging purposes only
 

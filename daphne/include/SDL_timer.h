@@ -28,6 +28,7 @@
  *  Header for the SDL time management routines.
  */
 
+#include <stdint.h>
 #include "SDL_stdinc.h"
 #include "SDL_error.h"
 
@@ -58,12 +59,12 @@ extern DECLSPEC Uint32 SDLCALL SDL_GetTicks(void);
 /**
  * \brief Get the current value of the high resolution counter
  */
-extern DECLSPEC Uint64 SDLCALL SDL_GetPerformanceCounter(void);
+extern DECLSPEC uint64_t SDLCALL SDL_GetPerformanceCounter(void);
 
 /**
  * \brief Get the count per second of the high resolution counter
  */
-extern DECLSPEC Uint64 SDLCALL SDL_GetPerformanceFrequency(void);
+extern DECLSPEC uint64_t SDLCALL SDL_GetPerformanceFrequency(void);
 
 /**
  * \brief Wait a specified number of milliseconds before returning.

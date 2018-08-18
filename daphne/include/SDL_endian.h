@@ -28,6 +28,7 @@
 #ifndef _SDL_endian_h
 #define _SDL_endian_h
 
+#include <stdint.h>
 #include "SDL_stdinc.h"
 
 /**
@@ -146,8 +147,8 @@ SDL_Swap32(Uint32 x)
 #endif
 
 #if defined(__GNUC__) && defined(__i386__)
-SDL_FORCE_INLINE Uint64
-SDL_Swap64(Uint64 x)
+SDL_FORCE_INLINE uint64_t
+SDL_Swap64(uint64_t x)
 {
     union
     {
@@ -155,7 +156,7 @@ SDL_Swap64(Uint64 x)
         {
             Uint32 a, b;
         } s;
-        Uint64 u;
+        uint64_t u;
     } v;
     v.u = x;
   __asm__("bswapl %0 ; bswapl %1 ; xchgl %0,%1": "=r"(v.s.a), "=r"(v.s.b):"0"(v.s.a),
@@ -164,15 +165,13 @@ SDL_Swap64(Uint64 x)
     return v.u;
 }
 #elif defined(__GNUC__) && defined(__x86_64__)
-SDL_FORCE_INLINE Uint64
-SDL_Swap64(Uint64 x)
+SDL_FORCE_INLINE uint64_t SDL_Swap64(uint64_t x)
 {
   __asm__("bswapq %0": "=r"(x):"0"(x));
     return x;
 }
 #else
-SDL_FORCE_INLINE Uint64
-SDL_Swap64(Uint64 x)
+SDL_FORCE_INLINE uint64_t SDL_Swap64(uint64_t x)
 {
     Uint32 hi, lo;
 

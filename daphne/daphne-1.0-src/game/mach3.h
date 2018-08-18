@@ -25,6 +25,8 @@
 #ifndef MACH3_H
 #define MACH3_H
 
+#include <stdint.h>
+
 #include "game.h"
 
 #include <queue>	// for testing, can be replaced with array later
@@ -101,7 +103,7 @@ protected:
    Uint8 m_soundctrl2;
 
    Uint8 m_dac_id;
-   Uint64 m_dac_last_cycs;
+   uint64_t m_dac_last_cycs;
    Uint8 m_dac_last_val;
 
    bool m_soundchip2_nmi_enabled;

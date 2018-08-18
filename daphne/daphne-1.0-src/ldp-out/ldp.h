@@ -23,6 +23,8 @@
 #ifndef LDP_PRE_H
 #define LDP_PRE_H
 
+#include <stdint.h>
+
 // different states that the laserdisc player could be in
 enum
 {
@@ -235,7 +237,7 @@ protected:
 	Uint16 m_last_try_frame;	// the last frame we _tried_ to seek to
 	Uint16 m_last_seeked_frame;	// the last frame we successfully seeked to (used with m_play_time to calculate current frame)
 // UPDATE : we aren't using cycles anymore (see pre_think())
-//	Uint64 m_play_cycles;	// # of elapsed cpu cycles from when we last issued a play command
+//	uint64_t m_play_cycles;	// # of elapsed cpu cycles from when we last issued a play command
 	Uint32 m_play_time;	// current time when we last issued a play command
 	unsigned int m_start_time;	// time when ldp() class was instantiated (only used when not using a cpu)
 	int m_status;	// the current status of the laserdisc player

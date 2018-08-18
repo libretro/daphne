@@ -60,7 +60,7 @@ unsigned int idle_timer; // added by JFA for -idleexit
 const double STICKY_COIN_SECONDS = 0.125;	// how many seconds a coin acceptor is forced to be "depressed" and how many seconds it is forced to be "released"
 Uint32 g_sticky_coin_cycles = 0;	// STICKY_COIN_SECONDS * get_cpu_hz(0), cannot be calculated statically
 queue<struct coin_input> g_coin_queue;	// keeps track of coin input to guarantee that coins don't get missed if the cpu is busy (during seeks for example)
-Uint64 g_last_coin_cycle_used = 0;	// the cycle value that our last coin press used
+uint64_t g_last_coin_cycle_used = 0;	// the cycle value that our last coin press used
 
 // the ASCII key words that the parser looks at for the key values
 // NOTE : these are in a specific order, corresponding to the enum in daphne.h
@@ -1194,7 +1194,7 @@ void input_disable(Uint8 move)
 
 static inline void add_coin_to_queue(bool enabled, Uint8 val)
 {
-	Uint64 total_cycles = get_total_cycles_executed(0);
+	uint64_t total_cycles = get_total_cycles_executed(0);
 	struct coin_input coin;
 	coin.coin_enabled = enabled;
 	coin.coin_val = val;

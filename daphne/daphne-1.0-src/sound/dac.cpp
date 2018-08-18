@@ -20,8 +20,9 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#include <stdint.h>
+#include <string.h>
 #include "sound.h"	// for get frequency stuff
-#include <string.h>	// for memset
 #include "../io/mpo_mem.h"
 
 // how many DACs have been created
@@ -117,7 +118,7 @@ void dac_get_stream(Uint8 *stream, int length, int internal_id)
 	/*
 	if (g_uDACSampleCount > 45)
 	{
-		Uint64 total_cycs = get_total_cycles_executed(1);
+		uint64_t total_cycs = get_total_cycles_executed(1);
 		string s = "total cycles for CPU #1 is " + numstr::ToStr(total_cycs) +
 			" and the sample count is " + numstr::ToStr(g_uDACSampleCount);
 		printline(s.c_str());

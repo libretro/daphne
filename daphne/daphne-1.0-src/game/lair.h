@@ -25,6 +25,8 @@
 #ifndef LAIR_H
 #define LAIR_H
 
+#include <stdint.h>
+
 #include "game.h"
 #include "../scoreboard/scoreboard_collection.h"
 
@@ -63,7 +65,7 @@ public:
 protected:
    Uint8 m_soundchip_id;
    Uint8 m_soundchip_address_latch;
-	Uint64 m_status_strobe_timer;			// indicates when the last status strobe occurred
+	uint64_t m_status_strobe_timer;			// indicates when the last status strobe occurred
 	unsigned char m_switchA;			// dip switch bank A (enabled low)
 	unsigned char m_switchB;			// dip switch bank B (enabled low)
 	unsigned char m_joyskill_val;		// joystick and space ace skill (enabled low)

@@ -42,6 +42,7 @@
 #define strcasecmp stricmp
 #endif
 
+#include <stdint.h>
 #include <stdio.h>	// for sprintf
 #include <math.h>   // for pow() in palette gamma
 #include "mach3.h"
@@ -778,7 +779,7 @@ void mach3::cpu_mem_write(Uint16 Addr, Uint8 Value)
 			// if it's time to re-calculate
 			if (Value != m_dac_last_val)
 			{
-				Uint64 u64CurCycs = get_total_cycles_executed(1);
+				uint64_t u64CurCycs = get_total_cycles_executed(1);
 				unsigned int uDiff = (unsigned int) (u64CurCycs - m_dac_last_cycs);
 				m_dac_last_cycs = u64CurCycs;
 
