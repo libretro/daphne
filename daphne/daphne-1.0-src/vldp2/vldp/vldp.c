@@ -357,9 +357,6 @@ const struct vldp_out_info *vldp_init(const struct vldp_in_info *in_info)
 
 	g_in_info = in_info;
 
-	// So parent thread knows if it's compatible with us
-	g_out_info.uApiVersion = API_VERSION;
-
 	// populate function pointers for parent thread's benefit
 	g_out_info.shutdown = vldp_shutdown;
 	g_out_info.open = vldp_open;

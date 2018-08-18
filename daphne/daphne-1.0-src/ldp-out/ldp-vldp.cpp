@@ -74,8 +74,6 @@ extern "C" {
 	extern DECLSPEC void SDLCALL SDL_SW_DestroyYUVTexture(SDL_SW_YUVTexture * swdata);
 }
 
-#define API_VERSION 11
-
 static const unsigned int FREQ1000 = AUDIO_FREQ * 1000;	// let compiler compute this ...
 
 // video overlay stuff
@@ -119,13 +117,8 @@ int g_vb_waiting_queue[VIDEO_BUFFER_AMOUNT] = { -1, -1, -1, -1 };
 
 VIDEO_BUFFER g_hw_overlay[VIDEO_BUFFER_AMOUNT] = { { VB_STATE_USEABLE, NULL }, { VB_STATE_USEABLE, NULL }, { VB_STATE_USEABLE, NULL }, { VB_STATE_USEABLE, NULL } };
 
-#define LOGVBSYS(STRIN)
-
-
 bool initialize_vb(Uint32 format, Uint32 target_format, int w, int h)
 {
-	LOGVBSYS("INITIALIZATION, top.");
-
 	for (int i = 0; i < VIDEO_BUFFER_AMOUNT; i++)
 	{
 		g_hw_overlay[i].buffer_state = VB_STATE_USEABLE;
@@ -139,14 +132,11 @@ bool initialize_vb(Uint32 format, Uint32 target_format, int w, int h)
 	g_vb_waiting_top		= -1;
 	g_vb_waiting_next		= 0;
 
-	LOGVBSYS("INITIALIZATION, bottom.");
 	return true;
 }
 
 void teardown_vb()
 {
-	LOGVBSYS("TEARDOWN, top.");
-
 	for (int i = 0; i < VIDEO_BUFFER_AMOUNT; i++)
 	{
 		g_hw_overlay[i].buffer_state = VB_STATE_USEABLE;
@@ -159,15 +149,11 @@ void teardown_vb()
 	g_vb_filling_queue		= -1;
 	g_vb_waiting_top		= -1;
 	g_vb_waiting_next		= 0;
-
-	LOGVBSYS("TEARDOWN, bottom.");
 }
 
 
 SDL_SW_YUVTexture * get_vb_next_usable(int * vb_ndx)
 {
-	LOGVBSYS("getUSABLE, top, before RECLAIM.");
-
 	// Reclaim already rendered buffers.
 	for (int i = 0; i < VIDEO_BUFFER_AMOUNT; i++)
 	{
@@ -176,8 +162,6 @@ SDL_SW_YUVTexture * get_vb_next_usable(int * vb_ndx)
 			g_hw_overlay[i].buffer_state = VB_STATE_USEABLE;
 		}
 	}
-
-	LOGVBSYS("getUSABLE, after RECLAIM.");
 
 	// Crawl all buffers looking for a STATE_USABLE buffer.
 	int vb_next;
@@ -195,7 +179,6 @@ SDL_SW_YUVTexture * get_vb_next_usable(int * vb_ndx)
 		if (g_vb_waiting_next < 0) g_vb_waiting_next = VIDEO_BUFFER_AMOUNT - 1;
 		vb_next = g_vb_waiting_next;
 		g_hw_overlay[(g_vb_waiting_queue[vb_next])].buffer_state = VB_STATE_USEABLE;
-		LOGVBSYS("getUSABLE, NO USABLE FOUND, eating most recent from WAIT_Q!");
 	}
 
 	// Check for and deal with no more usable buffers.
@@ -204,7 +187,6 @@ SDL_SW_YUVTexture * get_vb_next_usable(int * vb_ndx)
 		// This means we have no usable buffers.  Debug why, consider making VIDEO_BUFFER_AMOUNT larger, or
 		// frame skip making the g_first_waiting USABLE and the next WAITING the g_first_waiting.  In the
 		// initial implimentation were just going to log so possible errors can be attacked.
-		LOGVBSYS("getUSABLE, NO USEABLE BUFFERS, exiting with NULL!");
 		if (vb_ndx != NULL) *vb_ndx = -1;
 		return NULL;
 	}
@@ -216,7 +198,6 @@ SDL_SW_YUVTexture * get_vb_next_usable(int * vb_ndx)
 	{
 		// This means we are filling two buffers which should never happen.  In the
 		// initial implimentation were just going to log so possible errors can be attacked.
-		LOGVBSYS("getUSABLE, FILLING TWO+ buffers, exiting with NULL!");
 		if (vb_ndx != NULL) *vb_ndx = -1;
 		return NULL;
 	}
@@ -225,56 +206,37 @@ SDL_SW_YUVTexture * get_vb_next_usable(int * vb_ndx)
 	if (vb_ndx != NULL) *vb_ndx = vb_next;
 	g_vb_filling_queue = vb_next;
 	g_hw_overlay[vb_next].buffer_state = VB_STATE_FILLING;
-	LOGVBSYS("getUSABLE, bottom, found USABLE, moved to FILLING.");
 	return(g_hw_overlay[vb_next].video_buffer);
 }
 
 
 SDL_SW_YUVTexture * get_vb_filling(int * vb_ndx)
 {
-	LOGVBSYS("getFILLING, top.");
-
 	// Intialize returned ndx.
 	if (vb_ndx != NULL) *vb_ndx = -1;
 
 	// Make sure we have a filling queue and that it's tagged as such.
 	if (g_vb_filling_queue < 0)
-	{
-		LOGVBSYS("getFILLING, nothing in FILLING_Q, exiting NULL!");
 		return NULL;
-	}
 	if (g_hw_overlay[g_vb_filling_queue].buffer_state != VB_STATE_FILLING)
-	{
-		LOGVBSYS("getFILLING, FILLING buffer wrong state, exiting NULL!");
 		return NULL;
-	}
 
 	// Return a good queue.
 	if (vb_ndx != NULL) *vb_ndx = g_vb_filling_queue;
-	LOGVBSYS("getFILLING, bottom.");
 	return(g_hw_overlay[g_vb_filling_queue].video_buffer);
 }
 
 
 void set_vb_filling_done(int vb_ndx)
 {
-	LOGVBSYS("setFILLING_DONE, top.");
-
 	// Check the input ndx and make sure it's a filling queue.
 	if (vb_ndx >= VIDEO_BUFFER_AMOUNT)
-	{
-		LOGVBSYS("setFILLING_DONE, input ndx wrong, exiting!");
 		return;
-	}
 	if (g_hw_overlay[vb_ndx].buffer_state != VB_STATE_FILLING)
-	{
-		LOGVBSYS("setFILLING_DONE, FILLING buffer wrong state, exiting!");
 		return;
-	}
 
 	// Clear the filling queue.
 	g_vb_filling_queue = -1;
-	LOGVBSYS("setFILLING_DONE, CLEARING FILLING_Q.");
 
 	// Move from filling queue to waiting queue.
 
@@ -284,7 +246,6 @@ void set_vb_filling_done(int vb_ndx)
 	// picked up by the presentation thread.
 	if (g_vb_waiting_top == g_vb_waiting_next)
 	{
-		LOGVBSYS("setFILLING_DONE, WAITING_Q FILLED, need buffer, eating most recent!");
 		g_vb_waiting_next--;
 		if (g_vb_waiting_next < 0) g_vb_waiting_next = VIDEO_BUFFER_AMOUNT - 1;
 	}
@@ -294,7 +255,6 @@ void set_vb_filling_done(int vb_ndx)
 	if (vb_next_waiting_ndx >= VIDEO_BUFFER_AMOUNT) vb_next_waiting_ndx = 0;
 	if (vb_next_waiting_ndx == g_vb_waiting_top)
 	{
-		LOGVBSYS("setFILLING_DONE, WAITING_Q now FILLED!");
 	}
 
 	// While we are letting the presentation thread handle g_vb_waiting_top, on first entry, we are not.
@@ -304,22 +264,15 @@ void set_vb_filling_done(int vb_ndx)
 	g_hw_overlay[vb_ndx].buffer_state = VB_STATE_WAITING;
 	g_vb_waiting_queue[g_vb_waiting_next] = vb_ndx;
 	g_vb_waiting_next = vb_next_waiting_ndx;
-
-	LOGVBSYS("setFILLING_DONE, bottom.");
 }
 
 
 SDL_SW_YUVTexture * get_vb_waiting(int * vb_ndx)
 {
-	LOGVBSYS("getWAITING, top.");
-
 	// Make sure soemthing is waiting.
 	if (vb_ndx != NULL) *vb_ndx = -1;
 	if (g_vb_waiting_top < 0)
-	{
-		LOGVBSYS("getWAITING, nothing is WAITING, exiting NULL!");
 		return NULL;
-	}
 
 	int vb_rendering_ndx = g_vb_waiting_top;
 	int vb_new_top = g_vb_waiting_top + 1;
@@ -331,11 +284,9 @@ SDL_SW_YUVTexture * get_vb_waiting(int * vb_ndx)
 		(g_hw_overlay[(g_vb_waiting_queue[vb_new_top])].buffer_state == VB_STATE_WAITING))
 	{
 		g_vb_waiting_top = vb_new_top;
-		LOGVBSYS("getWAITING, new top WAITING buffer.");
 	} else {
 		g_vb_waiting_top	= -1;
 		g_vb_waiting_next	= 0;
-		LOGVBSYS("getWAITING, NO new top WAITING buffer.");
 	}
 	
 	g_hw_overlay[(g_vb_waiting_queue[vb_rendering_ndx])].buffer_state = VB_STATE_RENDERING;
@@ -343,31 +294,21 @@ SDL_SW_YUVTexture * get_vb_waiting(int * vb_ndx)
 	SDL_SW_YUVTexture * vb_rendering = g_hw_overlay[(g_vb_waiting_queue[vb_rendering_ndx])].video_buffer;
 	if (vb_ndx != NULL) *vb_ndx = vb_rendering_ndx;
 
-	LOGVBSYS("getWAITING, bottom, valid RENDERING buffer found.");
 	return(vb_rendering);
 }
 
 void set_vb_rendering_done(int vb_ndx)
 {
-	LOGVBSYS("setRENDERING_DONE, top.");
-
 	if (vb_ndx < 0) return;
 
 	int buffer_ndx = g_vb_waiting_queue[vb_ndx];
 	if (buffer_ndx < 0)
-	{
-		LOGVBSYS("setRENDERING_DONE, given rendering buffer is INVALID!");
 		return;
-	}
 
 	if (g_hw_overlay[buffer_ndx].buffer_state != VB_STATE_RENDERING)
-	{
-		LOGVBSYS("setRENDERING_DONE, given buffer is not in RENDERING state!");
 		return;
-	}
 
 	g_hw_overlay[buffer_ndx].buffer_state = VB_STATE_RENDERING_DONE;
-	LOGVBSYS("setRENDERING_DONE, bottom, buffer set to DONE.");
 
 	// 2017.11.06 - RJS - This shouldn't be necessary, but make for easier debugging.
 	g_vb_waiting_queue[vb_ndx] = -1;
