@@ -23,6 +23,8 @@
 #ifndef TONEGEN_H
 #define TONEGEN_H
 
+#include <stdint.h>
+
 #define VOICES 4
 
 int tonegen_initialize(Uint32);
@@ -34,7 +36,7 @@ struct tonegen
 	int bytes_per_switch[VOICES];
 	int flip[VOICES];
 	int bytes_to_go[VOICES];
-	Sint16 amplitude[VOICES];
+	int16_t amplitude[VOICES];
 };
 
 #endif

@@ -90,10 +90,10 @@ void samples_get_stream(Uint8 *stream, int length, int unused)
 				// if there is still some sample data to be mixed to this stream
 				if (data->uPos < data->uLength)
 				{
-					int iMixedSample1 = LOAD_LIL_SINT16((Sint16 *) ptrStream);
-					int iMixedSample2 = LOAD_LIL_SINT16(((Sint16 *) ptrStream) + 1);
+					int iMixedSample1 = LOAD_LIL_SINT16((int16_t *) ptrStream);
+					int iMixedSample2 = LOAD_LIL_SINT16(((int16_t *) ptrStream) + 1);
 
-					Sint16 i16Sample1 = LOAD_LIL_SINT16(data->pu8Buf + data->uPos);
+					int16_t i16Sample1 = LOAD_LIL_SINT16(data->pu8Buf + data->uPos);
 					iMixedSample1 += i16Sample1;
 					data->uPos += 2;
 

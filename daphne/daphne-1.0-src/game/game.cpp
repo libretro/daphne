@@ -332,7 +332,7 @@ void game::input_disable(Uint8 input)
 }
 
 // Added by ScottD
-void game::OnMouseMotion(uint16_t x, uint16_t y, Sint16 xrel, Sint16 yrel)
+void game::OnMouseMotion(uint16_t x, uint16_t y, int16_t xrel, int16_t yrel)
 {
 	// get rid of warnings
 	if (x || y || xrel || yrel)

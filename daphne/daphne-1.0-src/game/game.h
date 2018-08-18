@@ -107,7 +107,7 @@ public:
 	virtual void update_pc(Uint32 new_pc);		// update the PC
 	virtual void input_enable(Uint8);
 	virtual void input_disable(Uint8);
-	virtual void OnMouseMotion(uint16_t x, uint16_t y, Sint16 xrel, Sint16 yrel);  // Added by ScottD
+	virtual void OnMouseMotion(uint16_t x, uint16_t y, int16_t xrel, int16_t yrel);  // Added by ScottD
 	virtual void OnVblank();	// this gets called by the ldp class every vblank (since many games use vblank for their interrupt)
    virtual unsigned get_libretro_button_map(unsigned id);
    virtual const char *get_libretro_button_name(unsigned id);

@@ -69,7 +69,7 @@ struct singe_out_info
 	
 	void (*sep_do_blit)(SDL_Surface *srfDest);
 
-	void (*sep_do_mouse_move)(uint16_t x, uint16_t y, Sint16 xrel, Sint16 yrel);
+	void (*sep_do_mouse_move)(uint16_t x, uint16_t y, int16_t xrel, int16_t yrel);
 	void (*sep_error)(const char *fmt, ...);
 	void (*sep_print)(const char *fmt, ...);
 	void (*sep_set_static_pointers)(double *m_disc_fps, unsigned int *m_uDiscFPKS);

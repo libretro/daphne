@@ -49,7 +49,7 @@ public:
 	void shutdown();
 	void input_enable(Uint8);
 	void input_disable(Uint8);
-	void OnMouseMotion(uint16_t x, uint16_t y, Sint16 xrel, Sint16 yrel);
+	void OnMouseMotion(uint16_t x, uint16_t y, int16_t xrel, int16_t yrel);
 	bool handle_cmdline_arg(const char *arg);
 	void palette_calculate();
 	void video_repaint();

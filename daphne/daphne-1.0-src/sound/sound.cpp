@@ -557,8 +557,8 @@ void mixWithMaxVolume(Uint8 *stream, int length)
 		cur = g_soundchip_head;
 		while (cur)
 		{
-			mixed_sample_1 += LOAD_LIL_SINT16(((Sint16 *) cur->buffer) + sample);
-			mixed_sample_2 += LOAD_LIL_SINT16(((Sint16 *) cur->buffer) + sample + 1);
+			mixed_sample_1 += LOAD_LIL_SINT16(((int16_t *) cur->buffer) + sample);
+			mixed_sample_2 += LOAD_LIL_SINT16(((int16_t *) cur->buffer) + sample + 1);
 			cur = cur->next_soundchip;
 		}
 
@@ -591,8 +591,8 @@ void mixWithMults(Uint8 *stream, int length)
 		while (cur)
 		{
 			// multiply by the volume and then dividing by the max volume (by shifting right, which is much faster)
-			mixed_sample_1 += (Sint16) ((LOAD_LIL_SINT16(((Sint16 *) cur->buffer) + sample) * cur->uVolume[0]) >> AUDIO_MAX_VOL_POWER);
-			mixed_sample_2 += (Sint16) ((LOAD_LIL_SINT16(((Sint16 *) cur->buffer) + sample + 1) * cur->uVolume[1]) >> AUDIO_MAX_VOL_POWER);
+			mixed_sample_1 += (int16_t) ((LOAD_LIL_SINT16(((int16_t *) cur->buffer) + sample) * cur->uVolume[0]) >> AUDIO_MAX_VOL_POWER);
+			mixed_sample_2 += (int16_t) ((LOAD_LIL_SINT16(((int16_t *) cur->buffer) + sample + 1) * cur->uVolume[1]) >> AUDIO_MAX_VOL_POWER);
 			cur = cur->next_soundchip;
 		}
 

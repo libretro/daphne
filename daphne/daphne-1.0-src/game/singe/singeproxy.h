@@ -45,7 +45,7 @@ void          sep_call_lua(const char *func, const char *sig, ...);
 void          sep_capture_vldp();
 void          sep_die(const char *fmt, ...);
 void          sep_do_blit(SDL_Surface *srfDest);
-void          sep_do_mouse_move(uint16_t x, uint16_t y, Sint16 xrel, Sint16 yrel);
+void          sep_do_mouse_move(uint16_t x, uint16_t y, int16_t xrel, int16_t yrel);
 void          sep_error(const char *fmt, ...);
 int           sep_lua_error(lua_State *L);
 int           sep_prepare_frame_callback(struct yuv_buf *src);

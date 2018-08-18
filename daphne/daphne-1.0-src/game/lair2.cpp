@@ -691,8 +691,8 @@ void lair2::do_irq(unsigned int which_irq)
 			// NOTE : only works on little endian!
 			unsigned char u8Val = read_ldp1000();
 			unsigned char *ccbuf2 = &m_cpumem[0x1A050];
-			Sint16 *p_endbuf2 = (Sint16 *) &m_cpumem[0x1596E];
-			Sint16 *p_RxCnt2 = (Sint16 *) &m_cpumem[0x1596A];
+			int16_t *p_endbuf2 = (int16_t *) &m_cpumem[0x1596E];
+			int16_t *p_RxCnt2 = (int16_t *) &m_cpumem[0x1596A];
 
 			// this code modeled after dragon's lair 2 rom source code
 			ccbuf2[*p_endbuf2] = u8Val;

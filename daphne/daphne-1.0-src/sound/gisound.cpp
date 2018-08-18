@@ -39,7 +39,7 @@
 int g_gisoundchip_count = -1;
 
 gi_sound_chip *g_gi_chips[MAX_GISOUND_CHIPS] = { NULL };
-Sint16 g_volumetable[16];
+int16_t g_volumetable[16];
 
 int gisound_initialize(Uint32 core_frequency)
 {
@@ -78,8 +78,8 @@ int gisound_initialize(Uint32 core_frequency)
    // it's different the rest of the way
    for (i = 13; i > 0; i -= 2)
    {
-       g_volumetable[i] = (Sint16)((g_volumetable[i+2] * 0.5) + 0.5);
-       g_volumetable[i-1] = (Sint16)((g_volumetable[i] * 0.606) + 0.5);
+       g_volumetable[i] = (int16_t)((g_volumetable[i+2] * 0.5) + 0.5);
+       g_volumetable[i-1] = (int16_t)((g_volumetable[i] * 0.606) + 0.5);
    }
 
    g_volumetable[0] = 0;
@@ -264,7 +264,7 @@ void gisound_stream(Uint8* stream, int length, int index)
 	{
 		// endian-independent! :)
 		// NOTE : assumes stream is in little endian format
-		Sint16 sample = 
+		int16_t sample = 
 			(g_volumetable[g_gi_chips[index]->chan_a_amplitude] * 
 			((g_gi_chips[index]->tone_a?g_gi_chips[index]->chan_a_flip:1) 
 			+ (g_gi_chips[index]->noise_a?g_gi_chips[index]->noise_flip:1)) / 2 +

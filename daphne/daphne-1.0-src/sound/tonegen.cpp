@@ -68,12 +68,10 @@ void tonegen_stream(Uint8* stream, int length, int index)
 	{
 		// endian-independent! :)
 		// NOTE : assumes stream is in little endian format
-		Sint16 sample = 0;
+		int16_t sample = 0;
 		int channel = 0;
 		for (channel = 0; channel < VOICES; channel++)
-		{
 			sample += g_tonegen.amplitude[channel] * g_tonegen.flip[channel] / VOICES;
-		}
 
 		stream[pos] = stream[pos+2] = (uint16_t) (sample) & 0xff; 
 		stream[pos+1] = stream[pos+3] = ((uint16_t) (sample) >> 8) & 0xff; 

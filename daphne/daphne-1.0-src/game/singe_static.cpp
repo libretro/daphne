@@ -172,7 +172,7 @@ void singe::input_disable(Uint8 input)
 	g_pSingeOut->sep_call_lua("onInputReleased", "i", input);
 }
 
-void singe::OnMouseMotion(uint16_t x, uint16_t y, Sint16 xrel, Sint16 yrel)
+void singe::OnMouseMotion(uint16_t x, uint16_t y, int16_t xrel, int16_t yrel)
 {
 	if (g_pSingeOut)
 	{

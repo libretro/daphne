@@ -1,7 +1,7 @@
 #ifndef MPO_MEM_H
 #define MPO_MEM_H
 
-#include <SDL.h>	// for endian def
+#include <stdint.h>
 
 // mpo_mem.h
 // by Matt Ownby
@@ -19,30 +19,30 @@
 // Endian-macros
 
 // LOAD_LIL_SINT16: loads little-endian 16-bit value
-//  Usage: Sint16 val = LOAD_LIL_SINT16(void *ptr);
+//  Usage: int16_t val = LOAD_LIL_SINT16(void *ptr);
 #ifndef MSB_FIRST
-#define LOAD_LIL_SINT16(ptr) (Sint16) *((Sint16 *) (ptr))
+#define LOAD_LIL_SINT16(ptr) (int16_t) *((int16_t *) (ptr))
 #else
-#define LOAD_LIL_SINT16(ptr) (Sint16) (*((Uint8 *) (ptr))	| ((*((Uint8 *) (ptr)+1)) << 8))
+#define LOAD_LIL_SINT16(ptr) (int16_t) (*((uint8_t *) (ptr))	| ((*((uint8_t *) (ptr)+1)) << 8))
 #endif
 
 // LOAD_LIL_UINT32: loads little-endian 32-bit value
-//  Usage: Uint32 val = LOAD_LIL_UINT32(void *ptr);
+//  Usage: uint32_t val = LOAD_LIL_UINT32(void *ptr);
 #ifndef MSB_FIRST
-#define LOAD_LIL_UINT32(ptr) (Uint32) *((Uint32 *) (ptr))
+#define LOAD_LIL_UINT32(ptr) (uint32_t) *((uint32_t *) (ptr))
 #else
-#define LOAD_LIL_UINT32(ptr) (Uint32) (*((Uint8 *) (ptr)) | ((*((Uint8 *) (ptr)+1)) << 8) | ((*((Uint8 *) (ptr)+2)) << 16) | ((*((Uint8 *) (ptr)+3)) << 24))
+#define LOAD_LIL_UINT32(ptr) (uint32_t) (*((uint8_t *) (ptr)) | ((*((uint8_t *) (ptr)+1)) << 8) | ((*((uint8_t *) (ptr)+2)) << 16) | ((*((uint8_t *) (ptr)+3)) << 24))
 #endif
 
 // STORE_LIL_UINT32: stores 32-bit unsigned 'val' to 'ptr' in little-endian format
-//  Usage: STORE_LIL_UINT32(void *ptr, Uint32 val);
+//  Usage: STORE_LIL_UINT32(void *ptr, uint32_t val);
 #ifndef MSB_FIRST
-#define STORE_LIL_UINT32(ptr,val) *((Uint32 *) (ptr)) = (val)
+#define STORE_LIL_UINT32(ptr,val) *((uint32_t *) (ptr)) = (val)
 #else
-#define STORE_LIL_UINT32(ptr,val) *((Uint8 *) (ptr)) = (val) & 0xFF; \
-	*(((Uint8 *) (ptr))+1) = ((val) >> 8) & 0xFF; \
-	*(((Uint8 *) (ptr))+2) = ((val) >> 16) & 0xFF; \
-	*(((Uint8 *) (ptr))+3) = ((val) >> 24) & 0xFF
+#define STORE_LIL_UINT32(ptr,val) *((uint8_t *) (ptr)) = (val) & 0xFF; \
+	*(((uint8_t *) (ptr))+1) = ((val) >> 8) & 0xFF; \
+	*(((uint8_t *) (ptr))+2) = ((val) >> 16) & 0xFF; \
+	*(((uint8_t *) (ptr))+3) = ((val) >> 24) & 0xFF
 #endif
 
 

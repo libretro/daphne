@@ -222,7 +222,7 @@ void sep_do_blit(SDL_Surface *srfDest)
 	sep_srf32_to_srf8(g_se_surface, srfDest);
 }
 
-void sep_do_mouse_move(uint16_t x, uint16_t y, Sint16 xrel, Sint16 yrel)
+void sep_do_mouse_move(uint16_t x, uint16_t y, int16_t xrel, int16_t yrel)
 {
 	static bool debounced = false;
 	int x1 = (int)x;

@@ -41,7 +41,7 @@ bool g_bWaitFreqLow = false;
 
 // max sample value (gets negated repeatedly)
 // Using the absolute max (32767) seemed to loud, so I halved it.  Feel free to play with this.
-Sint16 g_s16SampleVal = 16384;
+int16_t g_s16SampleVal = 16384;
 
 // how many samples have been converted (used to maintain consistency)
 unsigned int g_uSampleCount = 0;

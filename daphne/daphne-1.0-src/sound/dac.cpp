@@ -29,7 +29,7 @@
 unsigned int g_uDACCount = 0;
 
 // lookup table to convert 8-bit unsigned sound data to 16-bit signed sound data
-Sint16 g_DACTable[256];
+int16_t g_DACTable[256];
 
 // the sample val that is currently active
 unsigned int g_u8DACVal = 0;
@@ -131,7 +131,7 @@ void dac_get_stream(Uint8 *stream, int length, int internal_id)
 
 	while (pos < length)
 	{
-		Sint16 mono_sample;	// just one sample value from -32768 to 32767
+		int16_t mono_sample;	// just one sample value from -32768 to 32767
 
 		// if we have some buffered audio samples to be used
 		if (buf_idx < g_uDACSampleCount)
