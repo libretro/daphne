@@ -27,11 +27,19 @@
 #pragma warning (disable:4996)
 #endif
 
+#include <stdint.h>
+
 #include <stdio.h>
 #include <stdlib.h>	// for malloc/free
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#ifdef _WIN32
+#include <direct.h>
+#else
+#include <unistd.h>
+#endif
 
 #include <SDL.h>
 
@@ -39,7 +47,6 @@
 #include "vldp_common.h"
 #include "mpegscan.h"
 
-#include <stdint.h>
 
 #include "../include/mpeg2.h"
 #include "../include/video_out.h"
@@ -258,7 +265,7 @@ static void vo_null_draw(uint8_t * const * buf, void *id)
 static void vo_null_setup_fbuf (uint8_t ** buf, void ** id)
 {
 	static int buffer_index = 0;
-	*id = (int *) buffer_index;	// THIS IS A LITTLE TRICKY
+	*id = (int*) buffer_index;
 	// We are setting an integer value to a pointer ...
 	// Because it is convenient to let the pointer hold the value of this integer for us
 	// Hopefully it doesn't cause any trouble later ;)

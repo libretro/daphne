@@ -47,11 +47,6 @@
 #include "SDL_thread.h"
 #include "../SDL_thread_c.h"
 #include "../SDL_systhread.h"
-#ifdef __ANDROID__
-#include "../../core/android/SDL_android.h"
-
-#include "..\..\..\main_android.h"
-#endif
 
 #ifdef __HAIKU__
 #include <be/kernel/OS.h>
@@ -62,9 +57,6 @@
 static void *
 RunThread(void *data)
 {
-#ifdef __ANDROID__
-    Android_JNI_SetupThread();
-#endif
     SDL_RunThread(data);
     return NULL;
 }
@@ -78,9 +70,7 @@ static int (*ppthread_setname_np)(pthread_t, const char*) = NULL;
 #endif
 int
 SDL_SYS_CreateThread(SDL_Thread *thread, void *args)
-{\
-	// 2017.02.07 - RJS ADD - Logging.
-
+{
 	pthread_attr_t type;
 
     /* do this here before any threads exist, so there's no race condition. */
