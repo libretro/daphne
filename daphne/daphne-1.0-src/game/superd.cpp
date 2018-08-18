@@ -31,10 +31,11 @@
 //  a latch which can then be read at any time by reading z80 port 4.
 // Upon writing to z80 port 0, a byte is put into a latch which is always sent to
 //  the LD-V1000 on the next command strobe.
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include "superd.h"
@@ -284,7 +285,7 @@ void superd::do_irq(unsigned int which_irq)
 	}
 }
 
-void superd::cpu_mem_write(Uint16 Addr, Uint8 Value)
+void superd::cpu_mem_write(uint16_t Addr, Uint8 Value)
 // Called whenever the Z80 emulator wants to write to memory
 {	
 	m_cpumem[Addr] = Value;
@@ -297,7 +298,7 @@ void superd::cpu_mem_write(Uint16 Addr, Uint8 Value)
 
 }
 
-void superd::port_write(Uint16 Port, Uint8 Value)
+void superd::port_write(uint16_t Port, Uint8 Value)
 // Called whenever the emulator wants to output to a port
 {
 
@@ -431,7 +432,7 @@ void superd::port_write(Uint16 Port, Uint8 Value)
 	}		
 }
 
-Uint8 superd::port_read(Uint16 Port)
+Uint8 superd::port_read(uint16_t Port)
 // Called whenever the emulator wants to read from a port
 {
 

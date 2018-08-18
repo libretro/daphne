@@ -53,8 +53,6 @@ SOURCES_C +=   $(DEPS_DIR)/zlib/deflate.c \
 SOURCES_CXX := 
 
 SOURCES_CXX += $(DAPHNE_DIR)/cpu/6809infc.cpp
-SOURCES_CXX += $(DAPHNE_DIR)/cpu/6809infc_ORIG.cpp
-SOURCES_CXX += $(DAPHNE_DIR)/cpu/6809infc_v1.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/cpu/cop.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/cpu/copintf.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/cpu/cpu.cpp
@@ -62,8 +60,6 @@ SOURCES_CXX += $(DAPHNE_DIR)/cpu/cpu-debug.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/cpu/m80.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/cpu/mamewrap.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/cpu/mc6809.cpp
-SOURCES_CXX += $(DAPHNE_DIR)/cpu/mc6809_ORIG.cpp
-SOURCES_CXX += $(DAPHNE_DIR)/cpu/mc6809_v1.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/cpu/nes_6502.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/cpu/nes6502.cpp
 SOURCES_CXX += $(DAPHNE_DIR)/cpu/z80.cpp

@@ -55,6 +55,7 @@ NORMAL_MODE = 0x20
 #define strcasecmp stricmp
 #endif
 
+#include <stdint.h>
 #include <stdio.h> 
 #include "lair2.h"
 #include "../ldp-out/ldp.h"
@@ -782,7 +783,7 @@ void lair2::do_irq(unsigned int which_irq)
 }
 
 
-void lair2::port_write(Uint16 port, Uint8 value)
+void lair2::port_write(uint16_t port, Uint8 value)
 {
 	switch(port)
 	{
@@ -926,7 +927,7 @@ void lair2::port_write(Uint16 port, Uint8 value)
 	}		
 }
 
-Uint8 lair2::port_read(Uint16 port)
+Uint8 lair2::port_read(uint16_t port)
 {
 	unsigned char result = 0;
 
@@ -1131,8 +1132,8 @@ void lair2::EEPROM_9536_write(Uint8 value)
       // bits 4-7 unknown
 
 	static Uint8 nv_opcode = 0xff;
-	static Uint16 nv_data = 0;
-	static Uint16 nv_address = 0;
+	static uint16_t nv_data = 0;
+	static uint16_t nv_address = 0;
 	static int address_count = 0;
 	static int bit_count = 0;
 	static Uint8 old = 0x00;

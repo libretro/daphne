@@ -30,15 +30,16 @@
 // f000 - f3ff video ram
 // f400 - f7ff video control ram
 
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 // disable "unreferenced inline function has been removed" warning
 #pragma warning( disable: 4514 )
 #endif
 
+#include <stdint.h>
 #include <string.h>
 #include <math.h>	// for pow
 #include "esh.h"
@@ -276,7 +277,7 @@ void esh::do_nmi()
 	Z80_ASSERT_NMI;
 }
 
-void esh::cpu_mem_write(Uint16 addr, Uint8 value)
+void esh::cpu_mem_write(uint16_t addr, Uint8 value)
 {
 	// if program writes to video memory
 //	if (addr > 0xf000 && addr <= 0xf7ff && value!=m_cpumem[addr])  //doesn't seem to be necessary 
@@ -288,7 +289,7 @@ void esh::cpu_mem_write(Uint16 addr, Uint8 value)
 	m_cpumem[addr] = value;	
 }
 
-Uint8 esh::port_read(Uint16 port)
+Uint8 esh::port_read(uint16_t port)
 {
 	char s[81];
 	Uint8 result = 0;
@@ -321,7 +322,7 @@ Uint8 esh::port_read(Uint16 port)
 	return result;
 }
 
-void esh::port_write(Uint16 port, Uint8 value)
+void esh::port_write(uint16_t port, Uint8 value)
 {
 	char s[81];
 	static unsigned int lastbeep = 0;

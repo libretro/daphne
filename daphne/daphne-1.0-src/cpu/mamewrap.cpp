@@ -9,10 +9,11 @@
 // at the time of this writing (Jan 6, 2001) there are enough wrappers for the z80 core to work.
 // Additional code might be needed to add other mame cpu cores (such as the x86 one)
 
-#ifdef WIN32
+#ifdef _WIN32
 #pragma warning (disable:4100)	// disable the warning about unreferenced formal parameters (MSVC++)
 #endif
 
+#include <stdint.h>
 #include <stdio.h>
 
 #include "generic_z80.h"
@@ -82,7 +83,7 @@ void mw_i86_set_mem(Uint8 *mem)
 UINT8 cpu_readmem16(UINT32 addr)
 {
 
-	return(g_game->cpu_mem_read(static_cast<Uint16>(addr)));
+	return(g_game->cpu_mem_read(static_cast<uint16_t>(addr)));
 
 }
 
@@ -95,7 +96,7 @@ UINT8 cpu_readmem20(UINT32 addr)
 // writes a byte to a memory location
 void cpu_writemem16(UINT32 addr, UINT8 value)
 {
-	g_game->cpu_mem_write(static_cast<Uint16>(addr), value);
+	g_game->cpu_mem_write(static_cast<uint16_t>(addr), value);
 }
 
 // writes a byte to a memory location

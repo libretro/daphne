@@ -82,10 +82,11 @@
 // NMI - caused when master z80 writes to ldp latch
 //
 //
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <string.h>
 #include "interstellar.h"
 #include "../cpu/cpu.h"
@@ -208,7 +209,7 @@ void interstellar::do_nmi()
 }
 
 // reads a byte from the cpu's memory
-Uint8 interstellar::cpu_mem_read(Uint16 addr)
+Uint8 interstellar::cpu_mem_read(uint16_t addr)
 {
 	Uint8 result = 0x00;
 	char s[81] = { 0 };
@@ -277,7 +278,7 @@ Uint8 interstellar::cpu_mem_read(Uint16 addr)
 }
 
 // writes a byte to the cpu's memory
-void interstellar::cpu_mem_write(Uint16 addr, Uint8 value)
+void interstellar::cpu_mem_write(uint16_t addr, Uint8 value)
 {
 	char s[81] = { 0 };	
 	
@@ -349,7 +350,7 @@ void interstellar::cpu_mem_write(Uint16 addr, Uint8 value)
 }
 
 // reads a byte from the cpu's port
-Uint8 interstellar::port_read(Uint16 port)
+Uint8 interstellar::port_read(uint16_t port)
 {
 	char s[81] = { 0 };
 	Uint8 result = 0x00;
@@ -444,7 +445,7 @@ Uint8 interstellar::port_read(Uint16 port)
 }
 
 // writes a byte to the cpu's port
-void interstellar::port_write(Uint16 port, Uint8 value)
+void interstellar::port_write(uint16_t port, Uint8 value)
 {
 	char s[81] = { 0 };
 

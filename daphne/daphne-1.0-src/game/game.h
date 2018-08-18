@@ -34,6 +34,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <stdint.h>
 #include <libretro.h>
 
 // we allow up to triple buffering
@@ -97,16 +98,16 @@ public:
 	virtual void reset();
 	virtual void do_irq(unsigned int);		// does an IRQ tick
 	virtual void do_nmi();		// does an NMI tick
-	virtual Uint8 cpu_mem_read(Uint16 addr);	// 16-bit addressing memory read routine
+	virtual Uint8 cpu_mem_read(uint16_t addr);	// 16-bit addressing memory read routine
 	virtual Uint8 cpu_mem_read(Uint32 addr);	// 32-bit addressing memory read routine
-	virtual void cpu_mem_write(Uint16 addr, Uint8 value);		// memory write routine
+	virtual void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
 	virtual void cpu_mem_write(Uint32 addr, Uint8 value);	// 32-bit addressing memory write routine
-	virtual Uint8 port_read(Uint16 port);		// read from port
-	virtual void port_write(Uint16 port, Uint8 value);		// write to a port
+	virtual Uint8 port_read(uint16_t port);		// read from port
+	virtual void port_write(uint16_t port, Uint8 value);		// write to a port
 	virtual void update_pc(Uint32 new_pc);		// update the PC
 	virtual void input_enable(Uint8);
 	virtual void input_disable(Uint8);
-	virtual void OnMouseMotion(Uint16 x, Uint16 y, Sint16 xrel, Sint16 yrel);  // Added by ScottD
+	virtual void OnMouseMotion(uint16_t x, uint16_t y, Sint16 xrel, Sint16 yrel);  // Added by ScottD
 	virtual void OnVblank();	// this gets called by the ldp class every vblank (since many games use vblank for their interrupt)
    virtual unsigned get_libretro_button_map(unsigned id);
    virtual const char *get_libretro_button_name(unsigned id);
@@ -216,7 +217,7 @@ protected:
 	
 	const char *m_nvram_filename; // filename for nvram (only for DL2/SA91 for now)
 	Uint8 *m_nvram_begin;  // points to where our nvram begins
-	Uint16 *m_EEPROM_9536_begin;  // points to the 9536 EEPROM for DL2/SA91
+	uint16_t *m_EEPROM_9536_begin;  // points to the 9536 EEPROM for DL2/SA91
 	bool m_EEPROM_9536;
 	Uint32 m_nvram_size;	// how big the nvram area is (if this is 0, nvram is not loaded/saved)
 

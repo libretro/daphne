@@ -101,8 +101,8 @@ public:
 	// it returns one of the SEARCH_* enumerations ...
 	virtual int get_search_result();
 
-	bool pre_skip_forward(Uint16);
-	bool pre_skip_backward(Uint16);
+	bool pre_skip_forward(uint16_t);
+	bool pre_skip_backward(uint16_t);
 
 	// steps 1 frame forward
 	void pre_step_forward();
@@ -110,11 +110,11 @@ public:
 	// steps 1 frame backward
 	void pre_step_backward();
 
-	virtual bool skip_forward(Uint16 frames_to_skip, Uint16 target_frame);
+	virtual bool skip_forward(uint16_t frames_to_skip, uint16_t target_frame);
 	// NOTE : frames_to_skip and target_frame are both included for your convenience
 	// use frames_to_skip only if you cannot use target_frame (which is more accurate)
 
-	virtual bool skip_backward(Uint16 frames_to_skip, Uint16 target_frame);
+	virtual bool skip_backward(uint16_t frames_to_skip, uint16_t target_frame);
 	// NOTE : frames_to_skip and target_frame are both included for your convenience
 	// use frames_to_skip only if you cannot use target_frame (which is more accurate)
 	
@@ -194,7 +194,7 @@ public:
 	bool is_blitting_allowed();	// returns value of blitting_allowed
 	void set_blitting_allowed(bool bVal);
 	int get_status();	// returns status of laserdisc player
-	void framenum_to_frame(Uint16, char *);	// converts int to 5-digit string
+	void framenum_to_frame(uint16_t, char *);	// converts int to 5-digit string
 	Uint32 get_search_latency();
 	void set_search_latency(unsigned int);
 	void set_stop_on_quit(bool);	// enables the stop_on_quit bool flag
@@ -233,9 +233,9 @@ protected:
 	bool blitting_allowed;	// whether it's ok to blit directly to the screen (SMPEG forbids this)
 	bool skipping_supported;	// whether the laserdisc player supports skipping
 	bool skip_instead_of_search;	// whether we should skip instead of search if searching forward a short distance
-	Uint16 max_skippable_frames;	// maximum # of frames that player can skip (if skipping is supported)
-	Uint16 m_last_try_frame;	// the last frame we _tried_ to seek to
-	Uint16 m_last_seeked_frame;	// the last frame we successfully seeked to (used with m_play_time to calculate current frame)
+	uint16_t max_skippable_frames;	// maximum # of frames that player can skip (if skipping is supported)
+	uint16_t m_last_try_frame;	// the last frame we _tried_ to seek to
+	uint16_t m_last_seeked_frame;	// the last frame we successfully seeked to (used with m_play_time to calculate current frame)
 // UPDATE : we aren't using cycles anymore (see pre_think())
 //	uint64_t m_play_cycles;	// # of elapsed cpu cycles from when we last issued a play command
 	Uint32 m_play_time;	// current time when we last issued a play command
@@ -318,8 +318,8 @@ class fast_noldp : public ldp
 	// see ldp.h for comments on how to use these functions
 	bool nonblocking_search(char *);
 	int get_search_result();
-	bool skip_forward(Uint16 frames_to_skip, Uint16 target_frame);
-	bool skip_backward(Uint16 frames_to_skip, Uint16 target_frame);
+	bool skip_forward(uint16_t frames_to_skip, uint16_t target_frame);
+	bool skip_backward(uint16_t frames_to_skip, uint16_t target_frame);
 };
 
 extern ldp *g_ldp;	// our global ldp class.  Defined here so that every .cpp file doesn't have to define it.

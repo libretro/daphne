@@ -23,11 +23,12 @@
 
 // File to control the Pioneer LD-V6000 series of players
 // written by Matt Ownby
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #pragma warning (disable:4100)
 #endif
 
+#include <stdint.h>
 #include <string.h>
 #include <stdio.h>
 #include "../io/serial.h"
@@ -167,7 +168,7 @@ int v6000::get_search_result()
 
 
 // skips forward a certain # of frames
-bool v6000::skip_forward(Uint16 frames_to_skip, Uint16 target_frame)
+bool v6000::skip_forward(uint16_t frames_to_skip, uint16_t target_frame)
 {
 	bool result = false;
 	char digits[6];

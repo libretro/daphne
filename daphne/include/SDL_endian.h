@@ -68,40 +68,35 @@ extern "C" {
  */
 #if defined(__GNUC__) && defined(__i386__) && \
    !(__GNUC__ == 2 && __GNUC_MINOR__ == 95 /* broken gcc version */)
-SDL_FORCE_INLINE Uint16
-SDL_Swap16(Uint16 x)
+SDL_FORCE_INLINE uint16_t SDL_Swap16(uint16_t x)
 {
   __asm__("xchgb %b0,%h0": "=q"(x):"0"(x));
     return x;
 }
 #elif defined(__GNUC__) && defined(__x86_64__)
-SDL_FORCE_INLINE Uint16
-SDL_Swap16(Uint16 x)
+SDL_FORCE_INLINE uint16_t SDL_Swap16(uint16_t x)
 {
   __asm__("xchgb %b0,%h0": "=Q"(x):"0"(x));
     return x;
 }
 #elif defined(__GNUC__) && (defined(__powerpc__) || defined(__ppc__))
-SDL_FORCE_INLINE Uint16
-SDL_Swap16(Uint16 x)
+SDL_FORCE_INLINE uint16_t SDL_Swap16(uint16_t x)
 {
     int result;
 
   __asm__("rlwimi %0,%2,8,16,23": "=&r"(result):"0"(x >> 8), "r"(x));
-    return (Uint16)result;
+    return (uint16_t)result;
 }
 #elif defined(__GNUC__) && (defined(__M68000__) || defined(__M68020__)) && !defined(__mcoldfire__)
-SDL_FORCE_INLINE Uint16
-SDL_Swap16(Uint16 x)
+SDL_FORCE_INLINE uint16_t SDL_Swap16(uint16_t x)
 {
   __asm__("rorw #8,%0": "=d"(x): "0"(x):"cc");
     return x;
 }
 #else
-SDL_FORCE_INLINE Uint16
-SDL_Swap16(Uint16 x)
+SDL_FORCE_INLINE uint16_t SDL_Swap16(uint16_t x)
 {
-    return SDL_static_cast(Uint16, ((x << 8) | (x >> 8)));
+    return SDL_static_cast(uint16_t, ((x << 8) | (x >> 8)));
 }
 #endif
 

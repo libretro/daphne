@@ -18,6 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include <stdint.h>
 #include "../SDL_internal.h"
 
 /* Functions for audio drivers to perform runtime conversion of audio format */
@@ -75,8 +76,8 @@ SDL_ConvertMono(SDL_AudioCVT * cvt, SDL_AudioFormat format)
             dst = cvt->buf;
             if (SDL_AUDIO_ISBIGENDIAN(format)) {
                 for (i = cvt->len_cvt / 4; i; --i) {
-                    sample = (Uint16) ((src[0] << 8) | src[1]) +
-                        (Uint16) ((src[2] << 8) | src[3]);
+                    sample = (uint16_t) ((src[0] << 8) | src[1]) +
+                        (uint16_t) ((src[2] << 8) | src[3]);
                     sample /= 2;
                     dst[1] = (sample & 0xFF);
                     sample >>= 8;
@@ -86,8 +87,8 @@ SDL_ConvertMono(SDL_AudioCVT * cvt, SDL_AudioFormat format)
                 }
             } else {
                 for (i = cvt->len_cvt / 4; i; --i) {
-                    sample = (Uint16) ((src[1] << 8) | src[0]) +
-                        (Uint16) ((src[3] << 8) | src[2]);
+                    sample = (uint16_t) ((src[1] << 8) | src[0]) +
+                        (uint16_t) ((src[3] << 8) | src[2]);
                     sample /= 2;
                     dst[0] = (sample & 0xFF);
                     sample >>= 8;
@@ -209,7 +210,7 @@ SDL_ConvertStrip(SDL_AudioCVT * cvt, SDL_AudioFormat format)
         strip_chans_6_to_2(Uint8);
         break;
     case 16:
-        strip_chans_6_to_2(Uint16);
+        strip_chans_6_to_2(uint16_t);
         break;
     case 32:
         strip_chans_6_to_2(Uint32);
@@ -251,7 +252,7 @@ SDL_ConvertStrip_2(SDL_AudioCVT * cvt, SDL_AudioFormat format)
         strip_chans_6_to_4(Uint8);
         break;
     case 16:
-        strip_chans_6_to_4(Uint16);
+        strip_chans_6_to_4(uint16_t);
         break;
     case 32:
         strip_chans_6_to_4(Uint32);
@@ -290,7 +291,7 @@ SDL_ConvertStereo(SDL_AudioCVT * cvt, SDL_AudioFormat format)
         dup_chans_1_to_2(Uint8);
         break;
     case 16:
-        dup_chans_1_to_2(Uint16);
+        dup_chans_1_to_2(uint16_t);
         break;
     case 32:
         dup_chans_1_to_2(Uint32);
@@ -362,7 +363,7 @@ SDL_ConvertSurround(SDL_AudioCVT * cvt, SDL_AudioFormat format)
     case AUDIO_U16:
         {
             Uint8 *src, *dst;
-            Uint16 lf, rf, ce, lr, rr;
+            uint16_t lf, rf, ce, lr, rr;
 
             src = cvt->buf + cvt->len_cvt;
             dst = cvt->buf + cvt->len_cvt * 3;
@@ -371,8 +372,8 @@ SDL_ConvertSurround(SDL_AudioCVT * cvt, SDL_AudioFormat format)
                 for (i = cvt->len_cvt / 4; i; --i) {
                     dst -= 12;
                     src -= 4;
-                    lf = (Uint16) ((src[0] << 8) | src[1]);
-                    rf = (Uint16) ((src[2] << 8) | src[3]);
+                    lf = (uint16_t) ((src[0] << 8) | src[1]);
+                    rf = (uint16_t) ((src[2] << 8) | src[3]);
                     ce = (lf / 2) + (rf / 2);
                     rr = lf - ce;
                     lr = rf - ce;
@@ -395,8 +396,8 @@ SDL_ConvertSurround(SDL_AudioCVT * cvt, SDL_AudioFormat format)
                 for (i = cvt->len_cvt / 4; i; --i) {
                     dst -= 12;
                     src -= 4;
-                    lf = (Uint16) ((src[1] << 8) | src[0]);
-                    rf = (Uint16) ((src[3] << 8) | src[2]);
+                    lf = (uint16_t) ((src[1] << 8) | src[0]);
+                    rf = (uint16_t) ((src[3] << 8) | src[2]);
                     ce = (lf / 2) + (rf / 2);
                     rr = lf - ce;
                     lr = rf - ce;
@@ -613,7 +614,7 @@ SDL_ConvertSurround_4(SDL_AudioCVT * cvt, SDL_AudioFormat format)
     case AUDIO_U16:
         {
             Uint8 *src, *dst;
-            Uint16 lf, rf, ce, lr, rr;
+            uint16_t lf, rf, ce, lr, rr;
 
             src = cvt->buf + cvt->len_cvt;
             dst = cvt->buf + cvt->len_cvt * 2;
@@ -622,8 +623,8 @@ SDL_ConvertSurround_4(SDL_AudioCVT * cvt, SDL_AudioFormat format)
                 for (i = cvt->len_cvt / 4; i; --i) {
                     dst -= 8;
                     src -= 4;
-                    lf = (Uint16) ((src[0] << 8) | src[1]);
-                    rf = (Uint16) ((src[2] << 8) | src[3]);
+                    lf = (uint16_t) ((src[0] << 8) | src[1]);
+                    rf = (uint16_t) ((src[2] << 8) | src[3]);
                     ce = (lf / 2) + (rf / 2);
                     rr = lf - ce;
                     lr = rf - ce;
@@ -641,8 +642,8 @@ SDL_ConvertSurround_4(SDL_AudioCVT * cvt, SDL_AudioFormat format)
                 for (i = cvt->len_cvt / 4; i; --i) {
                     dst -= 8;
                     src -= 4;
-                    lf = (Uint16) ((src[1] << 8) | src[0]);
-                    rf = (Uint16) ((src[3] << 8) | src[2]);
+                    lf = (uint16_t) ((src[1] << 8) | src[0]);
+                    rf = (uint16_t) ((src[3] << 8) | src[2]);
                     ce = (lf / 2) + (rf / 2);
                     rr = lf - ce;
                     lr = rf - ce;
@@ -832,8 +833,8 @@ SDL_BuildAudioTypeCVT(SDL_AudioCVT * cvt,
                       SDL_AudioFormat src_fmt, SDL_AudioFormat dst_fmt)
 {
     if (src_fmt != dst_fmt) {
-        const Uint16 src_bitsize = SDL_AUDIO_BITSIZE(src_fmt);
-        const Uint16 dst_bitsize = SDL_AUDIO_BITSIZE(dst_fmt);
+        const uint16_t src_bitsize = SDL_AUDIO_BITSIZE(src_fmt);
+        const uint16_t dst_bitsize = SDL_AUDIO_BITSIZE(dst_fmt);
         SDL_AudioFilter filter = SDL_HandTunedTypeCVT(src_fmt, dst_fmt);
 
         /* No hand-tuned converter? Try the autogenerated ones. */

@@ -70,7 +70,7 @@ public:
 	bool nonblocking_search(char *);
 	int get_search_result();
 	unsigned int play();
-	bool skip_forward(Uint16 frames_to_skip, Uint16 target_frame);
+	bool skip_forward(uint16_t frames_to_skip, uint16_t target_frame);
 	void pause();
 	bool change_speed(unsigned int uNumerator, unsigned int uDenominator);
 	void think();
@@ -120,7 +120,7 @@ private:
 	uint64_t get_audio_sample_position(unsigned int uTargetMpegFrame);
 
 	// NOTE : 'filename' does not include the prefix path
-	Uint16 mpeg_info (string &filename, Uint16 ld_frame);
+	uint16_t mpeg_info (string &filename, uint16_t ld_frame);
 	
 	Sint32 m_target_mpegframe;	// mpeg frame # we are seeking to
 	Sint32 m_cur_ldframe_offset;	// which laserdisc frame corresponds to the first frame in current mpeg file
@@ -176,7 +176,7 @@ int prepare_frame_callback_without_overlay(struct yuv_buf *buf);
 void display_frame_callback(struct yuv_buf *buf);
 void set_blend_fields(bool val);
 void buf2overlay(SDL_Texture *dst, struct yuv_buf *src);
-void buf2overlay_YUY2(Uint8 *out_pixels, Uint16 in_pitch, int in_h, int in_w, struct yuv_buf *src);
+void buf2overlay_YUY2(Uint8 *out_pixels, uint16_t in_pitch, int in_h, int in_w, struct yuv_buf *src);
 void update_parse_meter();
 void report_parse_progress_callback(double percent_complete);
 void report_mpeg_dimensions_callback(int, int);

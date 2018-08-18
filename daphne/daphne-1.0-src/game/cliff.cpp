@@ -27,10 +27,11 @@
 // 0x0000-0x9FFF Program ROMs
 // 0xE000-0xE7FF Battery-backed non-volatile RAM (5126)
 // 0xE800-0xEFFF Volatile RAM (2128)
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include "cliff.h"
@@ -205,7 +206,7 @@ void gtg::reset()
 }
 
 // when z80 outputs to a port, this gets called
-void cliff::port_write(Uint16 Port, Uint8 Value)
+void cliff::port_write(uint16_t Port, Uint8 Value)
 {
 
 	char s[81] = { 0 };
@@ -329,7 +330,7 @@ void cliff::port_write(Uint16 Port, Uint8 Value)
 }
 
 
-Uint8 cliff::port_read(Uint16 Port)
+Uint8 cliff::port_read(uint16_t Port)
 // Called whenever the emulator wants to read from a port
 {
     char s[81] = { 0 };
@@ -411,7 +412,7 @@ void cliff::do_irq(unsigned int which_irq)
 
 #ifdef DEBUG
 // the the purpose of debugging/disassembling the ROM
-void cliff::cpu_mem_write(Uint16 addr, Uint8 value)
+void cliff::cpu_mem_write(uint16_t addr, Uint8 value)
 {
 //	if (addr == 0xE116) set_cpu_trace(1);
 	m_cpumem[addr] = value;
@@ -703,7 +704,7 @@ void cliff::patch_roms()
 
 }
 
-Uint8 gtg::cpu_mem_read(Uint16 addr)
+Uint8 gtg::cpu_mem_read(uint16_t addr)
 {
  	Uint8 result = m_cpumem[addr];
 

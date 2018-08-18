@@ -165,7 +165,7 @@ void badlands::do_nmi()
 	video_blit();	// the NMI runs at the same period as the monitor vsync
 }
 
-Uint8 badlands::cpu_mem_read(Uint16 addr)
+Uint8 badlands::cpu_mem_read(uint16_t addr)
 {
 //	char s[81] = {0};
 
@@ -198,7 +198,7 @@ Uint8 badlands::cpu_mem_read(Uint16 addr)
 	return result;
 }
 
-void badlands::cpu_mem_write(Uint16 addr, Uint8 value)
+void badlands::cpu_mem_write(uint16_t addr, Uint8 value)
 {
 	char s[81] = {0};
 
@@ -336,7 +336,7 @@ void badlands::cpu_mem_write(Uint16 addr, Uint8 value)
 	m_cpumem[addr] = value;
 }
 
-Uint8 badlandp::cpu_mem_read(Uint16 addr)
+Uint8 badlandp::cpu_mem_read(uint16_t addr)
 {
 	char s[81] = {0};
 
@@ -378,7 +378,7 @@ Uint8 badlandp::cpu_mem_read(Uint16 addr)
 	return result;
 }
 
-void badlandp::cpu_mem_write(Uint16 addr, Uint8 value)
+void badlandp::cpu_mem_write(uint16_t addr, Uint8 value)
 {
 	char s[81] = {0};
 	

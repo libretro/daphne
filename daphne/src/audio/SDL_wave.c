@@ -18,6 +18,8 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+
+#include <stdint.h>
 #include <stdlib.h>
 #include "../SDL_internal.h"
 
@@ -32,15 +34,15 @@ static int ReadChunk(SDL_RWops * src, Chunk * chunk);
 struct MS_ADPCM_decodestate
 {
     Uint8 hPredictor;
-    Uint16 iDelta;
+    uint16_t iDelta;
     Sint16 iSamp1;
     Sint16 iSamp2;
 };
 static struct MS_ADPCM_decoder
 {
     WaveFMT wavefmt;
-    Uint16 wSamplesPerBlock;
-    Uint16 wNumCoef;
+    uint16_t wSamplesPerBlock;
+    uint16_t wNumCoef;
     Sint16 aCoeff[7][2];
     /* * * */
     struct MS_ADPCM_decodestate state[2];
@@ -62,22 +64,22 @@ InitMS_ADPCM(WaveFMT * format)
         SDL_SwapLE16(format->bitspersample);
     rogue_feel = (Uint8 *) format + sizeof(*format);
     if (sizeof(*format) == 16) {
-        /* const Uint16 extra_info = ((rogue_feel[1] << 8) | rogue_feel[0]); */
-        rogue_feel += sizeof(Uint16);
+        /* const uint16_t extra_info = ((rogue_feel[1] << 8) | rogue_feel[0]); */
+        rogue_feel += sizeof(uint16_t);
     }
     MS_ADPCM_state.wSamplesPerBlock = ((rogue_feel[1] << 8) | rogue_feel[0]);
-    rogue_feel += sizeof(Uint16);
+    rogue_feel += sizeof(uint16_t);
     MS_ADPCM_state.wNumCoef = ((rogue_feel[1] << 8) | rogue_feel[0]);
-    rogue_feel += sizeof(Uint16);
+    rogue_feel += sizeof(uint16_t);
     if (MS_ADPCM_state.wNumCoef != 7) {
         SDL_SetError("Unknown set of MS_ADPCM coefficients");
         return (-1);
     }
     for (i = 0; i < MS_ADPCM_state.wNumCoef; ++i) {
         MS_ADPCM_state.aCoeff[i][0] = ((rogue_feel[1] << 8) | rogue_feel[0]);
-        rogue_feel += sizeof(Uint16);
+        rogue_feel += sizeof(uint16_t);
         MS_ADPCM_state.aCoeff[i][1] = ((rogue_feel[1] << 8) | rogue_feel[0]);
-        rogue_feel += sizeof(Uint16);
+        rogue_feel += sizeof(uint16_t);
     }
     return (0);
 }
@@ -110,7 +112,7 @@ MS_ADPCM_nibble(struct MS_ADPCM_decodestate *state,
     if (delta < 16) {
         delta = 16;
     }
-    state->iDelta = (Uint16) delta;
+    state->iDelta = (uint16_t) delta;
     state->iSamp2 = state->iSamp1;
     state->iSamp1 = (Sint16) new_sample;
     return (new_sample);
@@ -224,7 +226,7 @@ struct IMA_ADPCM_decodestate
 static struct IMA_ADPCM_decoder
 {
     WaveFMT wavefmt;
-    Uint16 wSamplesPerBlock;
+    uint16_t wSamplesPerBlock;
     /* * * */
     struct IMA_ADPCM_decodestate state[2];
 } IMA_ADPCM_state;
@@ -244,8 +246,8 @@ InitIMA_ADPCM(WaveFMT * format)
         SDL_SwapLE16(format->bitspersample);
     rogue_feel = (Uint8 *) format + sizeof(*format);
     if (sizeof(*format) == 16) {
-        /* const Uint16 extra_info = ((rogue_feel[1] << 8) | rogue_feel[0]); */
-        rogue_feel += sizeof(Uint16);
+        /* const uint16_t extra_info = ((rogue_feel[1] << 8) | rogue_feel[0]); */
+        rogue_feel += sizeof(uint16_t);
     }
     IMA_ADPCM_state.wSamplesPerBlock = ((rogue_feel[1] << 8) | rogue_feel[0]);
     return (0);

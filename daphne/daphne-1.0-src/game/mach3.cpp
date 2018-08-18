@@ -354,8 +354,8 @@ void mach3::do_nmi()
 		// update audio target data buffer (only used by MACH3)
 		if (m_game_type == GAME_MACH3)
 		{
-			static Uint16 prev_frame = 0xFFFF;
-			Uint16 cur_frame = pr8210_get_current_frame() ;	
+			static uint16_t prev_frame = 0xFFFF;
+			uint16_t cur_frame = pr8210_get_current_frame() ;	
 
 			if ((cur_frame != prev_frame) && (((cur_frame) % 53) == 0) ) // target data buffer fills every 53 frames 
 			{
@@ -415,7 +415,7 @@ Uint8 mach3::cpu_mem_read(Uint32 addr)
 	if (which_cpu == 0)
 	{
 		char s[80];
-		Uint16 cur_frame = 0;	// temp variable used by more than one 'case' below, so we define it once here
+		uint16_t cur_frame = 0;	// temp variable used by more than one 'case' below, so we define it once here
 
 		if (addr > 0xFFFF) //accessing mirrored memory from different segment (UVT uses E0000 segment)
 		{
@@ -525,7 +525,7 @@ Uint8 mach3::cpu_mem_read(Uint32 addr)
 	} // end x86 CPU
 
 	// the cpu debugger goes to this mem read function, so we need to redirect it
-	else result = cpu_mem_read(static_cast<Uint16>(addr));
+	else result = cpu_mem_read(static_cast<uint16_t>(addr));
 	return (result);
 }
 
@@ -680,7 +680,7 @@ void mach3::cpu_mem_write(Uint32 Addr, Uint8 Value)
 }
 
 // only the 6502's use this read handler since the I86 uses 20 bit addressing
-Uint8 mach3::cpu_mem_read(Uint16 addr)
+Uint8 mach3::cpu_mem_read(uint16_t addr)
 {
 //	char s[80];	
 	Uint8 result = 0;
@@ -756,7 +756,7 @@ Uint8 mach3::cpu_mem_read(Uint16 addr)
 }
 
 // only the 6502's use this write handler since the I86 uses 20 bit addressing
-void mach3::cpu_mem_write(Uint16 Addr, Uint8 Value)
+void mach3::cpu_mem_write(uint16_t Addr, Uint8 Value)
 {
 //	char s[80];
 
@@ -865,7 +865,7 @@ void mach3::cpu_mem_write(Uint16 Addr, Uint8 Value)
 }
 
 // mack3 hardware doesn't appear to use ports
-void mach3::port_write(Uint16 port, Uint8 value)
+void mach3::port_write(uint16_t port, Uint8 value)
 {
 	char s[80];
 
@@ -875,7 +875,7 @@ void mach3::port_write(Uint16 port, Uint8 value)
 
 // mack3 hardware doesn't appear to use ports
 
-Uint8 mach3::port_read(Uint16 port)
+Uint8 mach3::port_read(uint16_t port)
 {
 	char s[80];
 
@@ -1167,12 +1167,10 @@ void mach3::draw_characters()
 
 void mach3::draw_sprites()
 {
-	Uint16 offset = 0x0000;  //uvt has two banks
+	uint16_t offset = 0x0000;  //uvt has two banks
 
 	if ((m_cpumem[0x5803] & 0x02))  //bank select bit
-	{
 		offset = 0x2000;
-	}
 
 	Uint8 * spritebank = (Uint8 *)&sprite[offset];
 

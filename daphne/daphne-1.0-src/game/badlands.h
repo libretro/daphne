@@ -23,6 +23,7 @@
 // badlands.h
 // by Mark Broadhead
 
+#include <stdint.h>
 #include "game.h"
 
 #define BADLANDS_CPU_HZ 14318180
@@ -45,8 +46,8 @@ public:
 	badlands();
 	void do_nmi();		// does an NMI tick
 	void do_irq(unsigned int);		// does an IRQ/FIRQ tick
-	Uint8 cpu_mem_read(Uint16 addr);			// memory read routine
-	void cpu_mem_write(Uint16 addr, Uint8 value);		// memory write routine
+	Uint8 cpu_mem_read(uint16_t addr);			// memory read routine
+	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
 	void reset();
 	void set_preset(int);
 	void input_enable(Uint8);
@@ -61,7 +62,7 @@ protected:
 	void update_shoot_led(Uint8);
 	Uint8 charx_offset;
 	Uint8 chary_offset;
-	Uint16 char_base;
+	uint16_t char_base;
 	Uint8 m_soundchip_id;
    bool shoot_led_overlay;
 	bool shoot_led_numlock;
@@ -81,7 +82,7 @@ class badlandp : public badlands
 {
 public:
    badlandp();
-	Uint8 cpu_mem_read(Uint16 addr);			// memory read routine
-	void cpu_mem_write(Uint16 addr, Uint8 value);		// memory write routine
+	Uint8 cpu_mem_read(uint16_t addr);			// memory read routine
+	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
 };
 

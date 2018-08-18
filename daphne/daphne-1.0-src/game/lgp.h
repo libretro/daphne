@@ -26,6 +26,7 @@
 #ifndef LGP_H
 #define LGP_H
 
+#include <stdint.h>
 #include "game.h"
 
 #define LGP_OVERLAY_W 256 // width of overlay
@@ -39,10 +40,10 @@ public:
 	lgp();
 	void do_irq(unsigned int);		// does an IRQ tick
 	void do_nmi();		// does an NMI tick
-	Uint8 cpu_mem_read(Uint16 addr);			// memory read routine
-	void cpu_mem_write(Uint16 addr, Uint8 value);		// memory write routine
-	Uint8 port_read(Uint16 port);		// read from port
-	void port_write(Uint16 port, Uint8 value);		// write to a port
+	Uint8 cpu_mem_read(uint16_t addr);			// memory read routine
+	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
+	Uint8 port_read(uint16_t port);		// read from port
+	void port_write(uint16_t port, Uint8 value);		// write to a port
 	virtual void input_enable(Uint8);
 	virtual void input_disable(Uint8);
 	bool set_bank(Uint8, Uint8);

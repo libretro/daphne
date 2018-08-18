@@ -18,6 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include <stdint.h>
 #include "../SDL_internal.h"
 
 /* This a stretch blit implementation based on ideas given to me by
@@ -53,7 +54,7 @@ static void name(type *src, int src_w, type *dst, int dst_w)    \
 }
 /* *INDENT-OFF* */
 DEFINE_COPY_ROW(copy_row1, Uint8)
-DEFINE_COPY_ROW(copy_row2, Uint16)
+DEFINE_COPY_ROW(copy_row2, uint16_t)
 DEFINE_COPY_ROW(copy_row4, Uint32)
 /* *INDENT-ON* */
 
@@ -172,8 +173,8 @@ SDL_SoftStretch(SDL_Surface * src, const SDL_Rect * srcrect,
                 copy_row1(srcp, srcrect->w, dstp, dstrect->w);
                 break;
             case 2:
-                copy_row2((Uint16 *) srcp, srcrect->w,
-                          (Uint16 *) dstp, dstrect->w);
+                copy_row2((uint16_t *) srcp, srcrect->w,
+                          (uint16_t *) dstp, dstrect->w);
                 break;
             case 3:
                 copy_row3(srcp, srcrect->w, dstp, dstrect->w);

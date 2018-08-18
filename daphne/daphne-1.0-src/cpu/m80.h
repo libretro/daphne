@@ -23,6 +23,7 @@
 #ifndef M80_H
 #define M80_H
 
+#include <stdint.h>
 // for Uint32, Uint8, etc definitions
 #include <SDL.h>
 
@@ -36,10 +37,10 @@ void m80_activate_nmi();
 void m80_activate_irq();
 Uint32 m80_get_pc();
 void m80_set_pc(Uint32);
-Uint16 m80_get_sp();
-void m80_set_sp(Uint16);
-Uint16 m80_get_reg(int index);
-void m80_set_reg(int index, Uint16 val);
+uint16_t m80_get_sp();
+void m80_set_sp(uint16_t idx);
+uint16_t m80_get_reg(int index);
+void m80_set_reg(int index, uint16_t val);
 void m80_set_irq_callback(Sint32 (*callback)(int));
 void m80_set_nmi_callback(Sint32 (*callback)());
 Uint32 m80_get_cycles_executed();

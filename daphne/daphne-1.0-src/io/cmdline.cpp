@@ -23,11 +23,12 @@
 // Parses our command line and sets our variables accordingly
 // by Matt Ownby
 
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #define _CRT_NONSTDC_NO_DEPRECATE 1
 #endif
 
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -758,7 +759,7 @@ bool parse_cmd_line(int argc, char **argv)
 		else if (strcasecmp(s, "-sound_buffer")==0)
 		{
 			get_next_word(s, sizeof(s));
-			Uint16 sbsize = (Uint16) atoi(s);
+			uint16_t sbsize = (uint16_t) atoi(s);
 			set_soundbuf_size(sbsize);
 			sprintf(s, "Setting sound buffer size to %d", sbsize);
 			printline(s);
@@ -955,7 +956,7 @@ bool parse_cmd_line(int argc, char **argv)
 		{
 			get_next_word(s, sizeof(s));
 			i = atoi(s);
-			set_video_width((Uint16)i);
+			set_video_width((uint16_t)i);
 			sprintf(s, "Setting screen width to %d", i);
 			printline(s);
 		}
@@ -963,7 +964,7 @@ bool parse_cmd_line(int argc, char **argv)
 		{
 			get_next_word(s, sizeof(s));
 			i = atoi(s);
-			set_video_height((Uint16)i);
+			set_video_height((uint16_t)i);
 			sprintf(s, "Setting screen height to %d", i);
 			printline(s);
 		}

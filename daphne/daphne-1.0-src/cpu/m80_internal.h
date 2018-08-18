@@ -27,6 +27,7 @@
 // m80_internal.h
 // NOTE : This should not be #included by any other file than m80.cpp
 
+#include <stdint.h>
 #include <SDL.h>
 // SDL.h is used to determine endianness and define some variable types
 // No actual SDL functions are used, so you can redefine your own variables
@@ -62,7 +63,7 @@ typedef union
 		Uint8 h, l;
 	} b;
 #endif
-	Uint16 w;
+	uint16_t w;
 } m80_pair;
 
 /////////////////////////
@@ -164,7 +165,7 @@ struct m80_context
 
 // peek a word but don't advance PC
 #ifndef MSB_FIRST
-#define M80_PEEK_WORD	*( (Uint16 *) ( (Uint8 *) (opcode_base + PC)))
+#define M80_PEEK_WORD	*( (uint16_t *) ( (Uint8 *) (opcode_base + PC)))
 #endif
 
 // Interrupt check macro
@@ -275,7 +276,7 @@ struct m80_context
 // Call macro
 #define M80_CALL	\
 	{	\
-		Uint16 destination = M80_GET_WORD;	\
+		uint16_t destination = M80_GET_WORD;	\
 		M80_PUSH16(M80_PC);	\
 		PC = destination;	\
 		M80_CHANGE_PC(PC);	\
@@ -570,7 +571,7 @@ struct m80_context
 {	\
 	Uint32 result = dest_reg + source_reg;	\
 	Uint32 cbits = (dest_reg ^ source_reg ^ result) >> 8;	\
-	dest_reg = (Uint16) result;	\
+	dest_reg = (uint16_t) result;	\
 	AF = (AF & (0xFF00 | S_FLAG | Z_FLAG | V_FLAG)) |	\
 		((result >> 8) & (U3_FLAG | U5_FLAG)) |	\
 		(cbits & H_FLAG) |	\
@@ -854,7 +855,7 @@ struct m80_context
 // macro to swap AF with AF'
 #define M80_EX_AFS	\
 {	\
-	Uint16 tmp = AFPRIME;	\
+	uint16_t tmp = AFPRIME;	\
 	AFPRIME = AF;	\
 	AF = tmp;	\
 }
@@ -862,7 +863,7 @@ struct m80_context
 // macro to swap HL and DE
 #define M80_EX_DEHL	\
 {	\
-	Uint16 temp;	\
+	uint16_t temp;	\
 	temp = HL;	\
 	HL = DE;	\
 	DE = temp;	\
@@ -892,7 +893,7 @@ struct m80_context
 // Exchange most of the registers (EXX)
 #define M80_EXX	\
 {	\
-	Uint16 temp = BC;	\
+	uint16_t temp = BC;	\
 	BC = BCPRIME;	\
 	BCPRIME = temp;	\
 	temp = DE;	\

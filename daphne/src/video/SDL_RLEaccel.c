@@ -18,6 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include <stdint.h>
 #include "../SDL_internal.h"
 
 /*
@@ -140,8 +141,8 @@
 #define ALPHA_BLIT16_565(to, from, length, bpp, alpha)  \
     do {                                                \
         int i;                                          \
-        Uint16 *src = (Uint16 *)(from);                 \
-        Uint16 *dst = (Uint16 *)(to);                   \
+        uint16_t *src = (uint16_t *)(from);                 \
+        uint16_t *dst = (uint16_t *)(to);                   \
         Uint32 ALPHA = alpha >> 3;                      \
         for(i = 0; i < (int)(length); i++) {            \
             Uint32 s = *src++;                          \
@@ -150,15 +151,15 @@
             d = (d | d << 16) & 0x07e0f81f;             \
             d += (s - d) * ALPHA >> 5;                  \
             d &= 0x07e0f81f;                            \
-            *dst++ = (Uint16)(d | d >> 16);             \
+            *dst++ = (uint16_t)(d | d >> 16);             \
         }                                               \
     } while(0)
 
 #define ALPHA_BLIT16_555(to, from, length, bpp, alpha)  \
     do {                                                \
         int i;                                          \
-        Uint16 *src = (Uint16 *)(from);                 \
-        Uint16 *dst = (Uint16 *)(to);                   \
+        uint16_t *src = (uint16_t *)(from);                 \
+        uint16_t *dst = (uint16_t *)(to);                   \
         Uint32 ALPHA = alpha >> 3;                      \
         for(i = 0; i < (int)(length); i++) {            \
             Uint32 s = *src++;                          \
@@ -167,7 +168,7 @@
             d = (d | d << 16) & 0x03e07c1f;             \
             d += (s - d) * ALPHA >> 5;                  \
             d &= 0x03e07c1f;                            \
-            *dst++ = (Uint16)(d | d >> 16);             \
+            *dst++ = (uint16_t)(d | d >> 16);             \
         }                                               \
     } while(0)
 
@@ -184,8 +185,8 @@
             unsigned rs, gs, bs, rd, gd, bd;                    \
             switch (bpp) {                                      \
             case 2:                                             \
-                s = *(Uint16 *)src;                             \
-                d = *(Uint16 *)dst;                             \
+                s = *(uint16_t *)src;                             \
+                d = *(uint16_t *)dst;                             \
                 break;                                          \
             case 3:                                             \
                 if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {          \
@@ -209,7 +210,7 @@
             PIXEL_FROM_RGB(d, fmt, rd, gd, bd);                 \
             switch (bpp) {                                      \
             case 2:                                             \
-                *(Uint16 *)dst = (Uint16)d;                     \
+                *(uint16_t *)dst = (uint16_t)d;                     \
                 break;                                          \
             case 3:                                             \
                 if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {          \
@@ -262,7 +263,7 @@
     do {                                                        \
         Uint32 s = *src++;                                      \
         Uint32 d = *dst;                                        \
-        *dst++ = (Uint16)((((s & mask) + (d & mask)) >> 1) +    \
+        *dst++ = (uint16_t)((((s & mask) + (d & mask)) >> 1) +    \
                           (s & d & (~mask & 0xffff)));          \
     } while(0)
 
@@ -270,8 +271,8 @@
 #define ALPHA_BLIT16_50(to, from, length, bpp, alpha, mask)     \
     do {                                                        \
         unsigned n = (length);                                  \
-        Uint16 *src = (Uint16 *)(from);                         \
-        Uint16 *dst = (Uint16 *)(to);                           \
+        uint16_t *src = (uint16_t *)(from);                         \
+        uint16_t *dst = (uint16_t *)(to);                           \
         if (((uintptr_t)src ^ (uintptr_t)dst) & 3) {            \
             /* source and destination not in phase, blit one by one */ \
             while (n--)                                         \
@@ -309,7 +310,7 @@
             case 1: blitter(1, Uint8, OPAQUE_BLIT); break;      \
             case 2: blitter(2, Uint8, OPAQUE_BLIT); break;      \
             case 3: blitter(3, Uint8, OPAQUE_BLIT); break;      \
-            case 4: blitter(4, Uint16, OPAQUE_BLIT); break;     \
+            case 4: blitter(4, uint16_t, OPAQUE_BLIT); break;     \
             }                                                   \
         } else {                                                \
             switch (fmt->BytesPerPixel) {                       \
@@ -361,12 +362,12 @@
                     && (fmt->Gmask == 0xff00 || fmt->Rmask == 0xff00 \
                     || fmt->Bmask == 0xff00)) {                 \
                     if (alpha == 128) {                         \
-                        blitter(4, Uint16, ALPHA_BLIT32_888_50); \
+                        blitter(4, uint16_t, ALPHA_BLIT32_888_50); \
                     } else {                                    \
-                        blitter(4, Uint16, ALPHA_BLIT32_888);   \
+                        blitter(4, uint16_t, ALPHA_BLIT32_888);   \
                     }                                           \
                 } else                                          \
-                    blitter(4, Uint16, ALPHA_BLIT_ANY);         \
+                    blitter(4, uint16_t, ALPHA_BLIT_ANY);         \
                 break;                                          \
             }                                                   \
         }                                                       \
@@ -506,7 +507,7 @@ SDL_RLEBlit(SDL_Surface * surf_src, SDL_Rect * srcrect,
                 RLESKIP(3, Uint8);
                 break;
             case 4:
-                RLESKIP(4, Uint16);
+                RLESKIP(4, uint16_t);
                 break;
             }
 
@@ -597,7 +598,7 @@ SDL_RLEBlit(SDL_Surface * surf_src, SDL_Rect * srcrect,
     d = (d | d << 16) & 0x07e0f81f;     \
     d += (s - d) * alpha >> 5;      \
     d &= 0x07e0f81f;            \
-    dst = (Uint16)(d | d >> 16);            \
+    dst = (uint16_t)(d | d >> 16);            \
     } while(0)
 
 #define BLIT_TRANSL_555(src, dst)       \
@@ -609,7 +610,7 @@ SDL_RLEBlit(SDL_Surface * surf_src, SDL_Rect * srcrect,
     d = (d | d << 16) & 0x03e07c1f;     \
     d += (s - d) * alpha >> 5;      \
     d &= 0x03e07c1f;            \
-    dst = (Uint16)(d | d >> 16);            \
+    dst = (uint16_t)(d | d >> 16);            \
     } while(0)
 
 /* used to save the destination format in the encoding. Designed to be
@@ -683,8 +684,8 @@ RLEAlphaClipBlit(int w, Uint8 * srcbuf, SDL_Surface * surf_dst,
         ofs = 0;                              \
         do {                              \
         unsigned run;                         \
-        ofs += ((Uint16 *)srcbuf)[0];                 \
-        run = ((Uint16 *)srcbuf)[1];                  \
+        ofs += ((uint16_t *)srcbuf)[0];                 \
+        run = ((uint16_t *)srcbuf)[1];                  \
         srcbuf += 4;                          \
         if(run) {                         \
             /* clip to left and right borders */          \
@@ -714,12 +715,12 @@ RLEAlphaClipBlit(int w, Uint8 * srcbuf, SDL_Surface * surf_dst,
     switch (df->BytesPerPixel) {
     case 2:
         if (df->Gmask == 0x07e0 || df->Rmask == 0x07e0 || df->Bmask == 0x07e0)
-            RLEALPHACLIPBLIT(Uint16, Uint8, BLIT_TRANSL_565);
+            RLEALPHACLIPBLIT(uint16_t, Uint8, BLIT_TRANSL_565);
         else
-            RLEALPHACLIPBLIT(Uint16, Uint8, BLIT_TRANSL_555);
+            RLEALPHACLIPBLIT(uint16_t, Uint8, BLIT_TRANSL_555);
         break;
     case 4:
-        RLEALPHACLIPBLIT(Uint32, Uint16, BLIT_TRANSL_888);
+        RLEALPHACLIPBLIT(Uint32, uint16_t, BLIT_TRANSL_888);
         break;
     }
 }
@@ -775,8 +776,8 @@ SDL_RLEAlphaBlit(SDL_Surface * surf_src, SDL_Rect * srcrect,
                     ofs = 0;
                     do {
                         int run;
-                        ofs += ((Uint16 *) srcbuf)[0];
-                        run = ((Uint16 *) srcbuf)[1];
+                        ofs += ((uint16_t *) srcbuf)[0];
+                        run = ((uint16_t *) srcbuf)[1];
                         srcbuf += 4 * (run + 1);
                         ofs += run;
                     } while (ofs < w);
@@ -788,8 +789,8 @@ SDL_RLEAlphaBlit(SDL_Surface * surf_src, SDL_Rect * srcrect,
                     ofs = 0;
                     do {
                         int run;
-                        ofs += ((Uint16 *) srcbuf)[0];
-                        run = ((Uint16 *) srcbuf)[1];
+                        ofs += ((uint16_t *) srcbuf)[0];
+                        run = ((uint16_t *) srcbuf)[1];
                         srcbuf += 4;
                         if (run) {
                             srcbuf += 4 * run;
@@ -838,8 +839,8 @@ SDL_RLEAlphaBlit(SDL_Surface * surf_src, SDL_Rect * srcrect,
         ofs = 0;                         \
         do {                             \
             unsigned run;                    \
-            ofs += ((Uint16 *)srcbuf)[0];            \
-            run = ((Uint16 *)srcbuf)[1];             \
+            ofs += ((uint16_t *)srcbuf)[0];            \
+            run = ((uint16_t *)srcbuf)[1];             \
             srcbuf += 4;                     \
             if(run) {                        \
             Ptype *dst = (Ptype *)dstbuf + ofs;      \
@@ -861,12 +862,12 @@ SDL_RLEAlphaBlit(SDL_Surface * surf_src, SDL_Rect * srcrect,
         case 2:
             if (df->Gmask == 0x07e0 || df->Rmask == 0x07e0
                 || df->Bmask == 0x07e0)
-                RLEALPHABLIT(Uint16, Uint8, BLIT_TRANSL_565);
+                RLEALPHABLIT(uint16_t, Uint8, BLIT_TRANSL_565);
             else
-                RLEALPHABLIT(Uint16, Uint8, BLIT_TRANSL_555);
+                RLEALPHABLIT(uint16_t, Uint8, BLIT_TRANSL_555);
             break;
         case 4:
-            RLEALPHABLIT(Uint32, Uint16, BLIT_TRANSL_888);
+            RLEALPHABLIT(Uint32, uint16_t, BLIT_TRANSL_888);
             break;
         }
     }
@@ -895,7 +896,7 @@ copy_opaque_16(void *dst, Uint32 * src, int n,
                SDL_PixelFormat * sfmt, SDL_PixelFormat * dfmt)
 {
     int i;
-    Uint16 *d = dst;
+    uint16_t *d = dst;
     for (i = 0; i < n; i++) {
         unsigned r, g, b;
         RGB_FROM_PIXEL(*src, sfmt, r, g, b);
@@ -912,7 +913,7 @@ uncopy_opaque_16(Uint32 * dst, void *src, int n,
                  RLEDestFormat * sfmt, SDL_PixelFormat * dfmt)
 {
     int i;
-    Uint16 *s = src;
+    uint16_t *s = src;
     unsigned alpha = dfmt->Amask ? 255 : 0;
     for (i = 0; i < n; i++) {
         unsigned r, g, b;
@@ -935,7 +936,7 @@ copy_transl_565(void *dst, Uint32 * src, int n,
     Uint32 *d = dst;
     for (i = 0; i < n; i++) {
         unsigned r, g, b, a;
-        Uint16 pix;
+        uint16_t pix;
         RGBA_FROM_8888(*src, sfmt, r, g, b, a);
         PIXEL_FROM_RGB(pix, dfmt, r, g, b);
         *d = ((pix & 0x7e0) << 16) | (pix & 0xf81f) | ((a << 2) & 0x7e0);
@@ -954,7 +955,7 @@ copy_transl_555(void *dst, Uint32 * src, int n,
     Uint32 *d = dst;
     for (i = 0; i < n; i++) {
         unsigned r, g, b, a;
-        Uint16 pix;
+        uint16_t pix;
         RGBA_FROM_8888(*src, sfmt, r, g, b, a);
         PIXEL_FROM_RGB(pix, dfmt, r, g, b);
         *d = ((pix & 0x3e0) << 16) | (pix & 0xfc1f) | ((a << 2) & 0x3e0);
@@ -1127,8 +1128,8 @@ RLEAlphaSurface(SDL_Surface * surface)
         /* opaque counts are 8 or 16 bits, depending on target depth */
 #define ADD_OPAQUE_COUNTS(n, m)         \
     if(df->BytesPerPixel == 4) {        \
-        ((Uint16 *)dst)[0] = n;     \
-        ((Uint16 *)dst)[1] = m;     \
+        ((uint16_t *)dst)[0] = n;     \
+        ((uint16_t *)dst)[1] = m;     \
         dst += 4;               \
     } else {                \
         dst[0] = n;             \
@@ -1138,7 +1139,7 @@ RLEAlphaSurface(SDL_Surface * surface)
 
         /* translucent counts are always 16 bit */
 #define ADD_TRANSL_COUNTS(n, m)     \
-    (((Uint16 *)dst)[0] = n, ((Uint16 *)dst)[1] = m, dst += 4)
+    (((uint16_t *)dst)[0] = n, ((uint16_t *)dst)[1] = m, dst += 4)
 
         for (y = 0; y < h; y++) {
             int runstart, skipstart;
@@ -1246,7 +1247,7 @@ getpix_8(Uint8 * srcbuf)
 static Uint32
 getpix_16(Uint8 * srcbuf)
 {
-    return *(Uint16 *) srcbuf;
+    return *(uint16_t *) srcbuf;
 }
 
 static Uint32
@@ -1322,8 +1323,8 @@ RLEColorkeySurface(SDL_Surface * surface)
 
 #define ADD_COUNTS(n, m)            \
     if(bpp == 4) {              \
-        ((Uint16 *)dst)[0] = n;     \
-        ((Uint16 *)dst)[1] = m;     \
+        ((uint16_t *)dst)[0] = n;     \
+        ((uint16_t *)dst)[1] = m;     \
         dst += 4;               \
     } else {                \
         dst[0] = n;             \
@@ -1502,8 +1503,8 @@ UnRLEAlpha(SDL_Surface * surface)
                 run = srcbuf[1];
                 srcbuf += 2;
             } else {
-                ofs += ((Uint16 *) srcbuf)[0];
-                run = ((Uint16 *) srcbuf)[1];
+                ofs += ((uint16_t *) srcbuf)[0];
+                run = ((uint16_t *) srcbuf)[1];
                 srcbuf += 4;
             }
             if (run) {
@@ -1521,8 +1522,8 @@ UnRLEAlpha(SDL_Surface * surface)
         ofs = 0;
         do {
             unsigned run;
-            ofs += ((Uint16 *) srcbuf)[0];
-            run = ((Uint16 *) srcbuf)[1];
+            ofs += ((uint16_t *) srcbuf)[0];
+            run = ((uint16_t *) srcbuf)[1];
             srcbuf += 4;
             if (run) {
                 srcbuf += uncopy_transl(dst + ofs, srcbuf, run, df, sf);

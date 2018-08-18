@@ -24,10 +24,11 @@
 // by Mark Broadhead 
 // based, in part, on information by Jeff Kulczycki
 //
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -290,7 +291,7 @@ void thayers::do_nmi()
 }
 
 // reads a byte from the cpu's memory
-Uint8 thayers::cpu_mem_read(Uint16 addr)
+Uint8 thayers::cpu_mem_read(uint16_t addr)
 {
 	if (addr == 0xbe17) // CHEAT - We need this since the CPU isn't recieving status from the COP420
 		return 0x01;
@@ -299,13 +300,13 @@ Uint8 thayers::cpu_mem_read(Uint16 addr)
 }
 
 // writes a byte to the cpu's memory
-void thayers::cpu_mem_write(Uint16 addr, Uint8 value)
+void thayers::cpu_mem_write(uint16_t addr, Uint8 value)
 {
 	m_cpumem[addr] = value;
 }
 
 // reads a byte from the cpu's port
-Uint8 thayers::port_read(Uint16 port)
+Uint8 thayers::port_read(uint16_t port)
 {
 	Uint8 result = 0;
 
@@ -365,7 +366,7 @@ Uint8 thayers::port_read(Uint16 port)
 }
 
 // writes a byte to the cpu's port
-void thayers::port_write(Uint16 port, Uint8 value)
+void thayers::port_write(uint16_t port, Uint8 value)
 {
 	char s[81] = { 0 };
 

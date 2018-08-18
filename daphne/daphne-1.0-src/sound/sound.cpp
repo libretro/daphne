@@ -24,6 +24,7 @@
 // DAPHNE
 // The sound code in this file uses SDL
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -66,8 +67,8 @@ void (*g_soundmix_callback)(Uint8* stream, int length) = mixNone;
 //  but now it can be changed from the command line
 // RJS HERE - default buffer samples here, needs ntsc/pal calculation
 // 2017.09.18 - RJS - This needs to be calculated for PAL (/50) or (/60).
-// APK Uint16 g_u16SoundBufSamples = 2048;
-Uint16 g_u16SoundBufSamples = 44100 / 60;
+// APK uint16_t g_u16SoundBufSamples = 2048;
+uint16_t g_u16SoundBufSamples = 44100 / 60;
 
 // # of bytes each individual sound chip should be allocated for its buffer
 unsigned int g_uSoundChipBufSize = g_u16SoundBufSamples * AUDIO_BYTES_PER_SAMPLE;
@@ -95,7 +96,7 @@ void set_sound_mute(bool bMuted)
 }
 // end edit
 
-void set_soundbuf_size(Uint16 newbufsize)
+void set_soundbuf_size(uint16_t newbufsize)
 {
 	g_u16SoundBufSamples = newbufsize;
 	g_uSoundChipBufSize = newbufsize * AUDIO_BYTES_PER_SAMPLE;
@@ -120,7 +121,7 @@ bool sound_init()
 	bool result = false;
 	int audio_rate = AUDIO_FREQ; // rate to mix audio at.  This cannot be changed without resampling all .wav's and all .ogg's
 	
-	Uint16 audio_format = AUDIO_FORMAT;
+	uint16_t audio_format = AUDIO_FORMAT;
 	int audio_channels = AUDIO_CHANNELS;
 	
 	printline("Initializing sound system ... ");
@@ -565,7 +566,7 @@ void mixWithMaxVolume(Uint8 *stream, int length)
 		DO_CLIP(mixed_sample_2);
 
 		// note: sample2 needs to be on top because this is little endian, hence LSB
-		Uint32 val_to_store = (((Uint16) mixed_sample_2) << 16) | (Uint16) mixed_sample_1;
+		Uint32 val_to_store = (((uint16_t) mixed_sample_2) << 16) | (uint16_t) mixed_sample_1;
 
 		STORE_LIL_UINT32(stream, val_to_store);
 		stream += 4;
@@ -598,7 +599,7 @@ void mixWithMults(Uint8 *stream, int length)
 		DO_CLIP(mixed_sample_1);
 		DO_CLIP(mixed_sample_2);
 
-		Uint32 val_to_store = (((Uint16) mixed_sample_2) << 16) | (Uint16) mixed_sample_1;
+		Uint32 val_to_store = (((uint16_t) mixed_sample_2) << 16) | (uint16_t) mixed_sample_1;
 		STORE_LIL_UINT32(stream, val_to_store);
 		stream += 4;
 	}

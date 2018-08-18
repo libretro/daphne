@@ -23,10 +23,11 @@
 // firefox.cpp
 // by Mark Broadhead
 //
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <string.h>
 #include "firefox.h"
 #include "../cpu/cpu.h"
@@ -230,7 +231,7 @@ void firefox::do_firq()
 	m_bFIRQLatch = true;
 }
 
-Uint8 firefox::cpu_mem_read(Uint16 addr)
+Uint8 firefox::cpu_mem_read(uint16_t addr)
 {
 //	char s[81] = {0};
 
@@ -360,7 +361,7 @@ Uint8 firefox::cpu_mem_read(Uint16 addr)
 	return result;
 }
 
-void firefox::cpu_mem_write(Uint16 addr, Uint8 value)
+void firefox::cpu_mem_write(uint16_t addr, Uint8 value)
 {
 	char s[81] = {0};
 

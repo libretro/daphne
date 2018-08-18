@@ -18,6 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include <stdint.h>
 #include "../SDL_internal.h"
 
 /* WAVE files are little-endian */
@@ -48,12 +49,12 @@ typedef struct WaveFMT
     Uint32  FMTchunk;
     Uint32  fmtlen;
 */
-    Uint16 encoding;
-    Uint16 channels;            /* 1 = mono, 2 = stereo */
+    uint16_t encoding;
+    uint16_t channels;            /* 1 = mono, 2 = stereo */
     Uint32 frequency;           /* One of 11025, 22050, or 44100 Hz */
     Uint32 byterate;            /* Average bytes per second */
-    Uint16 blockalign;          /* Bytes per sample block */
-    Uint16 bitspersample;       /* One of 8, 12, 16, or 4 for ADPCM */
+    uint16_t blockalign;          /* Bytes per sample block */
+    uint16_t bitspersample;       /* One of 8, 12, 16, or 4 for ADPCM */
 } WaveFMT;
 
 /* The general chunk found in the WAVE file */

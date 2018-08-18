@@ -22,14 +22,15 @@
 
 // PR-8210.h
 
-#include <SDL.h>	// for Uint16
+#include <stdint.h>
+#include <SDL.h>
 
 int get_pr8210_playing();
 void pr8210_command(unsigned int);
 void pr8210_audio1();
 void pr8210_audio2();
 void pr8210_seek();
-Uint16 pr8210_get_current_frame();
+uint16_t pr8210_get_current_frame();
 void pr8210_add_digit(char);
 void pr8210_reset();
 

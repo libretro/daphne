@@ -18,6 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include <stdint.h>
 #include "../SDL_internal.h"
 
 #include "SDL_video.h"
@@ -124,7 +125,7 @@ SDL_FillRect1SSE(Uint8 *pixels, int pitch, Uint32 color, int w, int h)
     SSE_END;
 }
 /* DEFINE_SSE_FILLRECT(1, Uint8) */
-DEFINE_SSE_FILLRECT(2, Uint16)
+DEFINE_SSE_FILLRECT(2, uint16_t)
 DEFINE_SSE_FILLRECT(4, Uint32)
 
 /* *INDENT-ON* */
@@ -173,21 +174,21 @@ static void
 SDL_FillRect2(Uint8 * pixels, int pitch, Uint32 color, int w, int h)
 {
     int n;
-    Uint16 *p = NULL;
+    uint16_t *p = NULL;
     
     while (h--) {
         n = w;
-        p = (Uint16 *) pixels;
+        p = (uint16_t *) pixels;
 
         if (n > 1) {
             if ((uintptr_t) p & 2) {
-                *p++ = (Uint16) color;
+                *p++ = (uint16_t) color;
                 --n;
             }
             SDL_memset4(p, color, (n >> 1));
         }
         if (n & 1) {
-            p[n - 1] = (Uint16) color;
+            p[n - 1] = (uint16_t) color;
         }
         pixels += pitch;
     }

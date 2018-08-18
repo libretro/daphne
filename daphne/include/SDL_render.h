@@ -48,6 +48,8 @@
 #ifndef _SDL_render_h
 #define _SDL_render_h
 
+#include <stdint.h>
+
 #include "SDL_stdinc.h"
 #include "SDL_rect.h"
 #include "SDL_video.h"
@@ -76,7 +78,7 @@ struct SDL_SW_YUVTexture
 		int rows, int cols, int mod);
 
 	/* These are just so we don't have to allocate them separately */
-	Uint16 pitches[3];
+	uint16_t pitches[3];
 	Uint8 *planes[3];
 
 	/* This is a temporary surface in case we have to stretch copy */

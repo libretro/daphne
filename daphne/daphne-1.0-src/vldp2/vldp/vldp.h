@@ -30,6 +30,7 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
 #include <SDL.h>	// only used for threading
 
 // RJS START - hack so I don't have to change an entire routine
@@ -37,7 +38,7 @@ struct SDL1_Overlay
 {
 	int	h;
 	int	w;
-	Uint16	pitches;
+	uint16_t	pitches;
 	Uint8	*pixels;
 };
 // RJS END
@@ -132,18 +133,18 @@ struct vldp_out_info
 	//  (for the purpose of simulating laserdisc seek delay)
 	// returns immediately, but search is not complete until 'status' is STAT_PAUSED
 	// returns 1 if command was acknowledged, or 0 if we timed out w/o getting acknowlegement
-	int (*search)(Uint16 frame, Uint32 min_seek_ms);
+	int (*search)(uint16_t frame, Uint32 min_seek_ms);
 	
 	// like search except it blocks until the search is complete
 	// 'min_seek_ms' is the minimum # of milliseconds that this seek must take
 	//  (for the purpose of simulating laserdisc seek delay)
 	// returns 1 if search succeeded, 2 if search is still going, 0 if search failed
 	// (so does not do true blocking, we could change this later)
-	int (*search_and_block)(Uint16 frame, Uint32 min_seek_ms);
+	int (*search_and_block)(uint16_t frame, Uint32 min_seek_ms);
 	
 	// skips to 'frame' and immediately begins playing.
 	// the mpeg is required to be playing before skip is called, because we accept no new timer as reference
-	int (*skip)(Uint16 frame);
+	int (*skip)(uint16_t frame);
 	
 	// pauses mpeg playback
 	int (*pause)();

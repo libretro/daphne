@@ -26,6 +26,7 @@
 #pragma warning (disable:4996)
 #endif
 
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include "vldp.h"
@@ -48,7 +49,7 @@ Uint8 g_req_cmdORcount = CMDORCOUNT_INITIAL;	// the current command parent threa
 unsigned int g_ack_count = ACK_COUNT_INITIAL;	// the result returned by the internal child thread
 char g_req_file[STRSIZE];	// requested mpeg filename
 Uint32 g_req_timer = 0;	// requests timer value to be used for mpeg playback
-Uint16 g_req_frame = 0;		// requested frame to search to
+uint16_t g_req_frame = 0;		// requested frame to search to
 Uint32 g_req_min_seek_ms = 0;	// seek must take at least this many milliseconds (simulate laserdisc seek delay)
 unsigned int g_req_precache = VLDP_FALSE;	// whether g_req_idx has any meaning
 unsigned int g_req_idx = 0;	// multipurpose index (used by precaching)
@@ -229,7 +230,7 @@ VLDP_BOOL vldp_precache(const char *filename)
 
 // issues search command and returns immediately to parent thread.
 // Search will not be complete until the VLDP status is STAT_PAUSED
-int vldp_search(Uint16 frame, Uint32 min_seek_ms)
+int vldp_search(uint16_t frame, Uint32 min_seek_ms)
 {
 	int result = 0;
 
@@ -243,7 +244,7 @@ int vldp_search(Uint16 frame, Uint32 min_seek_ms)
 }
 
 // issues search command blocks until search is complete
-int vldp_search_and_block(Uint16 frame, Uint32 min_seek_ms)
+int vldp_search_and_block(uint16_t frame, Uint32 min_seek_ms)
 {
 	int result = 0;
 
@@ -270,7 +271,7 @@ int vldp_play(Uint32 timer)
 	return(result);
 }
 
-int vldp_skip(Uint16 frame)
+int vldp_skip(uint16_t frame)
 {
 	int result = 0;
 

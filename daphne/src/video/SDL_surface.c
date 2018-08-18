@@ -18,6 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include <stdint.h>
 #include <math.h>
 #include "../SDL_internal.h"
 
@@ -290,13 +291,13 @@ SDL_ConvertColorkeyToAlpha(SDL_Surface * surface)
     switch (surface->format->BytesPerPixel) {
     case 2:
         {
-            Uint16 *row, *spot;
-            Uint16 ckey = (Uint16) surface->map->info.colorkey;
-            Uint16 mask = (Uint16) (~surface->format->Amask);
+            uint16_t *row, *spot;
+            uint16_t ckey = (uint16_t) surface->map->info.colorkey;
+            uint16_t mask = (uint16_t) (~surface->format->Amask);
 
             /* Ignore alpha in colorkey comparison */
             ckey &= mask;
-            row = (Uint16 *) surface->pixels;
+            row = (uint16_t *) surface->pixels;
             for (y = surface->h; y--;) {
                 spot = row;
                 for (x = surface->w; x--;) {

@@ -24,6 +24,8 @@
 #ifndef VP932_H
 #define VP932_H
 
+#include <stdint.h>
+
 // these functions are the only ones to be called externally
 void vp932_write(Uint8 data);	// write a byte to the vp932
 Uint8 vp932_read();	// read a byte from the vp932

@@ -31,11 +31,11 @@
 //
 // all games (except for ROM revisions D and earlier of Dragon's Lair) can also use an LD-V1000,
 // which is preferred due to lower latency and better reporting of status information.
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
-
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -47,7 +47,7 @@
 
 bool g_pr7820_ready = 1;	// The /READY line on player interface, not ready while stopped
 
-Uint16 g_pr7820_autostop_frame = 0;	// which frame we need to stop on (if any)
+uint16_t g_pr7820_autostop_frame = 0;	// which frame we need to stop on (if any)
 
 // whether a non-blocking search is pending
 bool g_bPR7820SearchPending = false;
@@ -132,7 +132,7 @@ void write_pr7820 (unsigned char value)
 
 	char s[81] = { 0 };
 	//	char f[81] = { 0 };
-	//	Uint16 curframe = 0;	// current frame we're on
+	//	uint16_t curframe = 0;	// current frame we're on
 
 	//	sprintf(s, "pr7820 : sent a %x", value);
 	//	printline(s);
@@ -356,10 +356,10 @@ void pr7820_pre_audio2()
 }
 
 // returns the frame that has been entered in by add_digit thus far
-Uint16 pr7820_get_buffered_frame()
+uint16_t pr7820_get_buffered_frame(void)
 {
 	pr7820_frame[pr7820_frame_index] = 0;	// terminate string
-	return ((Uint16) atoi(pr7820_frame));
+	return ((uint16_t) atoi(pr7820_frame));
 }
 
 // clears any received digits from the frame array

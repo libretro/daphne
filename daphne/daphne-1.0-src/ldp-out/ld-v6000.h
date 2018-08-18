@@ -23,6 +23,8 @@
 #ifndef V6000_H
 #define V6000_H
 
+#include <stdint.h>
+
 #include "ldp.h"
 
 class v6000 : public ldp
@@ -33,7 +35,7 @@ public:
 //	bool search(char *);
 	bool nonblocking_search(char *frame);
 	int get_search_result();
-	bool skip_forward(Uint16, Uint16);
+	bool skip_forward(uint16_t, uint16_t);
 	unsigned int play();
 	void pause();
 	void stop();

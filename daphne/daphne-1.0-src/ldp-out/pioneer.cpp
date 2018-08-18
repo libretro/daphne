@@ -27,11 +27,12 @@
 // ones (such as the LD-V1000 hehe, piece of trash)
 
 // written by Matt Ownby, "Ace64", and Mark Broadhead
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #define _CRT_NONSTDC_NO_DEPRECATE 1
 #endif
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>	// for atoi
 #include <string.h>
@@ -275,7 +276,7 @@ void pioneer::stop()
 
 
 // returns current frame # pioneer player is on
-Uint16 pioneer::get_real_current_frame()
+uint16_t pioneer::get_real_current_frame()
 {
 	char s[81] = { 0 };
 	bool gotframe = false;
@@ -285,7 +286,7 @@ Uint16 pioneer::get_real_current_frame()
 
 	gotframe = getstring(s, 80, 3000, true);
 	
-	return(static_cast<Uint16>(atoi(s)));
+	return(static_cast<uint16_t>(atoi(s)));
 }
 
 
@@ -365,7 +366,7 @@ bool pioneer::getstring(char *s, int length, Uint32 timeout, bool watchquit)
 // Pioneer skip_forward
 // Only the 4400 and 8000 support this feature 
 // Tests if player can skip_forward and if can't uses the generic search function
-bool pioneer::skip_forward(Uint16 frames_to_skip, Uint16 target_frame)
+bool pioneer::skip_forward(uint16_t frames_to_skip, uint16_t target_frame)
 {
 	bool result = false;
 	char frame[6] = {0};

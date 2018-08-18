@@ -30,6 +30,7 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>	// for atoi
 #include <string.h>	// memset, strcpy
@@ -122,7 +123,7 @@ void vp932_process_command()
 	printline(s);
 	vp932_command[vp932_command_pointer] = 0;
 	printline((const char*)vp932_command);
-	Uint16 current_frame = 0;
+	uint16_t current_frame = 0;
 	char frame_string[6];
 
 	switch (vp932_command[0])

@@ -18,6 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include <stdint.h>
 #include "../SDL_internal.h"
 
 /*
@@ -104,16 +105,16 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
     /* The Win32 BMP file header (14 bytes) */
     char magic[2];
     /* Uint32 bfSize = 0; */
-    /* Uint16 bfReserved1 = 0; */
-    /* Uint16 bfReserved2 = 0; */
+    /* uint16_t bfReserved1 = 0; */
+    /* uint16_t bfReserved2 = 0; */
     Uint32 bfOffBits = 0;
 
     /* The Win32 BITMAPINFOHEADER struct (40 bytes) */
     Uint32 biSize = 0;
     Sint32 biWidth = 0;
     Sint32 biHeight = 0;
-    /* Uint16 biPlanes = 0; */
-    Uint16 biBitCount = 0;
+    /* uint16_t biPlanes = 0; */
+    uint16_t biBitCount = 0;
     Uint32 biCompression = 0;
     /* Uint32 biSizeImage = 0; */
     /* Sint32 biXPelsPerMeter = 0; */
@@ -407,7 +408,7 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
             switch (biBitCount) {
             case 15:
             case 16:{
-                    Uint16 *pix = (Uint16 *) bits;
+                    uint16_t *pix = (uint16_t *) bits;
                     for (i = 0; i < surface->w; i++)
                         pix[i] = SDL_Swap16(pix[i]);
                     break;

@@ -177,7 +177,7 @@ extern DECLSPEC void SDLCALL SDL_FreeRW(SDL_RWops * area);
  *  Read an item of the specified endianness and return in native format.
  */
 /* @{ */
-extern DECLSPEC Uint16 SDLCALL SDL_ReadLE16(SDL_RWops * src);
+extern DECLSPEC uint16_t SDLCALL SDL_ReadLE16(SDL_RWops * src);
 extern DECLSPEC Uint32 SDLCALL SDL_ReadLE32(SDL_RWops * src);
 extern DECLSPEC uint64_t SDLCALL SDL_ReadLE64(SDL_RWops * src);
 /* @} *//* Read endian functions */

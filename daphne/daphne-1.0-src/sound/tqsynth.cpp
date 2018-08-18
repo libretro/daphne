@@ -26,10 +26,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -1945,7 +1946,7 @@ struct this_type_doesnt_matter
 } au_spec = { {0} };
 
 // Initialize startup parameters for synthesizer and audio.
-void tqsynth_init(int freq, Uint16 format, int channels, long base_F0)
+void tqsynth_init(int freq, uint16_t format, int channels, long base_F0)
 {
     double mSec_per_frame = 10;
 

@@ -24,11 +24,13 @@
 * This is SINGE - the Somewhat Interactive Nostalgic Game Engine!
 */
 
+#include <stdint.h>
+
 #include "singe.h"
 #include "singe/singe_interface.h"
 
 // Win32 doesn't use strcasecmp, it uses stricmp (lame)
-#ifdef WIN32
+#ifdef _WIN32
 #define strcasecmp stricmp
 #endif
 
@@ -170,7 +172,7 @@ void singe::input_disable(Uint8 input)
 	g_pSingeOut->sep_call_lua("onInputReleased", "i", input);
 }
 
-void singe::OnMouseMotion(Uint16 x, Uint16 y, Sint16 xrel, Sint16 yrel)
+void singe::OnMouseMotion(uint16_t x, uint16_t y, Sint16 xrel, Sint16 yrel)
 {
 	if (g_pSingeOut)
 	{

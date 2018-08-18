@@ -1,10 +1,12 @@
 #ifndef M80DAA_H
 #define M80DAA_H
 
+#include <stdint.h>
+
 ///////////////////////////////////////////////////////////
 
 // Special Thanx to Juergen Buchmueller for this table
-Uint16 daa_table[0x800] =
+uint16_t daa_table[0x800] =
 {
   (0x00<<8)   +Z_FLAG         +V_FLAG      ,
   (0x01<<8)                        ,

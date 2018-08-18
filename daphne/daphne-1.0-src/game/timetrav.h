@@ -25,6 +25,7 @@
 #ifndef TIMETRAV_H
 #define TIMETRAV_H
 
+#include <stdint.h>
 #include "game.h"
 
 #define TIMETRAV_CPU_HZ 5000000		// speed of cpu (5 MHz ?)
@@ -36,8 +37,8 @@ public:
 	void do_nmi();
 	Uint8 cpu_mem_read(Uint32 addr);
 	void cpu_mem_write(Uint32 addr, Uint8 value);
-	Uint8 port_read(Uint16);
-	void port_write(Uint16, Uint8);
+	Uint8 port_read(uint16_t);
+	void port_write(uint16_t, Uint8);
 	void input_enable(Uint8);
 	void input_disable(Uint8);
 	bool set_bank(unsigned char, unsigned char);

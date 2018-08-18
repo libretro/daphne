@@ -28,6 +28,8 @@
 #ifndef _SDL_keyboard_h
 #define _SDL_keyboard_h
 
+#include <stdint.h>
+
 #include "SDL_stdinc.h"
 #include "SDL_error.h"
 #include "SDL_keycode.h"
@@ -48,7 +50,7 @@ typedef struct SDL_Keysym
 {
     SDL_Scancode scancode;      /**< SDL physical key code - see ::SDL_Scancode for details */
     SDL_Keycode sym;            /**< SDL virtual key code - see ::SDL_Keycode for details */
-    Uint16 mod;                 /**< current key modifiers */
+    uint16_t mod;                 /**< current key modifiers */
     Uint32 unused;
 } SDL_Keysym;
 

@@ -19,6 +19,7 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 /* Need this so Linux systems define fseek64o, ftell64o and off64_t */
+#include <stdint.h>
 #define _LARGEFILE64_SOURCE
 #include "../SDL_internal.h"
 
@@ -580,10 +581,9 @@ SDL_FreeRW(SDL_RWops * area)
 
 /* Functions for dynamically reading and writing endian-specific values */
 
-Uint16
-SDL_ReadLE16(SDL_RWops * src)
+uint16_t SDL_ReadLE16(SDL_RWops * src)
 {
-    Uint16 value = 0;
+    uint16_t value = 0;
 
     SDL_RWread(src, &value, sizeof (value), 1);
     return SDL_SwapLE16(value);

@@ -26,7 +26,7 @@
 // handles the audio portion of VLDP (using Ogg Vorbis)
 #include <stdint.h>
 
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #pragma warning (disable:4100)	// disable the warning about unreferenced formal parameters (MSVC++)
 #endif
@@ -228,7 +228,7 @@ static void *audiocopy_mute(void *dest, const void *src, size_t bytes_to_copy)
 static void *audiocopy_left_only(void *dest, const void *src, size_t bytes_to_copy)
 {
 	Uint32 *dst32 = (Uint32 *) dest;
-	Uint16 *src16_L = (Uint16 *) src;	// point to first bit of left-channel data
+	uint16_t *src16_L = (uint16_t *) src;	// point to first bit of left-channel data
 
 	bytes_to_copy >>= 2;	// divide by 4 because we will be advancing 4 bytes per iteration
 	for (unsigned int index = 0; index < bytes_to_copy; index++)
@@ -244,7 +244,7 @@ static void *audiocopy_left_only(void *dest, const void *src, size_t bytes_to_co
 static void *audiocopy_right_only(void *dest, const void *src, size_t bytes_to_copy)
 {
 	Uint32 *dst32 = (Uint32 *) dest;
-	Uint16 *src16_R = (Uint16 *) src + 1;	// point to the first bit of data that occurs on the right channel
+	uint16_t *src16_R = (uint16_t *) src + 1;	// point to the first bit of data that occurs on the right channel
 
 	bytes_to_copy >>= 2;	// divide by 4 because we will be advancing 4 bytes per iteration
 	for (unsigned int index = 0; index < bytes_to_copy; index++)

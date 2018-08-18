@@ -25,10 +25,11 @@
 // Controls newer Philips laserdisc players
 // written by Matt Ownby
 // thanks to Matteo Marioni for the command protocol information
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_NONSTDC_NO_DEPRECATE 1
 #endif
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>	// for atoi
 #include <string.h>
@@ -144,15 +145,15 @@ int philips::get_search_result()
 // skips forward 'frames_to_skip' from current position
 // WARNING: This command seems to be inaccurate as it does not work correctly for Super Don
 // so it is commented out until someone can figure out what's wrong and fix it
-bool philips::skip_forward(Uint16 frames_to_skip)
+bool philips::skip_forward(uint16_t frames_to_skip)
 {
 
 	int i = 0;
-	Uint16 cur_frame = get_current_frame();
+	uint16_t cur_frame = get_current_frame();
 	bool success = true;
 	char frame_ascii[5];
 
-	cur_frame = (Uint16) (cur_frame + frames_to_skip);
+	cur_frame = (uint16_t) (cur_frame + frames_to_skip);
 	sprintf(frame_ascii, "%05d", cur_frame);
 
 	serial_rxflush();	// clear receive buffer
@@ -306,7 +307,7 @@ void philips::disable_audio2()
 
 // returns the actual current frame
 // This is not fast enough to be used in some games like Super Don
-Uint16 philips::get_real_current_frame()
+uint16_t philips::get_real_current_frame()
 {
 	char s[81] = { 0 };
 	
@@ -315,5 +316,5 @@ Uint16 philips::get_real_current_frame()
 	
 	getstring(s, 80, 1000, true);	// get result
 	
-	return((Uint16) atoi(&s[1]));	// first character is an F, followed by the frame
+	return((uint16_t) atoi(&s[1]));	// first character is an F, followed by the frame
 }

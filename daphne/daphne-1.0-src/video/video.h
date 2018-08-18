@@ -26,6 +26,8 @@
 #ifndef BITMAP_H
 #define BITMAP_H
 
+#include <stdint.h>
+
 #include <SDL.h>
 
 #define LED_RANGE 17 //16 is normal, the 17th is for the 'A' in SAE
@@ -77,10 +79,10 @@ SDL_Surface *get_screen();
 SDL_Surface *get_screen_blitter();
 
 void set_sboverlay_characterset(int value);
-Uint16 get_video_width();
-void set_video_width(Uint16);
-Uint16 get_video_height();
-void set_video_height(Uint16);
+uint16_t get_video_width();
+void set_video_width(uint16_t);
+uint16_t get_video_height();
+void set_video_height(uint16_t);
 void draw_string(const char*, int, int, SDL_Surface*);
 
 void set_force_aspect_ratio(bool bEnabled);

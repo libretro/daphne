@@ -36,6 +36,7 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <string.h>
 #include "lgp.h"
 #include "../io/conout.h"
@@ -139,7 +140,7 @@ void lgp::do_nmi()
 }
 
 // reads a byte from the cpu's memory
-Uint8 lgp::cpu_mem_read(Uint16 addr)
+Uint8 lgp::cpu_mem_read(uint16_t addr)
 {
 	
    Uint8 result = 0;
@@ -222,7 +223,7 @@ Uint8 lgp::cpu_mem_read(Uint16 addr)
 }
 
 // writes a byte to the cpu's memory
-void lgp::cpu_mem_write(Uint16 addr, Uint8 value)
+void lgp::cpu_mem_write(uint16_t addr, Uint8 value)
 {
 	char s[81] = { 0 };
 
@@ -338,7 +339,7 @@ void lgp::cpu_mem_write(Uint16 addr, Uint8 value)
 }
 
 // reads a byte from the cpu's port
-Uint8 lgp::port_read(Uint16 port)
+Uint8 lgp::port_read(uint16_t port)
 {
 //	char s[81] = { 0 };
 
@@ -358,7 +359,7 @@ Uint8 lgp::port_read(Uint16 port)
 }
 
 // writes a byte to the cpu's port
-void lgp::port_write(Uint16 port, Uint8 value)
+void lgp::port_write(uint16_t port, Uint8 value)
 {
 //	char s[81] = { 0 };
 

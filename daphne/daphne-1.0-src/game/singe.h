@@ -20,6 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <stdint.h>
+
 #include "../daphne.h"           // for get_quitflag
 #include "game.h"
 #include "../io/conout.h"
@@ -47,7 +49,7 @@ public:
 	void shutdown();
 	void input_enable(Uint8);
 	void input_disable(Uint8);
-	void OnMouseMotion(Uint16 x, Uint16 y, Sint16 xrel, Sint16 yrel);
+	void OnMouseMotion(uint16_t x, uint16_t y, Sint16 xrel, Sint16 yrel);
 	bool handle_cmdline_arg(const char *arg);
 	void palette_calculate();
 	void video_repaint();
@@ -74,9 +76,9 @@ public:
 	{
 		return g_ldp->pre_search(cpszFrame, block_until_search_finished);
 	}
-	static void framenum_to_frame(Uint16 u16Frame, char *pszFrame) { g_ldp->framenum_to_frame(u16Frame, pszFrame); }
-	static bool pre_skip_forward(Uint16 u16Frames) { return g_ldp->pre_skip_forward(u16Frames); }
-	static bool pre_skip_backward(Uint16 u16Frames) { return g_ldp->pre_skip_backward(u16Frames); }
+	static void framenum_to_frame(uint16_t u16Frame, char *pszFrame) { g_ldp->framenum_to_frame(u16Frame, pszFrame); }
+	static bool pre_skip_forward(uint16_t u16Frames) { return g_ldp->pre_skip_forward(u16Frames); }
+	static bool pre_skip_backward(uint16_t u16Frames) { return g_ldp->pre_skip_backward(u16Frames); }
 	static void pre_step_forward() { g_ldp->pre_step_forward(); }
 	static void pre_step_backward() { g_ldp->pre_step_backward(); }
 

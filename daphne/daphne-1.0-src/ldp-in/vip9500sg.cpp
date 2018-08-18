@@ -28,10 +28,11 @@
 //
 // This code emulates the Hitachi VIP-9550SG laserdisc player which is used in
 //  Astron Belt, Galaxy Ranger, and others running on the same hardware
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -240,7 +241,7 @@ void vip9500sg_enter(void)
 		// TODO: check for skip failure
 		vip9500sg_frame[vip9500sg_frame_index] = 0;
 
-		Uint16 frames_to_skip = (Uint16) atoi(vip9500sg_frame);
+		uint16_t frames_to_skip = (uint16_t) atoi(vip9500sg_frame);
 		
 		g_ldp->pre_skip_forward(frames_to_skip);
 		

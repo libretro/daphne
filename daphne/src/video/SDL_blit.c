@@ -18,6 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include <stdint.h>
 #include "../SDL_internal.h"
 
 #include "SDL_video.h"
@@ -66,16 +67,16 @@ SDL_SoftBlit(SDL_Surface * src, SDL_Rect * srcrect,
 
         /* Set up the blit information */
         info->src = (Uint8 *) src->pixels +
-            (Uint16) srcrect->y * src->pitch +
-            (Uint16) srcrect->x * info->src_fmt->BytesPerPixel;
+            (uint16_t) srcrect->y * src->pitch +
+            (uint16_t) srcrect->x * info->src_fmt->BytesPerPixel;
         info->src_w = srcrect->w;
         info->src_h = srcrect->h;
         info->src_pitch = src->pitch;
         info->src_skip =
             info->src_pitch - info->src_w * info->src_fmt->BytesPerPixel;
         info->dst =
-            (Uint8 *) dst->pixels + (Uint16) dstrect->y * dst->pitch +
-            (Uint16) dstrect->x * info->dst_fmt->BytesPerPixel;
+            (Uint8 *) dst->pixels + (uint16_t) dstrect->y * dst->pitch +
+            (uint16_t) dstrect->x * info->dst_fmt->BytesPerPixel;
         info->dst_w = dstrect->w;
         info->dst_h = dstrect->h;
         info->dst_pitch = dst->pitch;

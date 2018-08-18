@@ -23,6 +23,7 @@
 // badlands.h
 // by Mark Broadhead
 
+#include <stdint.h>
 #include "game.h"
 
 #define BEGA_OVERLAY_W 256	// width of overlay
@@ -48,8 +49,8 @@ public:
 	bega();
 	void do_nmi();		// does an NMI tick
 	void do_irq(unsigned int);		// does an IRQ tick
-	Uint8 cpu_mem_read(Uint16 addr);			// memory read routine
-	void cpu_mem_write(Uint16 addr, Uint8 value);		// memory write routine
+	Uint8 cpu_mem_read(uint16_t addr);			// memory read routine
+	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
 	void input_enable(Uint8);
 	void input_disable(Uint8);
 	void palette_calculate();

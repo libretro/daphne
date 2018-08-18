@@ -6,6 +6,7 @@
 
 ///////////////////////////////////////////////////////////////////
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,8 +20,8 @@ extern int mame_debug;	// declare mame_debug somewhere
 
 typedef Uint8		UINT8;
 typedef Uint8		BYTE;
-typedef Uint16		UINT16;
-typedef Uint16		WORD;
+typedef uint16_t		UINT16;
+typedef uint16_t		WORD;
 typedef Uint32		UINT32;
 typedef Sint8 		INT8;
 typedef Sint16		INT16;
@@ -274,9 +275,9 @@ void mw_i86_set_mem(Uint8 *mem);
 // included to make sure that g_game is defined, for the following macros
 
 // MPO : changed all of these to macros to eliminate (possible) function call overhead in case compiler doesn't inline functions
-#define cpu_readmem16(addr) g_game->cpu_mem_read(static_cast<Uint16>(addr))
+#define cpu_readmem16(addr) g_game->cpu_mem_read(static_cast<uint16_t>(addr))
 #define cpu_readmem20(addr) g_game->cpu_mem_read(static_cast<Uint32>(addr))
-#define cpu_writemem16(addr,value) g_game->cpu_mem_write(static_cast<Uint16>(addr), value)
+#define cpu_writemem16(addr,value) g_game->cpu_mem_write(static_cast<uint16_t>(addr), value)
 #define cpu_writemem20(addr,value) g_game->cpu_mem_write(static_cast<Uint32>(addr), value)
 #define cpu_readport16(port) g_game->port_read(port)
 #define cpu_writeport16(port,value) g_game->port_write(port, value)

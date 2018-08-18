@@ -22,7 +22,7 @@
 
 // contains the function for the VLDP private thread
 
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #pragma warning (disable:4996)
 #endif
@@ -382,7 +382,7 @@ struct precache_entry_s s_sPreCacheEntries[MAX_PRECACHE_FILES];	// struct array 
 static FILE *g_mpeg_handle = NULL;	// mpeg file we currently have open
 static mpeg2dec_t *g_mpeg_data = NULL;	// structure for libmpeg2's state
 static Uint32 g_frame_position[MAX_LDP_FRAMES] = { 0 };	// the file position of each I frame
-static Uint16 g_totalframes = 0;	// total # of frames in the current mpeg
+static uint16_t g_totalframes = 0;	// total # of frames in the current mpeg
 
 #define BUFFER_SIZE 262144
 static Uint8 g_buffer[BUFFER_SIZE];	// buffer to hold mpeg2 file as we read it in
@@ -1092,7 +1092,7 @@ void ivldp_render()
 void idle_handler_search(int skip)
 {
 	Uint32 proposed_pos = 0;
-	Uint16 req_frame = g_req_frame; // after we acknowledge the command, g_req_frame could become clobbered
+	uint16_t req_frame = g_req_frame; // after we acknowledge the command, g_req_frame could become clobbered
 	Uint32 min_seek_ms = g_req_min_seek_ms;	// g_req_min_seek_ms can be clobbered at any time after we acknowledge command
 
 	// adjusted req frame is the requested frame with fields taken into account

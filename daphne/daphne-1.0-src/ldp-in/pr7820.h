@@ -26,10 +26,12 @@
 #ifndef PR7820_H
 #define PR7820_H
 
+#include <stdint.h>
+
 bool read_pr7820_ready();
 void write_pr7820 (unsigned char value);
 void pr7820_clear(void);
-Uint16 pr7820_get_buffered_frame(void);
+uint16_t pr7820_get_buffered_frame(void);
 void pr7820_add_digit(char);
 void pr7820_pre_audio1();
 void pr7820_pre_audio2();

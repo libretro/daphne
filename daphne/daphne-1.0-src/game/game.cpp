@@ -22,11 +22,11 @@
 
 // game.cpp
 // by Matt Ownby
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 #pragma warning (disable:4100) // disable warning about unreferenced parameter
 
 // this doesn't disable the warnings I want disabled :(
@@ -36,6 +36,7 @@
 #pragma warning (disable:4663)
 #endif
 
+#include <stdint.h>
 #include <zlib.h>	// for CRC checking
 #include <string>	// STL strings, useful to prevent buffer overrun
 #include <string.h>
@@ -255,7 +256,7 @@ void game::do_nmi()
 }
 
 // reads a byte from a 16-bit address space
-Uint8 game::cpu_mem_read(Uint16 addr)
+Uint8 game::cpu_mem_read(uint16_t addr)
 {
 	return m_cpumem[addr];
 }
@@ -267,7 +268,7 @@ Uint8 game::cpu_mem_read(Uint32 addr)
 }
 
 // writes a byte to a 16-bit addresss space
-void game::cpu_mem_write(Uint16 addr, Uint8 value)
+void game::cpu_mem_write(uint16_t addr, Uint8 value)
 {
 	m_cpumem[addr] = value;
 }
@@ -279,7 +280,7 @@ void game::cpu_mem_write(Uint32 addr, Uint8 value)
 }
 
 // reads a byte from the cpu's port
-Uint8 game::port_read(Uint16 port)
+Uint8 game::port_read(uint16_t port)
 {
 	char s[81] = { 0 };
 
@@ -291,7 +292,7 @@ Uint8 game::port_read(Uint16 port)
 }
 
 // writes a byte to the cpu's port
-void game::port_write(Uint16 port, Uint8 value)
+void game::port_write(uint16_t port, Uint8 value)
 {
 	char s[81] = { 0 };
 
@@ -331,7 +332,7 @@ void game::input_disable(Uint8 input)
 }
 
 // Added by ScottD
-void game::OnMouseMotion(Uint16 x, Uint16 y, Sint16 xrel, Sint16 yrel)
+void game::OnMouseMotion(uint16_t x, uint16_t y, Sint16 xrel, Sint16 yrel)
 {
 	// get rid of warnings
 	if (x || y || xrel || yrel)
@@ -1132,7 +1133,7 @@ void game::toggle_game_pause()
 	else if (g_ldp->get_status() == LDP_PLAYING)
 	{
 //		char frame[6];
-//		Uint16 cur_frame = g_ldp->get_current_frame();
+//		uint16_t cur_frame = g_ldp->get_current_frame();
 
 		cpu_pause();
 		g_ldp->pre_pause();

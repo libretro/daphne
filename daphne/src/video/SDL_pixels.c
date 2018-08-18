@@ -18,6 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include <stdint.h>
 #include <math.h>
 #include "../SDL_internal.h"
 
@@ -1084,7 +1085,7 @@ SDL_FreeBlitMap(SDL_BlitMap * map)
 }
 
 void
-SDL_CalculateGammaRamp(float gamma, Uint16 * ramp)
+SDL_CalculateGammaRamp(float gamma, uint16_t * ramp)
 {
     int i;
 
@@ -1100,7 +1101,7 @@ SDL_CalculateGammaRamp(float gamma, Uint16 * ramp)
 
     /* 0.0 gamma is all black */
     if (gamma == 0.0f) {
-        memset(ramp, 0, 256 * sizeof(Uint16));
+        memset(ramp, 0, 256 * sizeof(uint16_t));
         return;
     } else if (gamma == 1.0f) {
         /* 1.0 gamma is identity */
@@ -1118,7 +1119,7 @@ SDL_CalculateGammaRamp(float gamma, Uint16 * ramp)
             if (value > 65535) {
                 value = 65535;
             }
-            ramp[i] = (Uint16) value;
+            ramp[i] = (uint16_t) value;
         }
     }
 }

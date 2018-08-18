@@ -58,7 +58,7 @@
 #define LDV1000_STACKSIZE 10
 unsigned char g_ldv1000_output_stack[LDV1000_STACKSIZE];
 int g_ldv1000_output_stack_pointer = 0;
-Uint16 g_ldv1000_autostop_frame = 0;	// which frame we need to stop on (if any)
+uint16_t g_ldv1000_autostop_frame = 0;	// which frame we need to stop on (if any)
 
 bool g_instant_seeking = false;	// whether we can make the LD-V1000 complete searches instantly
 								// Some games permit instantaneous seeking (Dragon's Lair) and
@@ -172,7 +172,7 @@ void write_ldv1000 (unsigned char value)
 
 	char s[81] = { 0 };
 //	char f[81] = { 0 };
-	Uint16 curframe = 0;	// current frame we're on
+	uint16_t curframe = 0;	// current frame we're on
 
 	// if high-bit is set, it means we are ready and so we accept input
 	if (g_ldv1000_output & 0x80)
@@ -373,7 +373,7 @@ void write_ldv1000 (unsigned char value)
 		case 0xBa:	// Skip Forward 100
 			// FIXME: ignore skip command if forward command has not been issued
 			{
-				Uint16 frames_to_skip = (Uint16) ((10 * (value & 0x0f)) + 1);	// LD-V1000 does add 1 when skipping
+				uint16_t frames_to_skip = (uint16_t) ((10 * (value & 0x0f)) + 1);	// LD-V1000 does add 1 when skipping
 				g_ldp->pre_skip_forward(frames_to_skip);
 			}
 			break;
@@ -573,10 +573,10 @@ void pre_audio2()
 }
 
 // returns the frame that has been entered in by add_digit thus far
-Uint16 get_buffered_frame()
+uint16_t get_buffered_frame(void)
 {
 	ldv1000_frame[FRAME_SIZE] = 0;	// terminate string
-	return ((Uint16) atoi(ldv1000_frame));
+	return ((uint16_t) atoi(ldv1000_frame));
 }
 
 // clears any received digits from the frame array

@@ -25,12 +25,12 @@
 // contributions made by Mark Broadhead, Robert DiNapoli, Jeff Kulczycki
 // If you don't see your name here, feel free to add it =]
 
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #pragma warning (disable:4996)
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 #pragma warning (disable:4100) // disable warning about unreferenced parameter
 #endif
 
@@ -39,6 +39,7 @@
 #define strcasecmp stricmp
 #endif
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -567,7 +568,7 @@ void lair::do_nmi()
 
 }
 
-void lair::cpu_mem_write(Uint16 Addr, Uint8 Value)
+void lair::cpu_mem_write(uint16_t Addr, Uint8 Value)
 // Called whenever the Z80 emulator wants to write to memory
 {
 	// if we're writing to RAM or hardware
@@ -777,7 +778,7 @@ void lair::cpu_mem_write(Uint16 Addr, Uint8 Value)
 
 
 // Called whenever the Z80 emulator wants to read from memory
-Uint8 lair::cpu_mem_read(Uint16 Addr)
+Uint8 lair::cpu_mem_read(uint16_t Addr)
 {
 
 	register Uint8 result;	// I intentionally left this uninitialized for speed

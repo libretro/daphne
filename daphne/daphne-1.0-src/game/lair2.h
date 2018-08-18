@@ -25,6 +25,7 @@
 #ifndef LAIR2_H
 #define LAIR2_H
 
+#include <stdint.h>
 #include "game.h"
 
 #define DL2_OVERLAY_W 320
@@ -67,8 +68,8 @@ public:
 	bool init();
 	void do_irq(unsigned int);
 	void cpu_mem_write(Uint32 addr, Uint8 value);
-	Uint8 port_read(Uint16);
-	void port_write(Uint16, Uint8);
+	Uint8 port_read(uint16_t);
+	void port_write(uint16_t, Uint8);
 	void input_enable(Uint8);
 	void input_disable(Uint8);
 	bool set_bank(unsigned char, unsigned char);
@@ -84,7 +85,7 @@ public:
 protected:
 	Uint8 ldp_status;					// read val from LDP1000
     Uint8 banks[2];
-	Uint16 EEPROM_9536[0x80];
+	uint16_t EEPROM_9536[0x80];
 
 private:
 	unsigned char m_u8SerialBuf[DL2_BUF_SIZE];	// buffer of serial data received from laserdisc player

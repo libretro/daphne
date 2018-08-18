@@ -18,6 +18,8 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include <stdint.h>
+
 #include "../SDL_internal.h"
 
 #include "SDL_video.h"
@@ -262,7 +264,7 @@ Blit_RGB101010_index8(SDL_BlitInfo * info)
 
 /* Special optimized blit for RGB 8-8-8 --> RGB 5-5-5 */
 #define RGB888_RGB555(dst, src) { \
-    *(Uint16 *)(dst) = (Uint16)((((*src)&0x00F80000)>>9)| \
+    *(uint16_t *)(dst) = (uint16_t)((((*src)&0x00F80000)>>9)| \
                                 (((*src)&0x0000F800)>>6)| \
                                 (((*src)&0x000000F8)>>3)); \
 }
@@ -282,7 +284,7 @@ Blit_RGB888_RGB555(SDL_BlitInfo * info)
 #endif
     int width, height;
     Uint32 *src;
-    Uint16 *dst;
+    uint16_t *dst;
     int srcskip, dstskip;
 
     /* Set up some basic variables */
@@ -290,7 +292,7 @@ Blit_RGB888_RGB555(SDL_BlitInfo * info)
     height = info->dst_h;
     src = (Uint32 *) info->src;
     srcskip = info->src_skip / 4;
-    dst = (Uint16 *) info->dst;
+    dst = (uint16_t *) info->dst;
     dstskip = info->dst_skip / 2;
 
 #ifdef USE_DUFFS_LOOP
@@ -386,7 +388,7 @@ Blit_RGB888_RGB555(SDL_BlitInfo * info)
 
 /* Special optimized blit for RGB 8-8-8 --> RGB 5-6-5 */
 #define RGB888_RGB565(dst, src) { \
-    *(Uint16 *)(dst) = (Uint16)((((*src)&0x00F80000)>>8)| \
+    *(uint16_t *)(dst) = (uint16_t)((((*src)&0x00F80000)>>8)| \
                                 (((*src)&0x0000FC00)>>5)| \
                                 (((*src)&0x000000F8)>>3)); \
 }
@@ -406,7 +408,7 @@ Blit_RGB888_RGB565(SDL_BlitInfo * info)
 #endif
     int width, height;
     Uint32 *src;
-    Uint16 *dst;
+    uint16_t *dst;
     int srcskip, dstskip;
 
     /* Set up some basic variables */
@@ -414,7 +416,7 @@ Blit_RGB888_RGB565(SDL_BlitInfo * info)
     height = info->dst_h;
     src = (Uint32 *) info->src;
     srcskip = info->src_skip / 4;
-    dst = (Uint16 *) info->dst;
+    dst = (uint16_t *) info->dst;
     dstskip = info->dst_skip / 2;
 
 #ifdef USE_DUFFS_LOOP
@@ -1433,9 +1435,9 @@ Blit2to2Key(SDL_BlitInfo * info)
 {
     int width = info->dst_w;
     int height = info->dst_h;
-    Uint16 *srcp = (Uint16 *) info->src;
+    uint16_t *srcp = (uint16_t *) info->src;
     int srcskip = info->src_skip;
-    Uint16 *dstp = (Uint16 *) info->dst;
+    uint16_t *dstp = (uint16_t *) info->dst;
     int dstskip = info->dst_skip;
     Uint32 ckey = info->colorkey;
     Uint32 rgbmask = ~info->src_fmt->Amask;

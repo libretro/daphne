@@ -23,6 +23,7 @@
 #ifndef SOUND_H
 #define SOUND_H
 
+#include <stdint.h>
 #include <SDL.h>
 
 // header file for sound.c
@@ -180,7 +181,7 @@ void update_soundchip_volumes();
 
 void shutdown_soundchip();
 void update_soundbuffer(); // update the sound buffers with 1 ms worth of data
-void set_soundbuf_size(Uint16 newbufsize);
+void set_soundbuf_size(uint16_t newbufsize);
 bool sound_init();
 void sound_shutdown();
 bool sound_play(Uint32 whichone);

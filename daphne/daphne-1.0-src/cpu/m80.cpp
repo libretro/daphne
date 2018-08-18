@@ -34,10 +34,11 @@
 /*	Z80 Undocumented Features (MOST HELPFUL!)	*/
 /*	Complete Opcode List	*/
 /*	PDF version of Word document with all instruction tables	*/
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <stdio.h>
 #include "m80.h"
 #ifdef USE_MAME_Z80_DEBUGGER
@@ -211,7 +212,7 @@ void m80_reset()
 #define M80_EXEC_ED	\
 {	\
 	Uint8 opcode = M80_GET_ARG;	/* get opcode and increment PC */	\
-	Uint16 temp_word;	/* a temp word for storing temp variables :) */ \
+	uint16_t temp_word;	/* a temp word for storing temp variables :) */ \
 	g_cycles_executed += ed_cycles[opcode];	\
 	M80_INC_R;	/* for each DE instruction, increase R again */ \
 	switch(opcode)	\
@@ -1334,7 +1335,7 @@ void m80_reset()
 #define M80_EXEC_DDFD(IXIY)	\
 {	\
 	Uint8 opcode = M80_GET_ARG;	/* get opcode and increment PC */	\
-	Uint16 temp_word;	/* temporary word to move data around with */	\
+	uint16_t temp_word;	/* temporary word to move data around with */	\
 	g_cycles_executed += ddfd_cycles[opcode];	\
 	M80_INC_R;	/* for each DD/FD instruction, increase R at least once */ \
 	switch(opcode)	\
@@ -1517,7 +1518,7 @@ void m80_reset()
 		break;	\
 	case 0x36:	/* LD (IXIY + d), N */	\
 		{	\
-			Uint16 addr = IXIY_OFFSET(IXIY);	\
+			uint16_t addr = IXIY_OFFSET(IXIY);	\
 			M80_WRITE_BYTE(addr, M80_GET_ARG);	\
 		}	\
 		break;	\
@@ -2161,7 +2162,7 @@ void m80_reset()
 #define M80_EXEC_CUR_INSTR	\
 {	\
 	Uint8 opcode = M80_GET_ARG;	/* get opcode and increment PC */	\
-	Uint16 temp_word;	\
+	uint16_t temp_word;	\
 	g_cycles_executed += op_cycles[opcode];	\
 	M80_INC_R;	/* for each instruction, increase R at least once */ \
 	switch(opcode)	\
@@ -3991,27 +3992,27 @@ Uint32 m80_get_pc()
 }
 
 /* returns the current stack pointer */
-Uint16 m80_get_sp()
+uint16_t m80_get_sp()
 {
 	return SP;
 }
 
-Uint16 m80_get_reg(int index)
+uint16_t m80_get_reg(int index)
 {
 	return g_context.m80_regs[index].w;
 }
 
-void m80_set_reg(int index, Uint16 value)
+void m80_set_reg(int index, uint16_t value)
 {
 	g_context.m80_regs[index].w = value;
 }
 
 void m80_set_pc(Uint32 value)
 {
-	PC = (Uint16) value;
+	PC = (uint16_t) value;
 }
 
-void m80_set_sp(Uint16 value)
+void m80_set_sp(uint16_t value)
 {
 	SP = value;
 }

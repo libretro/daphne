@@ -27,6 +27,8 @@
 #ifndef HITACHI_H
 #define HITACHI_H
 
+#include <stdint.h>
+
 #include "ldp.h"
 
 class hitachi : public ldp
@@ -37,16 +39,16 @@ public:
 	//	bool search(char *);
 	bool nonblocking_search(char *frame);
 	int get_search_result();
-	bool skip_forward(Uint16 frames_to_skip, Uint16);
+	bool skip_forward(uint16_t frames_to_skip, uint16_t);
 	unsigned int play();
 	void pause();
 	void stop();
-//	Uint16 get_current_frame();
+//	uint16_t get_current_frame();
 	void enable_audio1();
 	void enable_audio2();
 	void disable_audio1();
 	void disable_audio2();
-	Uint16 get_real_current_frame();
+	uint16_t get_real_current_frame();
 private:
 	bool receive_status(Uint8, Uint32);
 };

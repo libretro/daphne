@@ -18,6 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include <stdint.h>
 #include "../SDL_internal.h"
 
 #ifndef _SDL_blit_h
@@ -149,7 +150,7 @@ do {                                                                    \
         break;                                                          \
                                                                         \
         case 2:                                                         \
-            Pixel = *((Uint16 *)(buf));                                 \
+            Pixel = *((uint16_t *)(buf));                                 \
         break;                                                          \
                                                                         \
         case 3: {                                                       \
@@ -181,7 +182,7 @@ do {                                                                    \
         break;                                                          \
                                                                         \
         case 2:                                                         \
-            Pixel = *((Uint16 *)(buf));                                 \
+            Pixel = *((uint16_t *)(buf));                                 \
             RGB_FROM_PIXEL(Pixel, fmt, r, g, b);                        \
         break;                                                          \
                                                                         \
@@ -268,10 +269,10 @@ do {                                                                    \
         break;                                                          \
                                                                         \
         case 2: {                                                       \
-            Uint16 Pixel;                                               \
+            uint16_t Pixel;                                               \
                                                                         \
             PIXEL_FROM_RGB(Pixel, fmt, r, g, b);                        \
-            *((Uint16 *)(buf)) = Pixel;                                 \
+            *((uint16_t *)(buf)) = Pixel;                                 \
         }                                                               \
         break;                                                          \
                                                                         \
@@ -357,7 +358,7 @@ do {                                                                    \
         break;                                                          \
                                                                         \
         case 2:                                                         \
-            Pixel = *((Uint16 *)(buf));                                 \
+            Pixel = *((uint16_t *)(buf));                                 \
             RGBA_FROM_PIXEL(Pixel, fmt, r, g, b, a);                    \
         break;                                                          \
                                                                         \
@@ -409,10 +410,10 @@ do {                                                                    \
         break;                                                          \
                                                                         \
         case 2: {                                                       \
-            Uint16 _pixel;                                              \
+            uint16_t _pixel;                                              \
                                                                         \
             PIXEL_FROM_RGBA(_pixel, fmt, r, g, b, a);                   \
-            *((Uint16 *)(buf)) = _pixel;                                \
+            *((uint16_t *)(buf)) = _pixel;                                \
         }                                                               \
         break;                                                          \
                                                                         \

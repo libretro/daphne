@@ -31,10 +31,11 @@
 // version has an extra pcb on top which includes another 6502 and rom). 
 // It seems that the conversion board doesn't have any color ram, but this is 
 // unverified
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <string.h>
 #include "cobraconv.h"
 #include "../cpu/cpu.h"
@@ -157,7 +158,7 @@ void cobraconv::do_nmi()
 	nes6502_nmi();
 }
 
-Uint8 cobraconv::cpu_mem_read(Uint16 addr)
+Uint8 cobraconv::cpu_mem_read(uint16_t addr)
 {
 //	static unsigned int loopcount = 0;
 	char s[81] = {0};
@@ -283,7 +284,7 @@ Uint8 cobraconv::cpu_mem_read(Uint16 addr)
 	return result;
 }
 
-void cobraconv::cpu_mem_write(Uint16 addr, Uint8 value)
+void cobraconv::cpu_mem_write(uint16_t addr, Uint8 value)
 {
 	char s[81] = {0};
 

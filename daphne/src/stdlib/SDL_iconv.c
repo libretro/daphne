@@ -23,6 +23,7 @@
 #define SDL_DISABLE_ANALYZE_MACROS 1
 #endif
 
+#include <stdint.h>
 #include <stdlib.h>
 #include "../SDL_internal.h"
 
@@ -323,7 +324,7 @@ SDL_iconv(SDL_iconv_t cd,
         if (dstlen < 2) {
             return SDL_ICONV_E2BIG;
         }
-        *(Uint16 *) dst = UNICODE_BOM;
+        *(uint16_t *) dst = UNICODE_BOM;
         dst += 2;
         dstlen -= 2;
         cd->dst_fmt = ENCODING_UTF16NATIVE;
@@ -477,11 +478,11 @@ SDL_iconv(SDL_iconv_t cd,
         case ENCODING_UTF16BE: /* RFC 2781 */
             {
                 Uint8 *p = (Uint8 *) src;
-                Uint16 W1, W2;
+                uint16_t W1, W2;
                 if (srclen < 2) {
                     return SDL_ICONV_EINVAL;
                 }
-                W1 = ((Uint16) p[0] << 8) | (Uint16) p[1];
+                W1 = ((uint16_t) p[0] << 8) | (uint16_t) p[1];
                 src += 2;
                 srclen -= 2;
                 if (W1 < 0xD800 || W1 > 0xDFFF) {
@@ -499,7 +500,7 @@ SDL_iconv(SDL_iconv_t cd,
                     return SDL_ICONV_EINVAL;
                 }
                 p = (Uint8 *) src;
-                W2 = ((Uint16) p[0] << 8) | (Uint16) p[1];
+                W2 = ((uint16_t) p[0] << 8) | (uint16_t) p[1];
                 src += 2;
                 srclen -= 2;
                 if (W2 < 0xDC00 || W2 > 0xDFFF) {
@@ -516,11 +517,11 @@ SDL_iconv(SDL_iconv_t cd,
         case ENCODING_UTF16LE: /* RFC 2781 */
             {
                 Uint8 *p = (Uint8 *) src;
-                Uint16 W1, W2;
+                uint16_t W1, W2;
                 if (srclen < 2) {
                     return SDL_ICONV_EINVAL;
                 }
-                W1 = ((Uint16) p[1] << 8) | (Uint16) p[0];
+                W1 = ((uint16_t) p[1] << 8) | (uint16_t) p[0];
                 src += 2;
                 srclen -= 2;
                 if (W1 < 0xD800 || W1 > 0xDFFF) {
@@ -538,7 +539,7 @@ SDL_iconv(SDL_iconv_t cd,
                     return SDL_ICONV_EINVAL;
                 }
                 p = (Uint8 *) src;
-                W2 = ((Uint16) p[1] << 8) | (Uint16) p[0];
+                W2 = ((uint16_t) p[1] << 8) | (uint16_t) p[0];
                 src += 2;
                 srclen -= 2;
                 if (W2 < 0xDC00 || W2 > 0xDFFF) {
@@ -717,13 +718,12 @@ SDL_iconv(SDL_iconv_t cd,
                     dst += 2;
                     dstlen -= 2;
                 } else {
-                    Uint16 W1, W2;
-                    if (dstlen < 4) {
+                    uint16_t W1, W2;
+                    if (dstlen < 4)
                         return SDL_ICONV_E2BIG;
-                    }
                     ch = ch - 0x10000;
-                    W1 = 0xD800 | (Uint16) ((ch >> 10) & 0x3FF);
-                    W2 = 0xDC00 | (Uint16) (ch & 0x3FF);
+                    W1 = 0xD800 | (uint16_t) ((ch >> 10) & 0x3FF);
+                    W2 = 0xDC00 | (uint16_t) (ch & 0x3FF);
                     p[0] = (Uint8) (W1 >> 8);
                     p[1] = (Uint8) W1;
                     p[2] = (Uint8) (W2 >> 8);
@@ -748,13 +748,12 @@ SDL_iconv(SDL_iconv_t cd,
                     dst += 2;
                     dstlen -= 2;
                 } else {
-                    Uint16 W1, W2;
-                    if (dstlen < 4) {
+                    uint16_t W1, W2;
+                    if (dstlen < 4)
                         return SDL_ICONV_E2BIG;
-                    }
                     ch = ch - 0x10000;
-                    W1 = 0xD800 | (Uint16) ((ch >> 10) & 0x3FF);
-                    W2 = 0xDC00 | (Uint16) (ch & 0x3FF);
+                    W1 = 0xD800 | (uint16_t) ((ch >> 10) & 0x3FF);
+                    W2 = 0xDC00 | (uint16_t) (ch & 0x3FF);
                     p[1] = (Uint8) (W1 >> 8);
                     p[0] = (Uint8) W1;
                     p[3] = (Uint8) (W2 >> 8);

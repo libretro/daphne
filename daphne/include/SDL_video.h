@@ -28,6 +28,8 @@
 #ifndef _SDL_video_h
 #define _SDL_video_h
 
+#include <stdint.h>
+
 #include "SDL_stdinc.h"
 #include "SDL_pixels.h"
 #include "SDL_rect.h"
@@ -880,9 +882,9 @@ extern DECLSPEC int SDLCALL SDL_SetWindowInputFocus(SDL_Window * window);
  *  \sa SDL_GetWindowGammaRamp()
  */
 extern DECLSPEC int SDLCALL SDL_SetWindowGammaRamp(SDL_Window * window,
-                                                   const Uint16 * red,
-                                                   const Uint16 * green,
-                                                   const Uint16 * blue);
+                                                   const uint16_t * red,
+                                                   const uint16_t * green,
+                                                   const uint16_t * blue);
 
 /**
  *  \brief Get the gamma ramp for a window.
@@ -900,9 +902,9 @@ extern DECLSPEC int SDLCALL SDL_SetWindowGammaRamp(SDL_Window * window,
  *  \sa SDL_SetWindowGammaRamp()
  */
 extern DECLSPEC int SDLCALL SDL_GetWindowGammaRamp(SDL_Window * window,
-                                                   Uint16 * red,
-                                                   Uint16 * green,
-                                                   Uint16 * blue);
+                                                   uint16_t * red,
+                                                   uint16_t * green,
+                                                   uint16_t * blue);
 
 /**
  *  \brief Possible return values from the SDL_HitTest callback.

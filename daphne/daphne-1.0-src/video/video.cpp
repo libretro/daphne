@@ -23,11 +23,12 @@
 // video.cpp
 // Part of the DAPHNE emulator
 // This code started by Matt Ownby, May 2000
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #define _CRT_NONSTDC_NO_DEPRECATE 1
 #endif
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -47,8 +48,8 @@
 using namespace std;
 
 unsigned int g_vid_width = 640, g_vid_height = 480;	// default video width and video height
-const Uint16 cg_normalwidths[] = { 640, 800, 1024, 1280, 1280, 1600 };
-const Uint16 cg_normalheights[]= { 480, 600, 768, 960, 1024, 1200 };
+const uint16_t cg_normalwidths[] = { 640, 800, 1024, 1280, 1280, 1600 };
+const uint16_t cg_normalheights[]= { 480, 600, 768, 960, 1024, 1200 };
 
 // the dimensions that we draw (may differ from g_vid_width/height if aspect ratio is enforced)
 unsigned int g_draw_width = 640, g_draw_height = 480;
@@ -81,7 +82,7 @@ bool init_display()
 	// if we were able to initialize the video properly
 	{
 		// go through each standard resolution size to see if we are using a standard resolution
-		for (x=0; x < (sizeof(cg_normalwidths) / sizeof(Uint16)); x++)
+		for (x=0; x < (sizeof(cg_normalwidths) / sizeof(uint16_t)); x++)
 		{
 			// if we find a match, we know we're using a standard res
 			if ((g_vid_width == cg_normalwidths[x]) && (g_vid_height == cg_normalheights[x]))
@@ -95,7 +96,7 @@ bool init_display()
 		{
 			printline("WARNING : You have specified an abnormal screen resolution! Normal screen resolutions are:");
 			// print each standard resolution
-			for (x=0; x < (sizeof(cg_normalwidths) / sizeof(Uint16)); x++)
+			for (x=0; x < (sizeof(cg_normalwidths) / sizeof(uint16_t)); x++)
 			{	
 				sprintf(s,"%d x %d", cg_normalwidths[x], cg_normalheights[x]);
 				printline(s);
@@ -496,13 +497,13 @@ void set_sboverlay_characterset(int value)
 }
 
 // returns video width
-Uint16 get_video_width()
+uint16_t get_video_width()
 {
 	return g_vid_width;
 }
 
 // sets g_vid_width
-void set_video_width(Uint16 width)
+void set_video_width(uint16_t width)
 {
 	// Let the user specify whatever width s/he wants (and suffer the consequences)
 	// We need to support arbitrary resolution to accomodate stuff like screen rotation
@@ -510,13 +511,13 @@ void set_video_width(Uint16 width)
 }
 
 // returns video height
-Uint16 get_video_height()
+uint16_t get_video_height()
 {
 	return g_vid_height;
 }
 
 // sets g_vid_height
-void set_video_height(Uint16 height)
+void set_video_height(uint16_t height)
 {
 	// Let the user specify whatever height s/he wants (and suffer the consequences)
 	// We need to support arbitrary resolution to accomodate stuff like screen rotation

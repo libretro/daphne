@@ -23,6 +23,8 @@
 #ifndef PHILIPS_H
 #define PHILIPS_H
 
+#include <stdint.h>
+
 #include "ldp.h"
 
 class philips : public ldp
@@ -33,7 +35,7 @@ public:
 	//	bool search(char *);
 	bool nonblocking_search(char *frame);
 	int get_search_result();
-//	bool skip_forward(Uint16);
+//	bool skip_forward(uint16_t);
 	unsigned int play();
 	void pause();
 	void stop();
@@ -41,7 +43,7 @@ public:
 	void enable_audio2();
 	void disable_audio1();
 	void disable_audio2();
-	Uint16 get_real_current_frame();
+	uint16_t get_real_current_frame();
 
 private:
 	bool check_result(const char *, Uint32, bool);

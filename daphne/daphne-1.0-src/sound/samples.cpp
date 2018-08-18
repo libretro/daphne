@@ -1,9 +1,11 @@
 // samples.cpp
 
+#include <stdint.h>
+#include <string.h>	// for memset
+
 #include "../game/game.h"	// to get sound names
 #include "../io/conout.h"
 #include "../io/mpo_mem.h"	// for endian-independent macros
-#include <string.h>	// for memset
 #include "samples.h"
 
 //using namespace std;
@@ -111,7 +113,7 @@ void samples_get_stream(Uint8 *stream, int length, int unused)
 					DO_CLIP(iMixedSample2);
 
 					// yes, sample2 should be the most significant, sample1 least significant.. releasetest tests this
-					unsigned int val_to_store = (((Uint16) iMixedSample2) << 16) | (Uint16) iMixedSample1;
+					unsigned int val_to_store = (((uint16_t) iMixedSample2) << 16) | (uint16_t) iMixedSample1;
 					STORE_LIL_UINT32(ptrStream, val_to_store);
 					ptrStream += 4;
 				}

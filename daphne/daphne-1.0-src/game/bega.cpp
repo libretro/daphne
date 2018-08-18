@@ -366,7 +366,7 @@ void bega::do_nmi()
    nes6502_nmi();
 }
 
-Uint8 bega::cpu_mem_read(Uint16 addr)
+Uint8 bega::cpu_mem_read(uint16_t addr)
 {
 //   char s[81] = {0};
    Uint8 result;
@@ -478,7 +478,7 @@ Uint8 bega::cpu_mem_read(Uint16 addr)
    return result;
 }
 
-void bega::cpu_mem_write(Uint16 addr, Uint8 value)
+void bega::cpu_mem_write(uint16_t addr, Uint8 value)
 {
    char s[81] = {0};
 

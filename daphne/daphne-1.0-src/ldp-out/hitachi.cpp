@@ -39,6 +39,8 @@
 // The 9550 uses a regular modem cable, NOT a null modem cable
 // Original command set by Robert DiNapoli
 
+#include <stdint.h>
+
 #include "../timer/timer.h"
 #include "../io/serial.h"
 #include "../io/conout.h"
@@ -46,7 +48,7 @@
 #include "../game/game.h"	// to get game FPS
 #include "hitachi.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 #pragma warning (disable:4100)
 #endif
 
@@ -174,7 +176,7 @@ int hitachi::get_search_result()
 }
 
 // skips forward frames_to_skip number of frames, and returns true if it was successful
-bool hitachi::skip_forward(Uint16 frames_to_skip, Uint16 target_frame)
+bool hitachi::skip_forward(uint16_t frames_to_skip, uint16_t target_frame)
 {
 	char frame[FRAME_ARRAY_SIZE] = { 0 };
 	int i = 0;
@@ -187,7 +189,7 @@ bool hitachi::skip_forward(Uint16 frames_to_skip, Uint16 target_frame)
 	if (g_game->get_disc_fpks() != 29970)
 	{
 		printline("Hitachi: Disc is not standard 29.97 and therefore we must convert the skip parameter");
-		frames_to_skip = (Uint16) ((1.25 * frames_to_skip) + 0.5); // to float multiplication and add 0.5 to round to the nearest whole number
+		frames_to_skip = (uint16_t) ((1.25 * frames_to_skip) + 0.5); // to float multiplication and add 0.5 to round to the nearest whole number
 	}
 
 	framenum_to_frame(frames_to_skip, frame);
@@ -301,7 +303,7 @@ void hitachi::stop()
 }
 
 // comment this out if the hitachi can't return frames fast enough .. it can get stuck
-//Uint16 hitachi::get_current_frame()
+//uint16_t hitachi::get_current_frame()
 //{
 //	return get_real_current_frame();
 //}
@@ -311,10 +313,10 @@ void hitachi::stop()
 // 1 - Sometimes it gets "stuck" and times out after a second or two... this is obviously no good during a game
 // 2 - When it works properly it can't return the current frame # fast enough to be useful (no good w/ super don for example)
 // So there is really no point to using this unless you _have_ to know the real frame
-Uint16 hitachi::get_real_current_frame()
+uint16_t hitachi::get_real_current_frame()
 {
 	Uint8 highbyte = 0, lowbyte = 0;
-	Uint16 result = 0;
+	uint16_t result = 0;
 	
 	serial_rxflush();
 	serial_tx(0x6B);	// code to get current frame
@@ -326,7 +328,7 @@ Uint16 hitachi::get_real_current_frame()
 		lowbyte = serial_get_one_byte(1000);
 	}
 	
-	result = (Uint16) ((highbyte << 8) | lowbyte);
+	result = (uint16_t) ((highbyte << 8) | lowbyte);
 	return(result);
 }
 

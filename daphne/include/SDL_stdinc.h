@@ -28,6 +28,8 @@
 #ifndef _SDL_stdinc_h
 #define _SDL_stdinc_h
 
+#include <stdint.h>
+
 #include "SDL_config.h"
 
 #ifdef HAVE_SYS_TYPES_H
@@ -128,10 +130,6 @@ typedef uint8_t Uint8;
  * \brief A signed 16-bit integer type.
  */
 typedef int16_t Sint16;
-/**
- * \brief An unsigned 16-bit integer type.
- */
-typedef uint16_t Uint16;
 /**
  * \brief A signed 32-bit integer type.
  */
@@ -246,7 +244,6 @@ typedef int64_t Sint64;
 #ifndef DOXYGEN_SHOULD_IGNORE_THIS
 SDL_COMPILE_TIME_ASSERT(uint8, sizeof(Uint8) == 1);
 SDL_COMPILE_TIME_ASSERT(sint8, sizeof(Sint8) == 1);
-SDL_COMPILE_TIME_ASSERT(uint16, sizeof(Uint16) == 2);
 SDL_COMPILE_TIME_ASSERT(sint16, sizeof(Sint16) == 2);
 SDL_COMPILE_TIME_ASSERT(uint32, sizeof(Uint32) == 4);
 SDL_COMPILE_TIME_ASSERT(sint32, sizeof(Sint32) == 4);
@@ -349,7 +346,7 @@ extern DECLSPEC char *SDLCALL SDL_iconv_string(const char *tocode,
                                                const char *inbuf,
                                                size_t inbytesleft);
 #define SDL_iconv_utf8_locale(S)    SDL_iconv_string("", "UTF-8", S, strlen(S)+1)
-#define SDL_iconv_utf8_ucs2(S)      (Uint16 *)SDL_iconv_string("UCS-2-INTERNAL", "UTF-8", S, strlen(S)+1)
+#define SDL_iconv_utf8_ucs2(S)      (uint16_t *)SDL_iconv_string("UCS-2-INTERNAL", "UTF-8", S, strlen(S)+1)
 #define SDL_iconv_utf8_ucs4(S)      (Uint32 *)SDL_iconv_string("UCS-4-INTERNAL", "UTF-8", S, strlen(S)+1)
 
 /* force builds using Clang's static analysis tools to use literal C runtime

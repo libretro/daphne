@@ -18,6 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include <stdint.h>
 #include "../SDL_internal.h"
 
 #include "SDL_video.h"
@@ -84,7 +85,7 @@ Blit1to2(SDL_BlitInfo * info)
 #endif
     int width, height;
     Uint8 *src, *dst;
-    Uint16 *map;
+    uint16_t *map;
     int srcskip, dstskip;
 
     /* Set up some basic variables */
@@ -94,14 +95,14 @@ Blit1to2(SDL_BlitInfo * info)
     srcskip = info->src_skip;
     dst = info->dst;
     dstskip = info->dst_skip;
-    map = (Uint16 *) info->table;
+    map = (uint16_t *) info->table;
 
 #ifdef USE_DUFFS_LOOP
     while (height--) {
 		/* *INDENT-OFF* */
 		DUFFS_LOOP(
 		{
-			*(Uint16 *)dst = map[*src++];
+			*(uint16_t *)dst = map[*src++];
 			dst += 2;
 		},
 		width);
@@ -120,7 +121,7 @@ Blit1to2(SDL_BlitInfo * info)
 
         while (height--) {
             /* Perform copy alignment */
-            *(Uint16 *) dst = map[*src++];
+            *(uint16_t *) dst = map[*src++];
             dst += 2;
 
             /* Copy in 4 pixel chunks */
@@ -135,7 +136,7 @@ Blit1to2(SDL_BlitInfo * info)
             /* Get any leftovers */
             switch (width & 3) {
             case 3:
-                *(Uint16 *) dst = map[*src++];
+                *(uint16_t *) dst = map[*src++];
                 dst += 2;
             case 2:
                 *(Uint32 *) dst = (map[src[HI]] << 16) | (map[src[LO]]);
@@ -143,7 +144,7 @@ Blit1to2(SDL_BlitInfo * info)
                 dst += 4;
                 break;
             case 1:
-                *(Uint16 *) dst = map[*src++];
+                *(uint16_t *) dst = map[*src++];
                 dst += 2;
                 break;
             }
@@ -164,7 +165,7 @@ Blit1to2(SDL_BlitInfo * info)
             /* Get any leftovers */
             switch (width & 3) {
             case 3:
-                *(Uint16 *) dst = map[*src++];
+                *(uint16_t *) dst = map[*src++];
                 dst += 2;
             case 2:
                 *(Uint32 *) dst = (map[src[HI]] << 16) | (map[src[LO]]);
@@ -172,7 +173,7 @@ Blit1to2(SDL_BlitInfo * info)
                 dst += 4;
                 break;
             case 1:
-                *(Uint16 *) dst = map[*src++];
+                *(uint16_t *) dst = map[*src++];
                 dst += 2;
                 break;
             }
@@ -334,9 +335,9 @@ Blit1to2Key(SDL_BlitInfo * info)
     int height = info->dst_h;
     Uint8 *src = info->src;
     int srcskip = info->src_skip;
-    Uint16 *dstp = (Uint16 *) info->dst;
+    uint16_t *dstp = (uint16_t *) info->dst;
     int dstskip = info->dst_skip;
-    Uint16 *palmap = (Uint16 *) info->table;
+    uint16_t *palmap = (uint16_t *) info->table;
     Uint32 ckey = info->colorkey;
 
     /* Set up some basic variables */

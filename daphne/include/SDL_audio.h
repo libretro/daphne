@@ -28,6 +28,8 @@
 #ifndef _SDL_audio_h
 #define _SDL_audio_h
 
+#include <stdint.h>
+
 #include "SDL_stdinc.h"
 #include "SDL_error.h"
 #include "SDL_endian.h"
@@ -61,7 +63,7 @@ extern "C" {
  *
  *  There are macros in SDL 2.0 and later to query these bits.
  */
-typedef Uint16 SDL_AudioFormat;
+typedef uint16_t SDL_AudioFormat;
 
 /**
  *  \name Audio flags
@@ -171,8 +173,8 @@ typedef struct SDL_AudioSpec
     SDL_AudioFormat format;     /**< Audio data format */
     Uint8 channels;             /**< Number of channels: 1 mono, 2 stereo */
     Uint8 silence;              /**< Audio buffer silence value (calculated) */
-    Uint16 samples;             /**< Audio buffer size in samples (power of 2) */
-    Uint16 padding;             /**< Necessary for some compile environments */
+    uint16_t samples;             /**< Audio buffer size in samples (power of 2) */
+    uint16_t padding;             /**< Necessary for some compile environments */
     Uint32 size;                /**< Audio buffer size in bytes (calculated) */
     SDL_AudioCallback callback; /**< Callback that feeds the audio device (NULL to use SDL_QueueAudio()). */
     void *userdata;             /**< Userdata passed to callback (ignored for NULL callbacks). */

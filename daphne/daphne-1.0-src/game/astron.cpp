@@ -36,10 +36,11 @@
 //			collector that I know has found a romset, rumored to be a prototype, 
 //			might also have been a Japanese only release)
 // Cobra Command (Special version that runs on Hitachi AB hardware)
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <string.h>
 #include "astron.h"
 #include "../io/conout.h"
@@ -406,7 +407,7 @@ void astronh::astronh_nmi()
 }
 
 // reads a byte from the cpu's memory
-Uint8 astron::cpu_mem_read(Uint16 addr)
+Uint8 astron::cpu_mem_read(uint16_t addr)
 {
 	Uint8 result = m_cpumem[addr];
 //	char s[81] = { 0 };
@@ -478,7 +479,7 @@ Uint8 astron::cpu_mem_read(Uint16 addr)
 }
 
 // writes a byte to the cpu's memory
-void astron::cpu_mem_write(Uint16 addr, Uint8 value)
+void astron::cpu_mem_write(uint16_t addr, Uint8 value)
 {
 	m_cpumem[addr] = value;
 	char s[81] = { 0 };
@@ -640,7 +641,7 @@ void astron::cpu_mem_write(Uint16 addr, Uint8 value)
 	}
 }
 
-Uint8 astron::read_ldp(Uint16 addr)
+Uint8 astron::read_ldp(uint16_t addr)
 {
 //	char s[81] = {0};
 		
@@ -651,7 +652,7 @@ Uint8 astron::read_ldp(Uint16 addr)
 		return result;
 }
 
-Uint8 astronh::read_ldp(Uint16 addr)
+Uint8 astronh::read_ldp(uint16_t addr)
 {
 	Uint8 result = 0x00;
 	
@@ -671,7 +672,7 @@ Uint8 astronh::read_ldp(Uint16 addr)
 	return result;
 }
 
-void astron::write_ldp(Uint8 value, Uint16 addr)
+void astron::write_ldp(Uint8 value, uint16_t addr)
 {
 //	char s[81] = {0};
 	
@@ -680,7 +681,7 @@ void astron::write_ldp(Uint8 value, Uint16 addr)
 	ldp_output_latch = value;
 }
 
-void astronh::write_ldp(Uint8 value, Uint16 addr)
+void astronh::write_ldp(Uint8 value, uint16_t addr)
 {
 	switch (addr & 0x01)
 	{
@@ -697,7 +698,7 @@ void astronh::write_ldp(Uint8 value, Uint16 addr)
 }
 
 // reads a byte from the cpu's port
-Uint8 astron::port_read(Uint16 port)
+Uint8 astron::port_read(uint16_t port)
 {
 	char s[81] = { 0 };
 
@@ -709,7 +710,7 @@ Uint8 astron::port_read(Uint16 port)
 }
 
 // writes a byte to the cpu's port
-void astron::port_write(Uint16 port, Uint8 value)
+void astron::port_write(uint16_t port, Uint8 value)
 {
 	char s[81] = { 0 };
 

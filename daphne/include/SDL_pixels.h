@@ -28,6 +28,7 @@
 #ifndef _SDL_pixels_h
 #define _SDL_pixels_h
 
+#include <stdint.h>
 #include "SDL_stdinc.h"
 #include "SDL_endian.h"
 
@@ -454,7 +455,7 @@ extern DECLSPEC void SDLCALL SDL_GetRGBA(Uint32 pixel,
 /**
  *  \brief Calculate a 256 entry gamma ramp for a gamma value.
  */
-extern DECLSPEC void SDLCALL SDL_CalculateGammaRamp(float gamma, Uint16 * ramp);
+extern DECLSPEC void SDLCALL SDL_CalculateGammaRamp(float gamma, uint16_t * ramp);
 
 
 /* Ends C function definitions when using C++ */

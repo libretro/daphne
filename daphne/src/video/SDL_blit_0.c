@@ -18,6 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include <stdint.h>
 #include "../SDL_internal.h"
 
 #include "SDL_video.h"
@@ -86,7 +87,7 @@ BlitBto2(SDL_BlitInfo * info)
     int c;
     int width, height;
     Uint8 *src;
-    Uint16 *map, *dst;
+    uint16_t *map, *dst;
     int srcskip, dstskip;
 
     /* Set up some basic variables */
@@ -94,9 +95,9 @@ BlitBto2(SDL_BlitInfo * info)
     height = info->dst_h;
     src = info->src;
     srcskip = info->src_skip;
-    dst = (Uint16 *) info->dst;
+    dst = (uint16_t *) info->dst;
     dstskip = info->dst_skip / 2;
-    map = (Uint16 *) info->table;
+    map = (uint16_t *) info->table;
     srcskip += width - (width + 7) / 8;
 
     while (height--) {
@@ -252,7 +253,7 @@ BlitBto2Key(SDL_BlitInfo * info)
     int width = info->dst_w;
     int height = info->dst_h;
     Uint8 *src = info->src;
-    Uint16 *dstp = (Uint16 *) info->dst;
+    uint16_t *dstp = (uint16_t *) info->dst;
     int srcskip = info->src_skip;
     int dstskip = info->dst_skip;
     Uint32 ckey = info->colorkey;
@@ -271,7 +272,7 @@ BlitBto2Key(SDL_BlitInfo * info)
             }
             bit = (byte & 0x80) >> 7;
             if (bit != ckey) {
-                *dstp = ((Uint16 *) palmap)[bit];
+                *dstp = ((uint16_t *) palmap)[bit];
             }
             byte <<= 1;
             dstp++;

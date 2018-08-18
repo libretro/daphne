@@ -23,6 +23,7 @@
 #ifndef THAYERS_H
 #define THAYERS_H
 
+#include <stdint.h>
 #include <SDL.h>
 #include <SDL_keycode.h>
 #include "game.h"
@@ -40,10 +41,10 @@ public:
 	void do_irq(unsigned int which);
 	void do_nmi();		// dummy function to generate timer IRQ
 	void thayers_irq();	
-	Uint8 cpu_mem_read(Uint16 addr);			// memory read routine
-	void cpu_mem_write(Uint16 addr, Uint8 value);		// memory write routine
-	Uint8 port_read(Uint16 port);		// read from port
-	void port_write(Uint16 port, Uint8 value);		// write to a port
+	Uint8 cpu_mem_read(uint16_t addr);			// memory read routine
+	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
+	Uint8 port_read(uint16_t port);		// read from port
+	void port_write(uint16_t port, Uint8 value);		// write to a port
 	// RJS CHANGE START
 	//void process_keydown(SDLKey);
 	//void process_keyup(SDLKey);

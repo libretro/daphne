@@ -54,10 +54,10 @@ public:
 	void do_nmi();
 	Uint8 cpu_mem_read(Uint32 addr);
 	void cpu_mem_write(Uint32 addr, Uint8 value);
-	Uint8 cpu_mem_read(Uint16 addr);
-	void cpu_mem_write(Uint16 addr, Uint8 value);
-	Uint8 port_read(Uint16);
-	void port_write(Uint16, Uint8);
+	Uint8 cpu_mem_read(uint16_t addr);
+	void cpu_mem_write(uint16_t addr, Uint8 value);
+	Uint8 port_read(uint16_t);
+	void port_write(uint16_t, Uint8);
 	void input_enable(Uint8);
 	void input_disable(Uint8);
    unsigned get_libretro_button_map(unsigned id);
@@ -95,7 +95,7 @@ protected:
 
 	Uint8 m_frame_decoder_select_bit;
 	Uint8 m_audio_ready_bit;
-	Uint16 m_targetdata_offset;
+	uint16_t m_targetdata_offset;
 
    Uint8 m_soundchip1_id;
    Uint8 m_soundctrl1;

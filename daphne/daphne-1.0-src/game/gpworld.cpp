@@ -35,10 +35,11 @@
 // game wont be playable until vldp can do multiple speeds
 // samples are needed for game generated sounds
 // game seems to lockup with writes to dac0 and dae0?
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <string.h>
 #include "gpworld.h"
 #include "../io/conout.h"
@@ -144,7 +145,7 @@ void gpworld::do_nmi()
 }
 
 // reads a byte from the cpu's memory
-Uint8 gpworld::cpu_mem_read(Uint16 addr)
+Uint8 gpworld::cpu_mem_read(uint16_t addr)
 {
 	Uint8 result = m_cpumem[addr];
 	char s[81] = { 0 };
@@ -241,7 +242,7 @@ Uint8 gpworld::cpu_mem_read(Uint16 addr)
 }
 
 // writes a byte to the cpu's memory
-void gpworld::cpu_mem_write(Uint16 addr, Uint8 value)
+void gpworld::cpu_mem_write(uint16_t addr, Uint8 value)
 {
 	m_cpumem[addr] = value;
 	char s[81] = { 0 };
@@ -335,7 +336,7 @@ void gpworld::cpu_mem_write(Uint16 addr, Uint8 value)
 	}
 }
 
-Uint8 gpworld::read_ldp(Uint16 addr)
+Uint8 gpworld::read_ldp(uint16_t addr)
 {
 //	char s[81] = {0};
 		
@@ -346,7 +347,7 @@ Uint8 gpworld::read_ldp(Uint16 addr)
 		return result;
 }
 
-void gpworld::write_ldp(Uint8 value, Uint16 addr)
+void gpworld::write_ldp(Uint8 value, uint16_t addr)
 {
 //	char s[81] = {0};
 	
@@ -356,7 +357,7 @@ void gpworld::write_ldp(Uint8 value, Uint16 addr)
 }
 
 // reads a byte from the cpu's port
-Uint8 gpworld::port_read(Uint16 port)
+Uint8 gpworld::port_read(uint16_t port)
 {
 	char s[81] = { 0 };
 
@@ -389,7 +390,7 @@ Uint8 gpworld::port_read(Uint16 port)
 }
 
 // writes a byte to the cpu's port
-void gpworld::port_write(Uint16 port, Uint8 value)
+void gpworld::port_write(uint16_t port, Uint8 value)
 {
 	char s[81] = { 0 };
 

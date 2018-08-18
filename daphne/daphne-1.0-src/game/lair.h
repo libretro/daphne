@@ -43,8 +43,8 @@ public:
 	void shutdown();
 	void do_irq(unsigned int);
 	void do_nmi();
-	Uint8 cpu_mem_read(Uint16 addr);
-	void cpu_mem_write(Uint16 addr, Uint8 value);
+	Uint8 cpu_mem_read(uint16_t addr);
+	void cpu_mem_write(uint16_t addr, Uint8 value);
 	void input_enable(Uint8);
 	void input_disable(Uint8);
 	void OnVblank();

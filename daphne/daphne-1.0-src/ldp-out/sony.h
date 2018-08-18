@@ -26,6 +26,7 @@
 #ifndef SONY_H
 #define SONY_H
 
+#include <stdint.h>
 #include "ldp.h"
 
 class sony : public ldp
@@ -42,7 +43,7 @@ public:
 	void enable_audio2();
 	void disable_audio1();
 	void disable_audio2();
-//	Uint16 get_current_frame();
+//	uint16_t get_current_frame();
 
 	bool receive_status(Uint8);
 	void searchforframe(char *);

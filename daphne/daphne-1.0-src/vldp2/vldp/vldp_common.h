@@ -26,6 +26,8 @@
 #ifndef VLDP_COMMON_H
 #define VLDP_COMMON_H
 
+#include <stdint.h>
+
 #include <SDL.h>
 
 #include <SDL_thread.h>
@@ -53,7 +55,7 @@
 // (needs to be able to accomodate huge paths)
 #define STRSIZE 320
 
-extern Uint16 g_req_frame;	// which frame to seek to
+extern uint16_t g_req_frame;	// which frame to seek to
 extern Uint32 g_req_min_seek_ms;	// minimum # of milliseconds that this seek can take
 extern Uint32 g_req_timer;
 extern unsigned int g_req_idx;	// multipurpose index

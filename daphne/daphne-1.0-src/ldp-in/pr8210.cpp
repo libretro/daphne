@@ -33,10 +33,11 @@
 // As the manual says, a blip of 0 has an interval of 1.05 ms, while a blip of 1 has an interval of 2.11 ms
 // At the moment, each game driver calculates these blips internally.
 // NOTE : to calculate blips accurately, you need to use elapsed cpu cycles, not elapsed time.
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <stdio.h>
 #include "../io/conout.h"
 #include "pr8210.h"
@@ -247,9 +248,9 @@ void pr8210_seek()
 // PR8210 games should use this function instead of calling g_ldp->get_current_frame() directly
 //  because this function calls the necessary g_ldp->get_status() automatically.
 //  NOTE!! A result of 0 means we are seeking or stopped!
-Uint16 pr8210_get_current_frame()
+uint16_t pr8210_get_current_frame(void)
 {
-	Uint16 result = 0;	// 0 means we are seeking or stopped
+	uint16_t result = 0;	// 0 means we are seeking or stopped
 	int status = g_ldp->get_status();
 
 	if ((status == LDP_PLAYING) || (status == LDP_PAUSED))

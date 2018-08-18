@@ -24,10 +24,13 @@
 // four channel square wave generator
 //
 
+#include <stdint.h>
+#include <memory.h>
+
 #include "sound.h"
 #include "tonegen.h"
 #include "../io/conout.h"
-#include <memory.h>
+
 tonegen g_tonegen;
 bool g_tonegen_init = false;
 
@@ -72,8 +75,8 @@ void tonegen_stream(Uint8* stream, int length, int index)
 			sample += g_tonegen.amplitude[channel] * g_tonegen.flip[channel] / VOICES;
 		}
 
-		stream[pos] = stream[pos+2] = (Uint16) (sample) & 0xff; 
-		stream[pos+1] = stream[pos+3] = ((Uint16) (sample) >> 8) & 0xff; 
+		stream[pos] = stream[pos+2] = (uint16_t) (sample) & 0xff; 
+		stream[pos+1] = stream[pos+3] = ((uint16_t) (sample) >> 8) & 0xff; 
 
 		for (channel = 0; channel < VOICES; channel++)
 		{

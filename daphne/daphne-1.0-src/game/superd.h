@@ -27,6 +27,8 @@
 #ifndef SUPERD_H
 #define SUPERD_H
 
+#include <stdint.h>
+
 #include "game.h"
 
 #define SUPERD_CPU_HZ	5000000	// speed of cpu
@@ -45,9 +47,9 @@ public:
 	superd();
 	bool init();
 	void do_irq(unsigned int);
-	void cpu_mem_write(Uint16, Uint8);
-	Uint8 port_read(Uint16);
-	void port_write(Uint16, Uint8);
+	void cpu_mem_write(uint16_t, Uint8);
+	Uint8 port_read(uint16_t);
+	void port_write(uint16_t, Uint8);
 	void input_enable(Uint8);
 	void input_disable(Uint8);
 	void OnVblank();

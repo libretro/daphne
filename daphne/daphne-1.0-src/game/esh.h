@@ -23,6 +23,8 @@
 // esh.h
 // by Matt Ownby
 
+#include <stdint.h>
+
 #include "game.h"
 
 #define ESH_OVERLAY_W 256	// width of overlay
@@ -39,9 +41,9 @@ public:
 	esh();
 	void do_nmi();		// does an NMI tick
 	void do_irq(unsigned int);		// does an IRQ tick
-	void cpu_mem_write(Uint16 addr, Uint8 value);		// memory write routine
-	Uint8 port_read(Uint16 port);
-	void port_write(Uint16 port, Uint8 value);
+	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
+	Uint8 port_read(uint16_t port);
+	void port_write(uint16_t port, Uint8 value);
 	void input_enable(Uint8);
 	void input_disable(Uint8);
 	void palette_calculate();

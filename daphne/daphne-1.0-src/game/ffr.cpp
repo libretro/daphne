@@ -26,9 +26,11 @@
 
 // just a little exercise to try to see if I can get a clip from the Freedom Fighter laserdisc
 // to play correctly (using skipping)
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
+
+#include <stdint.h>
 
 #include "ffr.h"
 #include "../daphne.h"	// for get_quitflag
@@ -213,7 +215,7 @@ void ffr::start()
 			// if we have another sequence to skip to, then do so		
 			if (m_pClips[index+1].start)
 			{
-				g_ldp->pre_skip_forward((Uint16) (m_pClips[index+1].start - m_pClips[index].end));
+				g_ldp->pre_skip_forward((uint16_t) (m_pClips[index+1].start - m_pClips[index].end));
 			}
 			else
 			{

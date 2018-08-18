@@ -26,6 +26,8 @@
 #ifndef VIP9500SG_H
 #define VIP9500SG_H
 
+#include <stdint.h>
+
 #define VIP9500SG_SEARCH 0x01
 #define VIP9500SG_SKIP_FORWARD 0x02
 #define VIP9500SG_SKIP_BACKWARD 0x04

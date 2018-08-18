@@ -651,7 +651,7 @@ bool ldp_vldp::nonblocking_search(char *frame)
 	bool result = false;
 	string filename = "";
 	string oggname = "";
-	Uint16 target_ld_frame = (Uint16) atoi(frame);
+	uint16_t target_ld_frame = (uint16_t) atoi(frame);
 	uint64_t u64AudioTargetPos = 0;	// position in audio to seek to (in samples)
 	unsigned int seek_delay_ms = 0;	// how many ms this seek must be delayed (to simulate laserdisc lag)
 	
@@ -663,7 +663,7 @@ bool ldp_vldp::nonblocking_search(char *frame)
 	{
 		// this value should be approximately the last frame we displayed
 		// it doesn't get changed to the new frame until the seek is complete
-		Uint16 cur_frame = get_current_frame();
+		uint16_t cur_frame = get_current_frame();
 		unsigned int frame_delta = 0;	// how many frames we're skipping
 		
 		// if we're seeking forward
@@ -755,7 +755,7 @@ bool ldp_vldp::nonblocking_search(char *frame)
 			}
 
 			// try to search to the requested frame
-			if (g_vldp_info->search((Uint16) m_target_mpegframe, seek_delay_ms))
+			if (g_vldp_info->search((uint16_t) m_target_mpegframe, seek_delay_ms))
 			{
 				// if we have an audio file opened, do an audio seek also
 				if (m_audio_file_opened)
@@ -861,11 +861,11 @@ unsigned int ldp_vldp::play()
 // Caveats: Does not work with an mpeg of the wrong framerate, does not work with an mpeg
 //  that uses fields, and does not skip across file boundaries.
 // Returns true if skip was successful
-bool ldp_vldp::skip_forward(Uint16 frames_to_skip, Uint16 target_frame)
+bool ldp_vldp::skip_forward(uint16_t frames_to_skip, uint16_t target_frame)
 {
 	bool result = false;
 	
-	target_frame = (Uint16) (target_frame - m_cur_ldframe_offset);	// take offset into account
+	target_frame = (uint16_t) (target_frame - m_cur_ldframe_offset);	// take offset into account
 	// this is ok (and possible) because we don't support skipping across files
 
 	unsigned int uFPKS = g_vldp_info->uFpks;
@@ -1611,10 +1611,10 @@ uint64_t ldp_vldp::get_audio_sample_position(unsigned int uTargetMpegFrame)
 // If they aren't, you will need to calculate the actual mpeg frame to seek to
 // The reason I don't return time here instead of frames is because it is more accurate to
 //  return frames if they are at the same FPS (which hopefully they are hehe)
-Uint16 ldp_vldp::mpeg_info (string &filename, Uint16 ld_frame)
+uint16_t ldp_vldp::mpeg_info (string &filename, uint16_t ld_frame)
 {
 	unsigned int index = 0;
-	Uint16 mpeg_frame = 0;	// which mpeg frame to seek (assuming mpeg and disc have same FPS)
+	uint16_t mpeg_frame = 0;	// which mpeg frame to seek (assuming mpeg and disc have same FPS)
 	filename = "";	// blank 'filename' means error, so we default to this condition for safety reasons
 	
 	// find the mpeg file that has the LD frame inside of it
@@ -1630,7 +1630,7 @@ Uint16 ldp_vldp::mpeg_info (string &filename, Uint16 ld_frame)
 		if (m_mpeginfo[index].name != "")
 		{
 			filename = m_mpeginfo[index].name;
-			mpeg_frame = (Uint16) (ld_frame - m_mpeginfo[index].frame);
+			mpeg_frame = (uint16_t) (ld_frame - m_mpeginfo[index].frame);
 			m_cur_ldframe_offset = m_mpeginfo[index].frame;
 		}
 		else
@@ -1906,8 +1906,8 @@ int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 					// (if palette is NULL, the compiler shouldn't try to dereference palette->transparent)
 					if ((palette == NULL) || palette->transparent)
 					{
-						unsigned int Y_chunk = *((Uint16 *) Y);
-						unsigned int Y2_chunk = *((Uint16 *) Y2);
+						unsigned int Y_chunk = *((uint16_t *) Y);
+						unsigned int Y2_chunk = *((uint16_t *) Y2);
 						unsigned int V_chunk = *V;
 						unsigned int U_chunk = *U;
 						
@@ -2110,7 +2110,7 @@ void display_frame_callback(struct yuv_buf *buf)
 // assumes destination overlay is locked and *IMPORTANT* assumes src and dst are the same resolution
 // RJS CHANGE - Convert SDL_Overlay
 // void buf2overlay_YUY2(SDL_Overlay *dst, struct yuv_buf *src)
-void buf2overlay_YUY2(Uint8 *out_pixels, Uint16 in_pitch, int in_h, int in_w, struct yuv_buf *src)
+void buf2overlay_YUY2(Uint8 *out_pixels, uint16_t in_pitch, int in_h, int in_w, struct yuv_buf *src)
 {
 	// RJS START - from overlays to textures, remember this assumes an already locked texture
 	SDL1_Overlay dst_mem;
@@ -2136,8 +2136,8 @@ void buf2overlay_YUY2(Uint8 *out_pixels, Uint16 in_pitch, int in_h, int in_w, st
 		// do 4 bytes at a time, but only iterate for w_half
 		for (col = 0; col < (dst->w << 1); col += 4)
 		{
-			unsigned int Y_chunk = *((Uint16 *) Y);
-			unsigned int Y2_chunk = *((Uint16 *) Y2);
+			unsigned int Y_chunk = *((uint16_t *) Y);
+			unsigned int Y2_chunk = *((uint16_t *) Y2);
 			unsigned int V_chunk = *V;
 			unsigned int U_chunk = *U;
 			
@@ -2266,7 +2266,7 @@ void update_parse_meter()
 
          SDL_FillRect(screen, &clip, SDL_MapRGB(screen->format, 0, 0, 0));	// fill inside with black
 
-         clip.w = (Uint16)((screen->w * g_dPercentComplete01) + 0.5) - 1;	// compute how wide our progress bar should be (-1 to take into account left pixel border)
+         clip.w = (uint16_t)((screen->w * g_dPercentComplete01) + 0.5) - 1;	// compute how wide our progress bar should be (-1 to take into account left pixel border)
 
          // go from full red (hardly complete) to full green (fully complete)
          SDL_FillRect(screen, &clip, SDL_MapRGB(screen->format,

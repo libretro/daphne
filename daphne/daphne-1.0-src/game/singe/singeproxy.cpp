@@ -20,6 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <stdint.h>
 #include "singeproxy.h"
 #include "singe_interface.h"
 
@@ -221,7 +222,7 @@ void sep_do_blit(SDL_Surface *srfDest)
 	sep_srf32_to_srf8(g_se_surface, srfDest);
 }
 
-void sep_do_mouse_move(Uint16 x, Uint16 y, Sint16 xrel, Sint16 yrel)
+void sep_do_mouse_move(uint16_t x, uint16_t y, Sint16 xrel, Sint16 yrel)
 {
 	static bool debounced = false;
 	int x1 = (int)x;

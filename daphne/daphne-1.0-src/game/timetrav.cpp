@@ -19,10 +19,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <string.h> // for memset
 #include <stdio.h>	// for sprintf (we shouldn't use sprintf anymore)
 #include "timetrav.h"
@@ -116,7 +117,7 @@ void timetrav::cpu_mem_write(Uint32 addr, Uint8 value)
 	}
 }
 
-void timetrav::port_write(Uint16 port, Uint8 value)
+void timetrav::port_write(uint16_t port, Uint8 value)
 {
 	char s[80];
    static char display_string[9] = {0};
@@ -143,7 +144,7 @@ void timetrav::port_write(Uint16 port, Uint8 value)
    }
 }
 
-Uint8 timetrav::port_read(Uint16 port)
+Uint8 timetrav::port_read(uint16_t port)
 {
 	char s[80];
 

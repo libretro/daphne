@@ -26,6 +26,7 @@
 #ifndef GPWORLD_H
 #define GPWORLD_H
 
+#include <stdint.h>
 #include "game.h"
 
 #define GPWORLD_OVERLAY_W 360 // width of overlay
@@ -54,10 +55,10 @@ public:
 	gpworld();
 	void do_irq(unsigned int);		// does an IRQ tick
 	void do_nmi();		// does an NMI tick
-	Uint8 cpu_mem_read(Uint16 addr);			// memory read routine
-	void cpu_mem_write(Uint16 addr, Uint8 value);		// memory write routine
-	Uint8 port_read(Uint16 port);		// read from port
-	void port_write(Uint16 port, Uint8 value);		// write to a port
+	Uint8 cpu_mem_read(uint16_t addr);			// memory read routine
+	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
+	Uint8 port_read(uint16_t port);		// read from port
+	void port_write(uint16_t port, Uint8 value);		// write to a port
 	virtual void input_enable(Uint8);
 	virtual void input_disable(Uint8);
 	bool set_bank(Uint8, Uint8);
@@ -65,8 +66,8 @@ public:
 	void video_repaint();	// function to repaint video
    unsigned get_libretro_button_map(unsigned id);
    const char *get_libretro_button_name(unsigned id);
-	virtual void write_ldp(Uint8, Uint16);
-	virtual Uint8 read_ldp(Uint16);
+	virtual void write_ldp(Uint8, uint16_t);
+	virtual Uint8 read_ldp(uint16_t);
 protected:
 	void recalc_palette();
 	void draw_sprite(int);

@@ -27,11 +27,13 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
+#include <stdio.h>
+#include <memory.h>
+
 #include "sound.h"
 #include "gisound.h"
 #include "../io/conout.h"
-#include <memory.h>
-#include <stdio.h>
 
 #define MAX_GISOUND_CHIPS 4
 int g_gisoundchip_count = -1;
@@ -88,9 +90,9 @@ int gisound_initialize(Uint32 core_frequency)
 
 void gisound_writedata(Uint32 address, Uint32 data, int index)
 {
-   Uint16 chan_a_tone_period;
-   Uint16 chan_b_tone_period;
-   Uint16 chan_c_tone_period;
+   uint16_t chan_a_tone_period;
+   uint16_t chan_b_tone_period;
+   uint16_t chan_c_tone_period;
    g_gi_chips[index]->register_set[address] = data;
    int old_bytes_per_switch = 0;
 //	char s[81] = {0};
@@ -273,8 +275,8 @@ void gisound_stream(Uint8* stream, int length, int index)
 			((g_gi_chips[index]->tone_c?g_gi_chips[index]->chan_c_flip:1) 
 			+ (g_gi_chips[index]->noise_c?g_gi_chips[index]->noise_flip:1)) / 2) / 3;
 
-		stream[pos] = stream[pos+2] = (Uint16) (sample) & 0xff; 
-		stream[pos+1] = stream[pos+3] = ((Uint16) (sample) >> 8) & 0xff; 
+		stream[pos] = stream[pos+2] = (uint16_t) (sample) & 0xff; 
+		stream[pos+1] = stream[pos+3] = ((uint16_t) (sample) >> 8) & 0xff; 
 
 		g_gi_chips[index]->chan_a_bytes_to_go -= 4;
 		g_gi_chips[index]->chan_b_bytes_to_go -= 4;

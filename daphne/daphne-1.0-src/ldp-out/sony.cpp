@@ -25,6 +25,7 @@
 // Begun by Robert DiNapoli
 // Maintained by Matt Ownby
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>	// for atoi
 #include "sony.h"
@@ -166,7 +167,7 @@ void sony::stop()
 // queries sony player for current frame
 // I'm not sure if it's possible to query too quickly or not
 // (if you get errors querying for frame number, use the generic function instead)
-Uint16 sony::get_current_frame()
+uint16_t sony::get_current_frame()
 {
 	char frame[FRAME_ARRAY_SIZE] = { 0 };
 	int frame_index = 0;
@@ -179,7 +180,7 @@ Uint16 sony::get_current_frame()
 		frame[frame_index] = serial_get_one_byte();
 	}
 
-	return(static_cast<Uint16>(atoi(frame)));
+	return(static_cast<uint16_t>(atoi(frame)));
 }
 */
 

@@ -1,6 +1,8 @@
 #ifndef SINGE_INTERFACE_H
 #define SINGE_INTERFACE_H
 
+#include <stdint.h>
+
 // increase this number every time you change something in this file!!!
 #define SINGE_INTERFACE_API_VERSION 3
 
@@ -22,8 +24,8 @@ struct singe_in_info
 	void (*set_last_error)(const char *);
 
 	// From video/video.h
-	Uint16 (*get_video_width)();
-	Uint16 (*get_video_height)();
+	uint16_t (*get_video_width)();
+	uint16_t (*get_video_height)();
 	void (*draw_string)(const char*, int, int, SDL_Surface*);
 	
 	// From sound/samples.h
@@ -43,9 +45,9 @@ struct singe_in_info
 	void (*pre_pause)();
 	void (*pre_stop)();
 	bool (*pre_search)(const char *, bool block_until_search_finished);
-	void (*framenum_to_frame)(Uint16, char *);
-	bool (*pre_skip_forward)(Uint16);
-	bool (*pre_skip_backward)(Uint16);
+	void (*framenum_to_frame)(uint16_t, char *);
+	bool (*pre_skip_forward)(uint16_t);
+	bool (*pre_skip_backward)(uint16_t);
 	void (*pre_step_forward)();
 	void (*pre_step_backward)();
 
@@ -67,7 +69,7 @@ struct singe_out_info
 	
 	void (*sep_do_blit)(SDL_Surface *srfDest);
 
-	void (*sep_do_mouse_move)(Uint16 x, Uint16 y, Sint16 xrel, Sint16 yrel);
+	void (*sep_do_mouse_move)(uint16_t x, uint16_t y, Sint16 xrel, Sint16 yrel);
 	void (*sep_error)(const char *fmt, ...);
 	void (*sep_print)(const char *fmt, ...);
 	void (*sep_set_static_pointers)(double *m_disc_fps, unsigned int *m_uDiscFPKS);

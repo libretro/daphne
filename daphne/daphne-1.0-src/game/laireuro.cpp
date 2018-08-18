@@ -23,10 +23,11 @@
 
 // laireuro.cpp
 // by Mark Broadhead
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <string.h>	// for memset
 #include "laireuro.h"
 #include "../cpu/cpu.h"
@@ -175,7 +176,7 @@ void laireuro::do_nmi()
 	}
 }
 
-Uint8 laireuro::cpu_mem_read(Uint16 addr)
+Uint8 laireuro::cpu_mem_read(uint16_t addr)
 {
 	Uint8 result = m_cpumem[addr];
 
@@ -238,7 +239,7 @@ Uint8 laireuro::cpu_mem_read(Uint16 addr)
 	return result;
 }
 
-void laireuro::cpu_mem_write(Uint16 addr, Uint8 value)
+void laireuro::cpu_mem_write(uint16_t addr, Uint8 value)
 {	
 	char s[81] = {0};
 
@@ -312,7 +313,7 @@ void laireuro::cpu_mem_write(Uint16 addr, Uint8 value)
 	}
 }
 
-void laireuro::port_write(Uint16 port, Uint8 value)
+void laireuro::port_write(uint16_t port, Uint8 value)
 // Called whenever the emulator wants to output to a port
 {
 
@@ -344,7 +345,7 @@ void laireuro::port_write(Uint16 port, Uint8 value)
 	}		
 }
 
-Uint8 laireuro::port_read(Uint16 port)
+Uint8 laireuro::port_read(uint16_t port)
 // Called whenever the emulator wants to read from a port
 {
 

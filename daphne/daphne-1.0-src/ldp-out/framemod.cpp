@@ -26,6 +26,7 @@
 
 // contains functions to convert the regular DL/SA NTSC frames to other formats such as PAL
 
+#include <stdint.h>
 #include "framemod.h"
 #include "../daphne.h"	// for get_frame_modifer
 #include "../io/conout.h"
@@ -66,7 +67,7 @@ unsigned int get_frame_conversion_fpks()
 
 // converts a standard DL/SA '83 NTSC frame to PAL, Space Ace'91, etc ...
 // the resulting frame is returned
-Uint16 do_frame_conversion(int source_frame)
+uint16_t do_frame_conversion(int source_frame)
 {
 
 	double result_frame = (double) source_frame;	// it needs to be a float for precise math
@@ -211,6 +212,6 @@ Uint16 do_frame_conversion(int source_frame)
 			printline("Bug in framemod.cpp, unknown frame modifier!");
 	}
 
-	return( (Uint16) result_frame);
+	return( (uint16_t) result_frame);
 
 }
