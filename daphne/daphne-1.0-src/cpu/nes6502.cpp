@@ -2426,15 +2426,6 @@ end_execute:
    return (cpu.total_cycles - g_old_cycles);	// MPO : changed old_cycles to g_old_cycles
 }
 
-#if 0
-void nes6502_init(void)
-{
-   cpu.a_reg = cpu.x_reg = cpu.y_reg = 0;
-   cpu.s_reg = 0xFF;                         /* Stack grows down */
-   cpu.burn_cycles = 0;
-}
-#endif
-
 /* Issue a CPU Reset */
 void nes6502_reset(void)
 {

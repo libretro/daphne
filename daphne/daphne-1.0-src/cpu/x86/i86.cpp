@@ -364,12 +364,6 @@ Uint32 i86_execute(Uint32 num_cycles)
 	/* run until we're out */
 	while (i86_ICount > 0)
 	{
-//#define VERBOSE_DEBUG
-#ifdef VERBOSE_DEBUG
-		logerror("[%04x:%04x]=%02x\tF:%04x\tAX=%04x\tBX=%04x\tCX=%04x\tDX=%04x %d%d%d%d%d%d%d%d%d\n",
-				I.sregs[CS], I.pc - I.base[CS], ReadByte(I.pc), I.flags, I.regs.w[AX], I.regs.w[BX], I.regs.w[CX], I.regs.w[DX], I.AuxVal ? 1 : 0, I.OverVal ? 1 : 0,
-				I.SignVal ? 1 : 0, I.ZeroVal ? 1 : 0, I.CarryVal ? 1 : 0, I.ParityVal ? 1 : 0, I.TF, I.IF, I.DirVal < 0 ? 1 : 0);
-#endif
 		CALL_MAME_DEBUG;
 
 		seg_prefix = FALSE;
@@ -518,10 +512,6 @@ int i186_execute(int num_cycles)
 	/* run until we're out */
 	while (i86_ICount > 0)
 	{
-#ifdef VERBOSE_DEBUG
-		printf("[%04x:%04x]=%02x\tAX=%04x\tBX=%04x\tCX=%04x\tDX=%04x\n", I.sregs[CS], I.pc, ReadByte(I.pc), I.regs.w[AX],
-			   I.regs.w[BX], I.regs.w[CX], I.regs.w[DX]);
-#endif
 		CALL_MAME_DEBUG;
 
 		seg_prefix = FALSE;
@@ -615,10 +605,6 @@ static void v30_interrupt(unsigned int_num, BOOLEAN md_flag)
 {
 	unsigned dest_seg, dest_off;
 
-#if 0
-	logerror("PC=%05x : NEC Interrupt %02d", activecpu_get_pc(), int_num);
-#endif
-
 	v30_pushf();
 	I.TF = I.IF = 0;
 	if (md_flag)
@@ -674,10 +660,6 @@ int v30_execute(int num_cycles)
 	/* run until we're out */
 	while (i86_ICount > 0)
 	{
-#ifdef VERBOSE_DEBUG
-		printf("[%04x:%04x]=%02x\tAX=%04x\tBX=%04x\tCX=%04x\tDX=%04x\n", I.sregs[CS], I.pc, ReadByte(I.pc), I.regs.w[AX],
-			   I.regs.w[BX], I.regs.w[CX], I.regs.w[DX]);
-#endif
 		CALL_MAME_DEBUG;
 
 		seg_prefix = FALSE;
