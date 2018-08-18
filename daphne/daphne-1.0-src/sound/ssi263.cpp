@@ -359,7 +359,7 @@ bool ssi263_init(bool init_speech)
     bool result = false;
 
     // Always need a TQ class pointer so subtitled speech text can be displayed.
-    m_thayers = dynamic_cast<thayers *>(g_game);
+    m_thayers = (thayers *)(g_game);
 
     if (m_thayers)
     {

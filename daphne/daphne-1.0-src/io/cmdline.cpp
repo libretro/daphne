@@ -665,7 +665,7 @@ bool parse_cmd_line(int argc, char **argv)
 		// if they are pointing to a framefile to be used by VLDP
 		else if (strcasecmp(s, "-framefile")==0)
 		{
-			ldp_vldp *cur_ldp = dynamic_cast<ldp_vldp *>(g_ldp);	// see if the currently selected LDP is VLDP
+			ldp_vldp *cur_ldp = (ldp_vldp *)(g_ldp);	// see if the currently selected LDP is VLDP
 			get_next_word(s, sizeof(s));
 			// if it is a vldp, then this option has meaning and we can use it
 			if (cur_ldp)
@@ -682,7 +682,7 @@ bool parse_cmd_line(int argc, char **argv)
 		// if they are defining an alternate soundtrack to be used by VLDP
 		else if (strcasecmp(s, "-altaudio")==0)
 		{
-			ldp_vldp *cur_ldp = dynamic_cast<ldp_vldp *>(g_ldp);	// see if the currently selected LDP is VLDP
+			ldp_vldp *cur_ldp = (ldp_vldp *)(g_ldp);	// see if the currently selected LDP is VLDP
 			get_next_word(s, sizeof(s));
 			// if it is a vldp, then this option has meaning and we can use it
 			if (cur_ldp)
@@ -863,7 +863,7 @@ bool parse_cmd_line(int argc, char **argv)
 		// stretch video vertically by x amount (a value of 24 removes letterboxing effect in Cliffhanger)
 		else if (strcasecmp(s, "-vertical_stretch")==0)
 		{
-			ldp_vldp *the_ldp = dynamic_cast<ldp_vldp *>(g_ldp);
+			ldp_vldp *the_ldp = (ldp_vldp *)(g_ldp);
 
 			get_next_word(s, sizeof(s));
 			i = atoi(s);
@@ -1028,8 +1028,8 @@ bool parse_cmd_line(int argc, char **argv)
 			{
 				set_sboverlay_characterset(i);
 
-				lair *game_lair_or_sa = dynamic_cast<lair *>(g_game);
-				thayers *game_thayers = dynamic_cast<thayers *>(g_game);
+				lair *game_lair_or_sa = (lair *)(g_game);
+				thayers *game_thayers = (thayers *)(g_game);
 
 				// print a warning instead of an error to make daphne more friendly to non-daphneloader frontends
 				if (NULL == game_lair_or_sa && NULL == game_thayers)
@@ -1052,7 +1052,7 @@ bool parse_cmd_line(int argc, char **argv)
         // Playing Thayer's Quest, and don't want speech synthesis?
         else if (strcasecmp(s, "-nospeech")==0)
         {
-            thayers *game_thayers = dynamic_cast<thayers *>(g_game);
+            thayers *game_thayers = (thayers *)(g_game);
 
             if (game_thayers)
                 game_thayers->no_speech();
@@ -1091,7 +1091,7 @@ bool parse_cmd_line(int argc, char **argv)
         // from the dimensions of the game.
 		else if (strcasecmp(s, "-fullscale")==0)
 		{
-			ldp_vldp *cur_ldp = dynamic_cast<ldp_vldp *>(g_ldp);	// see if the currently selected LDP is VLDP
+			ldp_vldp *cur_ldp = (ldp_vldp *)(g_ldp);	// see if the currently selected LDP is VLDP
 			// if it is a vldp, then this option is not supported
 			if (cur_ldp)
 			{

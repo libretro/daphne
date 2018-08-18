@@ -19,7 +19,7 @@ IScoreboard *ScoreboardCollection::GetInstance(ILogger *pLogger, SDL_Surface *(*
 bool ScoreboardCollection::AddType(IScoreboard *pInstanceSC, ScoreboardFactory::ScoreboardType type)
 {
 	bool bRes = false;
-	ScoreboardCollection *pInstance = dynamic_cast<ScoreboardCollection *>(pInstanceSC);
+	ScoreboardCollection *pInstance = (ScoreboardCollection *)(pInstanceSC);
 
 	// if this instance is a scoreboard collection ...
 	if (pInstance)

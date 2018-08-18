@@ -815,7 +815,7 @@ void process_event(SDL_Event *event)
 			// We use a special case for Thayers Quest
 			else
 			{
-				thayers *l_thayers = dynamic_cast<thayers *>(g_game);
+				thayers *l_thayers = (thayers *)(g_game);
 				// cast game class to a thayers class so we can call a thayers-specific function
 
 				// make sure cast succeeded
@@ -838,7 +838,7 @@ void process_event(SDL_Event *event)
 			// We use a special case for Thayers Quest
 			else
 			{
-				thayers *l_thayers = dynamic_cast<thayers *>(g_game);
+				thayers *l_thayers = (thayers *)(g_game);
 				// cast game class to thayers class so we can call a thayers-specific function
 
 				// make sure cast succeeded
