@@ -538,11 +538,6 @@ void net_send_data_to_server()
 
 	if (!g_send_data_to_server) return;	// if user forbids data to be sent, don't do it
 
-#ifdef DEBUG
-	// I don't wanna mess up the server stats with people trying to debug daphne
-	return;
-#endif
-
 #ifdef WIN32
 	// initialize Winschlock
 	WSADATA wsaData;
