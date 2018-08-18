@@ -38,7 +38,8 @@
 #ifdef DEBUG
 #include <assert.h>
 #endif
-// 
+
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -1507,7 +1508,7 @@ bool ldp_vldp::precache_all_video()
 	// (it's legal for a framefile to have the same file listed more than once)
 	set<string> sDupePreventer;
 
-	MPO_UINT64 u64TotalBytes = 0;
+	uint64_t u64TotalBytes = 0;
 
 	// first compute file size ...
 	for (i = 0; i < m_file_index; i++)
