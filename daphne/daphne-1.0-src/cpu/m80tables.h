@@ -20,8 +20,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <stdint.h>
 
-Uint8 m80_inc_flags[256] = {
+uint8_t m80_inc_flags[256] = {
 
 	0x50, // 00
 
@@ -537,7 +538,7 @@ Uint8 m80_inc_flags[256] = {
 
 };
 
-Uint8 m80_dec_flags[256] = {
+uint8_t m80_dec_flags[256] = {
 
 	0x42, // 00
 
@@ -1053,7 +1054,7 @@ Uint8 m80_dec_flags[256] = {
 
 };
 
-Uint8 m80_sz53_flags[256] = {
+uint8_t m80_sz53_flags[256] = {
 
 	0x40, // 00
 
@@ -1569,7 +1570,7 @@ Uint8 m80_sz53_flags[256] = {
 
 };
 
-Uint8 m80_sz53p_flags[256] = {
+uint8_t m80_sz53p_flags[256] = {
 
 	0x44, // 00
 
@@ -2085,7 +2086,7 @@ Uint8 m80_sz53p_flags[256] = {
 
 };
 
-Uint8 m80_szhp_bit_flags[256] = {
+uint8_t m80_szhp_bit_flags[256] = {
 
 	0x54, // 00
 
