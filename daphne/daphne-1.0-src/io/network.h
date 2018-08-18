@@ -53,12 +53,8 @@ struct net_packet
 };
 
 void net_server_send();
-unsigned int get_user_id();
-void net_set_gamename(char *gamename);
-void net_set_ldpname(char *ldpname);
 unsigned int get_cpu_mhz();
 unsigned int get_sys_mem();
 char *get_video_description();
 char *get_cpu_name();
 char *get_os_description();
-void net_send_data_to_server();

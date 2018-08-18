@@ -184,8 +184,6 @@ bool parse_game_type()
 	// first thing we need to get from the command line is the game type
 	get_next_word(s, sizeof(s));
 
-	net_set_gamename(s);	// report to server the game we are running
-
 	if (strcasecmp(s, "ace") == 0)
 	{
 		g_game = new ace();
@@ -552,8 +550,6 @@ bool parse_ldp_type()
 
 	get_next_word(s, sizeof(s));
 
-	net_set_ldpname(s);	// report to server which ldp we are using
-
 	if (strcasecmp(s, "combo")==0)
 	{
 		g_ldp = new combo();
@@ -749,7 +745,6 @@ bool parse_cmd_line(int argc, char **argv)
       // if want data sent to the server
 		else if (strcasecmp(s, "-serversend")==0)
 		{
-			net_server_send();
 		}
 		else if (strcasecmp(s, "-nosound")==0)
 		{

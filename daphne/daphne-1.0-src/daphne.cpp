@@ -226,7 +226,6 @@ int main_daphne(int argc, char **argv)
 										// Send our game/ldp type to server to create stats.
 										// This was moved to after the game has finished running because it creates a slight delay (like 1 second),
 										//  which throws off the think_delay function in the LDP class.
-										// net_send_data_to_server();
 
 										result_code = 0;	// daphne will exit without any errors
 									}
@@ -295,8 +294,6 @@ int main_daphne_mainloop()
 int main_daphne_shutdown()
 {
 	g_game->pre_shutdown();
-
-	net_send_data_to_server();
 
 	int result_code = 0;	// daphne will exit without any errors
 
@@ -400,8 +397,6 @@ void reset_logfile(int argc, char **argv)
 	}
 	printline(str.c_str());
 	snprintf(s, sizeof(s), "--CPU : %s %d MHz || Mem : %d megs", get_cpu_name(), get_cpu_mhz(), get_sys_mem());
-	printline(s);
-	snprintf(s, sizeof(s), "--OS : %s || Video : %s", get_os_description(), get_video_description());
 	printline(s);
 	outstr("--OpenGL: ");
 	printline("Not Compiled In");
