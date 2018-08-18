@@ -446,25 +446,6 @@ extern DECLSPEC int SDLCALL SDL_SoftStretch(SDL_Surface * src,
                                             SDL_Surface * dst,
                                             const SDL_Rect * dstrect);
 
-#define SDL_BlitScaled SDL_UpperBlitScaled
-
-/**
- *  This is the public scaled blit function, SDL_BlitScaled(), and it performs
- *  rectangle validation and clipping before passing it to SDL_LowerBlitScaled()
- */
-extern DECLSPEC int SDLCALL SDL_UpperBlitScaled
-    (SDL_Surface * src, const SDL_Rect * srcrect,
-    SDL_Surface * dst, SDL_Rect * dstrect);
-
-/**
- *  This is a semi-private blit function and it performs low-level surface
- *  scaled blitting only.
- */
-extern DECLSPEC int SDLCALL SDL_LowerBlitScaled
-    (SDL_Surface * src, SDL_Rect * srcrect,
-    SDL_Surface * dst, SDL_Rect * dstrect);
-
-
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus
 }
