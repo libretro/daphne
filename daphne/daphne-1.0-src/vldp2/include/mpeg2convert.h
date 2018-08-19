@@ -1,5 +1,5 @@
 /*
- * alloc.c
+ * mpeg2convert.h
  * Copyright (C) 2000-2003 Michel Lespinasse <walken@zoy.org>
  * Copyright (C) 1999-2000 Aaron Holtzman <aholtzma@ess.engr.uvic.ca>
  *
@@ -21,50 +21,40 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <stdlib.h>
-#include <inttypes.h>
+#ifndef LIBMPEG2_MPEG2CONVERT_H
+#define LIBMPEG2_MPEG2CONVERT_H
 
 #include "mpeg2.h"
 
-static void * (* malloc_hook) (unsigned size, mpeg2_alloc_t reason) = NULL;
-static int (* free_hook) (void * buf) = NULL;
+/* Set up for C function definitions, even when using C++ */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-void * mpeg2_malloc (unsigned size, mpeg2_alloc_t reason)
-{
-    char * buf;
+mpeg2_convert_t mpeg2convert_rgb32;
+mpeg2_convert_t mpeg2convert_rgb24;
+mpeg2_convert_t mpeg2convert_rgb16;
+mpeg2_convert_t mpeg2convert_rgb15;
+mpeg2_convert_t mpeg2convert_rgb8;
+mpeg2_convert_t mpeg2convert_bgr32;
+mpeg2_convert_t mpeg2convert_bgr24;
+mpeg2_convert_t mpeg2convert_bgr16;
+mpeg2_convert_t mpeg2convert_bgr15;
+mpeg2_convert_t mpeg2convert_bgr8;
 
-    if (malloc_hook) {
-	buf = (char *) malloc_hook (size, reason);
-	if (buf)
-	    return buf;
-    }
+typedef enum {
+    MPEG2CONVERT_RGB = 0,
+    MPEG2CONVERT_BGR = 1
+} mpeg2convert_rgb_order_t;
 
-    if (size) {
-	buf = (char *) malloc (size + 63 + sizeof (void **));
-	if (buf) {
-	    char * align_buf;
+mpeg2_convert_t * mpeg2convert_rgb (mpeg2convert_rgb_order_t order,
+				    unsigned int bpp);
 
-	    align_buf = buf + 63 + sizeof (void **);
-	    align_buf -= (long)align_buf & 63;
-	    *(((void **)align_buf) - 1) = buf;
-	    return align_buf;
-	}
-    }
-    return NULL;
+mpeg2_convert_t mpeg2convert_uyvy;
+
+/* Ends C function definitions when using C++ */
+#ifdef __cplusplus
 }
+#endif
 
-void mpeg2_free (void * buf)
-{
-    if (free_hook && free_hook (buf))
-	return;
-
-    if (buf)
-	free (*(((void **)buf) - 1));
-}
-
-void mpeg2_malloc_hooks (void * alloc_func (unsigned, mpeg2_alloc_t),
-			 int free_func (void *))
-{
-    malloc_hook = alloc_func;
-    free_hook = free_func;
-}
+#endif /* LIBMPEG2_MPEG2CONVERT_H */

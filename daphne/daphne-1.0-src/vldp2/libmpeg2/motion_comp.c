@@ -1,6 +1,6 @@
 /*
  * motion_comp.c
- * Copyright (C) 2000-2002 Michel Lespinasse <walken@zoy.org>
+ * Copyright (C) 2000-2003 Michel Lespinasse <walken@zoy.org>
  * Copyright (C) 1999-2000 Aaron Holtzman <aholtzma@ess.engr.uvic.ca>
  *
  * This file is part of mpeg2dec, a free MPEG-2 video stream decoder.
@@ -16,27 +16,52 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License along
+ * with mpeg2dec; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-// RJS CHANGE
-// #include "config.h"
-#include "../include/config.h"
+#include "config.h"
 
 #include <inttypes.h>
 
-// RJS CHANGE
-// #include "mpeg2.h"
-#include "../include/mpeg2.h"
-
+#include "mpeg2.h"
+#include "attributes.h"
 #include "mpeg2_internal.h"
 
 mpeg2_mc_t mpeg2_mc;
 
 void mpeg2_mc_init (uint32_t accel)
 {
+#ifdef ARCH_X86
+    if (accel & MPEG2_ACCEL_X86_MMXEXT)
+	mpeg2_mc = mpeg2_mc_mmxext;
+    else if (accel & MPEG2_ACCEL_X86_3DNOW)
+	mpeg2_mc = mpeg2_mc_3dnow;
+    else if (accel & MPEG2_ACCEL_X86_MMX)
+	mpeg2_mc = mpeg2_mc_mmx;
+    else
+#endif
+#ifdef ARCH_PPC
+    if (accel & MPEG2_ACCEL_PPC_ALTIVEC)
+	mpeg2_mc = mpeg2_mc_altivec;
+    else
+#endif
+#ifdef ARCH_ALPHA
+    if (accel & MPEG2_ACCEL_ALPHA)
+	mpeg2_mc = mpeg2_mc_alpha;
+    else
+#endif
+#ifdef ARCH_SPARC
+    if (accel & MPEG2_ACCEL_SPARC_VIS)
+	mpeg2_mc = mpeg2_mc_vis;
+    else
+#endif
+#ifdef ARCH_ARM
+    if (accel & MPEG2_ACCEL_ARM)
+	mpeg2_mc = mpeg2_mc_arm;
+    else
+#endif
 	mpeg2_mc = mpeg2_mc_c;
 }
 

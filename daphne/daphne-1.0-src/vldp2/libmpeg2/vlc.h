@@ -1,6 +1,6 @@
 /*
  * vlc.h
- * Copyright (C) 2000-2002 Michel Lespinasse <walken@zoy.org>
+ * Copyright (C) 2000-2003 Michel Lespinasse <walken@zoy.org>
  * Copyright (C) 1999-2000 Aaron Holtzman <aholtzma@ess.engr.uvic.ca>
  *
  * This file is part of mpeg2dec, a free MPEG-2 video stream decoder.
@@ -16,10 +16,15 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License along
+ * with mpeg2dec; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+
+#ifndef LIBMPEG2_VLC_H
+#define LIBMPEG2_VLC_H
+
+#include "mpeg2_internal.h"
 
 #define GETWORD(bit_buf,shift,bit_ptr)				\
 do {								\
@@ -27,7 +32,8 @@ do {								\
     bit_ptr += 2;						\
 } while (0)
 
-static inline void bitstream_init (decoder_t * decoder, const uint8_t * start)
+static inline void bitstream_init (mpeg2_decoder_t * decoder,
+				   const uint8_t * start)
 {
     decoder->bitstream_buf =
 	(start[0] << 24) | (start[1] << 16) | (start[2] << 8) | start[3];
@@ -120,7 +126,7 @@ static const MBtab MB_P [] = {
 #define INTER MACROBLOCK_MOTION_FORWARD|MACROBLOCK_MOTION_BACKWARD
 
 static const MBtab MB_B [] = {
-    {0,                 0}, {INTRA|QUANT,       6},
+    {0,                 6}, {INTRA|QUANT,       6},
     {BWD|CODED|QUANT,   6}, {FWD|CODED|QUANT,   6},
     {INTER|CODED|QUANT, 5}, {INTER|CODED|QUANT, 5},
 					{INTRA,       5}, {INTRA,       5},
@@ -169,53 +175,53 @@ static const DMVtab DMV_2 [] = {
 
 
 static const CBPtab CBP_7 [] = {
-    {0x22, 7}, {0x12, 7}, {0x0a, 7}, {0x06, 7},
-    {0x21, 7}, {0x11, 7}, {0x09, 7}, {0x05, 7},
-    {0x3f, 6}, {0x3f, 6}, {0x03, 6}, {0x03, 6},
-    {0x24, 6}, {0x24, 6}, {0x18, 6}, {0x18, 6},
-    {0x3e, 5}, {0x3e, 5}, {0x3e, 5}, {0x3e, 5},
-    {0x02, 5}, {0x02, 5}, {0x02, 5}, {0x02, 5},
-    {0x3d, 5}, {0x3d, 5}, {0x3d, 5}, {0x3d, 5},
-    {0x01, 5}, {0x01, 5}, {0x01, 5}, {0x01, 5},
-    {0x38, 5}, {0x38, 5}, {0x38, 5}, {0x38, 5},
-    {0x34, 5}, {0x34, 5}, {0x34, 5}, {0x34, 5},
-    {0x2c, 5}, {0x2c, 5}, {0x2c, 5}, {0x2c, 5},
-    {0x1c, 5}, {0x1c, 5}, {0x1c, 5}, {0x1c, 5},
-    {0x28, 5}, {0x28, 5}, {0x28, 5}, {0x28, 5},
-    {0x14, 5}, {0x14, 5}, {0x14, 5}, {0x14, 5},
-    {0x30, 5}, {0x30, 5}, {0x30, 5}, {0x30, 5},
+    {0x11, 7}, {0x12, 7}, {0x14, 7}, {0x18, 7},
+    {0x21, 7}, {0x22, 7}, {0x24, 7}, {0x28, 7},
+    {0x3f, 6}, {0x3f, 6}, {0x30, 6}, {0x30, 6},
+    {0x09, 6}, {0x09, 6}, {0x06, 6}, {0x06, 6},
+    {0x1f, 5}, {0x1f, 5}, {0x1f, 5}, {0x1f, 5},
+    {0x10, 5}, {0x10, 5}, {0x10, 5}, {0x10, 5},
+    {0x2f, 5}, {0x2f, 5}, {0x2f, 5}, {0x2f, 5},
+    {0x20, 5}, {0x20, 5}, {0x20, 5}, {0x20, 5},
+    {0x07, 5}, {0x07, 5}, {0x07, 5}, {0x07, 5},
+    {0x0b, 5}, {0x0b, 5}, {0x0b, 5}, {0x0b, 5},
+    {0x0d, 5}, {0x0d, 5}, {0x0d, 5}, {0x0d, 5},
+    {0x0e, 5}, {0x0e, 5}, {0x0e, 5}, {0x0e, 5},
+    {0x05, 5}, {0x05, 5}, {0x05, 5}, {0x05, 5},
+    {0x0a, 5}, {0x0a, 5}, {0x0a, 5}, {0x0a, 5},
+    {0x03, 5}, {0x03, 5}, {0x03, 5}, {0x03, 5},
     {0x0c, 5}, {0x0c, 5}, {0x0c, 5}, {0x0c, 5},
-    {0x20, 4}, {0x20, 4}, {0x20, 4}, {0x20, 4},
-    {0x20, 4}, {0x20, 4}, {0x20, 4}, {0x20, 4},
-    {0x10, 4}, {0x10, 4}, {0x10, 4}, {0x10, 4},
-    {0x10, 4}, {0x10, 4}, {0x10, 4}, {0x10, 4},
-    {0x08, 4}, {0x08, 4}, {0x08, 4}, {0x08, 4},
-    {0x08, 4}, {0x08, 4}, {0x08, 4}, {0x08, 4},
+    {0x01, 4}, {0x01, 4}, {0x01, 4}, {0x01, 4},
+    {0x01, 4}, {0x01, 4}, {0x01, 4}, {0x01, 4},
+    {0x02, 4}, {0x02, 4}, {0x02, 4}, {0x02, 4},
+    {0x02, 4}, {0x02, 4}, {0x02, 4}, {0x02, 4},
     {0x04, 4}, {0x04, 4}, {0x04, 4}, {0x04, 4},
     {0x04, 4}, {0x04, 4}, {0x04, 4}, {0x04, 4},
-    {0x3c, 3}, {0x3c, 3}, {0x3c, 3}, {0x3c, 3},
-    {0x3c, 3}, {0x3c, 3}, {0x3c, 3}, {0x3c, 3},
-    {0x3c, 3}, {0x3c, 3}, {0x3c, 3}, {0x3c, 3},
-    {0x3c, 3}, {0x3c, 3}, {0x3c, 3}, {0x3c, 3}
+    {0x08, 4}, {0x08, 4}, {0x08, 4}, {0x08, 4},
+    {0x08, 4}, {0x08, 4}, {0x08, 4}, {0x08, 4},
+    {0x0f, 3}, {0x0f, 3}, {0x0f, 3}, {0x0f, 3},
+    {0x0f, 3}, {0x0f, 3}, {0x0f, 3}, {0x0f, 3},
+    {0x0f, 3}, {0x0f, 3}, {0x0f, 3}, {0x0f, 3},
+    {0x0f, 3}, {0x0f, 3}, {0x0f, 3}, {0x0f, 3}
 };
 
 static const CBPtab CBP_9 [] = {
-    {0,    0}, {0x00, 9}, {0x27, 9}, {0x1b, 9},
-    {0x3b, 9}, {0x37, 9}, {0x2f, 9}, {0x1f, 9},
-    {0x3a, 8}, {0x3a, 8}, {0x36, 8}, {0x36, 8},
-    {0x2e, 8}, {0x2e, 8}, {0x1e, 8}, {0x1e, 8},
-    {0x39, 8}, {0x39, 8}, {0x35, 8}, {0x35, 8},
-    {0x2d, 8}, {0x2d, 8}, {0x1d, 8}, {0x1d, 8},
-    {0x26, 8}, {0x26, 8}, {0x1a, 8}, {0x1a, 8},
-    {0x25, 8}, {0x25, 8}, {0x19, 8}, {0x19, 8},
-    {0x2b, 8}, {0x2b, 8}, {0x17, 8}, {0x17, 8},
-    {0x33, 8}, {0x33, 8}, {0x0f, 8}, {0x0f, 8},
-    {0x2a, 8}, {0x2a, 8}, {0x16, 8}, {0x16, 8},
-    {0x32, 8}, {0x32, 8}, {0x0e, 8}, {0x0e, 8},
-    {0x29, 8}, {0x29, 8}, {0x15, 8}, {0x15, 8},
-    {0x31, 8}, {0x31, 8}, {0x0d, 8}, {0x0d, 8},
-    {0x23, 8}, {0x23, 8}, {0x13, 8}, {0x13, 8},
-    {0x0b, 8}, {0x0b, 8}, {0x07, 8}, {0x07, 8}
+    {0,    9}, {0x00, 9}, {0x39, 9}, {0x36, 9},
+    {0x37, 9}, {0x3b, 9}, {0x3d, 9}, {0x3e, 9},
+    {0x17, 8}, {0x17, 8}, {0x1b, 8}, {0x1b, 8},
+    {0x1d, 8}, {0x1d, 8}, {0x1e, 8}, {0x1e, 8},
+    {0x27, 8}, {0x27, 8}, {0x2b, 8}, {0x2b, 8},
+    {0x2d, 8}, {0x2d, 8}, {0x2e, 8}, {0x2e, 8},
+    {0x19, 8}, {0x19, 8}, {0x16, 8}, {0x16, 8},
+    {0x29, 8}, {0x29, 8}, {0x26, 8}, {0x26, 8},
+    {0x35, 8}, {0x35, 8}, {0x3a, 8}, {0x3a, 8},
+    {0x33, 8}, {0x33, 8}, {0x3c, 8}, {0x3c, 8},
+    {0x15, 8}, {0x15, 8}, {0x1a, 8}, {0x1a, 8},
+    {0x13, 8}, {0x13, 8}, {0x1c, 8}, {0x1c, 8},
+    {0x25, 8}, {0x25, 8}, {0x2a, 8}, {0x2a, 8},
+    {0x23, 8}, {0x23, 8}, {0x2c, 8}, {0x2c, 8},
+    {0x31, 8}, {0x31, 8}, {0x32, 8}, {0x32, 8},
+    {0x34, 8}, {0x34, 8}, {0x38, 8}, {0x38, 8}
 };
 
 
@@ -288,7 +294,7 @@ static const DCTtab DCT_B14_10 [] = {
 };
 
 static const DCTtab DCT_B14_8 [] = {
-    { 65, 0, 6}, { 65, 0, 6}, { 65, 0, 6}, { 65, 0, 6},
+    { 65, 0,12}, { 65, 0,12}, { 65, 0,12}, { 65, 0,12},
     {  3, 2, 7}, {  3, 2, 7}, { 10, 1, 7}, { 10, 1, 7},
     {  1, 4, 7}, {  1, 4, 7}, {  9, 1, 7}, {  9, 1, 7},
     {  8, 1, 6}, {  8, 1, 6}, {  8, 1, 6}, {  8, 1, 6},
@@ -325,7 +331,7 @@ static const DCTtab DCT_B15_10 [] = {
 };
 
 static const DCTtab DCT_B15_8 [] = {
-    { 65, 0, 6}, { 65, 0, 6}, { 65, 0, 6}, { 65, 0, 6},
+    { 65, 0,12}, { 65, 0,12}, { 65, 0,12}, { 65, 0,12},
     {  8, 1, 7}, {  8, 1, 7}, {  9, 1, 7}, {  9, 1, 7},
     {  7, 1, 7}, {  7, 1, 7}, {  3, 2, 7}, {  3, 2, 7},
     {  1, 7, 6}, {  1, 7, 6}, {  1, 7, 6}, {  1, 7, 6},
@@ -426,3 +432,5 @@ static const MBAtab MBA_11 [] = {
     { 7,  7}, { 7,  7}, { 7,  7}, { 7,  7},
     { 7,  7}, { 7,  7}, { 7,  7}, { 7,  7}
 };
+
+#endif /* LIBMPEG2_VLC_H */

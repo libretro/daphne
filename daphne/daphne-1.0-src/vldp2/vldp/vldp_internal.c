@@ -648,27 +648,22 @@ static void ivldp_set_framerate(uint8_t frame_rate_code)
 
 }
 
-/////////////////
 
-// decode_mpeg2 function taken from mpeg2dec.c and optimized a bit
-static void decode_mpeg2 (uint8_t * current, uint8_t * end)
+static void decode_mpeg2(uint8_t *current, uint8_t *end)
 {
-    const mpeg2_info_t * info;
-    int state;
+    const mpeg2_info_t *info;
+    mpeg2_state_t state;
     vo_setup_result_t setup_result;
+    mpeg2_buffer(g_mpeg_data, current, end);
+    info = mpeg2_info(g_mpeg_data);
 
-    mpeg2_buffer (g_mpeg_data, current, end);
-
-    info = mpeg2_info (g_mpeg_data);
-	// loop until we return (state is -1)
-	for (;;)
-    {
-		state = mpeg2_parse (g_mpeg_data);
-		switch (state)
-		{
-		case -1:
-		    return;
-		case STATE_SEQUENCE:
+    // loop until we return (state is -1)
+    while (1) {
+        state = mpeg2_parse(g_mpeg_data);
+        switch (state) {
+        case STATE_BUFFER:
+            return;
+	case STATE_SEQUENCE:
 		    /* might set nb fbuf, convert format, stride */
 		    /* might set fbufs */
 		    if (vo_null_setup (info->sequence->width,
@@ -688,30 +683,19 @@ static void decode_mpeg2 (uint8_t * current, uint8_t * end)
 				mpeg2_set_buf (g_mpeg_data, buf, id);
 				vo_null_setup_fbuf(buf, &id);
 				mpeg2_set_buf (g_mpeg_data, buf, id);
-		    }
-		    break;
-		case STATE_PICTURE:
-		    /* might skip */
-		    /* might set fbuf */
-
-			// all possible stuff we could've done here was removed because the null driver
-			// doesn't do any of it
-		    
-		    break;
-		case STATE_PICTURE_2ND:
-		    /* should not do anything */
-		    break;
-		case STATE_SLICE:
-		case STATE_END:
-		    /* draw current picture */
-		    /* might free frame buffer */
-			// if the init hasn't been called yet, this may fail so we have to put the conditional
-		    if (info->display_fbuf)
-				vo_null_draw (info->display_fbuf->buf,
-				      info->display_fbuf->id);
-		    break;
-		} // end switch
-    } // end endless for loop
+}
+            break;
+        case STATE_SLICE:
+        case STATE_END:
+        case STATE_INVALID_END:
+            /* draw current picture */
+            /* might free frame buffer */
+            if (info->display_fbuf) vo_null_draw (info->display_fbuf->buf,info->display_fbuf->id);
+            break;
+        default:
+            break;
+        } // end switch
+    }     // end endless for loop
 }
 
 /////////////////
@@ -769,7 +753,7 @@ static void idle_handler_open()
 	ivldp_ack_command();	// acknowledge open command
 
 	// reset libmpeg2 so it is prepared to begin reading from a new m2v file
-	mpeg2_partial_init(g_mpeg_data);
+	mpeg2_reset(g_mpeg_data,0);
 
 	// if we have previously opened an mpeg, we need to close it and reset
 	if (io_is_open())
@@ -1016,7 +1000,7 @@ static void ivldp_render(void)
          render_finished = 1;
 
          // reset libmpeg2 so it is prepared to begin reading from the beginning of the file
-         mpeg2_partial_init(g_mpeg_data);
+         mpeg2_reset(g_mpeg_data,0);
          io_seek(0);	// seek to the beginning of the file
          g_out_info.current_frame = 0;	// set frame # to beginning of file where it belongs
       }
@@ -1084,7 +1068,7 @@ static void idle_handler_search(int skip)
 	ivldp_ack_command();	// acknowledge search/skip command
 
 	// reset libmpeg2 so it is prepared to start from a new spot
-	mpeg2_partial_init(g_mpeg_data);
+	mpeg2_reset(g_mpeg_data,0);
 
 	vldp_process_sequence_header();	// we need to process the sequence header before we can jump around the file for frames
 
