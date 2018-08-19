@@ -173,34 +173,21 @@ static struct
 static const char *
 getlocale(char *buffer, size_t bufsize)
 {
-    const char *lang;
-    char *ptr;
+    const char *lang = NULL;
+    char *ptr        = NULL;
 
-    lang = SDL_getenv("LC_ALL");
-    if (!lang) {
-        lang = SDL_getenv("LC_CTYPE");
-    }
-    if (!lang) {
-        lang = SDL_getenv("LC_MESSAGES");
-    }
-    if (!lang) {
-        lang = SDL_getenv("LANG");
-    }
-    if (!lang || !*lang || strcmp(lang, "C") == 0) {
+    if (!lang || !*lang || strcmp(lang, "C") == 0)
         lang = "ASCII";
-    }
 
     /* We need to trim down strings like "en_US.UTF-8@blah" to "UTF-8" */
     ptr = SDL_strchr(lang, '.');
-    if (ptr != NULL) {
+    if (ptr != NULL)
         lang = ptr + 1;
-    }
 
     SDL_strlcpy(buffer, lang, bufsize);
     ptr = SDL_strchr(buffer, '@');
-    if (ptr != NULL) {
+    if (ptr != NULL)
         *ptr = '\0';            /* chop end of string. */
-    }
 
     return buffer;
 }
