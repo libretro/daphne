@@ -91,9 +91,7 @@ int vldp_cmd(int cmd)
 
 	// if we weren't able to communicate, notify user
 	if (!result)
-	{
 		fprintf(stderr, "VLDP error!  Timed out waiting for internal thread to accept command!\n");
-	}
 	
 	return result;
 }
@@ -104,9 +102,10 @@ int vldp_cmd(int cmd)
 // if we are legitimately busy, we return 2 (busy)
 int vldp_wait_for_status(int stat)
 {
-	int result = 0;	// assume error unless we explicitly
-	int done = 0;
+	int result        = 0;	// assume error unless we explicitly
+	int done          = 0;
 	uint32_t cur_time = g_in_info->GetTicksFunc();
+
 	while (!done && ((g_in_info->GetTicksFunc() - cur_time) < VLDP_TIMEOUT))
 	{
 		if (g_out_info.status == stat)
@@ -115,24 +114,19 @@ int vldp_wait_for_status(int stat)
 			result = 1;
 		}
 		else if (g_out_info.status == STAT_ERROR)
-		{
 			done = 1;
-		}
+
 		// else keep waiting
 		SDL_Delay(0);	// switch to other thread, timing is critical so we delay for 0
 	}
 
 	// if we timed out but are busy, indicate that
 	if (g_out_info.status == STAT_BUSY)
-	{
 		result = 2;
-	}
 
 	// else if we timed out
 	else if ((g_in_info->GetTicksFunc() - cur_time) >= VLDP_TIMEOUT)
-	{
 		fprintf(stderr, "VLDP ERROR!!!!  Timed out with getting our expected response!\n");
-	}
 
 	return result;
 }
@@ -155,50 +149,42 @@ void vldp_shutdown()
 // file will not be open until the VLDP status is 'VLDP_STOPPED'.  Parent thread take heed.
 int vldp_open(const char *filename)
 {
-	int result = 0;	// assume we're busy so the loop below works the first time
-	FILE *F = NULL;
-	
 	if (p_initialized)
 	{
-		F = fopen(filename, "rb");
+		FILE *F = fopen(filename, "rb");
+
 		// if file exists, we can open it
 		if (F)
 		{
 			fclose(F);
 			SAFE_STRCPY(g_req_file, filename, sizeof(g_req_file));
 			g_req_precache = VLDP_FALSE;	// we're not precaching ...
-			result = vldp_cmd(VLDP_REQ_OPEN);
+			return vldp_cmd(VLDP_REQ_OPEN);
 		}
 		else
-		{
 			fprintf(stderr, "VLDP ERROR : can't open file %s\n", filename);
-		}
 	}
 
-	return result;
+	return 0;
 }
 
 VLDP_BOOL vldp_open_precached(unsigned int uIdx, const char *filename)
 {
-	VLDP_BOOL bResult = VLDP_FALSE;
-
 	if (p_initialized)
 	{
 		// even though we're using an index, we still need filename to compute .dat filename
 		SAFE_STRCPY(g_req_file, filename, sizeof(g_req_file));
 		g_req_idx = uIdx;
 		g_req_precache = VLDP_TRUE;
-		bResult = vldp_cmd(VLDP_REQ_OPEN);
+		return vldp_cmd(VLDP_REQ_OPEN);
 	}
 
-	return bResult;
+	return VLDP_FALSE;
 }
 
 int vldp_open_and_block(const char *filename)
 {
-	int result = 0;
-
-	result = vldp_open(filename);
+	int result = vldp_open(filename);
 
 	// if the open message was received ...
 	if (result)
@@ -216,95 +202,79 @@ int vldp_open_and_block(const char *filename)
 
 VLDP_BOOL vldp_precache(const char *filename)
 {
-	VLDP_BOOL bResult = VLDP_FALSE;
-
 	if (p_initialized)
 	{
 		SAFE_STRCPY(g_req_file, filename, sizeof(g_req_file));
-		bResult = vldp_cmd(VLDP_REQ_PRECACHE);
+		return vldp_cmd(VLDP_REQ_PRECACHE);
 	}
-	// else return false
 
-	return bResult;
+	return VLDP_FALSE;
 }
 
 // issues search command and returns immediately to parent thread.
 // Search will not be complete until the VLDP status is STAT_PAUSED
 int vldp_search(uint16_t frame, uint32_t min_seek_ms)
 {
-	int result = 0;
-
 	if (p_initialized)
 	{
 		g_req_frame = frame;
 		g_req_min_seek_ms = min_seek_ms;
-		result = vldp_cmd(VLDP_REQ_SEARCH);
+		return vldp_cmd(VLDP_REQ_SEARCH);
 	}
-	return result;
+
+	return 0;
 }
 
 // issues search command blocks until search is complete
 int vldp_search_and_block(uint16_t frame, uint32_t min_seek_ms)
 {
-	int result = 0;
-
 	if (p_initialized)
 	{
 		g_req_frame = frame;
 		g_req_min_seek_ms = min_seek_ms;
 		vldp_cmd(VLDP_REQ_SEARCH);
-		result = vldp_wait_for_status(STAT_PAUSED);
+		return vldp_wait_for_status(STAT_PAUSED);
 	}
-	return result;
+
+	return 0;
 }
 
 int vldp_play(uint32_t timer)
 {
-	int result = 0;
-
 	if (p_initialized)
 	{
 		g_req_timer = timer;
 		vldp_cmd(VLDP_REQ_PLAY);
-		result = vldp_wait_for_status(STAT_PLAYING);	// play could get an error if we're at EOF
+		return vldp_wait_for_status(STAT_PLAYING);	// play could get an error if we're at EOF
 	}
-	return(result);
+	return 0;
 }
 
 int vldp_skip(uint16_t frame)
 {
-	int result = 0;
-
 	// we can only skip if the mpeg is already playing (esp. since we don't accept a timer as an argument)
 	if (p_initialized && (g_out_info.status == STAT_PLAYING))
 	{
 		g_req_frame = frame;
 		g_req_min_seek_ms = 0;	// just for safety purposes, we want to ensure that there is no minimum skip delay
-		result = vldp_cmd(VLDP_REQ_SKIP);
+		return vldp_cmd(VLDP_REQ_SKIP);
 	}
 
-	return result;
+	return 0;
 }
 
 int vldp_pause()
 {
-	int result = 0;
 	if (p_initialized)
-	{
-		result = vldp_cmd(VLDP_REQ_PAUSE);
-	}
-	return result;
+		return vldp_cmd(VLDP_REQ_PAUSE);
+	return 0;
 }
 
 int vldp_step_forward()
 {
-	int result = 0;
-		
 	if (p_initialized)
-	{
-		result = vldp_cmd(VLDP_REQ_STEP_FORWARD);
-	}
-	return result;
+		return vldp_cmd(VLDP_REQ_STEP_FORWARD);
+	return 0;
 }
 
 int vldp_stop()
@@ -314,37 +284,27 @@ int vldp_stop()
 
 VLDP_BOOL vldp_speedchange(unsigned int uSkipPerFrame, unsigned int uStallPerFrame)
 {
-	VLDP_BOOL result = VLDP_FALSE;
-
 	if (p_initialized)
 	{
 		g_req_skip_per_frame = uSkipPerFrame;
 		g_req_stall_per_frame = uStallPerFrame;
-		result = vldp_cmd(VLDP_REQ_SPEEDCHANGE);
+		return vldp_cmd(VLDP_REQ_SPEEDCHANGE);
 	}
-	return result;
+	return VLDP_FALSE;
 }
 
 VLDP_BOOL vldp_lock(unsigned int uTimeoutMs)
 {
-	VLDP_BOOL result = VLDP_FALSE;
-	
 	if (p_initialized)
-	{
-		result = vldp_cmd(VLDP_REQ_LOCK);
-	}
-	return result;
+		return vldp_cmd(VLDP_REQ_LOCK);
+	return VLDP_FALSE;
 }
 
 VLDP_BOOL vldp_unlock(unsigned int uTimeoutMs)
 {
-	VLDP_BOOL result = VLDP_FALSE;
-	
 	if (p_initialized)
-	{
-		result = vldp_cmd(VLDP_REQ_UNLOCK);
-	}
-	return result;
+		return vldp_cmd(VLDP_REQ_UNLOCK);
+	return VLDP_FALSE;
 }
 
 ///////////////////////////////////////////////////////////////////////////
