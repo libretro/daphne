@@ -1284,7 +1284,6 @@ static VLDP_BOOL ivldp_get_mpeg_frame_offsets(char *mpeg_name)
 static VLDP_BOOL ivldp_parse_mpeg_frame_offsets(char *datafilename,
       uint32_t mpeg_size)
 {
-	int result = VLDP_TRUE;
 	FILE *data_file = fopen(datafilename, "wb");	// create file
 	struct dat_header header;	// header to put inside .DAT file
 
@@ -1336,9 +1335,7 @@ static VLDP_BOOL ivldp_parse_mpeg_frame_offsets(char *datafilename,
 			header.finished = 1;
 			header.uses_fields = 0;
 			if (parse_result == P_FINISHED_FIELDS)
-			{
 				header.uses_fields = 1;
-			}
 			fseek(data_file, 0L, SEEK_SET);
 			fwrite(&header, sizeof(header), 1, data_file);	// save changes
 		}
@@ -1355,8 +1352,8 @@ static VLDP_BOOL ivldp_parse_mpeg_frame_offsets(char *datafilename,
 			fprintf(stderr, "There was an error parsing the MPEG file.\n");
 			fprintf(stderr, "Either there is a bug in the parser or the MPEG file is corrupt.\n");
 			fprintf(stderr, "OR the user aborted the decoding process :)\n");
-			result = VLDP_FALSE;
 			unlink(datafilename);
+			return VLDP_FALSE;
 		}
 	} // end if we could create the file successfully
 
@@ -1366,44 +1363,40 @@ static VLDP_BOOL ivldp_parse_mpeg_frame_offsets(char *datafilename,
 	{
 		fprintf(stderr, "Could not create file %s\n", datafilename);
 		fprintf(stderr, "This probably means you don't have permission to create the file\n");
-		result = VLDP_FALSE;
+		return VLDP_FALSE;
 	}
 
-	return result;
+	return VLDP_TRUE;
 }
 
 static VLDP_BOOL io_open(const char *cpszFilename)
 {
-	VLDP_BOOL bResult = VLDP_FALSE;
-
 	// make sure everything is closed
 	if ((!s_bPreCacheEnabled) && (!g_mpeg_handle))
 	{
 		g_mpeg_handle = fopen(cpszFilename, "rb");
 		if (g_mpeg_handle)
-         bResult = VLDP_TRUE;
+         return VLDP_TRUE;
 	}
-	return bResult;
+	return VLDP_FALSE;
 }
 
 static VLDP_BOOL io_open_precached(unsigned int uIdx)
 {
-	VLDP_BOOL bResult = VLDP_FALSE;
-
 	// make sure everything is closed
 	if ((!g_mpeg_handle) && (!s_bPreCacheEnabled))
 	{
 		// make sure index is within range ...
 		if (uIdx < s_uPreCacheIdxCount)
 		{
-			bResult = VLDP_TRUE;
 			s_uCurPreCacheIdx = uIdx;
 			s_bPreCacheEnabled = VLDP_TRUE;
 			s_sPreCacheEntries[s_uCurPreCacheIdx].uPos = 0;	// when opening, rewind to beginning
+			return VLDP_TRUE;
 		}
 		// else out of range ...
 	}
-	return bResult;	
+	return VLDP_FALSE;	
 }
 
 static unsigned int io_read(void *buf, unsigned int uBytesToRead)
