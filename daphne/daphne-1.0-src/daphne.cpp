@@ -396,18 +396,6 @@ void reset_logfile(int argc, char **argv)
 		str = str + argv[i] + " ";
 	}
 	printline(str.c_str());
-	snprintf(s, sizeof(s), "--CPU : %s %d MHz || Mem : %d megs", get_cpu_name(), get_cpu_mhz(), get_sys_mem());
-	printline(s);
-	outstr("--OpenGL: ");
-	printline("Not Compiled In");
-
-	outstr("--RGB2YUV Function: ");
-	printline("C");
-	outstr("--Line Blending Function: ");
-	printline("C");
-
-	outstr("--Audio Mixing Function: ");
-	printline("C");
 }
 
 // added by JFA for -idleexit
