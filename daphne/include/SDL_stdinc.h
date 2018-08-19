@@ -131,10 +131,6 @@ typedef uint8_t Uint8;
  */
 typedef int16_t Sint16;
 /**
- * \brief A signed 32-bit integer type.
- */
-typedef int32_t Sint32;
-/**
  * \brief An unsigned 32-bit integer type.
  */
 typedef uint32_t Uint32;
@@ -246,7 +242,6 @@ SDL_COMPILE_TIME_ASSERT(uint8, sizeof(Uint8) == 1);
 SDL_COMPILE_TIME_ASSERT(sint8, sizeof(Sint8) == 1);
 SDL_COMPILE_TIME_ASSERT(sint16, sizeof(Sint16) == 2);
 SDL_COMPILE_TIME_ASSERT(uint32, sizeof(Uint32) == 4);
-SDL_COMPILE_TIME_ASSERT(sint32, sizeof(Sint32) == 4);
 SDL_COMPILE_TIME_ASSERT(sint64, sizeof(Sint64) == 8);
 #endif /* DOXYGEN_SHOULD_IGNORE_THIS */
 /** \endcond */

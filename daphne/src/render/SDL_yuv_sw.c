@@ -868,7 +868,7 @@ free_bits_at_bottom(Uint32 a)
     /* assume char is 8 bits */
     if (!a)
         return sizeof(Uint32) * 8;
-    if (((Sint32) a) & 1l)
+    if (((int32_t) a) & 1l)
         return 0;
     return 1 + free_bits_at_bottom(a >> 1);
 }

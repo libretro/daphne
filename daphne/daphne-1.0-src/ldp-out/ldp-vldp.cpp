@@ -73,7 +73,7 @@ extern "C" {
 static const unsigned int FREQ1000 = AUDIO_FREQ * 1000;	// let compiler compute this ...
 
 // video overlay stuff
-Sint32 g_vertical_offset = 0;	// (used a lot, we only want to calc it once)
+int32_t g_vertical_offset = 0;	// (used a lot, we only want to calc it once)
 
 double g_dPercentComplete01 = 0.0;	// send by child thread to indicate how far our parse is complete
 bool g_bGotParseUpdate = false;	// if true, it means we've received a parse update from VLDP
@@ -962,7 +962,7 @@ void ldp_vldp::think()
 // This function tests to make sure VLDP's current frame is the same as our internal current frame.
 unsigned int ldp_vldp::get_current_frame()
 {
-	Sint32 result = 0;
+	int32_t result = 0;
 
 	// safety check
 	if (!g_vldp_info) return 0;
@@ -1738,7 +1738,7 @@ bool ldp_vldp::parse_framefile(const char *pszInBuf, const char *pszFramefileFul
 	
 	string word = "", remaining = "";
 	result = true;	// from this point, we should assume success
-	Sint32 frame = 0;
+	int32_t frame = 0;
 	
 	// parse through entire file
 	while (pszPtr != NULL)
@@ -1765,7 +1765,7 @@ bool ldp_vldp::parse_framefile(const char *pszInBuf, const char *pszFramefileFul
 			if (((frame != 0) || (word == "0"))
 				&& find_word(remaining.c_str(), word, remaining))
 			{
-				pFrames[frame_idx].frame = (Sint32) frame;
+				pFrames[frame_idx].frame = (int32_t) frame;
 				pFrames[frame_idx].name = word;
 				++frame_idx;
 			}

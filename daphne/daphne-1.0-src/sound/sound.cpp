@@ -553,7 +553,7 @@ void mixWithMaxVolume(Uint8 *stream, int length)
 	//  because it is called constantly.
 	for (int sample = 0; sample < (length >> 1); sample += 2)
 	{
-		Sint32 mixed_sample_1 = 0, mixed_sample_2 = 0;	// left/right channels
+		int32_t mixed_sample_1 = 0, mixed_sample_2 = 0;	// left/right channels
 		cur = g_soundchip_head;
 		while (cur)
 		{
@@ -586,7 +586,7 @@ void mixWithMults(Uint8 *stream, int length)
 	//  because it is called constantly.
 	for (int sample = 0; sample < (length >> 1); sample += 2)
 	{
-		Sint32 mixed_sample_1 = 0, mixed_sample_2 = 0;	// left/right channels, 32-bit to support adding many 16-bit samples
+		int32_t mixed_sample_1 = 0, mixed_sample_2 = 0;	// left/right channels, 32-bit to support adding many 16-bit samples
 		cur = g_soundchip_head;
 		while (cur)
 		{

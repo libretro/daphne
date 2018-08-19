@@ -84,17 +84,17 @@ InitMS_ADPCM(WaveFMT * format)
     return (0);
 }
 
-static Sint32
+static int32_t
 MS_ADPCM_nibble(struct MS_ADPCM_decodestate *state,
                 Uint8 nybble, Sint16 * coeff)
 {
-    const Sint32 max_audioval = ((1 << (16 - 1)) - 1);
-    const Sint32 min_audioval = -(1 << (16 - 1));
-    const Sint32 adaptive[] = {
+    const int32_t max_audioval = ((1 << (16 - 1)) - 1);
+    const int32_t min_audioval = -(1 << (16 - 1));
+    const int32_t adaptive[] = {
         230, 230, 230, 230, 307, 409, 512, 614,
         768, 614, 512, 409, 307, 230, 230, 230
     };
-    Sint32 new_sample, delta;
+    int32_t new_sample, delta;
 
     new_sample = ((state->iSamp1 * coeff[0]) +
                   (state->iSamp2 * coeff[1])) / 256;
@@ -108,7 +108,7 @@ MS_ADPCM_nibble(struct MS_ADPCM_decodestate *state,
     } else if (new_sample > max_audioval) {
         new_sample = max_audioval;
     }
-    delta = ((Sint32) state->iDelta * adaptive[nybble]) / 256;
+    delta = ((int32_t) state->iDelta * adaptive[nybble]) / 256;
     if (delta < 16) {
         delta = 16;
     }
@@ -123,11 +123,11 @@ MS_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
 {
     struct MS_ADPCM_decodestate *state[2];
     Uint8 *freeable, *encoded, *decoded;
-    Sint32 encoded_len, samplesleft;
+    int32_t encoded_len, samplesleft;
     Sint8 nybble;
     Uint8 stereo;
     Sint16 *coeff[2];
-    Sint32 new_sample;
+    int32_t new_sample;
 
     /* Allocate the proper sized output buffer */
     encoded_len = *audio_len;
@@ -220,7 +220,7 @@ MS_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
 
 struct IMA_ADPCM_decodestate
 {
-    Sint32 sample;
+    int32_t sample;
     Sint8 index;
 };
 static struct IMA_ADPCM_decoder
@@ -253,18 +253,18 @@ InitIMA_ADPCM(WaveFMT * format)
     return (0);
 }
 
-static Sint32
+static int32_t
 IMA_ADPCM_nibble(struct IMA_ADPCM_decodestate *state, Uint8 nybble)
 {
-    const Sint32 max_audioval = ((1 << (16 - 1)) - 1);
-    const Sint32 min_audioval = -(1 << (16 - 1));
+    const int32_t max_audioval = ((1 << (16 - 1)) - 1);
+    const int32_t min_audioval = -(1 << (16 - 1));
     const int index_table[16] = {
         -1, -1, -1, -1,
         2, 4, 6, 8,
         -1, -1, -1, -1,
         2, 4, 6, 8
     };
-    const Sint32 step_table[89] = {
+    const int32_t step_table[89] = {
         7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 19, 21, 23, 25, 28, 31,
         34, 37, 41, 45, 50, 55, 60, 66, 73, 80, 88, 97, 107, 118, 130,
         143, 157, 173, 190, 209, 230, 253, 279, 307, 337, 371, 408,
@@ -274,7 +274,7 @@ IMA_ADPCM_nibble(struct IMA_ADPCM_decodestate *state, Uint8 nybble)
         9493, 10442, 11487, 12635, 13899, 15289, 16818, 18500, 20350,
         22385, 24623, 27086, 29794, 32767
     };
-    Sint32 delta, step;
+    int32_t delta, step;
 
     /* Compute difference and new sample value */
     if (state->index > 88) {
@@ -315,7 +315,7 @@ Fill_IMA_ADPCM_block(Uint8 * decoded, Uint8 * encoded,
 {
     int i;
     Sint8 nybble;
-    Sint32 new_sample;
+    int32_t new_sample;
 
     decoded += (channel * 2);
     for (i = 0; i < 4; ++i) {
@@ -342,7 +342,7 @@ IMA_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
 {
     struct IMA_ADPCM_decodestate *state;
     Uint8 *freeable, *encoded, *decoded;
-    Sint32 encoded_len, samplesleft;
+    int32_t encoded_len, samplesleft;
     unsigned int c, channels;
 
     /* Check to make sure we have enough variables in the state array */

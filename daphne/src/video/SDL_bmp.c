@@ -111,14 +111,14 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
 
     /* The Win32 BITMAPINFOHEADER struct (40 bytes) */
     Uint32 biSize = 0;
-    Sint32 biWidth = 0;
-    Sint32 biHeight = 0;
+    int32_t biWidth = 0;
+    int32_t biHeight = 0;
     /* uint16_t biPlanes = 0; */
     uint16_t biBitCount = 0;
     Uint32 biCompression = 0;
     /* Uint32 biSizeImage = 0; */
-    /* Sint32 biXPelsPerMeter = 0; */
-    /* Sint32 biYPelsPerMeter = 0; */
+    /* int32_t biXPelsPerMeter = 0; */
+    /* int32_t biYPelsPerMeter = 0; */
     Uint32 biClrUsed = 0;
     /* Uint32 biClrImportant = 0; */
 

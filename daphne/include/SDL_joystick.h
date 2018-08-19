@@ -69,7 +69,7 @@ typedef struct {
     Uint8 data[16];
 } SDL_JoystickGUID;
 
-typedef Sint32 SDL_JoystickID;
+typedef int32_t SDL_JoystickID;
 
 typedef enum
 {

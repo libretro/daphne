@@ -33,7 +33,7 @@ static void SDLCALL
 SDL_ConvertMono(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    Sint32 sample;
+    int32_t sample;
 
 	switch (format & (SDL_AUDIO_MASK_SIGNED |
                       SDL_AUDIO_MASK_BITSIZE |
@@ -138,17 +138,17 @@ SDL_ConvertMono(SDL_AudioCVT * cvt, SDL_AudioFormat format)
             Uint32 *dst = (Uint32 *) cvt->buf;
             if (SDL_AUDIO_ISBIGENDIAN(format)) {
                 for (i = cvt->len_cvt / 8; i; --i, src += 2) {
-                    const Sint64 added =
-                        (((Sint64) (Sint32) SDL_SwapBE32(src[0])) +
-                         ((Sint64) (Sint32) SDL_SwapBE32(src[1])));
-                    *(dst++) = SDL_SwapBE32((Uint32) ((Sint32) (added / 2)));
+                    const int64_t added =
+                        (((int64_t) (int32_t) SDL_SwapBE32(src[0])) +
+                         ((int64_t) (int32_t) SDL_SwapBE32(src[1])));
+                    *(dst++) = SDL_SwapBE32((Uint32) ((int32_t) (added / 2)));
                 }
             } else {
                 for (i = cvt->len_cvt / 8; i; --i, src += 2) {
-                    const Sint64 added =
-                        (((Sint64) (Sint32) SDL_SwapLE32(src[0])) +
-                         ((Sint64) (Sint32) SDL_SwapLE32(src[1])));
-                    *(dst++) = SDL_SwapLE32((Uint32) ((Sint32) (added / 2)));
+                    const int64_t added =
+                        (((int64_t) (int32_t) SDL_SwapLE32(src[0])) +
+                         ((int64_t) (int32_t) SDL_SwapLE32(src[1])));
+                    *(dst++) = SDL_SwapLE32((Uint32) ((int32_t) (added / 2)));
                 }
             }
         }
@@ -482,7 +482,7 @@ SDL_ConvertSurround(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 
     case AUDIO_S32:
         {
-            Sint32 lf, rf, ce;
+            int32_t lf, rf, ce;
             const Uint32 *src = (const Uint32 *) (cvt->buf + cvt->len_cvt);
             Uint32 *dst = (Uint32 *) (cvt->buf + cvt->len_cvt * 3);
 
@@ -490,8 +490,8 @@ SDL_ConvertSurround(SDL_AudioCVT * cvt, SDL_AudioFormat format)
                 for (i = cvt->len_cvt / 8; i; --i) {
                     dst -= 6;
                     src -= 2;
-                    lf = (Sint32) SDL_SwapBE32(src[0]);
-                    rf = (Sint32) SDL_SwapBE32(src[1]);
+                    lf = (int32_t) SDL_SwapBE32(src[0]);
+                    rf = (int32_t) SDL_SwapBE32(src[1]);
                     ce = (lf / 2) + (rf / 2);
                     dst[0] = SDL_SwapBE32((Uint32) lf);
                     dst[1] = SDL_SwapBE32((Uint32) rf);
@@ -504,8 +504,8 @@ SDL_ConvertSurround(SDL_AudioCVT * cvt, SDL_AudioFormat format)
                 for (i = cvt->len_cvt / 8; i; --i) {
                     dst -= 6;
                     src -= 2;
-                    lf = (Sint32) SDL_SwapLE32(src[0]);
-                    rf = (Sint32) SDL_SwapLE32(src[1]);
+                    lf = (int32_t) SDL_SwapLE32(src[0]);
+                    rf = (int32_t) SDL_SwapLE32(src[1]);
                     ce = (lf / 2) + (rf / 2);
                     dst[0] = src[0];
                     dst[1] = src[1];
@@ -715,14 +715,14 @@ SDL_ConvertSurround_4(SDL_AudioCVT * cvt, SDL_AudioFormat format)
         {
             const Uint32 *src = (const Uint32 *) (cvt->buf + cvt->len_cvt);
             Uint32 *dst = (Uint32 *) (cvt->buf + cvt->len_cvt * 2);
-            Sint32 lf, rf, ce;
+            int32_t lf, rf, ce;
 
             if (SDL_AUDIO_ISBIGENDIAN(format)) {
                 for (i = cvt->len_cvt / 8; i; --i) {
                     dst -= 4;
                     src -= 2;
-                    lf = (Sint32) SDL_SwapBE32(src[0]);
-                    rf = (Sint32) SDL_SwapBE32(src[1]);
+                    lf = (int32_t) SDL_SwapBE32(src[0]);
+                    rf = (int32_t) SDL_SwapBE32(src[1]);
                     ce = (lf / 2) + (rf / 2);
                     dst[0] = src[0];
                     dst[1] = src[1];
@@ -733,8 +733,8 @@ SDL_ConvertSurround_4(SDL_AudioCVT * cvt, SDL_AudioFormat format)
                 for (i = cvt->len_cvt / 8; i; --i) {
                     dst -= 4;
                     src -= 2;
-                    lf = (Sint32) SDL_SwapLE32(src[0]);
-                    rf = (Sint32) SDL_SwapLE32(src[1]);
+                    lf = (int32_t) SDL_SwapLE32(src[0]);
+                    rf = (int32_t) SDL_SwapLE32(src[1]);
                     ce = (lf / 2) + (rf / 2);
                     dst[0] = src[0];
                     dst[1] = src[1];

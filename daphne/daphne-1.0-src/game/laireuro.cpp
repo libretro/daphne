@@ -543,7 +543,7 @@ void laireuro::input_disable(Uint8 move)
 	}
 }
 
-Sint32 laireuro_irq_callback(int irqline)
+int32_t laireuro_irq_callback(int irqline)
 {
 	m80_set_irq_line(CLEAR_LINE);
 	return g_int_vec;

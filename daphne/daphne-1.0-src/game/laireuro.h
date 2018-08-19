@@ -33,7 +33,7 @@
 #define LAIREURO_COLOR_COUNT 8 // 8 colors total
 
 // we need our own callback since laireuro uses IM2
-Sint32 laireuro_irq_callback(int);
+int32_t laireuro_irq_callback(int);
 
 // CTC Stuff
 void ctc_init(double, double, double, double, double);

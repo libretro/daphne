@@ -591,7 +591,7 @@ void ldp_vldp_audio_callback(Uint8 *stream, int len, int unused)
 			}
 
 			// if we're not too far behind, don't loop
-			else if ((Sint32) (correct_samples - g_samples_played) < len)
+			else if ((int32_t) (correct_samples - g_samples_played) < len)
 			{
 				audio_caught_up = true;
 			}

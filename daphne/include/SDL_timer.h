@@ -54,7 +54,7 @@ extern DECLSPEC Uint32 SDLCALL SDL_GetTicks(void);
  *      ... do work until timeout has elapsed
  *  }
  */
-#define SDL_TICKS_PASSED(A, B)  ((Sint32)((B) - (A)) <= 0)
+#define SDL_TICKS_PASSED(A, B)  ((int32_t)((B) - (A)) <= 0)
 
 /**
  * \brief Get the current value of the high resolution counter

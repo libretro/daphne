@@ -62,8 +62,8 @@ struct yuv_buf g_yuv_buf[YUV_BUF_COUNT];
 #pragma warning (disable:4018)
 static void vo_null_draw(uint8_t * const * buf, void *id)
 {
-    Sint32 correct_elapsed_ms = 0;	// we want this signed since we compare against actual_elapsed_ms
-    Sint32 actual_elapsed_ms = 0;	// we want this signed because it could be negative
+    int32_t correct_elapsed_ms = 0;	// we want this signed since we compare against actual_elapsed_ms
+    int32_t actual_elapsed_ms = 0;	// we want this signed because it could be negative
 	unsigned int uStallFrames = 0;	// how many frames we have to stall during the loop (for multi-speed playback)
 
 	// if we don't need to skip any frames
@@ -85,7 +85,7 @@ static void vo_null_draw(uint8_t * const * buf, void *id)
 			s64Ms = (s64Ms * 1000000) / g_out_info.uFpks;
 
 			// compute how much time ought to have elapsed based on our frame count
-			correct_elapsed_ms = (Sint32) (s64Ms) +
+			correct_elapsed_ms = (int32_t) (s64Ms) +
 				// add on any extra delay that has been requested (simulated seek delay)
 				s_extra_delay_ms;
 			actual_elapsed_ms = g_in_info->uMsTimer - s_timer;
@@ -104,7 +104,7 @@ static void vo_null_draw(uint8_t * const * buf, void *id)
 				{
 				
 					// stall if we are playing too quickly and if we don't have a command waiting for us
-					while (((Sint32) (g_in_info->uMsTimer - s_timer) < correct_elapsed_ms)
+					while (((int32_t) (g_in_info->uMsTimer - s_timer) < correct_elapsed_ms)
 						&& (!bFrameNotShownDueToCmd))
 					{
 						// IMPORTANT: this delay should come before the check for ivldp_got_new_command,

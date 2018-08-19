@@ -45,7 +45,7 @@ using namespace std;
 struct fileframes
 {
 	string name;	// name of mpeg file
-	Sint32 frame;	// ldp frame that mpeg file starts on
+	int32_t frame;	// ldp frame that mpeg file starts on
 };
 
 // these values can be OR'd together to create multiple filter effects
@@ -122,8 +122,8 @@ private:
 	// NOTE : 'filename' does not include the prefix path
 	uint16_t mpeg_info (string &filename, uint16_t ld_frame);
 	
-	Sint32 m_target_mpegframe;	// mpeg frame # we are seeking to
-	Sint32 m_cur_ldframe_offset;	// which laserdisc frame corresponds to the first frame in current mpeg file
+	int32_t m_target_mpegframe;	// mpeg frame # we are seeking to
+	int32_t m_cur_ldframe_offset;	// which laserdisc frame corresponds to the first frame in current mpeg file
 
 	// strings
 	string m_cur_mpeg_filename;	// name of the mpeg file we currently have open
