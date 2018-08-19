@@ -57,7 +57,25 @@
 #define YUV_BUF_COUNT 3        // libmpeg2 needs 3 buffers to do its thing ...
 struct yuv_buf g_yuv_buf[YUV_BUF_COUNT];
 
-////
+//// forward declarations
+static int ivldp_got_new_command(void);
+static void ivldp_ack_command(void);
+static void ivldp_lock_handler(void);
+static void ivldp_respond_req_play(void);
+static void ivldp_render(void);
+static void idle_handler_search(int skip);
+static void idle_handler_open(void);
+static void idle_handler_precache(void);
+static void idle_handler_play(void);
+
+static VLDP_BOOL io_open_precached(unsigned int uIdx);
+static VLDP_BOOL io_open(const char *cpszFilename);
+static VLDP_BOOL io_is_open(void);
+static unsigned int io_length(void);
+static VLDP_BOOL io_seek(unsigned int uPos);
+static unsigned int io_read(void *buf, unsigned int uBytesToRead);
+static void io_close(void);
+
 #pragma warning (push)
 #pragma warning (disable:4018)
 static void vo_null_draw(uint8_t * const * buf, void *id)
@@ -491,7 +509,7 @@ int idle_handler(void *surface)
 }
 
 // returns 1 if there is a new command waiting for us or 0 otherwise
-int ivldp_got_new_command()
+static int ivldp_got_new_command(void)
 {
 	int result = 0;
 
@@ -506,13 +524,13 @@ int ivldp_got_new_command()
 
 // acknowledges a command sent by the parent thread
 // NOTE : We don't check to see if parent thread got our acknowledgement because it creates too much latency
-void ivldp_ack_command()
+static void ivldp_ack_command(void)
 {
 	s_old_req_cmdORcount = g_req_cmdORcount;
 	g_ack_count++;	// here is where we acknowledge
 }
 
-void ivldp_lock_handler()
+static void ivldp_lock_handler(void)
 {
 	ivldp_ack_command();
 	{
@@ -627,7 +645,7 @@ void play_handler()
 }
 
 // sets the framerate inside our info structure based upon the framerate code received
-void ivldp_set_framerate(uint8_t frame_rate_code)
+static void ivldp_set_framerate(uint8_t frame_rate_code)
 {
 	// now to compute the framerate
 
@@ -778,7 +796,7 @@ void vldp_process_sequence_header()
 
 // opens a new mpeg2 file
 // The file is positioned at the beginning
-void idle_handler_open()
+static void idle_handler_open()
 {
 	char req_file[STRSIZE] = { 0 };
 	unsigned int req_idx = g_req_idx;
@@ -871,7 +889,7 @@ void idle_handler_open()
 }
 
 // gets called when the user wants to precache a file ...
-void idle_handler_precache()
+static void idle_handler_precache(void)
 {
 	char req_file[STRSIZE] = { 0 };
 	
@@ -959,7 +977,7 @@ void idle_handler_precache()
 // OR if ivldp_render() has hit EOF and rewound back to the beginning
 // This ASSUMES that g_mpeg_handle is at the BEGINNING of the file
 // and that mpeg2_partial_init() has been called
-void idle_handler_play()
+static void idle_handler_play(void)
 {
 	ivldp_respond_req_play();
 	// when the frame is actually blitted is when we set the status to STAT_PLAYING
@@ -967,7 +985,7 @@ void idle_handler_play()
 }
 
 // responds to play request
-void ivldp_respond_req_play()
+static void ivldp_respond_req_play(void)
 {
 	s_timer = g_req_timer;
 	//fprintf(stderr, "ivldp_respond_req_play() : g_req_timer is %u, and uMstimer is %u\n", g_req_timer, g_in_info->uMsTimer);	// REMOVE ME
@@ -1005,72 +1023,72 @@ void ivldp_respond_req_speedchange()
 
 // displays 1 or more frames to the screen, according to the state variables.
 // This function can be used to do both still frames and moving video.  Play and search both use this function.
-void ivldp_render()
+static void ivldp_render(void)
 {
-    uint8_t *end = NULL;
-	int render_finished = 0;
+   uint8_t *end = NULL;
+   int render_finished = 0;
 
-	s_skip_all = 0;	// default value, don't skip frames unless the play or paused handler orders it
+   s_skip_all = 0;	// default value, don't skip frames unless the play or paused handler orders it
 
-	//printf("s_skip_all skipped %u frames.\n", s_uSkipAllCount);
+   //printf("s_skip_all skipped %u frames.\n", s_uSkipAllCount);
 
-	// check to make sure a file has been opened
-	if (!io_is_open())
-	{
-		render_finished = 1;
-		fprintf(stderr, "VLDP RENDER ERROR : we tried to render an mpeg but none was open!\n");
-		g_out_info.status = STAT_ERROR;
-	}
+   // check to make sure a file has been opened
+   if (!io_is_open())
+   {
+      render_finished = 1;
+      fprintf(stderr, "VLDP RENDER ERROR : we tried to render an mpeg but none was open!\n");
+      g_out_info.status = STAT_ERROR;
+   }
 
-	// while we're not finished playing and pausing		
-    while (!render_finished)
-    {
-		//		end = g_buffer + fread (g_buffer, 1, BUFFER_SIZE, g_mpeg_handle);
-		end = g_buffer + io_read(g_buffer, BUFFER_SIZE);
-		
-		// safety check, they could be equal if we were already at EOF before we tried this
+   // while we're not finished playing and pausing		
+   while (!render_finished)
+   {
+      //		end = g_buffer + fread (g_buffer, 1, BUFFER_SIZE, g_mpeg_handle);
+      end = g_buffer + io_read(g_buffer, BUFFER_SIZE);
+
+      // safety check, they could be equal if we were already at EOF before we tried this
       // read chunk of video stream
-		if (g_buffer != end)
-			decode_mpeg2 (g_buffer, end);	// display it to the screen
-		
-		// if we've read to the end of the mpeg2 file, then we can't play anymore, so we pause on last frame
-		if (end != (g_buffer + BUFFER_SIZE))
-		{
-			g_out_info.status = STAT_STOPPED;	// it's a toss-up between this and STAT_PAUSED
-			render_finished = 1;
-			
-			// reset libmpeg2 so it is prepared to begin reading from the beginning of the file
-			mpeg2_partial_init(g_mpeg_data);
-			io_seek(0);	// seek to the beginning of the file
-			g_out_info.current_frame = 0;	// set frame # to beginning of file where it belongs
-		}
+      if (g_buffer != end)
+         decode_mpeg2 (g_buffer, end);	// display it to the screen
 
-		// if a new command is coming in, check to see if we need to stop
-		if (ivldp_got_new_command())
-		{
-			// check to see if we need to suddenly abort the rendering process
-			switch (g_req_cmdORcount & 0xF0)
-			{
-			case VLDP_REQ_QUIT:
-			case VLDP_REQ_OPEN:
-			case VLDP_REQ_SEARCH:
-			case VLDP_REQ_STOP:
-				g_out_info.status = STAT_BUSY;
-				render_finished = 1;
-				break;
-			case VLDP_REQ_SKIP:
-				// do not change the playing status because skips are supposed to be instant
-				render_finished = 1;
-				break;
-			} // end switch
-		} // end if they got a new command
-    } // end while
+      // if we've read to the end of the mpeg2 file, then we can't play anymore, so we pause on last frame
+      if (end != (g_buffer + BUFFER_SIZE))
+      {
+         g_out_info.status = STAT_STOPPED;	// it's a toss-up between this and STAT_PAUSED
+         render_finished = 1;
+
+         // reset libmpeg2 so it is prepared to begin reading from the beginning of the file
+         mpeg2_partial_init(g_mpeg_data);
+         io_seek(0);	// seek to the beginning of the file
+         g_out_info.current_frame = 0;	// set frame # to beginning of file where it belongs
+      }
+
+      // if a new command is coming in, check to see if we need to stop
+      if (ivldp_got_new_command())
+      {
+         // check to see if we need to suddenly abort the rendering process
+         switch (g_req_cmdORcount & 0xF0)
+         {
+            case VLDP_REQ_QUIT:
+            case VLDP_REQ_OPEN:
+            case VLDP_REQ_SEARCH:
+            case VLDP_REQ_STOP:
+               g_out_info.status = STAT_BUSY;
+               render_finished = 1;
+               break;
+            case VLDP_REQ_SKIP:
+               // do not change the playing status because skips are supposed to be instant
+               render_finished = 1;
+               break;
+         } // end switch
+      } // end if they got a new command
+   } // end while
 }
 
 // searches to any arbitrary frame, be it I, P, or B, and renders it
 // if skip is set, it will do a laserdisc skip instead of a search (ie it will go a frame, resume playback,
 // and not adjust any timers)
-void idle_handler_search(int skip)
+static void idle_handler_search(int skip)
 {
 	uint32_t proposed_pos = 0;
 	uint16_t req_frame = g_req_frame; // after we acknowledge the command, g_req_frame could become clobbered
@@ -1395,8 +1413,7 @@ VLDP_BOOL ivldp_parse_mpeg_frame_offsets(char *datafilename, uint32_t mpeg_size)
 	return result;
 }
 
-
-VLDP_BOOL io_open(const char *cpszFilename)
+static VLDP_BOOL io_open(const char *cpszFilename)
 {
 	VLDP_BOOL bResult = VLDP_FALSE;
 
@@ -1410,7 +1427,7 @@ VLDP_BOOL io_open(const char *cpszFilename)
 	return bResult;
 }
 
-VLDP_BOOL io_open_precached(unsigned int uIdx)
+static VLDP_BOOL io_open_precached(unsigned int uIdx)
 {
 	VLDP_BOOL bResult = VLDP_FALSE;
 
@@ -1430,7 +1447,7 @@ VLDP_BOOL io_open_precached(unsigned int uIdx)
 	return bResult;	
 }
 
-unsigned int io_read(void *buf, unsigned int uBytesToRead)
+static unsigned int io_read(void *buf, unsigned int uBytesToRead)
 {
 	unsigned int uBytesRead = 0;
 
@@ -1457,12 +1474,10 @@ unsigned int io_read(void *buf, unsigned int uBytesToRead)
 
 VLDP_BOOL io_seek(unsigned int uPos)
 {
-	VLDP_BOOL bResult = VLDP_FALSE;
-
 	if (g_mpeg_handle)
 	{
 		if (fseek(g_mpeg_handle, uPos, SEEK_SET) == 0)
-			bResult = VLDP_TRUE;
+			return VLDP_TRUE;
 	}
 	else
 	{
@@ -1472,13 +1487,13 @@ VLDP_BOOL io_seek(unsigned int uPos)
 		if (uPos < entry->uLength)
 		{
 			entry->uPos = uPos;
-			bResult = VLDP_TRUE;
+			return VLDP_TRUE;
 		}
 	}
-	return bResult;
+	return VLDP_FALSE;
 }
 
-void io_close()
+static void io_close(void)
 {
 	if (g_mpeg_handle)
 	{
@@ -1491,26 +1506,23 @@ void io_close()
 	// else nothing is open ...
 }
 
-VLDP_BOOL io_is_open()
+static VLDP_BOOL io_is_open(void)
 {
-	VLDP_BOOL bResult = VLDP_FALSE;
 	if ((g_mpeg_handle) || (s_bPreCacheEnabled))
-		bResult = VLDP_TRUE;
-	return bResult;
+		return VLDP_TRUE;
+	return VLDP_FALSE;
 }
 
-unsigned int io_length()
+static unsigned int io_length(void)
 {
-	unsigned int uResult = 0;
-
 	if (g_mpeg_handle)
 	{
 		struct stat the_stat;
 		fstat(fileno(g_mpeg_handle), &the_stat);
-		uResult = the_stat.st_size;
+		return the_stat.st_size;
 	}
 	else if (s_bPreCacheEnabled)
-		uResult = s_sPreCacheEntries[s_uCurPreCacheIdx].uLength;
+		return s_sPreCacheEntries[s_uCurPreCacheIdx].uLength;
 
-	return uResult;
+	return 0;
 }

@@ -49,33 +49,14 @@ struct precache_entry_s
 };
 
 int idle_handler(void *surface);
-void blank_video();
-int ivldp_got_new_command();
-void ivldp_ack_command();
-void ivldp_lock_handler();
 void paused_handler();
 void play_handler();
-void ivldp_set_framerate(uint8_t frame_rate_code);
 void vldp_process_sequence_header();
-void idle_handler_open();
-void idle_handler_precache();
-void idle_handler_play();
-void ivldp_respond_req_play();
 void ivldp_respond_req_pause_or_step();
 void ivldp_respond_req_speedchange();
-void ivldp_render();
-void idle_handler_search(int skip);
 VLDP_BOOL ivldp_get_mpeg_frame_offsets(char *mpeg_name);
 VLDP_BOOL ivldp_parse_mpeg_frame_offsets(char *datafilename, uint32_t mpeg_size);
 void ivldp_update_progress_indicator(SDL_Surface *indicator, double percentage_completed);
-
-VLDP_BOOL io_open(const char *cpszFilename);
-VLDP_BOOL io_open_precached(unsigned int uIdx);
-unsigned int io_read(void *buf, unsigned int uBytesToRead);
-VLDP_BOOL io_seek(unsigned int uPos);
-void io_close();
-VLDP_BOOL io_is_open();
-unsigned int io_length();
 
 ///////////////////////////////////////
 
