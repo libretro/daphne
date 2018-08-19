@@ -70,13 +70,13 @@ extern DECLSPEC SDL_Window * SDLCALL SDL_GetKeyboardFocus(void);
  *
  *  \b Example:
  *  \code
- *  const Uint8 *state = SDL_GetKeyboardState(NULL);
+ *  const uint8_t *state = SDL_GetKeyboardState(NULL);
  *  if ( state[SDL_SCANCODE_RETURN] )   {
  *      printf("<RETURN> is pressed.\n");
  *  }
  *  \endcode
  */
-extern DECLSPEC const Uint8 *SDLCALL SDL_GetKeyboardState(int *numkeys);
+extern DECLSPEC const uint8_t *SDLCALL SDL_GetKeyboardState(int *numkeys);
 
 /**
  *  \brief Get the current key modifier state for the keyboard.

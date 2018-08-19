@@ -145,9 +145,9 @@ void gpworld::do_nmi()
 }
 
 // reads a byte from the cpu's memory
-Uint8 gpworld::cpu_mem_read(uint16_t addr)
+uint8_t gpworld::cpu_mem_read(uint16_t addr)
 {
-	Uint8 result = m_cpumem[addr];
+	uint8_t result = m_cpumem[addr];
 	char s[81] = { 0 };
 	
 	// main rom
@@ -242,7 +242,7 @@ Uint8 gpworld::cpu_mem_read(uint16_t addr)
 }
 
 // writes a byte to the cpu's memory
-void gpworld::cpu_mem_write(uint16_t addr, Uint8 value)
+void gpworld::cpu_mem_write(uint16_t addr, uint8_t value)
 {
 	m_cpumem[addr] = value;
 	char s[81] = { 0 };
@@ -336,18 +336,18 @@ void gpworld::cpu_mem_write(uint16_t addr, Uint8 value)
 	}
 }
 
-Uint8 gpworld::read_ldp(uint16_t addr)
+uint8_t gpworld::read_ldp(uint16_t addr)
 {
 //	char s[81] = {0};
 		
-		Uint8 result = ldp_input_latch;
+		uint8_t result = ldp_input_latch;
 //		sprintf(s, "Read from player %x at pc: %x", result, Z80_GET_PC);
 //		printline(s);
 
 		return result;
 }
 
-void gpworld::write_ldp(Uint8 value, uint16_t addr)
+void gpworld::write_ldp(uint8_t value, uint16_t addr)
 {
 //	char s[81] = {0};
 	
@@ -357,7 +357,7 @@ void gpworld::write_ldp(Uint8 value, uint16_t addr)
 }
 
 // reads a byte from the cpu's port
-Uint8 gpworld::port_read(uint16_t port)
+uint8_t gpworld::port_read(uint16_t port)
 {
 	char s[81] = { 0 };
 
@@ -390,7 +390,7 @@ Uint8 gpworld::port_read(uint16_t port)
 }
 
 // writes a byte to the cpu's port
-void gpworld::port_write(uint16_t port, Uint8 value)
+void gpworld::port_write(uint16_t port, uint8_t value)
 {
 	char s[81] = { 0 };
 
@@ -422,26 +422,26 @@ void gpworld::palette_calculate()
 	//	color conversion for all 2^12 possible colors
 	for (int i = 0; i < 4096; i++)
 	{
-		Uint8 bit0,bit1,bit2,bit3;	
+		uint8_t bit0,bit1,bit2,bit3;	
 
 		// red component
-		bit0 = static_cast<Uint8>((i >> 3) & 0x01);
-		bit1 = static_cast<Uint8>((i >> 2) & 0x01);
-		bit2 = static_cast<Uint8>((i >> 1) & 0x01);
-		bit3 = static_cast<Uint8>((i >> 0) & 0x01);
-		palette_lookup[i].r = static_cast<Uint8>((0x8f * bit0) + (0x43 * bit1) + (0x1f * bit2) + (0x0e * bit3));
+		bit0 = static_cast<uint8_t>((i >> 3) & 0x01);
+		bit1 = static_cast<uint8_t>((i >> 2) & 0x01);
+		bit2 = static_cast<uint8_t>((i >> 1) & 0x01);
+		bit3 = static_cast<uint8_t>((i >> 0) & 0x01);
+		palette_lookup[i].r = static_cast<uint8_t>((0x8f * bit0) + (0x43 * bit1) + (0x1f * bit2) + (0x0e * bit3));
 		// green component
-		bit0 = static_cast<Uint8>((i >> 7) & 0x01);
-		bit1 = static_cast<Uint8>((i >> 6) & 0x01);
-		bit2 = static_cast<Uint8>((i >> 5) & 0x01);
-		bit3 = static_cast<Uint8>((i >> 4) & 0x01);
-		palette_lookup[i].g = static_cast<Uint8>((0x8f * bit0) + (0x43 * bit1) + (0x1f * bit2) + (0x0e * bit3));
+		bit0 = static_cast<uint8_t>((i >> 7) & 0x01);
+		bit1 = static_cast<uint8_t>((i >> 6) & 0x01);
+		bit2 = static_cast<uint8_t>((i >> 5) & 0x01);
+		bit3 = static_cast<uint8_t>((i >> 4) & 0x01);
+		palette_lookup[i].g = static_cast<uint8_t>((0x8f * bit0) + (0x43 * bit1) + (0x1f * bit2) + (0x0e * bit3));
 		// blue component
-		bit0 = static_cast<Uint8>((i >> 11) & 0x01);
-		bit1 = static_cast<Uint8>((i >> 10) & 0x01);
-		bit2 = static_cast<Uint8>((i >> 9) & 0x01);
-		bit3 = static_cast<Uint8>((i >> 8) & 0x01);
-		palette_lookup[i].b = static_cast<Uint8>((0x8f * bit0) + (0x43 * bit1) + (0x1f * bit2) + (0x0e * bit3));		
+		bit0 = static_cast<uint8_t>((i >> 11) & 0x01);
+		bit1 = static_cast<uint8_t>((i >> 10) & 0x01);
+		bit2 = static_cast<uint8_t>((i >> 9) & 0x01);
+		bit3 = static_cast<uint8_t>((i >> 8) & 0x01);
+		palette_lookup[i].b = static_cast<uint8_t>((0x8f * bit0) + (0x43 * bit1) + (0x1f * bit2) + (0x0e * bit3));		
 	}
 
 	recalc_palette();
@@ -453,7 +453,7 @@ void gpworld::recalc_palette()
 	{
 		m_video_overlay_needs_update = true;
 
-		Uint8 used_tile_colors[4096] = {0};
+		uint8_t used_tile_colors[4096] = {0};
 		//int used_colors = 0;
 		int i;
 
@@ -528,7 +528,7 @@ void gpworld::video_repaint()
 	// START modified Mame code
 	// check if sprites need to be drawn
 	int spr_number,sprite_bottom_y,sprite_top_y;
-	Uint8 *sprite_base;
+	uint8_t *sprite_base;
 
 	for (spr_number = 0;spr_number < 64;spr_number++)
 	{
@@ -542,7 +542,7 @@ void gpworld::video_repaint()
 	}
 	// END modified Mame code
 
-	Uint8 pixel[8];
+	uint8_t pixel[8];
 
 	// loop through video memory and draw characters
 	for (int charx = 19; charx < 64; charx++)
@@ -553,20 +553,20 @@ void gpworld::video_repaint()
 			{
 				int current_character = chary * 64 + charx + GPWORLD_VID_ADDRESS;
 					
-				pixel[0] = static_cast<Uint8>(((character[m_cpumem[current_character]*8+y] & 0x80) >> 7) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x80) >> 6));
-				pixel[1] = static_cast<Uint8>(((character[m_cpumem[current_character]*8+y] & 0x40) >> 6) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x40) >> 5));
-				pixel[2] = static_cast<Uint8>(((character[m_cpumem[current_character]*8+y] & 0x20) >> 5) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x20) >> 4));
-				pixel[3] = static_cast<Uint8>(((character[m_cpumem[current_character]*8+y] & 0x10) >> 4) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x10) >> 3));
-				pixel[4] = static_cast<Uint8>(((character[m_cpumem[current_character]*8+y] & 0x08) >> 3) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x08) >> 2));
-				pixel[5] = static_cast<Uint8>(((character[m_cpumem[current_character]*8+y] & 0x04) >> 2) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x04) >> 1));
-				pixel[6] = static_cast<Uint8>(((character[m_cpumem[current_character]*8+y] & 0x02) >> 1) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x02) >> 0));
-				pixel[7] = static_cast<Uint8>(((character[m_cpumem[current_character]*8+y] & 0x01) >> 0) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x01) << 1));
+				pixel[0] = static_cast<uint8_t>(((character[m_cpumem[current_character]*8+y] & 0x80) >> 7) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x80) >> 6));
+				pixel[1] = static_cast<uint8_t>(((character[m_cpumem[current_character]*8+y] & 0x40) >> 6) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x40) >> 5));
+				pixel[2] = static_cast<uint8_t>(((character[m_cpumem[current_character]*8+y] & 0x20) >> 5) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x20) >> 4));
+				pixel[3] = static_cast<uint8_t>(((character[m_cpumem[current_character]*8+y] & 0x10) >> 4) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x10) >> 3));
+				pixel[4] = static_cast<uint8_t>(((character[m_cpumem[current_character]*8+y] & 0x08) >> 3) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x08) >> 2));
+				pixel[5] = static_cast<uint8_t>(((character[m_cpumem[current_character]*8+y] & 0x04) >> 2) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x04) >> 1));
+				pixel[6] = static_cast<uint8_t>(((character[m_cpumem[current_character]*8+y] & 0x02) >> 1) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x02) >> 0));
+				pixel[7] = static_cast<uint8_t>(((character[m_cpumem[current_character]*8+y] & 0x01) >> 0) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x01) << 1));
 			
 				for (int x = 0; x < 8; x++)
 				{
 					if (pixel[x])
 					{
-						*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + ((chary * 8 + y) * GPWORLD_OVERLAY_W) + ((charx - 19) * 8 + x)) = tile_color_pointer[(pixel[x]) | ((m_cpumem[current_character]) & 0xfc)];
+						*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + ((chary * 8 + y) * GPWORLD_OVERLAY_W) + ((charx - 19) * 8 + x)) = tile_color_pointer[(pixel[x]) | ((m_cpumem[current_character]) & 0xfc)];
 					}
 				}
 			}
@@ -578,7 +578,7 @@ void gpworld::video_repaint()
 //		{
 //			for (int y = 0; y <256; y++)
 //			{
-//				*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + y * GPWORLD_OVERLAY_W + x) = x / 16 + (y / 16) * 16;
+//				*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + y * GPWORLD_OVERLAY_W + x) = x / 16 + (y / 16) * 16;
 //			}
 //		}
 
@@ -589,7 +589,7 @@ void gpworld::video_repaint()
 }
 
 // this gets called when the user presses a key or moves the joystick
-void gpworld::input_enable(Uint8 move)
+void gpworld::input_enable(uint8_t move)
 {
 	switch (move)
 	{
@@ -632,7 +632,7 @@ void gpworld::input_enable(Uint8 move)
 }  
 
 // this gets called when the user releases a key or moves the joystick back to center position
-void gpworld::input_disable(Uint8 move)
+void gpworld::input_disable(uint8_t move)
 {
 	switch (move)
 	{
@@ -673,17 +673,17 @@ void gpworld::input_disable(Uint8 move)
 }
 
 // used to set dip switch values
-bool gpworld::set_bank(Uint8 which_bank, Uint8 value)
+bool gpworld::set_bank(uint8_t which_bank, uint8_t value)
 {
 	bool result = true;
 	
 	switch (which_bank)
 	{
 	case 0:	// bank A
-		banks[3] = (Uint8) (value ^ 0xFF);	// dip switches are active low
+		banks[3] = (uint8_t) (value ^ 0xFF);	// dip switches are active low
 		break;
 	case 1:	// bank B
-		banks[4] = (Uint8) (value ^ 0xFF);	// switches are active low
+		banks[4] = (uint8_t) (value ^ 0xFF);	// switches are active low
 		break;
 	default:
 		printline("ERROR: Bank specified is out of range!");
@@ -698,7 +698,7 @@ bool gpworld::set_bank(Uint8 which_bank, Uint8 value)
 void gpworld::draw_sprite(int spr_number)
 {
 	int sx,sy,row,height,src,sprite_color, sprite_bank;
-	Uint8 *sprite_base;
+	uint8_t *sprite_base;
 	int skip;	/* bytes to skip before drawing each row (can be negative) */
 
 	sprite_base	= m_cpumem + GPWORLD_SPRITE_ADDRESS + 0x8 * spr_number;
@@ -738,15 +738,15 @@ void gpworld::draw_sprite(int spr_number)
 			data_lo = sprite[(src2 & 0x7fff) | (sprite_bank << 16)];
 			data_high = sprite[(src2 & 0x7fff) | 0x8000 | (sprite_bank << 16)];
 
-			Uint8 pixel1 = data_high >> 0x04;
-			Uint8 pixel2 = data_high & 0x0f;
-			Uint8 pixel3 = data_lo >> 0x04;
-			Uint8 pixel4 = data_lo & 0x0f;
+			uint8_t pixel1 = data_high >> 0x04;
+			uint8_t pixel2 = data_high & 0x0f;
+			uint8_t pixel3 = data_lo >> 0x04;
+			uint8_t pixel4 = data_lo & 0x0f;
 
 			// draw these guys backwards
 			if (src & 0x8000)
 			{
-				Uint8 temp_pixel;
+				uint8_t temp_pixel;
 				temp_pixel = pixel1;
 				pixel1 = pixel4;
 				pixel4 = temp_pixel;
@@ -768,19 +768,19 @@ void gpworld::draw_sprite(int spr_number)
 				// draw the pixel - don't draw if its black as to not cover up any tiles
 				if (pixel1 && (pixel1 != 0xf))
 				{
-					*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (y * GPWORLD_OVERLAY_W) + x + 0) = pixel1 + (0x10 * sprite_color);
+					*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (y * GPWORLD_OVERLAY_W) + x + 0) = pixel1 + (0x10 * sprite_color);
 				}
 				if (pixel2 && (pixel2 != 0xf))
 				{
-					*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (y * GPWORLD_OVERLAY_W) + x + 1) = pixel2 + (0x10 * sprite_color);
+					*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (y * GPWORLD_OVERLAY_W) + x + 1) = pixel2 + (0x10 * sprite_color);
 				}
 				if (pixel3 && (pixel3 != 0xf))
 				{
-					*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (y * GPWORLD_OVERLAY_W) + x + 2) = pixel3 + (0x10 * sprite_color);
+					*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (y * GPWORLD_OVERLAY_W) + x + 2) = pixel3 + (0x10 * sprite_color);
 				}
 				if (pixel4 && (pixel4 != 0xf))
 				{
-					*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (y * GPWORLD_OVERLAY_W) + x + 3) = pixel4 + (0x10 * sprite_color);
+					*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (y * GPWORLD_OVERLAY_W) + x + 3) = pixel4 + (0x10 * sprite_color);
 				}
 			}
 			x += 4;

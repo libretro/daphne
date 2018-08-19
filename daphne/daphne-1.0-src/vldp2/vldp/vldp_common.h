@@ -61,7 +61,7 @@ extern Uint32 g_req_timer;
 extern unsigned int g_req_idx;	// multipurpose index
 extern unsigned int g_req_precache;
 extern char g_req_file[];	// which file to open
-extern Uint8 g_req_cmdORcount;	// the current command count OR'd with the current command of parent thread
+extern uint8_t g_req_cmdORcount;	// the current command count OR'd with the current command of parent thread
 								// made 8-bit to ensure that it's atomic
 extern unsigned int g_ack_count;	// how many times we've acknowledged a command
 

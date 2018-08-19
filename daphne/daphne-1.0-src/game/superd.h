@@ -47,11 +47,11 @@ public:
 	superd();
 	bool init();
 	void do_irq(unsigned int);
-	void cpu_mem_write(uint16_t, Uint8);
-	Uint8 port_read(uint16_t);
-	void port_write(uint16_t, Uint8);
-	void input_enable(Uint8);
-	void input_disable(Uint8);
+	void cpu_mem_write(uint16_t, uint8_t);
+	uint8_t port_read(uint16_t);
+	void port_write(uint16_t, uint8_t);
+	void input_enable(uint8_t);
+	void input_disable(uint8_t);
 	void OnVblank();
 	void OnLDV1000LineChange(bool bIsStatus, bool bIsEnabled);
 	bool set_bank(unsigned char, unsigned char);
@@ -61,12 +61,12 @@ public:
 	void palette_calculate();
 	
 protected:
-    Uint8 m_soundchip_id;
-    Uint8 ldp_output_latch;	// holds data to be sent to the LDV1000
-	Uint8 ldp_input_latch;	// holds data that was retrieved from the LDV1000
-	Uint8 character[0x2000];	// character ram
-	Uint8 color_prom[0x20];
-	Uint8 banks[4];				// superdon's banks
+    uint8_t m_soundchip_id;
+    uint8_t ldp_output_latch;	// holds data to be sent to the LDV1000
+	uint8_t ldp_input_latch;	// holds data that was retrieved from the LDV1000
+	uint8_t character[0x2000];	// character ram
+	uint8_t color_prom[0x20];
+	uint8_t banks[4];				// superdon's banks
 		// bank 1 is joystick
 		// bank 2 is buttons
 		// bank 3 is dip switch 1

@@ -46,12 +46,12 @@ public:
 	badlands();
 	void do_nmi();		// does an NMI tick
 	void do_irq(unsigned int);		// does an IRQ/FIRQ tick
-	Uint8 cpu_mem_read(uint16_t addr);			// memory read routine
-	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
+	uint8_t cpu_mem_read(uint16_t addr);			// memory read routine
+	void cpu_mem_write(uint16_t addr, uint8_t value);		// memory write routine
 	void reset();
 	void set_preset(int);
-	void input_enable(Uint8);
-	void input_disable(Uint8);
+	void input_enable(uint8_t);
+	void input_disable(uint8_t);
 	bool set_bank(unsigned char, unsigned char);
 	void palette_calculate();
 	void video_repaint();	// function to repaint video
@@ -59,20 +59,20 @@ public:
    const char *get_libretro_button_name(unsigned id);
 
 protected:
-	void update_shoot_led(Uint8);
-	Uint8 charx_offset;
-	Uint8 chary_offset;
+	void update_shoot_led(uint8_t);
+	uint8_t charx_offset;
+	uint8_t chary_offset;
 	uint16_t char_base;
-	Uint8 m_soundchip_id;
+	uint8_t m_soundchip_id;
    bool shoot_led_overlay;
 	bool shoot_led_numlock;
 	bool shoot_led;
 	bool firq_on;
 	bool irq_on;
 	bool nmi_on;
-	Uint8 character[0x2000];		
-	Uint8 color_prom[0x20];
-	Uint8 banks[3];				// badlands's banks
+	uint8_t character[0x2000];		
+	uint8_t color_prom[0x20];
+	uint8_t banks[3];				// badlands's banks
 		// bank 1 is switches
 		// bank 2 is dip switch 1
 		// bank 3 is dip switch 2
@@ -82,7 +82,7 @@ class badlandp : public badlands
 {
 public:
    badlandp();
-	Uint8 cpu_mem_read(uint16_t addr);			// memory read routine
-	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
+	uint8_t cpu_mem_read(uint16_t addr);			// memory read routine
+	void cpu_mem_write(uint16_t addr, uint8_t value);		// memory write routine
 };
 

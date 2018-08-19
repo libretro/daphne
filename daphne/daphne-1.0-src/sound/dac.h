@@ -23,6 +23,7 @@
 #ifndef DAC_H
 #define DAC_H
 
+#include <stdint.h>
 #include <SDL.h>	// for data-type defs
 
 // init callback
@@ -32,6 +33,6 @@ int dac_init(Uint32 unused);
 void dac_ctrl_data(unsigned int uSamplesSinceLastChange, unsigned int uByte, int internal_id);
 
 // called from sound mixer to get audio stream
-void dac_get_stream(Uint8 *stream, int length, int internal_id);
+void dac_get_stream(uint8_t *stream, int length, int internal_id);
 
 #endif // DAC_H

@@ -73,10 +73,10 @@ void timetrav::do_nmi()
 {
 }
 
-Uint8 timetrav::cpu_mem_read(Uint32 addr)
+uint8_t timetrav::cpu_mem_read(Uint32 addr)
 {
 	char s[80];
-	Uint8 result = m_cpumem[addr];
+	uint8_t result = m_cpumem[addr];
 
 	// Scratch ram
    if (addr < 0x10000)
@@ -94,7 +94,7 @@ Uint8 timetrav::cpu_mem_read(Uint32 addr)
 	return (result);
 }
 
-void timetrav::cpu_mem_write(Uint32 addr, Uint8 value)
+void timetrav::cpu_mem_write(Uint32 addr, uint8_t value)
 {
 	char s[80];
 
@@ -117,7 +117,7 @@ void timetrav::cpu_mem_write(Uint32 addr, Uint8 value)
 	}
 }
 
-void timetrav::port_write(uint16_t port, Uint8 value)
+void timetrav::port_write(uint16_t port, uint8_t value)
 {
 	char s[80];
    static char display_string[9] = {0};
@@ -144,7 +144,7 @@ void timetrav::port_write(uint16_t port, Uint8 value)
    }
 }
 
-Uint8 timetrav::port_read(uint16_t port)
+uint8_t timetrav::port_read(uint16_t port)
 {
 	char s[80];
 
@@ -173,11 +173,11 @@ bool timetrav::set_bank(unsigned char which_bank, unsigned char value)
 	return result;
 }
 
-void timetrav::input_disable(Uint8 move)
+void timetrav::input_disable(uint8_t move)
 {
 }
 
-void timetrav::input_enable(Uint8 move)
+void timetrav::input_enable(uint8_t move)
 {
 }
 

@@ -52,31 +52,31 @@ public:
 	mach3();
    void do_irq(unsigned int);		// does an IRQ tick
 	void do_nmi();
-	Uint8 cpu_mem_read(Uint32 addr);
-	void cpu_mem_write(Uint32 addr, Uint8 value);
-	Uint8 cpu_mem_read(uint16_t addr);
-	void cpu_mem_write(uint16_t addr, Uint8 value);
-	Uint8 port_read(uint16_t);
-	void port_write(uint16_t, Uint8);
-	void input_enable(Uint8);
-	void input_disable(Uint8);
+	uint8_t cpu_mem_read(Uint32 addr);
+	void cpu_mem_write(Uint32 addr, uint8_t value);
+	uint8_t cpu_mem_read(uint16_t addr);
+	void cpu_mem_write(uint16_t addr, uint8_t value);
+	uint8_t port_read(uint16_t);
+	void port_write(uint16_t, uint8_t);
+	void input_enable(uint8_t);
+	void input_disable(uint8_t);
    unsigned get_libretro_button_map(unsigned id);
    const char *get_libretro_button_name(unsigned id);
 	bool set_bank(unsigned char, unsigned char);
 //	void set_version(int);
 //	bool handle_cmdline_arg(const char *arg);
 	void patch_roms();
-	Uint8 character[0x2000];  //character gfx ROM (8KB)
-	Uint8 sprite[0x10000];  //sprite gfx ROM (64KB for UVT, 32KB for MACH3)
-   Uint8 m_cpumem2[0x10000]; // memory space for first 6502
-   Uint8 m_cpumem3[0x10000]; // memory space for second 6502
-	Uint8 targetdata[0x100000]; 
+	uint8_t character[0x2000];  //character gfx ROM (8KB)
+	uint8_t sprite[0x10000];  //sprite gfx ROM (64KB for UVT, 32KB for MACH3)
+   uint8_t m_cpumem2[0x10000]; // memory space for first 6502
+   uint8_t m_cpumem3[0x10000]; // memory space for second 6502
+	uint8_t targetdata[0x100000]; 
 	Uint32 m_current_targetdata; //pointer to active buffer within target data
 
 protected:
-	Uint8 m_gamecontrols;
-	Uint8 m_serviceswitches;
-	Uint8 m_dipswitches;
+	uint8_t m_gamecontrols;
+	uint8_t m_serviceswitches;
+	uint8_t m_dipswitches;
 
 	bool m_ldvideo_enabled;	// whether laserdisc video is visible or not
 
@@ -90,27 +90,27 @@ protected:
 	void draw_characters();  
 	void draw_sprites();
 
-	void draw_8x8(Uint8 character_number, Uint8 *character_set, Uint8 xcoord, Uint8 ycoord);
-	void draw_16x16(Uint8 character_number, Uint8 *character_set, Uint8 xcoord, Uint8 ycoord);
+	void draw_8x8(uint8_t character_number, uint8_t *character_set, uint8_t xcoord, uint8_t ycoord);
+	void draw_16x16(uint8_t character_number, uint8_t *character_set, uint8_t xcoord, uint8_t ycoord);
 
-	Uint8 m_frame_decoder_select_bit;
-	Uint8 m_audio_ready_bit;
+	uint8_t m_frame_decoder_select_bit;
+	uint8_t m_audio_ready_bit;
 	uint16_t m_targetdata_offset;
 
-   Uint8 m_soundchip1_id;
-   Uint8 m_soundctrl1;
-   Uint8 m_soundchip2_id;
-   Uint8 m_soundctrl2;
+   uint8_t m_soundchip1_id;
+   uint8_t m_soundctrl1;
+   uint8_t m_soundchip2_id;
+   uint8_t m_soundctrl2;
 
-   Uint8 m_dac_id;
+   uint8_t m_dac_id;
    uint64_t m_dac_last_cycs;
-   Uint8 m_dac_last_val;
+   uint8_t m_dac_last_val;
 
    bool m_soundchip2_nmi_enabled;
    unsigned int m_last0x4000;
-   queue <Uint8> m_sounddata_latch1;
-   queue <Uint8> m_sounddata_latch2;
-   Uint8 m_psg_latch;
+   queue <uint8_t> m_sounddata_latch1;
+   queue <uint8_t> m_sounddata_latch2;
+   uint8_t m_psg_latch;
 
 private:
 

@@ -158,12 +158,12 @@ void cobraconv::do_nmi()
 	nes6502_nmi();
 }
 
-Uint8 cobraconv::cpu_mem_read(uint16_t addr)
+uint8_t cobraconv::cpu_mem_read(uint16_t addr)
 {
 //	static unsigned int loopcount = 0;
 	char s[81] = {0};
 
-	Uint8 result = 0;
+	uint8_t result = 0;
 
 	switch (cpu_getactivecpu())
 	{
@@ -284,7 +284,7 @@ Uint8 cobraconv::cpu_mem_read(uint16_t addr)
 	return result;
 }
 
-void cobraconv::cpu_mem_write(uint16_t addr, Uint8 value)
+void cobraconv::cpu_mem_write(uint16_t addr, uint8_t value)
 {
 	char s[81] = {0};
 
@@ -395,31 +395,31 @@ void cobraconv::palette_calculate()
 	//Convert palette rom into a useable palette
 	for (int i = 0; i < COBRACONV_COLOR_COUNT; i++)
 	{
-		Uint8 bit0,bit1,bit2;	
+		uint8_t bit0,bit1,bit2;	
 
 		/* red component */
-		bit0 = static_cast<Uint8>((color_prom[i] >> 0) & 0x01);
-		bit1 = static_cast<Uint8>((color_prom[i] >> 1) & 0x01);
-		bit2 = static_cast<Uint8>((color_prom[i] >> 2) & 0x01); 
-		temp_color.r = static_cast<Uint8>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
+		bit0 = static_cast<uint8_t>((color_prom[i] >> 0) & 0x01);
+		bit1 = static_cast<uint8_t>((color_prom[i] >> 1) & 0x01);
+		bit2 = static_cast<uint8_t>((color_prom[i] >> 2) & 0x01); 
+		temp_color.r = static_cast<uint8_t>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
 
 		/* green component */
-		bit0 = static_cast<Uint8>((color_prom[i] >> 3) & 0x01);
-		bit1 = static_cast<Uint8>((color_prom[i] >> 4) & 0x01);
-		bit2 = static_cast<Uint8>((color_prom[i] >> 5) & 0x01);
-		temp_color.g = static_cast<Uint8>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
+		bit0 = static_cast<uint8_t>((color_prom[i] >> 3) & 0x01);
+		bit1 = static_cast<uint8_t>((color_prom[i] >> 4) & 0x01);
+		bit2 = static_cast<uint8_t>((color_prom[i] >> 5) & 0x01);
+		temp_color.g = static_cast<uint8_t>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
 
 		/* blue component */
-		bit0 = static_cast<Uint8>(0);
-		bit1 = static_cast<Uint8>((color_prom[i] >> 6) & 0x01);
-		bit2 = static_cast<Uint8>((color_prom[i] >> 7) & 0x01);
-		temp_color.b = static_cast<Uint8>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
+		bit0 = static_cast<uint8_t>(0);
+		bit1 = static_cast<uint8_t>((color_prom[i] >> 6) & 0x01);
+		bit2 = static_cast<uint8_t>((color_prom[i] >> 7) & 0x01);
+		temp_color.b = static_cast<uint8_t>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
 
 		////apply gamma correction to make colors brighter overall
 		//Corrected value = 255 * (uncorrected value / 255) ^ (1.0 / gamma)
-		//temp_color.r = (Uint8) (255 * pow((static_cast<double>(temp_color.r)) / 255, 1/COBRACONV_GAMMA));
-		//temp_color.g = (Uint8) (255 * pow((static_cast<double>(temp_color.g)) / 255, 1/COBRACONV_GAMMA));
-		//temp_color.b = (Uint8) (255 * pow((static_cast<double>(temp_color.b)) / 255, 1/COBRACONV_GAMMA));
+		//temp_color.r = (uint8_t) (255 * pow((static_cast<double>(temp_color.r)) / 255, 1/COBRACONV_GAMMA));
+		//temp_color.g = (uint8_t) (255 * pow((static_cast<double>(temp_color.g)) / 255, 1/COBRACONV_GAMMA));
+		//temp_color.b = (uint8_t) (255 * pow((static_cast<double>(temp_color.b)) / 255, 1/COBRACONV_GAMMA));
 
 		palette_set_color(i, temp_color);
 	}
@@ -491,11 +491,11 @@ bool cobraconv::set_bank(unsigned char which_bank, unsigned char value)
 	return result;
 }
 // this gets called when the user presses a key or moves the joystick
-void cobraconv::input_enable(Uint8 move)
+void cobraconv::input_enable(uint8_t move)
 {
 	if (input_isinverted())
 	{
-		Uint8 newmove = move;
+		uint8_t newmove = move;
 		if (move == SWITCH_UP)		newmove = SWITCH_DOWN;
 		if (move == SWITCH_DOWN)	newmove = SWITCH_UP;
 		move = newmove;
@@ -551,11 +551,11 @@ void cobraconv::input_enable(Uint8 move)
 }
 
 // this gets called when the user releases a key or moves the joystick back to center position
-void cobraconv::input_disable(Uint8 move)
+void cobraconv::input_disable(uint8_t move)
 {
 	if (input_isinverted())
 	{
-		Uint8 newmove = move;
+		uint8_t newmove = move;
 		if (move == SWITCH_UP)		newmove = SWITCH_DOWN;
 		if (move == SWITCH_DOWN)	newmove = SWITCH_UP;
 		move = newmove;
@@ -629,80 +629,80 @@ void cobraconv::OnLDV1000LineChange(bool bIsStatus, bool bIsEnabled)
 	}
 }
 
-void cobraconv::draw_8x8(int character_number, Uint8 *character_set, int xcoord, int ycoord,
+void cobraconv::draw_8x8(int character_number, uint8_t *character_set, int xcoord, int ycoord,
 						 int xflip, int yflip, int color)
 {
-	Uint8 pixel[8] = {0};
+	uint8_t pixel[8] = {0};
 
 	for (int y = 0; y < 8; y++)
 	{
-		Uint8 byte1 = character_set[character_number*8+y];
-		Uint8 byte2 = character_set[character_number*8+y+0x2000];
-		Uint8 byte3 = character_set[character_number*8+y+0x4000];
+		uint8_t byte1 = character_set[character_number*8+y];
+		uint8_t byte2 = character_set[character_number*8+y+0x2000];
+		uint8_t byte3 = character_set[character_number*8+y+0x4000];
 
-		pixel[0] = static_cast<Uint8>(((byte1 & 0x01) << 2) | ((byte2 & 0x01) << 1) | ((byte3 & 0x01) << 0));
-		pixel[1] = static_cast<Uint8>(((byte1 & 0x02) << 1) | ((byte2 & 0x02) << 0) | ((byte3 & 0x02) >> 1));
-		pixel[2] = static_cast<Uint8>(((byte1 & 0x04) << 0) | ((byte2 & 0x04) >> 1) | ((byte3 & 0x04) >> 2));
-		pixel[3] = static_cast<Uint8>(((byte1 & 0x08) >> 1) | ((byte2 & 0x08) >> 2) | ((byte3 & 0x08) >> 3));
-		pixel[4] = static_cast<Uint8>(((byte1 & 0x10) >> 2) | ((byte2 & 0x10) >> 3) | ((byte3 & 0x10) >> 4));
-		pixel[5] = static_cast<Uint8>(((byte1 & 0x20) >> 3) | ((byte2 & 0x20) >> 4) | ((byte3 & 0x20) >> 5));
-		pixel[6] = static_cast<Uint8>(((byte1 & 0x40) >> 4) | ((byte2 & 0x40) >> 5) | ((byte3 & 0x40) >> 6));
-		pixel[7] = static_cast<Uint8>(((byte1 & 0x80) >> 5) | ((byte2 & 0x80) >> 6) | ((byte3 & 0x80) >> 7));
+		pixel[0] = static_cast<uint8_t>(((byte1 & 0x01) << 2) | ((byte2 & 0x01) << 1) | ((byte3 & 0x01) << 0));
+		pixel[1] = static_cast<uint8_t>(((byte1 & 0x02) << 1) | ((byte2 & 0x02) << 0) | ((byte3 & 0x02) >> 1));
+		pixel[2] = static_cast<uint8_t>(((byte1 & 0x04) << 0) | ((byte2 & 0x04) >> 1) | ((byte3 & 0x04) >> 2));
+		pixel[3] = static_cast<uint8_t>(((byte1 & 0x08) >> 1) | ((byte2 & 0x08) >> 2) | ((byte3 & 0x08) >> 3));
+		pixel[4] = static_cast<uint8_t>(((byte1 & 0x10) >> 2) | ((byte2 & 0x10) >> 3) | ((byte3 & 0x10) >> 4));
+		pixel[5] = static_cast<uint8_t>(((byte1 & 0x20) >> 3) | ((byte2 & 0x20) >> 4) | ((byte3 & 0x20) >> 5));
+		pixel[6] = static_cast<uint8_t>(((byte1 & 0x40) >> 4) | ((byte2 & 0x40) >> 5) | ((byte3 & 0x40) >> 6));
+		pixel[7] = static_cast<uint8_t>(((byte1 & 0x80) >> 5) | ((byte2 & 0x80) >> 6) | ((byte3 & 0x80) >> 7));
 
 		for (int x = 0; x < 8; x++)
 		{
 			if (pixel[x])
 			{
-				*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + ((ycoord + (yflip ? y : (7-y))) * COBRACONV_OVERLAY_W) + (xcoord + (xflip ? (7-x) : x))) = pixel[x] + (8*color);
+				*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + ((ycoord + (yflip ? y : (7-y))) * COBRACONV_OVERLAY_W) + (xcoord + (xflip ? (7-x) : x))) = pixel[x] + (8*color);
 			}
 		}
 	}
 }
 
-void cobraconv::draw_16x32(int character_number, Uint8 *character_set, int xcoord, int ycoord,
+void cobraconv::draw_16x32(int character_number, uint8_t *character_set, int xcoord, int ycoord,
 						   int xflip, int yflip, int color)
 {
-	Uint8 pixel[16] = {0};
+	uint8_t pixel[16] = {0};
 
 	for (int b = 0; b < 8; b+=2) // laid out as four 8-pixel high blocks
 	{
 		for (int y = 0; y < 8; y++)
 		{
-			Uint8 byte1 = character_set[character_number*32+y+(b*8)];
-			Uint8 byte2 = character_set[character_number*32+y+0x2000+(b*8)];
-			Uint8 byte3 = character_set[character_number*32+y+0x4000+(b*8)];
-			Uint8 byte4 = character_set[character_number*32+y+((b+1)*8)];
-			Uint8 byte5 = character_set[character_number*32+y+0x2000+((b+1)*8)];
-			Uint8 byte6 = character_set[character_number*32+y+0x4000+((b+1)*8)];
+			uint8_t byte1 = character_set[character_number*32+y+(b*8)];
+			uint8_t byte2 = character_set[character_number*32+y+0x2000+(b*8)];
+			uint8_t byte3 = character_set[character_number*32+y+0x4000+(b*8)];
+			uint8_t byte4 = character_set[character_number*32+y+((b+1)*8)];
+			uint8_t byte5 = character_set[character_number*32+y+0x2000+((b+1)*8)];
+			uint8_t byte6 = character_set[character_number*32+y+0x4000+((b+1)*8)];
 
-			pixel[0]  = static_cast<Uint8>((((byte1 & 0x01) << 2) | ((byte2 & 0x01) << 1) | ((byte3 & 0x01) << 0)));
-			pixel[1]  = static_cast<Uint8>((((byte1 & 0x02) << 1) | ((byte2 & 0x02) << 0) | ((byte3 & 0x02) >> 1)));
-			pixel[2]  = static_cast<Uint8>((((byte1 & 0x04) << 0) | ((byte2 & 0x04) >> 1) | ((byte3 & 0x04) >> 2)));
-			pixel[3]  = static_cast<Uint8>((((byte1 & 0x08) >> 1) | ((byte2 & 0x08) >> 2) | ((byte3 & 0x08) >> 3)));
-			pixel[4]  = static_cast<Uint8>((((byte1 & 0x10) >> 2) | ((byte2 & 0x10) >> 3) | ((byte3 & 0x10) >> 4)));
-			pixel[5]  = static_cast<Uint8>((((byte1 & 0x20) >> 3) | ((byte2 & 0x20) >> 4) | ((byte3 & 0x20) >> 5)));
-			pixel[6]  = static_cast<Uint8>((((byte1 & 0x40) >> 4) | ((byte2 & 0x40) >> 5) | ((byte3 & 0x40) >> 6)));
-			pixel[7]  = static_cast<Uint8>((((byte1 & 0x80) >> 5) | ((byte2 & 0x80) >> 6) | ((byte3 & 0x80) >> 7)));
-			pixel[8]  = static_cast<Uint8>((((byte4 & 0x01) << 2) | ((byte5 & 0x01) << 1) | ((byte6 & 0x01) << 0)));
-			pixel[9]  = static_cast<Uint8>((((byte4 & 0x02) << 1) | ((byte5 & 0x02) << 0) | ((byte6 & 0x02) >> 1)));
-			pixel[10] = static_cast<Uint8>((((byte4 & 0x04) << 0) | ((byte5 & 0x04) >> 1) | ((byte6 & 0x04) >> 2)));
-			pixel[11] = static_cast<Uint8>((((byte4 & 0x08) >> 1) | ((byte5 & 0x08) >> 2) | ((byte6 & 0x08) >> 3)));
-			pixel[12] = static_cast<Uint8>((((byte4 & 0x10) >> 2) | ((byte5 & 0x10) >> 3) | ((byte6 & 0x10) >> 4)));
-			pixel[13] = static_cast<Uint8>((((byte4 & 0x20) >> 3) | ((byte5 & 0x20) >> 4) | ((byte6 & 0x20) >> 5)));
-			pixel[14] = static_cast<Uint8>((((byte4 & 0x40) >> 4) | ((byte5 & 0x40) >> 5) | ((byte6 & 0x40) >> 6)));
-			pixel[15] = static_cast<Uint8>((((byte4 & 0x80) >> 5) | ((byte5 & 0x80) >> 6) | ((byte6 & 0x80) >> 7)));
+			pixel[0]  = static_cast<uint8_t>((((byte1 & 0x01) << 2) | ((byte2 & 0x01) << 1) | ((byte3 & 0x01) << 0)));
+			pixel[1]  = static_cast<uint8_t>((((byte1 & 0x02) << 1) | ((byte2 & 0x02) << 0) | ((byte3 & 0x02) >> 1)));
+			pixel[2]  = static_cast<uint8_t>((((byte1 & 0x04) << 0) | ((byte2 & 0x04) >> 1) | ((byte3 & 0x04) >> 2)));
+			pixel[3]  = static_cast<uint8_t>((((byte1 & 0x08) >> 1) | ((byte2 & 0x08) >> 2) | ((byte3 & 0x08) >> 3)));
+			pixel[4]  = static_cast<uint8_t>((((byte1 & 0x10) >> 2) | ((byte2 & 0x10) >> 3) | ((byte3 & 0x10) >> 4)));
+			pixel[5]  = static_cast<uint8_t>((((byte1 & 0x20) >> 3) | ((byte2 & 0x20) >> 4) | ((byte3 & 0x20) >> 5)));
+			pixel[6]  = static_cast<uint8_t>((((byte1 & 0x40) >> 4) | ((byte2 & 0x40) >> 5) | ((byte3 & 0x40) >> 6)));
+			pixel[7]  = static_cast<uint8_t>((((byte1 & 0x80) >> 5) | ((byte2 & 0x80) >> 6) | ((byte3 & 0x80) >> 7)));
+			pixel[8]  = static_cast<uint8_t>((((byte4 & 0x01) << 2) | ((byte5 & 0x01) << 1) | ((byte6 & 0x01) << 0)));
+			pixel[9]  = static_cast<uint8_t>((((byte4 & 0x02) << 1) | ((byte5 & 0x02) << 0) | ((byte6 & 0x02) >> 1)));
+			pixel[10] = static_cast<uint8_t>((((byte4 & 0x04) << 0) | ((byte5 & 0x04) >> 1) | ((byte6 & 0x04) >> 2)));
+			pixel[11] = static_cast<uint8_t>((((byte4 & 0x08) >> 1) | ((byte5 & 0x08) >> 2) | ((byte6 & 0x08) >> 3)));
+			pixel[12] = static_cast<uint8_t>((((byte4 & 0x10) >> 2) | ((byte5 & 0x10) >> 3) | ((byte6 & 0x10) >> 4)));
+			pixel[13] = static_cast<uint8_t>((((byte4 & 0x20) >> 3) | ((byte5 & 0x20) >> 4) | ((byte6 & 0x20) >> 5)));
+			pixel[14] = static_cast<uint8_t>((((byte4 & 0x40) >> 4) | ((byte5 & 0x40) >> 5) | ((byte6 & 0x40) >> 6)));
+			pixel[15] = static_cast<uint8_t>((((byte4 & 0x80) >> 5) | ((byte5 & 0x80) >> 6) | ((byte6 & 0x80) >> 7)));
 
 			for (int x = 0; x < 16; x++)
 			{
 				if (pixel[x])
 				{
-					*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + ((ycoord + (8-y)+(b*4)) * COBRACONV_OVERLAY_W) + (xcoord + (xflip ? (15-x) : x))) = pixel[x] + (8*color);
+					*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + ((ycoord + (8-y)+(b*4)) * COBRACONV_OVERLAY_W) + (xcoord + (xflip ? (15-x) : x))) = pixel[x] + (8*color);
 				}			
 			}
 		}
 	}
 }
-void cobraconv::draw_sprites(int offset, Uint8 *character_set)
+void cobraconv::draw_sprites(int offset, uint8_t *character_set)
 {
 	for (int sprites = 0; sprites < 0x32; sprites += 4)
 	{

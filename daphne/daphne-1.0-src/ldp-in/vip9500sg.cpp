@@ -159,8 +159,8 @@ void write_vip9500sg (unsigned char value)
 		{
 			unsigned int curframe = g_ldp->get_current_frame();
 			vip9500sg_queue_push(0x6b); // frame
-			vip9500sg_queue_push((Uint8) ((curframe >> 8) & 0xff)); // high byte of frame
-			vip9500sg_queue_push((Uint8) (curframe & 0xff)); // low byte of frame
+			vip9500sg_queue_push((uint8_t) ((curframe >> 8) & 0xff)); // high byte of frame
+			vip9500sg_queue_push((uint8_t) (curframe & 0xff)); // low byte of frame
 		}
 		break;
 	case 0x6e: // UNKNOWN

@@ -285,7 +285,7 @@ void superd::do_irq(unsigned int which_irq)
 	}
 }
 
-void superd::cpu_mem_write(uint16_t Addr, Uint8 Value)
+void superd::cpu_mem_write(uint16_t Addr, uint8_t Value)
 // Called whenever the Z80 emulator wants to write to memory
 {	
 	m_cpumem[Addr] = Value;
@@ -298,7 +298,7 @@ void superd::cpu_mem_write(uint16_t Addr, Uint8 Value)
 
 }
 
-void superd::port_write(uint16_t Port, Uint8 Value)
+void superd::port_write(uint16_t Port, uint8_t Value)
 // Called whenever the emulator wants to output to a port
 {
 
@@ -432,7 +432,7 @@ void superd::port_write(uint16_t Port, Uint8 Value)
 	}		
 }
 
-Uint8 superd::port_read(uint16_t Port)
+uint8_t superd::port_read(uint16_t Port)
 // Called whenever the emulator wants to read from a port
 {
 
@@ -504,23 +504,23 @@ void superd::palette_calculate()
 	//Convert palette rom into a useable palette
 	for (int i = 0; i < SUPERD_COLOR_COUNT; i++)
 	{
-		Uint8 bit0,bit1,bit2;	
+		uint8_t bit0,bit1,bit2;	
 
 		/* red component */
-		bit0 = static_cast<Uint8>((color_prom[i] >> 5) & 0x01);
-		bit1 = static_cast<Uint8>((color_prom[i] >> 6) & 0x01);
-		bit2 = static_cast<Uint8>((color_prom[i] >> 7) & 0x01);
-		temp_color.r = static_cast<Uint8>((0x24 * bit0) + (0x4a * bit1) + (0x91 * bit2));
+		bit0 = static_cast<uint8_t>((color_prom[i] >> 5) & 0x01);
+		bit1 = static_cast<uint8_t>((color_prom[i] >> 6) & 0x01);
+		bit2 = static_cast<uint8_t>((color_prom[i] >> 7) & 0x01);
+		temp_color.r = static_cast<uint8_t>((0x24 * bit0) + (0x4a * bit1) + (0x91 * bit2));
 		/* green component */
-		bit0 = static_cast<Uint8>((color_prom[i] >> 2) & 0x01);
-		bit1 = static_cast<Uint8>((color_prom[i] >> 3) & 0x01);	
-		bit2 = static_cast<Uint8>((color_prom[i] >> 4) & 0x01);
-		temp_color.g = static_cast<Uint8>((0x24 * bit0) + (0x4a * bit1) + (0x91 * bit2));
+		bit0 = static_cast<uint8_t>((color_prom[i] >> 2) & 0x01);
+		bit1 = static_cast<uint8_t>((color_prom[i] >> 3) & 0x01);	
+		bit2 = static_cast<uint8_t>((color_prom[i] >> 4) & 0x01);
+		temp_color.g = static_cast<uint8_t>((0x24 * bit0) + (0x4a * bit1) + (0x91 * bit2));
 		/* blue component */
-		bit0 = static_cast<Uint8>(0);
-		bit1 = static_cast<Uint8>((color_prom[i] >> 0) & 0x01);
-		bit2 = static_cast<Uint8>((color_prom[i] >> 1) & 0x01);
-		temp_color.b = static_cast<Uint8>((0x24 * bit0) + (0x4a * bit1) + (0x91 * bit2));
+		bit0 = static_cast<uint8_t>(0);
+		bit1 = static_cast<uint8_t>((color_prom[i] >> 0) & 0x01);
+		bit2 = static_cast<uint8_t>((color_prom[i] >> 1) & 0x01);
+		temp_color.b = static_cast<uint8_t>((0x24 * bit0) + (0x4a * bit1) + (0x91 * bit2));
 		palette_set_color(i, temp_color);
 	}
 	
@@ -538,10 +538,10 @@ void superd::video_repaint()
 			{
 				for (int y = 0; y < 8; y++)
 				{
-					Uint8 left_pixel = static_cast<Uint8>((character[m_cpumem[chary * 32 + charx + 0x5c00]*32+x+4*y] & 0xf0) >> 4);
-					Uint8 right_pixel = static_cast<Uint8>((character[m_cpumem[chary * 32 + charx + 0x5c00]*32+x+4*y] & 0x0f));
-					*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + ((chary * 8 + y) * SUPERD_OVERLAY_W) + (charx * 8 + x * 2)) = left_pixel;
-					*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + ((chary * 8 + y) * SUPERD_OVERLAY_W) + (charx * 8 + x * 2 + 1)) = right_pixel;
+					uint8_t left_pixel = static_cast<uint8_t>((character[m_cpumem[chary * 32 + charx + 0x5c00]*32+x+4*y] & 0xf0) >> 4);
+					uint8_t right_pixel = static_cast<uint8_t>((character[m_cpumem[chary * 32 + charx + 0x5c00]*32+x+4*y] & 0x0f));
+					*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + ((chary * 8 + y) * SUPERD_OVERLAY_W) + (charx * 8 + x * 2)) = left_pixel;
+					*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + ((chary * 8 + y) * SUPERD_OVERLAY_W) + (charx * 8 + x * 2 + 1)) = right_pixel;
 				}
 			}
 		}
@@ -549,7 +549,7 @@ void superd::video_repaint()
 }
 
 // this gets called when the user presses a key or moves the joystick
-void superd::input_enable(Uint8 move)
+void superd::input_enable(uint8_t move)
 {
 	switch (move)
 	{
@@ -593,7 +593,7 @@ void superd::input_enable(Uint8 move)
 }  
 
 // this gets called when the user releases a key or moves the joystick back to center position
-void superd::input_disable(Uint8 move)
+void superd::input_disable(uint8_t move)
 {
 	switch (move)
 	{

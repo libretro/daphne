@@ -320,7 +320,7 @@ SDL_ConvertColorkeyToAlpha(SDL_Surface * surface)
 }
 
 int
-SDL_SetSurfaceColorMod(SDL_Surface * surface, Uint8 r, Uint8 g, Uint8 b)
+SDL_SetSurfaceColorMod(SDL_Surface * surface, uint8_t r, uint8_t g, uint8_t b)
 {
     int flags;
 
@@ -346,7 +346,7 @@ SDL_SetSurfaceColorMod(SDL_Surface * surface, Uint8 r, Uint8 g, Uint8 b)
 
 
 int
-SDL_GetSurfaceColorMod(SDL_Surface * surface, Uint8 * r, Uint8 * g, Uint8 * b)
+SDL_GetSurfaceColorMod(SDL_Surface * surface, uint8_t * r, uint8_t * g, uint8_t * b)
 {
     if (!surface) {
         return -1;
@@ -365,7 +365,7 @@ SDL_GetSurfaceColorMod(SDL_Surface * surface, Uint8 * r, Uint8 * g, Uint8 * b)
 }
 
 int
-SDL_SetSurfaceAlphaMod(SDL_Surface * surface, Uint8 alpha)
+SDL_SetSurfaceAlphaMod(SDL_Surface * surface, uint8_t alpha)
 {
     int flags;
 
@@ -388,7 +388,7 @@ SDL_SetSurfaceAlphaMod(SDL_Surface * surface, Uint8 alpha)
 }
 
 int
-SDL_GetSurfaceAlphaMod(SDL_Surface * surface, Uint8 * alpha)
+SDL_GetSurfaceAlphaMod(SDL_Surface * surface, uint8_t * alpha)
 {
     if (!surface) {
         return -1;
@@ -771,7 +771,7 @@ SDL_ConvertSurface(SDL_Surface * surface, const SDL_PixelFormat * format,
 
         if (set_colorkey_by_color) {
             /* Set the colorkey by color, which needs to be unique */
-            Uint8 keyR, keyG, keyB, keyA;
+            uint8_t keyR, keyG, keyB, keyA;
 
             SDL_GetRGBA(surface->map->info.colorkey, surface->format, &keyR,
                         &keyG, &keyB, &keyA);

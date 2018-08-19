@@ -62,7 +62,7 @@ void tonegen_writedata(Uint32 channel, Uint32 frequency, int index)
 	g_tonegen.bytes_per_switch[channel] = frequency?(int) ((AUDIO_FREQ / frequency * 4 / 2) + .5):0;
 }
 
-void tonegen_stream(Uint8* stream, int length, int index)
+void tonegen_stream(uint8_t* stream, int length, int index)
 {
 	for (int pos = 0; pos < length; pos += 4)
 	{

@@ -54,7 +54,7 @@ void          sep_release_vldp();
 void          sep_set_static_pointers(double *m_disc_fps, unsigned int *m_uDiscFPKS);
 void          sep_set_surface(int width, int height);
 void          sep_shutdown(void);
-void          sep_sound_ended(Uint8 *buffer, unsigned int slot);
+void          sep_sound_ended(uint8_t *buffer, unsigned int slot);
 bool          sep_srf32_to_srf8(SDL_Surface *src, SDL_Surface *dst);
 void          sep_startup(const char *script);
 void          sep_unload_fonts(void);

@@ -18,6 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include <stdint.h>
 #include "../SDL_internal.h"
 
 /* Useful functions and variables from SDL_pixel.c */
@@ -36,6 +37,6 @@ extern void SDL_FreeBlitMap(SDL_BlitMap * map);
 /* Miscellaneous functions */
 extern int SDL_CalculatePitch(SDL_Surface * surface);
 extern void SDL_DitherColors(SDL_Color * colors, int bpp);
-extern Uint8 SDL_FindColor(SDL_Palette * pal, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+extern uint8_t SDL_FindColor(SDL_Palette * pal, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
 /* vi: set ts=4 sw=4 expandtab: */

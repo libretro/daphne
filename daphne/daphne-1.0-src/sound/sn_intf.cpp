@@ -51,12 +51,12 @@ int tms9919_initialize(Uint32 core_frequency)
 	return result;
 }
 
-void tms9919_writedata(Uint8 data, int index)
+void tms9919_writedata(uint8_t data, int index)
 {
 	g_paSoundChips[index]->WriteData(data);
 }
 
-void tms9919_stream(Uint8* stream, int length, int index)
+void tms9919_stream(uint8_t* stream, int length, int index)
 {
 	g_paSoundChips[index]->AudioCallback(stream, length);
 }

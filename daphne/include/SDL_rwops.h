@@ -115,9 +115,9 @@ typedef struct SDL_RWops
         } stdio;
         struct
         {
-            Uint8 *base;
-            Uint8 *here;
-            Uint8 *stop;
+            uint8_t *base;
+            uint8_t *here;
+            uint8_t *stop;
         } mem;
         struct
         {

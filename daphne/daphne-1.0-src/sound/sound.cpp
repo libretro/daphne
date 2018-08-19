@@ -60,7 +60,7 @@ struct sounddef *g_soundchip_head = NULL;	// pointer to the first sound chip in 
 unsigned int g_uSoundChipNextID = 0;	// the idea that the next soundchip to get added will get (also usually indicates how many sound chips have been added, but not if a soundchip gets deleted)
 
 // callback to actually do the mixing
-void (*g_soundmix_callback)(Uint8* stream, int length) = mixNone;
+void (*g_soundmix_callback)(uint8_t* stream, int length) = mixNone;
 
 // The # of samples in the sound buffer
 // Matt prefers 1024 but some people (cough Warren) can't handle it haha
@@ -106,7 +106,7 @@ void set_soundbuf_size(uint16_t newbufsize)
 	while (cur)
 	{
 		delete cur->buffer;
-		cur->buffer = new Uint8 [g_uSoundChipBufSize];
+		cur->buffer = new uint8_t [g_uSoundChipBufSize];
       memset(cur->buffer, 0, g_uSoundChipBufSize);
 		cur->buffer_pointer = cur->buffer;
 		cur->bytes_left = g_uSoundChipBufSize;
@@ -379,7 +379,7 @@ unsigned int add_soundchip(struct sounddef *candidate)
 	cur->next_soundchip = NULL;
 	cur->bNeedsConstantUpdates = false;	// sensible default
 	// create a buffer for each chip
-	cur->buffer = new Uint8 [g_uSoundChipBufSize];
+	cur->buffer = new uint8_t [g_uSoundChipBufSize];
 	cur->buffer_pointer = cur->buffer;
 	cur->bytes_left = g_uSoundChipBufSize;
 	cur->init_callback = NULL;
@@ -519,14 +519,14 @@ void init_soundchip()
 
 // Mixing callback
 // USED WHEN : all audio is muted
-void mixMute(Uint8 *stream, int length)
+void mixMute(uint8_t *stream, int length)
 {
 	memset(stream, 0, length);
 }
 
 // Mixing callback
 // USED WHEN: there is only 1 sound chip, then there is no need to do any mixing
-void mixNone(Uint8 *stream, int length)
+void mixNone(uint8_t *stream, int length)
 {
 	if (g_soundchip_head != NULL)
 	{
@@ -536,7 +536,7 @@ void mixNone(Uint8 *stream, int length)
 
 // Mixing callback
 // USED WHEN: there are more than 1 sound chip, but all volumes are maximum
-void mixWithMaxVolume(Uint8 *stream, int length)
+void mixWithMaxVolume(uint8_t *stream, int length)
 {
 
 	// this is a dangerous trick (casting one struct to another) in order to get us extra speed
@@ -577,7 +577,7 @@ void mixWithMaxVolume(Uint8 *stream, int length)
 // Mixing callback
 // USED WHEN: there are more than 1 sound chip, and volumes are variable
 //  (this is the slowest callback)
-void mixWithMults(Uint8 *stream, int length)
+void mixWithMults(uint8_t *stream, int length)
 {
 	struct sounddef *cur;
 
@@ -605,7 +605,7 @@ void mixWithMults(Uint8 *stream, int length)
 	}
 }
 
-void audio_callback ( void *data, Uint8 *stream, int length )
+void audio_callback ( void *data, uint8_t *stream, int length )
 {
 	// now go through the sound chips and mix them in
 	struct sounddef *cur = g_soundchip_head;
@@ -623,7 +623,7 @@ void audio_callback ( void *data, Uint8 *stream, int length )
 	g_soundmix_callback(stream, length);
 }
 
-void audio_writedata(Uint8 id, Uint8 data)
+void audio_writedata(uint8_t id, uint8_t data)
 {
 	// if sound isn't initialized, then the soundchips aren't initialized either
 	if (g_sound_initialized)
@@ -641,7 +641,7 @@ void audio_writedata(Uint8 id, Uint8 data)
 }
 
 // in case audio_writedata doesn't cut it ...
-void audio_write_ctrl_data(unsigned int uCtrl, unsigned int uData, Uint8 id)
+void audio_write_ctrl_data(unsigned int uCtrl, unsigned int uData, uint8_t id)
 {
 	// if sound isn't initialized, then the soundchips aren't initialized either
 	if (g_sound_initialized)
@@ -658,7 +658,7 @@ void audio_write_ctrl_data(unsigned int uCtrl, unsigned int uData, Uint8 id)
 	}
 }
 
-void set_soundchip_volume(Uint8 id, unsigned int uChannel, unsigned int uVolume)
+void set_soundchip_volume(uint8_t id, unsigned int uChannel, unsigned int uVolume)
 {
 	struct sounddef *cur = g_soundchip_head;
 	while (cur)

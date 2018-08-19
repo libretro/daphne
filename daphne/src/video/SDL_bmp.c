@@ -61,8 +61,8 @@ static void CorrectAlphaChannel(SDL_Surface *surface)
 #else
     int alphaChannelOffset = 3;
 #endif
-    Uint8 *alpha = ((Uint8*)surface->pixels) + alphaChannelOffset;
-    Uint8 *end = alpha + surface->h * surface->pitch;
+    uint8_t *alpha = ((uint8_t*)surface->pixels) + alphaChannelOffset;
+    uint8_t *end = alpha + surface->h * surface->pitch;
 
     while (alpha < end) {
         if (*alpha != 0) {
@@ -73,7 +73,7 @@ static void CorrectAlphaChannel(SDL_Surface *surface)
     }
 
     if (!hasAlpha) {
-        alpha = ((Uint8*)surface->pixels) + alphaChannelOffset;
+        alpha = ((uint8_t*)surface->pixels) + alphaChannelOffset;
         while (alpha < end) {
             *alpha = SDL_ALPHA_OPAQUE;
             alpha += 4;
@@ -94,8 +94,8 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
     Uint32 Bmask = 0;
     Uint32 Amask = 0;
     SDL_Palette *palette;
-    Uint8 *bits;
-    Uint8 *top, *end;
+    uint8_t *bits;
+    uint8_t *top, *end;
     SDL_bool topDown;
     int ExpandBMP;
     SDL_bool haveRGBMasks = SDL_FALSE;
@@ -355,8 +355,8 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
         was_error = SDL_TRUE;
         goto done;
     }
-    top = (Uint8 *)surface->pixels;
-    end = (Uint8 *)surface->pixels+(surface->h*surface->pitch);
+    top = (uint8_t *)surface->pixels;
+    end = (uint8_t *)surface->pixels+(surface->h*surface->pitch);
     switch (ExpandBMP) {
     case 1:
         bmpPitch = (biWidth + 7) >> 3;
@@ -379,7 +379,7 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
         switch (ExpandBMP) {
         case 1:
         case 4:{
-                Uint8 pixel = 0;
+                uint8_t pixel = 0;
                 int shift = (8 - ExpandBMP);
                 for (i = 0; i < surface->w; ++i) {
                     if (i % (8 / ExpandBMP) == 0) {
@@ -426,7 +426,7 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
         }
         /* Skip padding bytes, ugh */
         if (pad) {
-            Uint8 padbyte;
+            uint8_t padbyte;
             for (i = 0; i < pad; ++i) {
                 SDL_RWread(src, &padbyte, 1, 1);
             }

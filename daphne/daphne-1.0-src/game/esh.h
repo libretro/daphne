@@ -41,11 +41,11 @@ public:
 	esh();
 	void do_nmi();		// does an NMI tick
 	void do_irq(unsigned int);		// does an IRQ tick
-	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
-	Uint8 port_read(uint16_t port);
-	void port_write(uint16_t port, Uint8 value);
-	void input_enable(Uint8);
-	void input_disable(Uint8);
+	void cpu_mem_write(uint16_t addr, uint8_t value);		// memory write routine
+	uint8_t port_read(uint16_t port);
+	void port_write(uint16_t port, uint8_t value);
+	void input_enable(uint8_t);
+	void input_disable(uint8_t);
 	void palette_calculate();
 	void video_repaint();	// function to repaint video
    unsigned get_libretro_button_map(unsigned id);
@@ -54,15 +54,15 @@ public:
 	void set_version(int);
 
 protected:
-	Uint8 character[0x8000];		
-	Uint8 miscprom[0x200];		
-	Uint8 color_prom[0x200];		
+	uint8_t character[0x8000];		
+	uint8_t miscprom[0x200];		
+	uint8_t color_prom[0x200];		
 
 private:
 	bool m_needlineblink, m_needcharblink;
 	int blank_count;
-	Uint8 palette_high_bit;
-	Uint8 banks[4];				// esh's banks
+	uint8_t palette_high_bit;
+	uint8_t banks[4];				// esh's banks
 		// bank 1 is switches
 		// bank 2 is switches
 		// bank 3 is dip switch 1

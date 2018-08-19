@@ -44,14 +44,8 @@ NORMAL_MODE = 0x20
 #ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #pragma warning (disable:4996)
-#endif
-
-#ifdef _WIN32
 #pragma warning (disable:4100) // disable warning about unreferenced parameter
-#endif
-
 // Win32 doesn't use strcasecmp, it uses stricmp (lame)
-#ifdef _WIN32
 #define strcasecmp stricmp
 #endif
 
@@ -783,7 +777,7 @@ void lair2::do_irq(unsigned int which_irq)
 }
 
 
-void lair2::port_write(uint16_t port, Uint8 value)
+void lair2::port_write(uint16_t port, uint8_t value)
 {
 	switch(port)
 	{
@@ -927,7 +921,7 @@ void lair2::port_write(uint16_t port, Uint8 value)
 	}		
 }
 
-Uint8 lair2::port_read(uint16_t port)
+uint8_t lair2::port_read(uint16_t port)
 {
 	unsigned char result = 0;
 
@@ -994,7 +988,7 @@ Uint8 lair2::port_read(uint16_t port)
 	return(result);
 }
 
-void lair2::cpu_mem_write(Uint32 Addr, Uint8 Value)
+void lair2::cpu_mem_write(Uint32 Addr, uint8_t Value)
 {
 	m_cpumem[Addr] = Value; // always store to RAM if we write to it
 }
@@ -1011,7 +1005,7 @@ bool lair2::set_bank(unsigned char which_bank, unsigned char value)
 }
 
 
-void lair2::input_enable(Uint8 move)
+void lair2::input_enable(uint8_t move)
 {
 	switch(move)
 	{
@@ -1053,7 +1047,7 @@ void lair2::input_enable(Uint8 move)
 }
 
 
-void lair2::input_disable(Uint8 move)
+void lair2::input_disable(uint8_t move)
 {
 	switch(move)
 	{
@@ -1121,7 +1115,7 @@ void lair2::video_repaint()
 	} // end if video resizing is required
 }
 
-void lair2::EEPROM_9536_write(Uint8 value)
+void lair2::EEPROM_9536_write(uint8_t value)
 {
       // NV RAM saving 
       // uses the 9536 EEPROM
@@ -1131,12 +1125,12 @@ void lair2::EEPROM_9536_write(Uint8 value)
       // bit 3 = PRE
       // bits 4-7 unknown
 
-	static Uint8 nv_opcode = 0xff;
+	static uint8_t nv_opcode = 0xff;
 	static uint16_t nv_data = 0;
 	static uint16_t nv_address = 0;
 	static int address_count = 0;
 	static int bit_count = 0;
-	static Uint8 old = 0x00;
+	static uint8_t old = 0x00;
 	int org = 1;
 
 	if (value & 0x04) // check chip select - while this is high be are still getting data for the same command

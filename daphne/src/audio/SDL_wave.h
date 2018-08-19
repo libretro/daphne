@@ -62,7 +62,7 @@ typedef struct Chunk
 {
     Uint32 magic;
     Uint32 length;
-    Uint8 *data;
+    uint8_t *data;
 } Chunk;
 
 /* vi: set ts=4 sw=4 expandtab: */

@@ -25,6 +25,7 @@
 #ifndef MIX_H
 #define MIX_H
 
+#include <stdint.h>
 #include <SDL.h>	// for datatype defs
 
 struct mix_s
@@ -44,7 +45,7 @@ struct mix_s
 void mix_c();
 
 extern mix_s *g_pMixBufs;
-extern Uint8 *g_pSampleDst;
+extern uint8_t *g_pSampleDst;
 extern Uint32 g_uBytesToMix;
 #define g_mix_func mix_c
 

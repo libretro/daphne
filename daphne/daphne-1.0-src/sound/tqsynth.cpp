@@ -1964,7 +1964,7 @@ void tqsynth_init(int freq, uint16_t format, int channels, long base_F0)
     au_spec.channel = -1;
     au_spec.real.freq = freq;
     au_spec.real.format = format;
-    au_spec.real.channels = (Uint8) channels;
+    au_spec.real.channels = (uint8_t) channels;
 	au_spec.bConverting = false;
 
     if (klatt_global.samrate != au_spec.real.freq || au_spec.real.channels != 1)
@@ -1975,7 +1975,7 @@ void tqsynth_init(int freq, uint16_t format, int channels, long base_F0)
 }
 
 // Release a previously synthesized wave chunk.
-void tqsynth_free_chunk(Uint8 *pu8Buf)
+void tqsynth_free_chunk(uint8_t *pu8Buf)
 {
 	MPO_FREE(pu8Buf);
 }
@@ -2000,9 +2000,9 @@ bool audio_get_chunk(int num_samples, short *samples, sample_s *ptrSample)
                                    klatt_global.samrate, au_spec.real.format,
                                    au_spec.real.channels, au_spec.real.freq))
         {
-            cvt.buf = (Uint8 *) MPO_MALLOC(num_bytes * cvt.len_mult);
+            cvt.buf = (uint8_t *) MPO_MALLOC(num_bytes * cvt.len_mult);
             cvt.len = num_bytes;
-            memcpy(cvt.buf, (Uint8 *) samples, num_bytes);
+            memcpy(cvt.buf, (uint8_t *) samples, num_bytes);
 
 			// if conversion succeeds
             if (0 == SDL_ConvertAudio(&cvt))
@@ -2020,12 +2020,12 @@ bool audio_get_chunk(int num_samples, short *samples, sample_s *ptrSample)
     }
     else
     {
-		ptrSample->pu8Buf = (Uint8 *) MPO_MALLOC(num_bytes);
+		ptrSample->pu8Buf = (uint8_t *) MPO_MALLOC(num_bytes);
 
         // Sample wanted/real specs match, so don't need any conversion.
 		if (NULL != ptrSample->pu8Buf)
 		{
-			memcpy(ptrSample->pu8Buf, (Uint8 *) samples, num_bytes);
+			memcpy(ptrSample->pu8Buf, (uint8_t *) samples, num_bytes);
 			ptrSample->uLength = num_bytes;
 			bResult = true;
 		}

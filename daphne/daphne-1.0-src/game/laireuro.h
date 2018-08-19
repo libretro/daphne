@@ -37,10 +37,10 @@ int32_t laireuro_irq_callback(int);
 
 // CTC Stuff
 void ctc_init(double, double, double, double, double);
-void ctc_write(Uint8, Uint8);
-Uint8 ctc_read(Uint8);
-void dart_write(bool b, bool command, Uint8 data);
-void ctc_update_period(Uint8 channel);
+void ctc_write(uint8_t, uint8_t);
+uint8_t ctc_read(uint8_t);
+void dart_write(bool b, bool command, uint8_t data);
+void ctc_update_period(uint8_t channel);
 
 #define COUNTER true
 #define TIMER false
@@ -48,8 +48,8 @@ void ctc_update_period(Uint8 channel);
 struct ctc_channel
 {
 	double trig; // period of the trigger input
-	Uint8 control;
-	Uint8 time_const;
+	uint8_t control;
+	uint8_t time_const;
 	bool load_const;
 	bool time;
 	bool time_trig;
@@ -61,15 +61,15 @@ struct ctc_channel
 
 struct ctc_chip
 {
-	Uint8 int_vector;
+	uint8_t int_vector;
 	ctc_channel channels[4];
 	double clock; // period of the clock
 };
 
 struct dart_chip
 {
-	Uint8 next_reg;
-	Uint8 int_vector;
+	uint8_t next_reg;
+	uint8_t int_vector;
 	bool transmit_int;
 	bool ext_int;
 };
@@ -81,24 +81,24 @@ public:
 	laireuro();
 	void do_irq(Uint32);
 	void do_nmi();
-	Uint8 cpu_mem_read(uint16_t);
-	void cpu_mem_write(uint16_t, Uint8);
-	Uint8 port_read(uint16_t);
-	void port_write(uint16_t, Uint8);
-	void input_enable(Uint8);
-	void input_disable(Uint8);
+	uint8_t cpu_mem_read(uint16_t);
+	void cpu_mem_write(uint16_t, uint8_t);
+	uint8_t port_read(uint16_t);
+	void port_write(uint16_t, uint8_t);
+	void input_enable(uint8_t);
+	void input_disable(uint8_t);
 	void palette_calculate();
 	void video_repaint();
    unsigned get_libretro_button_map(unsigned id);
    const char *get_libretro_button_name(unsigned id);
 	void set_version(int);
-	bool set_bank(Uint8, Uint8);
+	bool set_bank(uint8_t, uint8_t);
 
 protected:
-	Uint8 m_wt_misc;
-	Uint8 m_character[0x2000];	
+	uint8_t m_wt_misc;
+	uint8_t m_character[0x2000];	
 	SDL_Color m_colors[LAIREURO_COLOR_COUNT];		
-	Uint8 m_banks[4];				
+	uint8_t m_banks[4];				
 };
 
 class aceeuro : public laireuro

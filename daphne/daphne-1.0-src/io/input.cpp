@@ -877,7 +877,7 @@ void process_event(SDL_Event *event)
 			// for (i = 0; i < (sizeof(joystick_buttons_map) / sizeof(int)); i++) {
 			for (i = 0; i < MAX_DEFINED_JOYSTICK_BUTTONS; i++) {
 				if (event->jbutton.button == i) {
-					input_enable((Uint8)joystick_buttons_map[i]);
+					input_enable((uint8_t)joystick_buttons_map[i]);
 					break;
 				}
 			}
@@ -896,7 +896,7 @@ void process_event(SDL_Event *event)
 			// for (i = 0; i < (sizeof(joystick_buttons_map) / sizeof(int)); i++) {
 			for (i = 0; i < MAX_DEFINED_JOYSTICK_BUTTONS; i++) {
 				if (event->jbutton.button == i) {
-					input_disable((Uint8)joystick_buttons_map[i]);
+					input_disable((uint8_t)joystick_buttons_map[i]);
 					break;
 				}
 			}
@@ -909,7 +909,7 @@ void process_event(SDL_Event *event)
 			// loop through buttons and look for a press
 			for (i = 0; i < (sizeof(mouse_buttons_map) / sizeof(int)); i++) {
 				if (event->button.button == i) {
-					input_enable((Uint8)mouse_buttons_map[i]);
+					input_enable((uint8_t)mouse_buttons_map[i]);
 					break;
 				}
 			}
@@ -918,7 +918,7 @@ void process_event(SDL_Event *event)
 			// added by ScottD
 			for (i = 0; i < (sizeof(mouse_buttons_map) / sizeof(int)); i++) {
 				if (event->button.button == i) {
-					input_disable((Uint8)mouse_buttons_map[i]);
+					input_disable((uint8_t)mouse_buttons_map[i]);
 					break;
 				}
 			}
@@ -946,7 +946,7 @@ void process_keydown(SDL_Keycode key)
 {
 	// go through each key def (defined in enum in daphne.h) and check to see if the key entered matches
 	// If we have a match, the switch to be used is the value of the index "move"
-	for (Uint8 move = 0; move < SWITCH_COUNT; move++)
+	for (uint8_t move = 0; move < SWITCH_COUNT; move++)
 	{
 		if ((key == g_key_defs[move][0]) || (key == g_key_defs[move][1]))
 		{
@@ -962,7 +962,7 @@ void process_keyup(SDL_Keycode key)
 {
 	// go through each key def (defined in enum in daphne.h) and check to see if the key entered matches
 	// If we have a match, the switch to be used is the value of the index "move"
-	for (Uint8 move = 0; move < SWITCH_COUNT; move++)
+	for (uint8_t move = 0; move < SWITCH_COUNT; move++)
 	{
 		if ((key == g_key_defs[move][0]) || (key == g_key_defs[move][1]))
 		{
@@ -1032,7 +1032,7 @@ void process_joystick_motion(SDL_Event *event)
 void process_joystick_hat_motion(SDL_Event *event)
 {
 
-	static Uint8 prev_hat_position = SDL_HAT_CENTERED; 
+	static uint8_t prev_hat_position = SDL_HAT_CENTERED; 
 
 	if ( ( event->jhat.value & SDL_HAT_UP ) && !( prev_hat_position & SDL_HAT_UP ) )
 	{
@@ -1103,17 +1103,17 @@ bool input_pause(bool fPause)
 // search button on their remote.
 static int fCoinStart_Started_References = 0;
 
-static inline void add_coin_to_queue(bool enabled, Uint8 val);
+static inline void add_coin_to_queue(bool enabled, uint8_t val);
 
 // if user has pressed a key/moved the joystick/pressed a button
-void input_enable(Uint8 move)
+void input_enable(uint8_t move)
 {
 	// RJS START ADD - coin start switch
 	if (move == SWITCH_COINSTART)
 	{
 		if (fCoinStart_Started_References != 0) return;
 
-		Uint8 nCredits = g_game->get_game_credits();
+		uint8_t nCredits = g_game->get_game_credits();
 		if (nCredits > 0)
 		{
 			move = SWITCH_START1;
@@ -1159,7 +1159,7 @@ void input_enable(Uint8 move)
 }
 
 // if user has released a key/released a button/moved joystick back to center position
-void input_disable(Uint8 move)
+void input_disable(uint8_t move)
 {
 	// RJS START ADD - coin start switch
 	if (move == SWITCH_COINSTART)
@@ -1192,7 +1192,7 @@ void input_disable(Uint8 move)
 	// else do nothing
 }
 
-static inline void add_coin_to_queue(bool enabled, Uint8 val)
+static inline void add_coin_to_queue(bool enabled, uint8_t val)
 {
 	uint64_t total_cycles = get_total_cycles_executed(0);
 	struct coin_input coin;

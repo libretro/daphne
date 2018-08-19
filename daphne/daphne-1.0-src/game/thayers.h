@@ -41,10 +41,10 @@ public:
 	void do_irq(unsigned int which);
 	void do_nmi();		// dummy function to generate timer IRQ
 	void thayers_irq();	
-	Uint8 cpu_mem_read(uint16_t addr);			// memory read routine
-	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
-	Uint8 port_read(uint16_t port);		// read from port
-	void port_write(uint16_t port, Uint8 value);		// write to a port
+	uint8_t cpu_mem_read(uint16_t addr);			// memory read routine
+	void cpu_mem_write(uint16_t addr, uint8_t value);		// memory write routine
+	uint8_t port_read(uint16_t port);		// read from port
+	void port_write(uint16_t port, uint8_t value);		// write to a port
 	// RJS CHANGE START
 	//void process_keydown(SDLKey);
 	//void process_keyup(SDLKey);
@@ -57,7 +57,7 @@ public:
    unsigned get_libretro_button_map(unsigned id);
    const char *get_libretro_button_name(unsigned id);
     void init_overlay_scoreboard(bool fShowScoreboard);
-	void write_scoreboard(Uint8, Uint8, int); // function to decode scoreboard data
+	void write_scoreboard(uint8_t, uint8_t, int); // function to decode scoreboard data
 
 	// COP421 interface functions
 	void thayers_write_d_port(unsigned char); // Write to D port
@@ -76,14 +76,14 @@ public:
 
 protected:
 //	void string_draw(char*, int, int);
-	Uint8 coprom[0x400];
+	uint8_t coprom[0x400];
 	bool key_press;
-	Uint8 cop_read_latch;
-	Uint8 cop_write_latch;
-	Uint8 cop_g_read_latch;
-	Uint8 cop_g_write_latch;
-	Uint8 m_irq_status;
-	Uint8 banks[4];				// thayers's banks
+	uint8_t cop_read_latch;
+	uint8_t cop_write_latch;
+	uint8_t cop_g_read_latch;
+	uint8_t cop_g_write_latch;
+	uint8_t m_irq_status;
+	uint8_t banks[4];				// thayers's banks
 	// bank 1 is Dip Bank A
 	// bank 2 is bits 0-3 is Dip Bank B, 4 and 5 Coin 1 and 2, 6 and 7 laserdisc ready	
 

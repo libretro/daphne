@@ -113,7 +113,7 @@ void dac_ctrl_data(unsigned int uCyclesSinceLastChange, unsigned int u8Byte, int
 }
 
 // called from sound mixer to get audio stream
-void dac_get_stream(Uint8 *stream, int length, int internal_id)
+void dac_get_stream(uint8_t *stream, int length, int internal_id)
 {
 	/*
 	if (g_uDACSampleCount > 45)

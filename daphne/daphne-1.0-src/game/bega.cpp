@@ -37,6 +37,7 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <string.h>	// for memset
 #include "bega.h"
 #include "../cpu/cpu.h"
@@ -366,10 +367,10 @@ void bega::do_nmi()
    nes6502_nmi();
 }
 
-Uint8 bega::cpu_mem_read(uint16_t addr)
+uint8_t bega::cpu_mem_read(uint16_t addr)
 {
 //   char s[81] = {0};
-   Uint8 result;
+   uint8_t result;
 
    if (cpu_getactivecpu() == 0)
    {
@@ -478,7 +479,7 @@ Uint8 bega::cpu_mem_read(uint16_t addr)
    return result;
 }
 
-void bega::cpu_mem_write(uint16_t addr, Uint8 value)
+void bega::cpu_mem_write(uint16_t addr, uint8_t value)
 {
    char s[81] = {0};
 
@@ -707,13 +708,13 @@ void bega::video_repaint()
 
 
 // this gets called when the user presses a key or moves the joystick
-void bega::input_enable(Uint8 move)
+void bega::input_enable(uint8_t move)
 {
 	if (strncmp(m_shortgamename, "cobra", 6) == 0)
 	{
 		if (input_isinverted())
 		{
-			Uint8 newmove = move;
+			uint8_t newmove = move;
 			if (move == SWITCH_UP)		newmove = SWITCH_DOWN;
 			if (move == SWITCH_DOWN)	newmove = SWITCH_UP;
 			move = newmove;
@@ -769,13 +770,13 @@ void bega::input_enable(Uint8 move)
 }  
 
 // this gets called when the user releases a key or moves the joystick back to center position
-void bega::input_disable(Uint8 move)
+void bega::input_disable(uint8_t move)
 {
 	if (strncmp(m_shortgamename, "cobra", 6) == 0)
 	{
 		if (input_isinverted())
 		{
-			Uint8 newmove = move;
+			uint8_t newmove = move;
 			if (move == SWITCH_UP)		newmove = SWITCH_DOWN;
 			if (move == SWITCH_DOWN)	newmove = SWITCH_UP;
 			move = newmove;
@@ -835,10 +836,10 @@ void bega::input_disable(Uint8 move)
 // 60 1 2 3 4 5 6 7 8 9 70 1 2 3 4 5 6 7 8 9 80 1 2 3 4 5 6 7 8 9 90 1 2 3 4 5 6 7 8 9 00 1 2 3 4 5 6 7 8 9 10 1 2 3 4 5 6 7 8 9 20 1 2 3 4 5 6 7 8 9 
 //            !     _              +         0  1 2 3 4 5 6 7 8 9            Ö   A B C D  E F G H I J K L M N  O P Q R S T U V W X  Y Z █
 
-void bega::draw_8x8(int character_number, Uint8 *character_set, int xcoord, int ycoord,
+void bega::draw_8x8(int character_number, uint8_t *character_set, int xcoord, int ycoord,
                     int xflip, int yflip, int color)
 {
-   Uint8 pixel[8] = {0};
+   uint8_t pixel[8] = {0};
 
    // RJS START TEST - for character numbers
    /*
@@ -855,72 +856,72 @@ void bega::draw_8x8(int character_number, Uint8 *character_set, int xcoord, int 
 
    for (int y = 0; y < 8; y++)
    {
-      Uint8 byte1 = character_set[character_number*8+y];
-      Uint8 byte2 = character_set[character_number*8+y+0x2000];
-      Uint8 byte3 = character_set[character_number*8+y+0x4000];
+      uint8_t byte1 = character_set[character_number*8+y];
+      uint8_t byte2 = character_set[character_number*8+y+0x2000];
+      uint8_t byte3 = character_set[character_number*8+y+0x4000];
 
-      pixel[0] = static_cast<Uint8>(((byte1 & 0x01) << 2) | ((byte2 & 0x01) << 1) | ((byte3 & 0x01) << 0));
-      pixel[1] = static_cast<Uint8>(((byte1 & 0x02) << 1) | ((byte2 & 0x02) << 0) | ((byte3 & 0x02) >> 1));
-      pixel[2] = static_cast<Uint8>(((byte1 & 0x04) << 0) | ((byte2 & 0x04) >> 1) | ((byte3 & 0x04) >> 2));
-      pixel[3] = static_cast<Uint8>(((byte1 & 0x08) >> 1) | ((byte2 & 0x08) >> 2) | ((byte3 & 0x08) >> 3));
-      pixel[4] = static_cast<Uint8>(((byte1 & 0x10) >> 2) | ((byte2 & 0x10) >> 3) | ((byte3 & 0x10) >> 4));
-      pixel[5] = static_cast<Uint8>(((byte1 & 0x20) >> 3) | ((byte2 & 0x20) >> 4) | ((byte3 & 0x20) >> 5));
-      pixel[6] = static_cast<Uint8>(((byte1 & 0x40) >> 4) | ((byte2 & 0x40) >> 5) | ((byte3 & 0x40) >> 6));
-      pixel[7] = static_cast<Uint8>(((byte1 & 0x80) >> 5) | ((byte2 & 0x80) >> 6) | ((byte3 & 0x80) >> 7));
+      pixel[0] = static_cast<uint8_t>(((byte1 & 0x01) << 2) | ((byte2 & 0x01) << 1) | ((byte3 & 0x01) << 0));
+      pixel[1] = static_cast<uint8_t>(((byte1 & 0x02) << 1) | ((byte2 & 0x02) << 0) | ((byte3 & 0x02) >> 1));
+      pixel[2] = static_cast<uint8_t>(((byte1 & 0x04) << 0) | ((byte2 & 0x04) >> 1) | ((byte3 & 0x04) >> 2));
+      pixel[3] = static_cast<uint8_t>(((byte1 & 0x08) >> 1) | ((byte2 & 0x08) >> 2) | ((byte3 & 0x08) >> 3));
+      pixel[4] = static_cast<uint8_t>(((byte1 & 0x10) >> 2) | ((byte2 & 0x10) >> 3) | ((byte3 & 0x10) >> 4));
+      pixel[5] = static_cast<uint8_t>(((byte1 & 0x20) >> 3) | ((byte2 & 0x20) >> 4) | ((byte3 & 0x20) >> 5));
+      pixel[6] = static_cast<uint8_t>(((byte1 & 0x40) >> 4) | ((byte2 & 0x40) >> 5) | ((byte3 & 0x40) >> 6));
+      pixel[7] = static_cast<uint8_t>(((byte1 & 0x80) >> 5) | ((byte2 & 0x80) >> 6) | ((byte3 & 0x80) >> 7));
 
       for (int x = 0; x < 8; x++)
       {
          if (pixel[x])
          {
-            *((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + ((ycoord + (yflip ? y : (7-y))) * BEGA_OVERLAY_W) + (xcoord + (xflip ? (7-x) : x))) = pixel[x] + (8*color);
+            *((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + ((ycoord + (yflip ? y : (7-y))) * BEGA_OVERLAY_W) + (xcoord + (xflip ? (7-x) : x))) = pixel[x] + (8*color);
          }
       }
    }
 }
 
-void bega::draw_16x16(int character_number, Uint8 *character_set, int xcoord, int ycoord,
+void bega::draw_16x16(int character_number, uint8_t *character_set, int xcoord, int ycoord,
                       int xflip, int yflip, int color)
 {
-   Uint8 pixel[16] = {0};
+   uint8_t pixel[16] = {0};
 
    for (int y = 0; y < 16; y++)
    {
-      Uint8 byte1 = character_set[character_number*32+y];
-      Uint8 byte2 = character_set[character_number*32+y+0x2000];
-      Uint8 byte3 = character_set[character_number*32+y+0x4000];
-      Uint8 byte4 = character_set[character_number*32+y+16];
-      Uint8 byte5 = character_set[character_number*32+y+0x2000+16];
-      Uint8 byte6 = character_set[character_number*32+y+0x4000+16];
+      uint8_t byte1 = character_set[character_number*32+y];
+      uint8_t byte2 = character_set[character_number*32+y+0x2000];
+      uint8_t byte3 = character_set[character_number*32+y+0x4000];
+      uint8_t byte4 = character_set[character_number*32+y+16];
+      uint8_t byte5 = character_set[character_number*32+y+0x2000+16];
+      uint8_t byte6 = character_set[character_number*32+y+0x4000+16];
 
-      pixel[0]  = static_cast<Uint8>((((byte1 & 0x01) << 2) | ((byte2 & 0x01) << 1) | ((byte3 & 0x01) << 0)));
-      pixel[1]  = static_cast<Uint8>((((byte1 & 0x02) << 1) | ((byte2 & 0x02) << 0) | ((byte3 & 0x02) >> 1)));
-      pixel[2]  = static_cast<Uint8>((((byte1 & 0x04) << 0) | ((byte2 & 0x04) >> 1) | ((byte3 & 0x04) >> 2)));
-      pixel[3]  = static_cast<Uint8>((((byte1 & 0x08) >> 1) | ((byte2 & 0x08) >> 2) | ((byte3 & 0x08) >> 3)));
-      pixel[4]  = static_cast<Uint8>((((byte1 & 0x10) >> 2) | ((byte2 & 0x10) >> 3) | ((byte3 & 0x10) >> 4)));
-      pixel[5]  = static_cast<Uint8>((((byte1 & 0x20) >> 3) | ((byte2 & 0x20) >> 4) | ((byte3 & 0x20) >> 5)));
-      pixel[6]  = static_cast<Uint8>((((byte1 & 0x40) >> 4) | ((byte2 & 0x40) >> 5) | ((byte3 & 0x40) >> 6)));
-      pixel[7]  = static_cast<Uint8>((((byte1 & 0x80) >> 5) | ((byte2 & 0x80) >> 6) | ((byte3 & 0x80) >> 7)));
-      pixel[8]  = static_cast<Uint8>((((byte4 & 0x01) << 2) | ((byte5 & 0x01) << 1) | ((byte6 & 0x01) << 0)));
-      pixel[9]  = static_cast<Uint8>((((byte4 & 0x02) << 1) | ((byte5 & 0x02) << 0) | ((byte6 & 0x02) >> 1)));
-      pixel[10] = static_cast<Uint8>((((byte4 & 0x04) << 0) | ((byte5 & 0x04) >> 1) | ((byte6 & 0x04) >> 2)));
-      pixel[11] = static_cast<Uint8>((((byte4 & 0x08) >> 1) | ((byte5 & 0x08) >> 2) | ((byte6 & 0x08) >> 3)));
-      pixel[12] = static_cast<Uint8>((((byte4 & 0x10) >> 2) | ((byte5 & 0x10) >> 3) | ((byte6 & 0x10) >> 4)));
-      pixel[13] = static_cast<Uint8>((((byte4 & 0x20) >> 3) | ((byte5 & 0x20) >> 4) | ((byte6 & 0x20) >> 5)));
-      pixel[14] = static_cast<Uint8>((((byte4 & 0x40) >> 4) | ((byte5 & 0x40) >> 5) | ((byte6 & 0x40) >> 6)));
-      pixel[15] = static_cast<Uint8>((((byte4 & 0x80) >> 5) | ((byte5 & 0x80) >> 6) | ((byte6 & 0x80) >> 7)));
+      pixel[0]  = static_cast<uint8_t>((((byte1 & 0x01) << 2) | ((byte2 & 0x01) << 1) | ((byte3 & 0x01) << 0)));
+      pixel[1]  = static_cast<uint8_t>((((byte1 & 0x02) << 1) | ((byte2 & 0x02) << 0) | ((byte3 & 0x02) >> 1)));
+      pixel[2]  = static_cast<uint8_t>((((byte1 & 0x04) << 0) | ((byte2 & 0x04) >> 1) | ((byte3 & 0x04) >> 2)));
+      pixel[3]  = static_cast<uint8_t>((((byte1 & 0x08) >> 1) | ((byte2 & 0x08) >> 2) | ((byte3 & 0x08) >> 3)));
+      pixel[4]  = static_cast<uint8_t>((((byte1 & 0x10) >> 2) | ((byte2 & 0x10) >> 3) | ((byte3 & 0x10) >> 4)));
+      pixel[5]  = static_cast<uint8_t>((((byte1 & 0x20) >> 3) | ((byte2 & 0x20) >> 4) | ((byte3 & 0x20) >> 5)));
+      pixel[6]  = static_cast<uint8_t>((((byte1 & 0x40) >> 4) | ((byte2 & 0x40) >> 5) | ((byte3 & 0x40) >> 6)));
+      pixel[7]  = static_cast<uint8_t>((((byte1 & 0x80) >> 5) | ((byte2 & 0x80) >> 6) | ((byte3 & 0x80) >> 7)));
+      pixel[8]  = static_cast<uint8_t>((((byte4 & 0x01) << 2) | ((byte5 & 0x01) << 1) | ((byte6 & 0x01) << 0)));
+      pixel[9]  = static_cast<uint8_t>((((byte4 & 0x02) << 1) | ((byte5 & 0x02) << 0) | ((byte6 & 0x02) >> 1)));
+      pixel[10] = static_cast<uint8_t>((((byte4 & 0x04) << 0) | ((byte5 & 0x04) >> 1) | ((byte6 & 0x04) >> 2)));
+      pixel[11] = static_cast<uint8_t>((((byte4 & 0x08) >> 1) | ((byte5 & 0x08) >> 2) | ((byte6 & 0x08) >> 3)));
+      pixel[12] = static_cast<uint8_t>((((byte4 & 0x10) >> 2) | ((byte5 & 0x10) >> 3) | ((byte6 & 0x10) >> 4)));
+      pixel[13] = static_cast<uint8_t>((((byte4 & 0x20) >> 3) | ((byte5 & 0x20) >> 4) | ((byte6 & 0x20) >> 5)));
+      pixel[14] = static_cast<uint8_t>((((byte4 & 0x40) >> 4) | ((byte5 & 0x40) >> 5) | ((byte6 & 0x40) >> 6)));
+      pixel[15] = static_cast<uint8_t>((((byte4 & 0x80) >> 5) | ((byte5 & 0x80) >> 6) | ((byte6 & 0x80) >> 7)));
 
       for (int x = 0; x < 16; x++)
       {
          if (pixel[x])
          {
-            *((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + ((ycoord + (yflip ? y : (15-y))) * BEGA_OVERLAY_W) + (xcoord + (xflip ? (15-x) : x))) = pixel[x] + (8*color);
+            *((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + ((ycoord + (yflip ? y : (15-y))) * BEGA_OVERLAY_W) + (xcoord + (xflip ? (15-x) : x))) = pixel[x] + (8*color);
          }
 
       }
    }
 }
 
-void bega::draw_sprites(int offset, Uint8 *character_set)
+void bega::draw_sprites(int offset, uint8_t *character_set)
 {
    for (int sprites = 0; sprites < 0x32; sprites += 4)
    {
@@ -938,12 +939,12 @@ void bega::draw_sprites(int offset, Uint8 *character_set)
    }
 }
 
-Uint8 bega::read_m6850_status()
+uint8_t bega::read_m6850_status()
 {
    return mc6850_status;
 }
 
-void bega::write_m6850_control(Uint8 data)
+void bega::write_m6850_control(uint8_t data)
 {
    if ((data & 0x03) == 0x03)
    {
@@ -1020,7 +1021,7 @@ void bega::write_m6850_control(Uint8 data)
    }	
 }
 
-Uint8 bega::read_m6850_data()
+uint8_t bega::read_m6850_data()
 {
    // if there is new data get it from the ldp, otherwise return the old data
    if (mc6850_status & 0x01)
@@ -1033,7 +1034,7 @@ Uint8 bega::read_m6850_data()
    return ldp_status;
 }
 
-void bega::write_m6850_data(Uint8 data)
+void bega::write_m6850_data(uint8_t data)
 {
    //	char s[81];
    //	sprintf(s, "Sending LDP %x", data);

@@ -42,33 +42,33 @@ public:
 	interstellar();
 	void do_irq(unsigned int);		// does an IRQ tick
 	void do_nmi();		// does an NMI tick
-	Uint8 cpu_mem_read(uint16_t addr);			// memory read routine
-	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
-	Uint8 port_read(uint16_t port);		// read from port
-	void port_write(uint16_t port, Uint8 value);		// write to a port
-	void input_enable(Uint8);
-	void input_disable(Uint8);
+	uint8_t cpu_mem_read(uint16_t addr);			// memory read routine
+	void cpu_mem_write(uint16_t addr, uint8_t value);		// memory write routine
+	uint8_t port_read(uint16_t port);		// read from port
+	void port_write(uint16_t port, uint8_t value);		// write to a port
+	void input_enable(uint8_t);
+	void input_disable(uint8_t);
 	void palette_calculate();
 	void video_repaint();	// function to repaint video
    unsigned get_libretro_button_map(unsigned id);
    const char *get_libretro_button_name(unsigned id);
-	bool set_bank(Uint8, Uint8);
+	bool set_bank(uint8_t, uint8_t);
 
 private:	
 	bool m_cpu0_nmi_enable;
 	bool m_cpu1_nmi_enable;
 	bool m_cpu2_nmi_enable;
 	SDL_Color m_background_color;
-	Uint8 m_soundchip1_id;
-	Uint8 m_soundchip2_id;
-   Uint8 character[0x6000];
-	Uint8 color_prom[0x300];
-	Uint8 banks[3];
-	Uint8 m_cpumem2[0x10000]; // memory space for the second z80
-	Uint8 m_cpumem3[0x10000]; // memory space for the third z80
-	Uint8 cpu_latch1;
-	Uint8 cpu_latch2;
-	Uint8 sound_latch;
+	uint8_t m_soundchip1_id;
+	uint8_t m_soundchip2_id;
+   uint8_t character[0x6000];
+	uint8_t color_prom[0x300];
+	uint8_t banks[3];
+	uint8_t m_cpumem2[0x10000]; // memory space for the second z80
+	uint8_t m_cpumem3[0x10000]; // memory space for the third z80
+	uint8_t cpu_latch1;
+	uint8_t cpu_latch2;
+	uint8_t sound_latch;
 	// RJS REMOVED
 	// bool sound_data;
 	void draw_8x8(int character_number, int xcoord, int ycoord, int xflip, int yflip, int palette);

@@ -66,7 +66,7 @@ SDL_SoftBlit(SDL_Surface * src, SDL_Rect * srcrect,
         SDL_BlitInfo *info = &src->map->info;
 
         /* Set up the blit information */
-        info->src = (Uint8 *) src->pixels +
+        info->src = (uint8_t *) src->pixels +
             (uint16_t) srcrect->y * src->pitch +
             (uint16_t) srcrect->x * info->src_fmt->BytesPerPixel;
         info->src_w = srcrect->w;
@@ -75,7 +75,7 @@ SDL_SoftBlit(SDL_Surface * src, SDL_Rect * srcrect,
         info->src_skip =
             info->src_pitch - info->src_w * info->src_fmt->BytesPerPixel;
         info->dst =
-            (Uint8 *) dst->pixels + (uint16_t) dstrect->y * dst->pitch +
+            (uint8_t *) dst->pixels + (uint16_t) dstrect->y * dst->pitch +
             (uint16_t) dstrect->x * info->dst_fmt->BytesPerPixel;
         info->dst_w = dstrect->w;
         info->dst_h = dstrect->h;

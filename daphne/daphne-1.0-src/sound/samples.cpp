@@ -13,7 +13,7 @@
 struct sample_data_s
 {
 	// holds audio buffer
-	Uint8 *pu8Buf;
+	uint8_t *pu8Buf;
 
 	// holds audio length
 	Uint32 uLength;
@@ -28,7 +28,7 @@ struct sample_data_s
 	bool bActive;
 
 	// if this is not NULL, it will get called when the sample has finished playing
-	void (*finishedCallback)(Uint8 *pu8Buf, unsigned int uSampleIdx);
+	void (*finishedCallback)(uint8_t *pu8Buf, unsigned int uSampleIdx);
 };
 
 // this number can be any size, but there's no reason to make it huge
@@ -65,7 +65,7 @@ void samples_shutdown(int unused)
 }
 
 // called from sound mixer to get audio stream
-void samples_get_stream(Uint8 *stream, int length, int unused)
+void samples_get_stream(uint8_t *stream, int length, int unused)
 {
 	// (each sample is 4 bytes, which is why we divide length by 4)
 	unsigned int uTotalSamples = length >> 2;
@@ -82,7 +82,7 @@ void samples_get_stream(Uint8 *stream, int length, int unused)
 
 		if (data->bActive)
 		{
-			Uint8 *ptrStream = stream;
+			uint8_t *ptrStream = stream;
 
 			// do each sample
 			for (unsigned int uSample = 0; uSample < uTotalSamples; ++uSample)
@@ -134,8 +134,8 @@ void samples_get_stream(Uint8 *stream, int length, int unused)
 	} // end looping through all sample slots
 }
 
-int samples_play_sample(Uint8 *pu8Buf, unsigned int uLength, unsigned int uChannels, int iSlot,
-								 void (*finishedCallback)(Uint8 *pu8Buf, unsigned int uSlot))
+int samples_play_sample(uint8_t *pu8Buf, unsigned int uLength, unsigned int uChannels, int iSlot,
+								 void (*finishedCallback)(uint8_t *pu8Buf, unsigned int uSlot))
 {
 	int iResult = -1;
 	sample_data_s *state = NULL;

@@ -40,8 +40,8 @@
 
 ctc_chip g_ctc;
 dart_chip g_dart;
-Uint8 g_int_vec;
-Uint8 g_soundchip_id;
+uint8_t g_int_vec;
+uint8_t g_soundchip_id;
 
 laireuro::laireuro()
 {
@@ -176,9 +176,9 @@ void laireuro::do_nmi()
 	}
 }
 
-Uint8 laireuro::cpu_mem_read(uint16_t addr)
+uint8_t laireuro::cpu_mem_read(uint16_t addr)
 {
-	Uint8 result = m_cpumem[addr];
+	uint8_t result = m_cpumem[addr];
 
 	// main rom (must be > 0 because it's unsigned)
 	if (addr <= 0x9fff)
@@ -239,7 +239,7 @@ Uint8 laireuro::cpu_mem_read(uint16_t addr)
 	return result;
 }
 
-void laireuro::cpu_mem_write(uint16_t addr, Uint8 value)
+void laireuro::cpu_mem_write(uint16_t addr, uint8_t value)
 {	
 	char s[81] = {0};
 
@@ -313,7 +313,7 @@ void laireuro::cpu_mem_write(uint16_t addr, Uint8 value)
 	}
 }
 
-void laireuro::port_write(uint16_t port, Uint8 value)
+void laireuro::port_write(uint16_t port, uint8_t value)
 // Called whenever the emulator wants to output to a port
 {
 
@@ -345,7 +345,7 @@ void laireuro::port_write(uint16_t port, Uint8 value)
 	}		
 }
 
-Uint8 laireuro::port_read(uint16_t port)
+uint8_t laireuro::port_read(uint16_t port)
 // Called whenever the emulator wants to read from a port
 {
 
@@ -440,29 +440,29 @@ void laireuro::video_repaint()
 					// bit 0 of wt misc turns on/off character generator
 					if (m_wt_misc & 0x04)
 					{
-                  Uint8 pixel = static_cast<Uint8>(m_character[(m_cpumem[chary * 64 + charx * 2 + 0xc001]*16+y) | ((m_wt_misc & 0x02) << 11)] & (0x01 << x));
-						*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + (charx - charx_offset)) = pixel?m_cpumem[chary * 64 + charx * 2 + 0xc002]:((m_wt_misc & 0x02)?0:4);
-						*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + 1 + (charx - charx_offset)) = pixel?m_cpumem[chary * 64 + charx * 2 + 0xc002]:((m_wt_misc & 0x02)?0:4);
-						*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2 + 1) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + (charx - charx_offset)) = pixel?m_cpumem[chary * 64 + charx * 2 + 0xc002]:((m_wt_misc & 0x02)?0:4);
-						*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2 + 1) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + 1 + (charx - charx_offset)) = pixel?m_cpumem[chary * 64 + charx * 2 + 0xc002]:((m_wt_misc & 0x02)?0:4);
+                  uint8_t pixel = static_cast<uint8_t>(m_character[(m_cpumem[chary * 64 + charx * 2 + 0xc001]*16+y) | ((m_wt_misc & 0x02) << 11)] & (0x01 << x));
+						*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + (charx - charx_offset)) = pixel?m_cpumem[chary * 64 + charx * 2 + 0xc002]:((m_wt_misc & 0x02)?0:4);
+						*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + 1 + (charx - charx_offset)) = pixel?m_cpumem[chary * 64 + charx * 2 + 0xc002]:((m_wt_misc & 0x02)?0:4);
+						*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2 + 1) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + (charx - charx_offset)) = pixel?m_cpumem[chary * 64 + charx * 2 + 0xc002]:((m_wt_misc & 0x02)?0:4);
+						*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2 + 1) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + 1 + (charx - charx_offset)) = pixel?m_cpumem[chary * 64 + charx * 2 + 0xc002]:((m_wt_misc & 0x02)?0:4);
 					}
 					else 
 					{
-						*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + (charx - charx_offset)) = 0;
-						*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + 1 + (charx - charx_offset)) = 0;
-						*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2 + 1) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + (charx - charx_offset)) = 0;
-						*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2 + 1) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + 1 + (charx - charx_offset)) = 0;
+						*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + (charx - charx_offset)) = 0;
+						*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + 1 + (charx - charx_offset)) = 0;
+						*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2 + 1) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + (charx - charx_offset)) = 0;
+						*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2 + 1) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + 1 + (charx - charx_offset)) = 0;
 					}
 				}
-				*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + (charx - charx_offset)) = ((m_wt_misc & 0x04)?4:0);
-				*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2 + 1) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + (charx - charx_offset)) = ((m_wt_misc & 0x04)?4:0);
+				*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + (charx - charx_offset)) = ((m_wt_misc & 0x04)?4:0);
+				*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 32 + y * 2 + 1) * LAIREURO_OVERLAY_W) + (charx - charx_offset) * 16 + (x * 2) + (charx - charx_offset)) = ((m_wt_misc & 0x04)?4:0);
 			}
 		}
 	}
 }
 
 // this gets called when the user presses a key or moves the joystick
-void laireuro::input_enable(Uint8 move)
+void laireuro::input_enable(uint8_t move)
 {
 	switch (move)
 	{
@@ -503,7 +503,7 @@ void laireuro::input_enable(Uint8 move)
 }  
 
 // this gets called when the user releases a key or moves the joystick back to center position
-void laireuro::input_disable(Uint8 move)
+void laireuro::input_disable(uint8_t move)
 {
 	switch (move)
 	{
@@ -549,7 +549,7 @@ int32_t laireuro_irq_callback(int irqline)
 	return g_int_vec;
 }
 
-void ctc_write(Uint8 channel, Uint8 value)
+void ctc_write(uint8_t channel, uint8_t value)
 {
 #ifdef DEBUG
 	char s[81] = "";
@@ -601,12 +601,12 @@ void ctc_write(Uint8 channel, Uint8 value)
 	}
 }
 
-Uint8 ctc_read(Uint8 channel)
+uint8_t ctc_read(uint8_t channel)
 {	
 	return g_ctc.channels[channel].time_const;
 }
 
-void dart_write(bool b, bool command, Uint8 data)
+void dart_write(bool b, bool command, uint8_t data)
 {
 	char s[81] = "";
 	if (command)
@@ -692,7 +692,7 @@ void ctc_init(double clock, double trig0, double trig1, double trig2, double tri
 	g_ctc.channels[3].trig = trig3;
 }
 
-void ctc_update_period(Uint8 channel)
+void ctc_update_period(uint8_t channel)
 {
 	double new_period = 0;
 	if (g_ctc.channels[channel].mode == TIMER)
@@ -785,7 +785,7 @@ void laireuro::set_version(int version)
 }	
 
 // used to set dip switch values
-bool laireuro::set_bank(Uint8 which_bank, Uint8 value)
+bool laireuro::set_bank(uint8_t which_bank, uint8_t value)
 {
 	bool result = true;
 	

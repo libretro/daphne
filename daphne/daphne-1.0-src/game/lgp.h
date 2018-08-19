@@ -40,36 +40,36 @@ public:
 	lgp();
 	void do_irq(unsigned int);		// does an IRQ tick
 	void do_nmi();		// does an NMI tick
-	Uint8 cpu_mem_read(uint16_t addr);			// memory read routine
-	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
-	Uint8 port_read(uint16_t port);		// read from port
-	void port_write(uint16_t port, Uint8 value);		// write to a port
-	virtual void input_enable(Uint8);
-	virtual void input_disable(Uint8);
-	bool set_bank(Uint8, Uint8);
+	uint8_t cpu_mem_read(uint16_t addr);			// memory read routine
+	void cpu_mem_write(uint16_t addr, uint8_t value);		// memory write routine
+	uint8_t port_read(uint16_t port);		// read from port
+	void port_write(uint16_t port, uint8_t value);		// write to a port
+	virtual void input_enable(uint8_t);
+	virtual void input_disable(uint8_t);
+	bool set_bank(uint8_t, uint8_t);
 	void video_repaint();	// function to repaint video
    unsigned get_libretro_button_map(unsigned id);
    const char *get_libretro_button_name(unsigned id);
 protected:
-	Uint8 m_soundchip1_id;   
-	Uint8 m_soundchip2_id;
-	Uint8 m_soundchip3_id;   
-	Uint8 m_soundchip4_id;
-	Uint8 m_soundchip1_address_latch;
-	Uint8 m_soundchip2_address_latch;
-	Uint8 m_soundchip3_address_latch;
-	Uint8 m_soundchip4_address_latch;
-	Uint8 m_cpumem2[0x10000];
+	uint8_t m_soundchip1_id;   
+	uint8_t m_soundchip2_id;
+	uint8_t m_soundchip3_id;   
+	uint8_t m_soundchip4_id;
+	uint8_t m_soundchip1_address_latch;
+	uint8_t m_soundchip2_address_latch;
+	uint8_t m_soundchip3_address_latch;
+	uint8_t m_soundchip4_address_latch;
+	uint8_t m_cpumem2[0x10000];
 	void draw_sprite(int);
-	Uint8 m_ldp_write_latch;
-	Uint8 m_ldp_read_latch;
-	Uint8 m_character[0x8000];	
-	Uint8 m_transparent_color;	// which color is to be transparent
+	uint8_t m_ldp_write_latch;
+	uint8_t m_ldp_read_latch;
+	uint8_t m_character[0x8000];	
+	uint8_t m_transparent_color;	// which color is to be transparent
 	bool palette_modified;		// has our palette been modified?
-	Uint8 ldp_output_latch;	// holds data to be sent to the LDV1000
-	Uint8 ldp_input_latch;	// holds data that was retrieved from the LDV1000
+	uint8_t ldp_output_latch;	// holds data to be sent to the LDV1000
+	uint8_t ldp_input_latch;	// holds data that was retrieved from the LDV1000
 	bool nmie;
-	Uint8 banks[7];
+	uint8_t banks[7];
 	void recalc_palette();
 	void draw_8x8(int character_number, int xcoord, int ycoord);
 };

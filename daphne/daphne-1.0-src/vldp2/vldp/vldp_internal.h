@@ -25,6 +25,8 @@
 #ifndef VLDP_INTERNAL_H
 #define VLDP_INTERNAL_H
 
+#include <stdint.h>
+
 #include "vldp.h"	// for the VLDP_BOOL definition and SDL.h
 
 // this is which version of the .dat file format we are using
@@ -33,9 +35,9 @@
 // header for the .DAT files that are generated
 struct dat_header
 {
-	Uint8 version;	// which version of the DAT file this is
-	Uint8 finished;	// whether the parse finished parsing or was interrupted
-	Uint8 uses_fields;	// whether the stream uses fields or frames
+	uint8_t version;	// which version of the DAT file this is
+	uint8_t finished;	// whether the parse finished parsing or was interrupted
+	uint8_t uses_fields;	// whether the stream uses fields or frames
 	Uint32 length;	// length of the m2v stream
 };
 
@@ -53,7 +55,7 @@ void ivldp_ack_command();
 void ivldp_lock_handler();
 void paused_handler();
 void play_handler();
-void ivldp_set_framerate(Uint8 frame_rate_code);
+void ivldp_set_framerate(uint8_t frame_rate_code);
 void vldp_process_sequence_header();
 void idle_handler_open();
 void idle_handler_precache();
@@ -77,7 +79,7 @@ unsigned int io_length();
 
 ///////////////////////////////////////
 
-extern Uint8 s_old_req_cmdORcount;	// the last value of the command byte we received
+extern uint8_t s_old_req_cmdORcount;	// the last value of the command byte we received
 extern int s_paused;	// whether the video is to be paused
 extern int s_blanked;	// whether the mpeg video is to be blanked
 extern int s_frames_to_skip;	// how many frames to skip before rendering the next frame (used for P and B frames seeking)

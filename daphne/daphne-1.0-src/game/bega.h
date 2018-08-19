@@ -49,10 +49,10 @@ public:
 	bega();
 	void do_nmi();		// does an NMI tick
 	void do_irq(unsigned int);		// does an IRQ tick
-	Uint8 cpu_mem_read(uint16_t addr);			// memory read routine
-	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
-	void input_enable(Uint8);
-	void input_disable(Uint8);
+	uint8_t cpu_mem_read(uint16_t addr);			// memory read routine
+	void cpu_mem_write(uint16_t addr, uint8_t value);		// memory write routine
+	void input_enable(uint8_t);
+	void input_disable(uint8_t);
 	void palette_calculate();
 	void video_repaint();	// function to repaint video
    unsigned get_libretro_button_map(unsigned id);
@@ -61,26 +61,26 @@ public:
 	bool set_bank(unsigned char which_bank, unsigned char value);
 
 protected:
-   Uint8 m_soundchip1_id;   
-   Uint8 m_soundchip2_id;
-   Uint8 m_soundchip1_address_latch;
-   Uint8 m_soundchip2_address_latch;
-   Uint8 m_sounddata_latch;
-   void draw_8x8(int, Uint8 *, int, int, int, int, int);
-	void draw_16x16(int, Uint8 *, int, int, int, int, int);
-	void draw_sprites(int, Uint8 *);
-	void write_m6850_control(Uint8);
-	Uint8 read_m6850_status();
-	void write_m6850_data(Uint8);
-	Uint8 read_m6850_data();
-	Uint8 ldp_status;
+   uint8_t m_soundchip1_id;   
+   uint8_t m_soundchip2_id;
+   uint8_t m_soundchip1_address_latch;
+   uint8_t m_soundchip2_address_latch;
+   uint8_t m_sounddata_latch;
+   void draw_8x8(int, uint8_t *, int, int, int, int, int);
+	void draw_16x16(int, uint8_t *, int, int, int, int, int);
+	void draw_sprites(int, uint8_t *);
+	void write_m6850_control(uint8_t);
+	uint8_t read_m6850_status();
+	void write_m6850_data(uint8_t);
+	uint8_t read_m6850_data();
+	uint8_t ldp_status;
 	bool vblank;
 	void recalc_palette();
-	Uint8 m_cpumem2[0x10000];
-   Uint8 mc6850_status;
-	Uint8 character1[0x6000];		
-	Uint8 character2[0x6000];		
-	Uint8 banks[3];				// bega's banks
+	uint8_t m_cpumem2[0x10000];
+   uint8_t mc6850_status;
+	uint8_t character1[0x6000];		
+	uint8_t character2[0x6000];		
+	uint8_t banks[3];				// bega's banks
 		// bank 1 is switches
 		// bank 2 is dip switch 1
 		// bank 3 is dip switch 2

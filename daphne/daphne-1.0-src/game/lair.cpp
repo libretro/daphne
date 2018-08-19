@@ -568,7 +568,7 @@ void lair::do_nmi()
 
 }
 
-void lair::cpu_mem_write(uint16_t Addr, Uint8 Value)
+void lair::cpu_mem_write(uint16_t Addr, uint8_t Value)
 // Called whenever the Z80 emulator wants to write to memory
 {
 	// if we're writing to RAM or hardware
@@ -778,10 +778,10 @@ void lair::cpu_mem_write(uint16_t Addr, Uint8 Value)
 
 
 // Called whenever the Z80 emulator wants to read from memory
-Uint8 lair::cpu_mem_read(uint16_t Addr)
+uint8_t lair::cpu_mem_read(uint16_t Addr)
 {
 
-	register Uint8 result;	// I intentionally left this uninitialized for speed
+	register uint8_t result;	// I intentionally left this uninitialized for speed
 
 	// RAM/ROM
 	if (Addr < 0xC000)
@@ -1013,7 +1013,7 @@ bool ace::handle_cmdline_arg(const char *arg)
 	return bRes;
 }
 
-Uint8 lair::read_C010()
+uint8_t lair::read_C010()
 // emulates the C010 memory location
 // bit 0 = player 1 button, bit 1 = player 2 button (clear = button is depressed)
 // bit 2 = coin 1 inserted, bit 3 = coin 2 inserted
@@ -1051,7 +1051,7 @@ Uint8 lair::read_C010()
 
 }
 
-void lair::input_enable(Uint8 move)
+void lair::input_enable(uint8_t move)
 {
 	switch(move)
 	{
@@ -1115,7 +1115,7 @@ void lair::input_enable(Uint8 move)
 }
 
 
-void lair::input_disable(Uint8 move)
+void lair::input_disable(uint8_t move)
 {
 	switch(move)
 	{

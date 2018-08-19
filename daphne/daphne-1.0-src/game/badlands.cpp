@@ -23,10 +23,11 @@
 // badlands.cpp
 // by Mark Broadhead
 //
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <string.h>
 #include <math.h>
 #include "badlands.h"
@@ -165,11 +166,11 @@ void badlands::do_nmi()
 	video_blit();	// the NMI runs at the same period as the monitor vsync
 }
 
-Uint8 badlands::cpu_mem_read(uint16_t addr)
+uint8_t badlands::cpu_mem_read(uint16_t addr)
 {
 //	char s[81] = {0};
 
-	Uint8 result = m_cpumem[addr];
+	uint8_t result = m_cpumem[addr];
 
 	// Dipswitch 2
 	if (addr == 0x0000)
@@ -198,7 +199,7 @@ Uint8 badlands::cpu_mem_read(uint16_t addr)
 	return result;
 }
 
-void badlands::cpu_mem_write(uint16_t addr, Uint8 value)
+void badlands::cpu_mem_write(uint16_t addr, uint8_t value)
 {
 	char s[81] = {0};
 
@@ -336,11 +337,11 @@ void badlands::cpu_mem_write(uint16_t addr, Uint8 value)
 	m_cpumem[addr] = value;
 }
 
-Uint8 badlandp::cpu_mem_read(uint16_t addr)
+uint8_t badlandp::cpu_mem_read(uint16_t addr)
 {
 	char s[81] = {0};
 
-	Uint8 result = m_cpumem[addr];
+	uint8_t result = m_cpumem[addr];
    
 	// Laserdisc 
 	if (addr == 0x0000)
@@ -378,7 +379,7 @@ Uint8 badlandp::cpu_mem_read(uint16_t addr)
 	return result;
 }
 
-void badlandp::cpu_mem_write(uint16_t addr, Uint8 value)
+void badlandp::cpu_mem_write(uint16_t addr, uint8_t value)
 {
 	char s[81] = {0};
 	
@@ -462,31 +463,31 @@ void badlands::palette_calculate()
 	//Convert palette rom into a useable palette
 	for (int i = 0; i < BADLANDS_COLOR_COUNT; i++)
 	{
-		Uint8 bit0,bit1,bit2;	
+		uint8_t bit0,bit1,bit2;	
 
 		/* red component */
-		bit0 = static_cast<Uint8>((color_prom[i] >> 0) & 0x01);
-		bit1 = static_cast<Uint8>((color_prom[i] >> 1) & 0x01);
-		bit2 = static_cast<Uint8>((color_prom[i] >> 2) & 0x01);
-		temp_color.r = static_cast<Uint8>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
+		bit0 = static_cast<uint8_t>((color_prom[i] >> 0) & 0x01);
+		bit1 = static_cast<uint8_t>((color_prom[i] >> 1) & 0x01);
+		bit2 = static_cast<uint8_t>((color_prom[i] >> 2) & 0x01);
+		temp_color.r = static_cast<uint8_t>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
 			
 		/* green component */
-		bit0 = static_cast<Uint8>((color_prom[i] >> 3) & 0x01);
-		bit1 = static_cast<Uint8>((color_prom[i] >> 4) & 0x01);
-		bit2 = static_cast<Uint8>((color_prom[i] >> 5) & 0x01);
-		temp_color.g = static_cast<Uint8>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
+		bit0 = static_cast<uint8_t>((color_prom[i] >> 3) & 0x01);
+		bit1 = static_cast<uint8_t>((color_prom[i] >> 4) & 0x01);
+		bit2 = static_cast<uint8_t>((color_prom[i] >> 5) & 0x01);
+		temp_color.g = static_cast<uint8_t>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
 				
 		/* blue component */
-		bit0 = static_cast<Uint8>(0);
-		bit1 = static_cast<Uint8>((color_prom[i] >> 6) & 0x01);
-		bit2 = static_cast<Uint8>((color_prom[i] >> 7) & 0x01);
-		temp_color.b = static_cast<Uint8>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
+		bit0 = static_cast<uint8_t>(0);
+		bit1 = static_cast<uint8_t>((color_prom[i] >> 6) & 0x01);
+		bit2 = static_cast<uint8_t>((color_prom[i] >> 7) & 0x01);
+		temp_color.b = static_cast<uint8_t>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
 			
 		//apply gamma correction to make colors brighter overall
 		//  Corrected value = 255 * (uncorrected value / 255) ^ (1.0 / gamma)
-		temp_color.r = (Uint8) (255 * pow((static_cast<double>(temp_color.r)) / 255, 1/BADLANDS_GAMMA));
-		temp_color.g = (Uint8) (255 * pow((static_cast<double>(temp_color.g)) / 255, 1/BADLANDS_GAMMA));
-		temp_color.b = (Uint8) (255 * pow((static_cast<double>(temp_color.b)) / 255, 1/BADLANDS_GAMMA));
+		temp_color.r = (uint8_t) (255 * pow((static_cast<double>(temp_color.r)) / 255, 1/BADLANDS_GAMMA));
+		temp_color.g = (uint8_t) (255 * pow((static_cast<double>(temp_color.g)) / 255, 1/BADLANDS_GAMMA));
+		temp_color.b = (uint8_t) (255 * pow((static_cast<double>(temp_color.b)) / 255, 1/BADLANDS_GAMMA));
 
 		palette_set_color(i, temp_color);
 	}
@@ -503,10 +504,10 @@ void badlands::video_repaint()
 			{
 				for (int y = 0; y < 8; y++)
 				{
-					Uint8 left_pixel = static_cast<Uint8>((character[m_cpumem[chary * 64 + charx + char_base]*32+x+4*y] & 0xf0) >> 4);
-					Uint8 right_pixel = static_cast<Uint8>((character[m_cpumem[chary * 64 + charx + char_base]*32+x+4*y] & 0x0f));
-					*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 8 + y) * BADLANDS_OVERLAY_W) + ((charx  - charx_offset) * 8 + x * 2)) = left_pixel;
-					*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 8 + y) * BADLANDS_OVERLAY_W) + ((charx  - charx_offset) * 8 + x * 2 + 1)) = right_pixel;
+					uint8_t left_pixel = static_cast<uint8_t>((character[m_cpumem[chary * 64 + charx + char_base]*32+x+4*y] & 0xf0) >> 4);
+					uint8_t right_pixel = static_cast<uint8_t>((character[m_cpumem[chary * 64 + charx + char_base]*32+x+4*y] & 0x0f));
+					*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 8 + y) * BADLANDS_OVERLAY_W) + ((charx  - charx_offset) * 8 + x * 2)) = left_pixel;
+					*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary - chary_offset) * 8 + y) * BADLANDS_OVERLAY_W) + ((charx  - charx_offset) * 8 + x * 2 + 1)) = right_pixel;
 				}
 			}
 		}
@@ -520,7 +521,7 @@ void badlands::video_repaint()
 }
 
 // this gets called when the user presses a key or moves the joystick
-void badlands::input_enable(Uint8 move)
+void badlands::input_enable(uint8_t move)
 {
 	switch (move)
 	{
@@ -554,7 +555,7 @@ void badlands::input_enable(Uint8 move)
 }  
 
 // this gets called when the user releases a key or moves the joystick back to center position
-void badlands::input_disable(Uint8 move)
+void badlands::input_disable(uint8_t move)
 {
 	switch (move)
 	{
@@ -634,7 +635,7 @@ void badlands::set_preset(int preset)
 
 }
 
-void badlands::update_shoot_led(Uint8 value)
+void badlands::update_shoot_led(uint8_t value)
 {
 	static bool ledstate = false;
 	if (value)

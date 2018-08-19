@@ -20,11 +20,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <stdint.h>
+
 typedef struct
 {
-	Uint8 y;
-	Uint8 v;
-	Uint8 u;
+	uint8_t y;
+	uint8_t v;
+	uint8_t u;
 	bool transparent;
 } t_yuv_color; 
 

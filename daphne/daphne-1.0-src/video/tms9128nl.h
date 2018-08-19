@@ -24,6 +24,7 @@
 #ifndef TMS9128NL_H
 #define TMS9128NL_H
 
+#include <stdint.h>
 #include <SDL.h>	// to declare SDL_Color
 
 
@@ -40,15 +41,15 @@
 
 // mixes two colors together 0.75 and 0.25 weights, returning their mixture in 'result'
 #define MIX_COLORS_75_25(result,src1,src2) \
-	result.r = (Uint8) (((src1.r * 3) + src2.r) >> 2);	\
-	result.g = (Uint8) (((src1.g * 3) + src2.g) >> 2);	\
-	result.b = (Uint8) (((src1.b * 3) + src2.b) >> 2)
+	result.r = (uint8_t) (((src1.r * 3) + src2.r) >> 2);	\
+	result.g = (uint8_t) (((src1.g * 3) + src2.g) >> 2);	\
+	result.b = (uint8_t) (((src1.b * 3) + src2.b) >> 2)
 
 // mix two colors evenly (50% blend)
 #define MIX_COLORS_50(result,src1,src2) \
-	result.r = (Uint8) ((src1.r + src2.r) >> 1);	\
-	result.g = (Uint8) ((src1.g + src2.g) >> 1);	\
-	result.b = (Uint8) ((src1.b + src2.b) >> 1)
+	result.r = (uint8_t) ((src1.r + src2.r) >> 1);	\
+	result.g = (uint8_t) ((src1.g + src2.g) >> 1);	\
+	result.b = (uint8_t) ((src1.b + src2.b) >> 1)
 
 	
 void tms9128nl_reset();

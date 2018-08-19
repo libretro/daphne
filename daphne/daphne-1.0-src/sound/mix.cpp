@@ -21,19 +21,19 @@
  */
 
 // mix.cpp
-
+#include <stdint.h>
 #include "sound.h"
 #include "../io/mpo_mem.h"
 #include "mix.h"
 
 struct mix_s *g_pMixBufs = NULL;
-Uint8 *g_pSampleDst = 0;
+uint8_t *g_pSampleDst = 0;
 unsigned int g_uBytesToMix = 0;
 
 void mix_c()
 {
 	unsigned int uSamplesToMix = g_uBytesToMix >> 1;
-	Uint8 *stream = g_pSampleDst;
+	uint8_t *stream = g_pSampleDst;
 	unsigned int sample = 0, val_to_store = 0;
 
 	for (sample = 0; sample < uSamplesToMix; sample += 2)

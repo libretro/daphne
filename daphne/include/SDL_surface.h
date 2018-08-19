@@ -28,6 +28,7 @@
 #ifndef _SDL_surface_h
 #define _SDL_surface_h
 
+#include <stdint.h>
 #include "SDL_stdinc.h"
 #include "SDL_pixels.h"
 #include "SDL_rect.h"
@@ -234,7 +235,7 @@ extern DECLSPEC int SDLCALL SDL_GetColorKey(SDL_Surface * surface,
  *  \sa SDL_GetSurfaceColorMod()
  */
 extern DECLSPEC int SDLCALL SDL_SetSurfaceColorMod(SDL_Surface * surface,
-                                                   Uint8 r, Uint8 g, Uint8 b);
+                                                   uint8_t r, uint8_t g, uint8_t b);
 
 
 /**
@@ -250,8 +251,8 @@ extern DECLSPEC int SDLCALL SDL_SetSurfaceColorMod(SDL_Surface * surface,
  *  \sa SDL_SetSurfaceColorMod()
  */
 extern DECLSPEC int SDLCALL SDL_GetSurfaceColorMod(SDL_Surface * surface,
-                                                   Uint8 * r, Uint8 * g,
-                                                   Uint8 * b);
+                                                   uint8_t * r, uint8_t * g,
+                                                   uint8_t * b);
 
 /**
  *  \brief Set an additional alpha value used in blit operations.
@@ -264,7 +265,7 @@ extern DECLSPEC int SDLCALL SDL_GetSurfaceColorMod(SDL_Surface * surface,
  *  \sa SDL_GetSurfaceAlphaMod()
  */
 extern DECLSPEC int SDLCALL SDL_SetSurfaceAlphaMod(SDL_Surface * surface,
-                                                   Uint8 alpha);
+                                                   uint8_t alpha);
 
 /**
  *  \brief Get the additional alpha value used in blit operations.
@@ -277,7 +278,7 @@ extern DECLSPEC int SDLCALL SDL_SetSurfaceAlphaMod(SDL_Surface * surface,
  *  \sa SDL_SetSurfaceAlphaMod()
  */
 extern DECLSPEC int SDLCALL SDL_GetSurfaceAlphaMod(SDL_Surface * surface,
-                                                   Uint8 * alpha);
+                                                   uint8_t * alpha);
 
 /**
  *  \brief Set the blend mode used for blit operations.

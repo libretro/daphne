@@ -22,21 +22,22 @@
 
 // blend.cpp
 
+#include <stdint.h>
 #include "blend.h"
 
-Uint8 *g_blend_line1 = 0;
-Uint8 *g_blend_line2 = 0;
-Uint8 *g_blend_dest = 0;
+uint8_t *g_blend_line1 = 0;
+uint8_t *g_blend_line2 = 0;
+uint8_t *g_blend_dest = 0;
 unsigned int g_blend_iterations = 0;
 
 void blend_c()
 {
-	register Uint8 *ptr1 = g_blend_line1;
-	register Uint8 *ptr2 = g_blend_line2;
+	register uint8_t *ptr1 = g_blend_line1;
+	register uint8_t *ptr2 = g_blend_line2;
 	
 	for (unsigned int col = 0; col < g_blend_iterations; col++)
 	{
-		g_blend_dest[col] = (Uint8) ((*ptr1 + *ptr2) >> 1);	// average fields together
+		g_blend_dest[col] = (uint8_t) ((*ptr1 + *ptr2) >> 1);	// average fields together
 		ptr1++;
 		ptr2++;
 	}

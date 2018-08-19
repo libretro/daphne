@@ -39,10 +39,10 @@ public:
 	cobraconv();
 	void do_nmi();		// does an NMI tick
 	void do_irq(unsigned int);		// does an IRQ tick
-	Uint8 cpu_mem_read(uint16_t addr);			// memory read routine
-	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
-	void input_enable(Uint8);
-	void input_disable(Uint8);
+	uint8_t cpu_mem_read(uint16_t addr);			// memory read routine
+	void cpu_mem_write(uint16_t addr, uint8_t value);		// memory write routine
+	void input_enable(uint8_t);
+	void input_disable(uint8_t);
 	void OnVblank();
 	void OnLDV1000LineChange(bool bIsStatus, bool bIsEnabled);
 	void palette_calculate();
@@ -52,22 +52,22 @@ public:
 	bool set_bank(unsigned char, unsigned char);
 
 protected:
-	Uint8 m_sounddata_latch;
-	Uint8 m_soundchip_id;
-	Uint8 m_soundchip_address_latch;
-	Uint8 m_cpumem2[0x10000]; // 64k of space for the sound cpu
-	void draw_8x8(int, Uint8 *, int, int, int, int, int);
-	void draw_16x32(int, Uint8 *, int, int, int, int, int);
-	void draw_sprites(int, Uint8 *);
-	Uint8 ldp_status;
-	Uint8 character1[0x6000];
-	Uint8 character2[0x6000];
-	Uint8 character[0x8000];
-	Uint8 color_prom[0x200];
-	Uint8 miscprom[0x400];		//stores unused proms, to make sure no one strips them out
+	uint8_t m_sounddata_latch;
+	uint8_t m_soundchip_id;
+	uint8_t m_soundchip_address_latch;
+	uint8_t m_cpumem2[0x10000]; // 64k of space for the sound cpu
+	void draw_8x8(int, uint8_t *, int, int, int, int, int);
+	void draw_16x32(int, uint8_t *, int, int, int, int, int);
+	void draw_sprites(int, uint8_t *);
+	uint8_t ldp_status;
+	uint8_t character1[0x6000];
+	uint8_t character2[0x6000];
+	uint8_t character[0x8000];
+	uint8_t color_prom[0x200];
+	uint8_t miscprom[0x400];		//stores unused proms, to make sure no one strips them out
 
 	bool palette_updated;		// whether our color ram has been written to
-	Uint8 banks[4];				// switch banks
+	uint8_t banks[4];				// switch banks
 		// bank 0 is switches
 		// bank 1 is dip switch 1
 		// bank 2 is dip switch 2

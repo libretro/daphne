@@ -125,7 +125,7 @@ unsigned char read_ldv1000()
 			if (g_ldp->get_current_frame() >= g_ldv1000_autostop_frame)
 			{
 				g_ldp->pre_pause();
-				g_ldv1000_output = (Uint8) ((g_ldv1000_output & 0x80) | 0x65);	// preserve ready bit and set status to paused
+				g_ldv1000_output = (uint8_t) ((g_ldv1000_output & 0x80) | 0x65);	// preserve ready bit and set status to paused
 				g_ldv1000_autostop_frame = 0;
 			}
 		}

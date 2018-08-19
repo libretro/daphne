@@ -18,6 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include <stdint.h>
 #include "../SDL_internal.h"
 
 #include "SDL_video.h"
@@ -55,8 +56,8 @@ SDL_Blit_Slow(SDL_BlitInfo * info)
     incx = (info->src_w << 16) / info->dst_w;
 
     while (info->dst_h--) {
-        Uint8 *src = 0;
-        Uint8 *dst = (Uint8 *) info->dst;
+        uint8_t *src = 0;
+        uint8_t *dst = (uint8_t *) info->dst;
         int n = info->dst_w;
         srcx = -1;
         posx = 0x10000L;

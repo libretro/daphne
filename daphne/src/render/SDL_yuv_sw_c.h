@@ -34,7 +34,7 @@ struct SDL_SW_YUVTexture
     Uint32 format;
     Uint32 target_format;
     int w, h;
-    Uint8 *pixels;
+    uint8_t *pixels;
     int *colortab;
     Uint32 *rgb_2_pix;
     void (*Display1X) (int *colortab, Uint32 * rgb_2_pix,
@@ -48,7 +48,7 @@ struct SDL_SW_YUVTexture
 
     /* These are just so we don't have to allocate them separately */
     uint16_t pitches[3];
-    Uint8 *planes[3];
+    uint8_t *planes[3];
 
     /* This is a temporary surface in case we have to stretch copy */
     SDL_Surface *stretch;
@@ -73,9 +73,9 @@ int SDL_SW_QueryYUVTexturePixels(SDL_SW_YUVTexture * swdata, void **pixels,
 int SDL_SW_UpdateYUVTexture(SDL_SW_YUVTexture * swdata, const SDL_Rect * rect,
                             const void *pixels, int pitch);
 int SDL_SW_UpdateYUVTexturePlanar(SDL_SW_YUVTexture * swdata, const SDL_Rect * rect,
-                                  const Uint8 *Yplane, int Ypitch,
-                                  const Uint8 *Uplane, int Upitch,
-                                  const Uint8 *Vplane, int Vpitch);
+                                  const uint8_t *Yplane, int Ypitch,
+                                  const uint8_t *Uplane, int Upitch,
+                                  const uint8_t *Vplane, int Vpitch);
 int SDL_SW_LockYUVTexture(SDL_SW_YUVTexture * swdata, const SDL_Rect * rect,
                           void **pixels, int *pitch);
 void SDL_SW_UnlockYUVTexture(SDL_SW_YUVTexture * swdata);

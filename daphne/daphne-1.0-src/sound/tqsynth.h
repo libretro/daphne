@@ -35,4 +35,4 @@
 void tqsynth_init(int freq, uint16_t format, int channels, long base_F0);
 bool audio_get_chunk(int num_samples, short *samples, sample_s *ptrSample);
 bool tqsynth_phones_to_wave(char *phonemes, int len, sample_s *ptrSample);
-void tqsynth_free_chunk(Uint8 *pu8Buf);
+void tqsynth_free_chunk(uint8_t *pu8Buf);

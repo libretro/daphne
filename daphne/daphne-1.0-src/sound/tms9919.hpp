@@ -29,6 +29,8 @@
 #ifndef _TMS9919_HPP_
 #define _TMS9919_HPP_
 
+#include <stdint.h>
+
 class cTMS5220;
 
 class cTMS9919 {
@@ -61,7 +63,7 @@ public:
 
     virtual int SetSpeechSynthesizer ( cTMS5220 * );
 
-    void WriteData ( Uint8 data );
+    void WriteData ( uint8_t data );
     void set_core_frequency (Uint32);
 
 };

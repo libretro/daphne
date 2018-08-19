@@ -250,7 +250,7 @@ void hitachi::pause()
 
 // waits 'timeout' ms for 'expected_code' from the player
 // if it receives it within that time, it returns 'true', otherwise 'false'
-bool hitachi::receive_status (Uint8 expected_code, Uint32 timeout)
+bool hitachi::receive_status (uint8_t expected_code, Uint32 timeout)
 {
 	unsigned int cur_time = refresh_ms_time();	// current time
 	bool result = false;
@@ -315,7 +315,7 @@ void hitachi::stop()
 // So there is really no point to using this unless you _have_ to know the real frame
 uint16_t hitachi::get_real_current_frame()
 {
-	Uint8 highbyte = 0, lowbyte = 0;
+	uint8_t highbyte = 0, lowbyte = 0;
 	uint16_t result = 0;
 	
 	serial_rxflush();

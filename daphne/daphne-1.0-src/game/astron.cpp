@@ -407,9 +407,9 @@ void astronh::astronh_nmi()
 }
 
 // reads a byte from the cpu's memory
-Uint8 astron::cpu_mem_read(uint16_t addr)
+uint8_t astron::cpu_mem_read(uint16_t addr)
 {
-	Uint8 result = m_cpumem[addr];
+	uint8_t result = m_cpumem[addr];
 //	char s[81] = { 0 };
 	
 	// main rom
@@ -479,7 +479,7 @@ Uint8 astron::cpu_mem_read(uint16_t addr)
 }
 
 // writes a byte to the cpu's memory
-void astron::cpu_mem_write(uint16_t addr, Uint8 value)
+void astron::cpu_mem_write(uint16_t addr, uint8_t value)
 {
 	m_cpumem[addr] = value;
 	char s[81] = { 0 };
@@ -641,20 +641,20 @@ void astron::cpu_mem_write(uint16_t addr, Uint8 value)
 	}
 }
 
-Uint8 astron::read_ldp(uint16_t addr)
+uint8_t astron::read_ldp(uint16_t addr)
 {
 //	char s[81] = {0};
 		
-		Uint8 result = ldp_input_latch;
+		uint8_t result = ldp_input_latch;
 //		sprintf(s, "Read from player %x at pc: %x", result, Z80_GET_PC);
 //		printline(s);
 
 		return result;
 }
 
-Uint8 astronh::read_ldp(uint16_t addr)
+uint8_t astronh::read_ldp(uint16_t addr)
 {
-	Uint8 result = 0x00;
+	uint8_t result = 0x00;
 	
 	switch (addr & 0x01)
 	{
@@ -672,7 +672,7 @@ Uint8 astronh::read_ldp(uint16_t addr)
 	return result;
 }
 
-void astron::write_ldp(Uint8 value, uint16_t addr)
+void astron::write_ldp(uint8_t value, uint16_t addr)
 {
 //	char s[81] = {0};
 	
@@ -681,7 +681,7 @@ void astron::write_ldp(Uint8 value, uint16_t addr)
 	ldp_output_latch = value;
 }
 
-void astronh::write_ldp(Uint8 value, uint16_t addr)
+void astronh::write_ldp(uint8_t value, uint16_t addr)
 {
 	switch (addr & 0x01)
 	{
@@ -698,7 +698,7 @@ void astronh::write_ldp(Uint8 value, uint16_t addr)
 }
 
 // reads a byte from the cpu's port
-Uint8 astron::port_read(uint16_t port)
+uint8_t astron::port_read(uint16_t port)
 {
 	char s[81] = { 0 };
 
@@ -710,7 +710,7 @@ Uint8 astron::port_read(uint16_t port)
 }
 
 // writes a byte to the cpu's port
-void astron::port_write(uint16_t port, Uint8 value)
+void astron::port_write(uint16_t port, uint8_t value)
 {
 	char s[81] = { 0 };
 
@@ -741,8 +741,8 @@ void astron::palette_calculate()
 	// first, check the sprites
 	for (x = 0x0000; x < 0x8000; x++)
 	{
-		Uint8 data_lo = sprite[x];
-		Uint8 data_high = sprite[x + 0x8000];
+		uint8_t data_lo = sprite[x];
+		uint8_t data_high = sprite[x + 0x8000];
 			
 		used_sprite_color[((data_lo & 0x0f) | ((data_high << 0x04) & 0xff))] = true;
 		used_sprite_color[((data_lo >> 0x04) | ((data_high & 0xf0) & 0xff))] = true;
@@ -770,26 +770,26 @@ void astron::palette_calculate()
 	//	color conversion for all 2^12 possible colors
 	for (int i = 0; i < 4096; i++)
 	{
-		Uint8 bit0,bit1,bit2,bit3;	
+		uint8_t bit0,bit1,bit2,bit3;	
 
 		// red component
-		bit0 = static_cast<Uint8>((i >> 3) & 0x01);
-		bit1 = static_cast<Uint8>((i >> 2) & 0x01);
-		bit2 = static_cast<Uint8>((i >> 1) & 0x01);
-		bit3 = static_cast<Uint8>((i >> 0) & 0x01);
-		palette_lookup[i].r = static_cast<Uint8>((0x8f * bit0) + (0x43 * bit1) + (0x1f * bit2) + (0x0e * bit3));
+		bit0 = static_cast<uint8_t>((i >> 3) & 0x01);
+		bit1 = static_cast<uint8_t>((i >> 2) & 0x01);
+		bit2 = static_cast<uint8_t>((i >> 1) & 0x01);
+		bit3 = static_cast<uint8_t>((i >> 0) & 0x01);
+		palette_lookup[i].r = static_cast<uint8_t>((0x8f * bit0) + (0x43 * bit1) + (0x1f * bit2) + (0x0e * bit3));
 		// green component
-		bit0 = static_cast<Uint8>((i >> 7) & 0x01);
-		bit1 = static_cast<Uint8>((i >> 6) & 0x01);
-		bit2 = static_cast<Uint8>((i >> 5) & 0x01);
-		bit3 = static_cast<Uint8>((i >> 4) & 0x01);
-		palette_lookup[i].g = static_cast<Uint8>((0x8f * bit0) + (0x43 * bit1) + (0x1f * bit2) + (0x0e * bit3));
+		bit0 = static_cast<uint8_t>((i >> 7) & 0x01);
+		bit1 = static_cast<uint8_t>((i >> 6) & 0x01);
+		bit2 = static_cast<uint8_t>((i >> 5) & 0x01);
+		bit3 = static_cast<uint8_t>((i >> 4) & 0x01);
+		palette_lookup[i].g = static_cast<uint8_t>((0x8f * bit0) + (0x43 * bit1) + (0x1f * bit2) + (0x0e * bit3));
 		// blue component
-		bit0 = static_cast<Uint8>((i >> 11) & 0x01);
-		bit1 = static_cast<Uint8>((i >> 10) & 0x01);
-		bit2 = static_cast<Uint8>((i >> 9) & 0x01);
-		bit3 = static_cast<Uint8>((i >> 8) & 0x01);
-		palette_lookup[i].b = static_cast<Uint8>((0x8f * bit0) + (0x43 * bit1) + (0x1f * bit2) + (0x0e * bit3));
+		bit0 = static_cast<uint8_t>((i >> 11) & 0x01);
+		bit1 = static_cast<uint8_t>((i >> 10) & 0x01);
+		bit2 = static_cast<uint8_t>((i >> 9) & 0x01);
+		bit3 = static_cast<uint8_t>((i >> 8) & 0x01);
+		palette_lookup[i].b = static_cast<uint8_t>((0x8f * bit0) + (0x43 * bit1) + (0x1f * bit2) + (0x0e * bit3));
 	}
 		
 	// if the total number of colors is under 0xff we can cheat and have them all in one palette
@@ -865,7 +865,7 @@ void astron::video_repaint()
 	// START modified Mame code
 	// check if sprites need to be drawn
 	int spr_number,sprite_bottom_y,sprite_top_y;
-	Uint8 *sprite_base;
+	uint8_t *sprite_base;
 
 	for (spr_number = 0;spr_number < 32;spr_number++)
 	{
@@ -879,7 +879,7 @@ void astron::video_repaint()
 	}
 	// END modified Mame code
 		
-	Uint8 pixel[8];
+	uint8_t pixel[8];
 
 	// loop through video memory and draw characters
 	for (int charx = 0; charx < 32; charx++)
@@ -890,14 +890,14 @@ void astron::video_repaint()
 			{
 				int current_character = chary * 32 + charx + BASE_VID_MEM_ADDRESS;
 					
-				pixel[0] = static_cast<Uint8>(bankprom[((character[m_cpumem[current_character]*8+y] & 0x80) >> 7) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x80) >> 6) | (((m_cpumem[current_character]) & 0xf8) >> 0x01) | ((m_cpumem[0xd801] & 0x20) << 2)]);
-				pixel[1] = static_cast<Uint8>(bankprom[((character[m_cpumem[current_character]*8+y] & 0x40) >> 6) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x40) >> 5) | (((m_cpumem[current_character]) & 0xf8) >> 0x01) | ((m_cpumem[0xd801] & 0x20) << 2)]);
-				pixel[2] = static_cast<Uint8>(bankprom[((character[m_cpumem[current_character]*8+y] & 0x20) >> 5) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x20) >> 4) | (((m_cpumem[current_character]) & 0xf8) >> 0x01) | ((m_cpumem[0xd801] & 0x20) << 2)]);
-				pixel[3] = static_cast<Uint8>(bankprom[((character[m_cpumem[current_character]*8+y] & 0x10) >> 4) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x10) >> 3) | (((m_cpumem[current_character]) & 0xf8) >> 0x01) | ((m_cpumem[0xd801] & 0x20) << 2)]);
-				pixel[4] = static_cast<Uint8>(bankprom[((character[m_cpumem[current_character]*8+y] & 0x08) >> 3) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x08) >> 2) | (((m_cpumem[current_character]) & 0xf8) >> 0x01) | ((m_cpumem[0xd801] & 0x20) << 2)]);
-				pixel[5] = static_cast<Uint8>(bankprom[((character[m_cpumem[current_character]*8+y] & 0x04) >> 2) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x04) >> 1) | (((m_cpumem[current_character]) & 0xf8) >> 0x01) | ((m_cpumem[0xd801] & 0x20) << 2)]);
-				pixel[6] = static_cast<Uint8>(bankprom[((character[m_cpumem[current_character]*8+y] & 0x02) >> 1) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x02) >> 0) | (((m_cpumem[current_character]) & 0xf8) >> 0x01) | ((m_cpumem[0xd801] & 0x20) << 2)]);
-				pixel[7] = static_cast<Uint8>(bankprom[((character[m_cpumem[current_character]*8+y] & 0x01) >> 0) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x01) << 1) | (((m_cpumem[current_character]) & 0xf8) >> 0x01) | ((m_cpumem[0xd801] & 0x20) << 2)]);
+				pixel[0] = static_cast<uint8_t>(bankprom[((character[m_cpumem[current_character]*8+y] & 0x80) >> 7) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x80) >> 6) | (((m_cpumem[current_character]) & 0xf8) >> 0x01) | ((m_cpumem[0xd801] & 0x20) << 2)]);
+				pixel[1] = static_cast<uint8_t>(bankprom[((character[m_cpumem[current_character]*8+y] & 0x40) >> 6) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x40) >> 5) | (((m_cpumem[current_character]) & 0xf8) >> 0x01) | ((m_cpumem[0xd801] & 0x20) << 2)]);
+				pixel[2] = static_cast<uint8_t>(bankprom[((character[m_cpumem[current_character]*8+y] & 0x20) >> 5) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x20) >> 4) | (((m_cpumem[current_character]) & 0xf8) >> 0x01) | ((m_cpumem[0xd801] & 0x20) << 2)]);
+				pixel[3] = static_cast<uint8_t>(bankprom[((character[m_cpumem[current_character]*8+y] & 0x10) >> 4) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x10) >> 3) | (((m_cpumem[current_character]) & 0xf8) >> 0x01) | ((m_cpumem[0xd801] & 0x20) << 2)]);
+				pixel[4] = static_cast<uint8_t>(bankprom[((character[m_cpumem[current_character]*8+y] & 0x08) >> 3) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x08) >> 2) | (((m_cpumem[current_character]) & 0xf8) >> 0x01) | ((m_cpumem[0xd801] & 0x20) << 2)]);
+				pixel[5] = static_cast<uint8_t>(bankprom[((character[m_cpumem[current_character]*8+y] & 0x04) >> 2) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x04) >> 1) | (((m_cpumem[current_character]) & 0xf8) >> 0x01) | ((m_cpumem[0xd801] & 0x20) << 2)]);
+				pixel[6] = static_cast<uint8_t>(bankprom[((character[m_cpumem[current_character]*8+y] & 0x02) >> 1) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x02) >> 0) | (((m_cpumem[current_character]) & 0xf8) >> 0x01) | ((m_cpumem[0xd801] & 0x20) << 2)]);
+				pixel[7] = static_cast<uint8_t>(bankprom[((character[m_cpumem[current_character]*8+y] & 0x01) >> 0) | ((character[m_cpumem[current_character]*8+y+0x800] & 0x01) << 1) | (((m_cpumem[current_character]) & 0xf8) >> 0x01) | ((m_cpumem[0xd801] & 0x20) << 2)]);
 			
 				// draw the remapped colors instead of the regular if our palette is compressed
 				if (compress_palette)
@@ -906,7 +906,7 @@ void astron::video_repaint()
 					{
 						if (pixel[x])
 						{
-							*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + ((chary * 8 + y) * ASTRON_OVERLAY_W) + (charx * 8 + x)) = mapped_tile_color[pixel[x]];
+							*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + ((chary * 8 + y) * ASTRON_OVERLAY_W) + (charx * 8 + x)) = mapped_tile_color[pixel[x]];
 								
 							//char s[81] = {0};
 							//sprintf(s, "drawing color %x", mapped_tile_color[pixel[x]]);
@@ -920,7 +920,7 @@ void astron::video_repaint()
 					{
 						if (pixel[x])
 						{
-							*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + ((chary * 8 + y) * ASTRON_OVERLAY_W) + (charx * 8 + x)) = pixel[x];
+							*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + ((chary * 8 + y) * ASTRON_OVERLAY_W) + (charx * 8 + x)) = pixel[x];
 						}
 					}
 				}					
@@ -930,7 +930,7 @@ void astron::video_repaint()
 }
 
 // this gets called when the user presses a key or moves the joystick
-void astron::input_enable(Uint8 move)
+void astron::input_enable(uint8_t move)
 {
 	if ((strncmp(m_shortgamename, "astron", 7)	== 0) ||
 		(strncmp(m_shortgamename, "astronp", 8)	== 0) ||
@@ -939,7 +939,7 @@ void astron::input_enable(Uint8 move)
 	{
 		if (input_isinverted())
 		{
-			Uint8 newmove = move;
+			uint8_t newmove = move;
 			if (move == SWITCH_UP)		newmove = SWITCH_DOWN;
 			if (move == SWITCH_DOWN)	newmove = SWITCH_UP;
 			move = newmove;
@@ -985,7 +985,7 @@ void astron::input_enable(Uint8 move)
 }  
 
 // this gets called when the user releases a key or moves the joystick back to center position
-void astron::input_disable(Uint8 move)
+void astron::input_disable(uint8_t move)
 {
 	if ((strncmp(m_shortgamename, "astron", 7)	== 0) ||
 		(strncmp(m_shortgamename, "astronp", 8)	== 0) ||
@@ -994,7 +994,7 @@ void astron::input_disable(Uint8 move)
 	{
 		if (input_isinverted())
 		{
-			Uint8 newmove = move;
+			uint8_t newmove = move;
 			if (move == SWITCH_UP)		newmove = SWITCH_DOWN;
 			if (move == SWITCH_DOWN)	newmove = SWITCH_UP;
 			move = newmove;
@@ -1040,12 +1040,12 @@ void astron::input_disable(Uint8 move)
 }
 
 // this gets called when the user presses a key or moves the joystick
-void cobraab::input_enable(Uint8 move)
+void cobraab::input_enable(uint8_t move)
 {
 	// RJS START ADD - inverted controls
 	if (input_isinverted())
 	{
-		Uint8 newmove = move;
+		uint8_t newmove = move;
 		if (move == SWITCH_UP)		newmove = SWITCH_DOWN;
 		if (move == SWITCH_DOWN)	newmove = SWITCH_UP;
 		move = newmove;
@@ -1094,12 +1094,12 @@ void cobraab::input_enable(Uint8 move)
 }  
 
 // this gets called when the user releases a key or moves the joystick back to center position
-void cobraab::input_disable(Uint8 move)
+void cobraab::input_disable(uint8_t move)
 {
 	// RJS START ADD - inverted controls
 	if (input_isinverted())
 	{
-		Uint8 newmove = move;
+		uint8_t newmove = move;
 		if (move == SWITCH_UP)		newmove = SWITCH_DOWN;
 		if (move == SWITCH_DOWN)	newmove = SWITCH_UP;
 		move = newmove;
@@ -1161,17 +1161,17 @@ void cobraab::patch_roms()
 }
 
 // used to set dip switch values
-bool astron::set_bank(Uint8 which_bank, Uint8 value)
+bool astron::set_bank(uint8_t which_bank, uint8_t value)
 {
 	bool result = true;
 	
 	switch (which_bank)
 	{
 	case 0:	// bank A
-		banks[2] = (Uint8) (value ^ 0xFF);	// dip switches are active low
+		banks[2] = (uint8_t) (value ^ 0xFF);	// dip switches are active low
 		break;
 	case 1:	// bank B
-		banks[3] = (Uint8) (value ^ 0xFF);	// switches are active low
+		banks[3] = (uint8_t) (value ^ 0xFF);	// switches are active low
 		break;
 	default:
 		printline("ERROR: Bank specified is out of range!");
@@ -1186,7 +1186,7 @@ bool astron::set_bank(Uint8 which_bank, Uint8 value)
 void astron::draw_sprite(int spr_number)
 {
 	int sy,row,height,src;
-	Uint8 *sprite_base;
+	uint8_t *sprite_base;
 	int skip;	/* bytes to skip before drawing each row (can be negative) */
 
 
@@ -1225,13 +1225,13 @@ void astron::draw_sprite(int spr_number)
 				break;
 			}
 			
-			Uint8 pixel1 = (data_lo >> 0x04) | (data_high & 0xf0);
-			Uint8 pixel2 = (data_lo & 0x0f) | (data_high << 0x04);
+			uint8_t pixel1 = (data_lo >> 0x04) | (data_high & 0xf0);
+			uint8_t pixel2 = (data_lo & 0x0f) | (data_high << 0x04);
 
 			// draw these guys backwards
 			if (src & 0x8000)
 			{
-				Uint8 temp_pixel;
+				uint8_t temp_pixel;
 				temp_pixel = pixel1;
 				pixel1 = pixel2;
 				pixel2 = temp_pixel;
@@ -1246,12 +1246,12 @@ void astron::draw_sprite(int spr_number)
 			// draw the pixel - don't draw if its black as to not cover up any tiles
 			if (pixel1)
 			{
-				*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (y * ASTRON_OVERLAY_W) + x) = pixel1;
+				*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (y * ASTRON_OVERLAY_W) + x) = pixel1;
 			}
 			x++;
 			if (pixel2)
 			{
-				*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (y * ASTRON_OVERLAY_W) + x) = pixel2;
+				*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (y * ASTRON_OVERLAY_W) + x) = pixel2;
 			}
 			x++;
 		}
@@ -1260,7 +1260,7 @@ void astron::draw_sprite(int spr_number)
 // END modified Mame code
 
 // very minimal 8251 implementation, just to get Astron working
-void astronh::write_8251_data(Uint8 data)
+void astronh::write_8251_data(uint8_t data)
 {
 	char s[81] = { 0 };
 	sprintf(s, "ASTRONH: 8251_write_data() with %x", data);
@@ -1270,10 +1270,10 @@ void astronh::write_8251_data(Uint8 data)
 	write_vip9500sg(data);
 }
 
-Uint8 astronh::read_8251_data(void)
+uint8_t astronh::read_8251_data(void)
 {
 	char s[81] = { 0 };
-	Uint8 result = read_vip9500sg();
+	uint8_t result = read_vip9500sg();
 	sprintf(s, "ASTRONH: 8251_read_data with %x", result);
 //	printline(s);
 	// reading from the 8251 resets rxrdy
@@ -1281,7 +1281,7 @@ Uint8 astronh::read_8251_data(void)
 	return result;
 }
 
-void astronh::write_8251_control(Uint8 control)
+void astronh::write_8251_control(uint8_t control)
 {
 	char s[81] = { 0 };
 	static bool init = false;
@@ -1398,10 +1398,10 @@ void astronh::write_8251_control(Uint8 control)
 	}	
 }
 
-Uint8 astronh::read_8251_status(void)
+uint8_t astronh::read_8251_status(void)
 {
 	// with astron all we care about are the bottom two bits of status (rxrdy, txrdy)
-	Uint8 result = (0x00 | txrdy | (rxrdy << 0x01));
+	uint8_t result = (0x00 | txrdy | (rxrdy << 0x01));
 
 	return result;
 }

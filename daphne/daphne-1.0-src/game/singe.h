@@ -47,8 +47,8 @@ public:
 	bool init();
 	void start();
 	void shutdown();
-	void input_enable(Uint8);
-	void input_disable(Uint8);
+	void input_enable(uint8_t);
+	void input_disable(uint8_t);
 	void OnMouseMotion(uint16_t x, uint16_t y, int16_t xrel, int16_t yrel);
 	bool handle_cmdline_arg(const char *arg);
 	void palette_calculate();

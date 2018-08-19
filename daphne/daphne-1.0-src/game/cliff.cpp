@@ -206,7 +206,7 @@ void gtg::reset()
 }
 
 // when z80 outputs to a port, this gets called
-void cliff::port_write(uint16_t Port, Uint8 Value)
+void cliff::port_write(uint16_t Port, uint8_t Value)
 {
 
 	char s[81] = { 0 };
@@ -330,7 +330,7 @@ void cliff::port_write(uint16_t Port, Uint8 Value)
 }
 
 
-Uint8 cliff::port_read(uint16_t Port)
+uint8_t cliff::port_read(uint16_t Port)
 // Called whenever the emulator wants to read from a port
 {
     char s[81] = { 0 };
@@ -412,7 +412,7 @@ void cliff::do_irq(unsigned int which_irq)
 
 #ifdef DEBUG
 // the the purpose of debugging/disassembling the ROM
-void cliff::cpu_mem_write(uint16_t addr, Uint8 value)
+void cliff::cpu_mem_write(uint16_t addr, uint8_t value)
 {
 //	if (addr == 0xE116) set_cpu_trace(1);
 	m_cpumem[addr] = value;
@@ -442,7 +442,7 @@ void cliff::cliff_do_blip()
 {
 	static uint64_t total_cycles = 0;
 
-	Uint8 blip_value = 0;
+	uint8_t blip_value = 0;
 	uint64_t cur_total_cycles = get_total_cycles_executed(0);
 	
 	// check to make sure flush_cpu_timers was not called
@@ -528,7 +528,7 @@ void cliff::cliff_set_test_mode(int enabled)
 }
 
 // this gets called when the user presses a key or moves the joystick
-void cliff::input_enable(Uint8 move)
+void cliff::input_enable(uint8_t move)
 {
 	static unsigned char service_enabled = 0;	// start disabled
 	static unsigned char test_enabled = 0;
@@ -585,7 +585,7 @@ void cliff::input_enable(Uint8 move)
 }
 
 // this gets called when the user releases a key or moves the joystick back to center position
-void cliff::input_disable(Uint8 move)
+void cliff::input_disable(uint8_t move)
 {
 	switch (move)
 	{
@@ -704,9 +704,9 @@ void cliff::patch_roms()
 
 }
 
-Uint8 gtg::cpu_mem_read(uint16_t addr)
+uint8_t gtg::cpu_mem_read(uint16_t addr)
 {
- 	Uint8 result = m_cpumem[addr];
+ 	uint8_t result = m_cpumem[addr];
 
 	//mem hack for GtG disc side detection
 	//(this address is filled by GtG's ISR when a chapter code is received from the

@@ -34,7 +34,7 @@ using namespace std;
 typedef struct g_soundType {
 	SDL_AudioSpec  audioSpec;
 	Uint32         length;
-	Uint8         *buffer;
+	uint8_t         *buffer;
 } g_soundT;
 
 // These are pointers and values needed by the script engine to interact with Daphne
@@ -380,7 +380,7 @@ void sep_shutdown(void)
   }
 }
 
-void sep_sound_ended(Uint8 *buffer, unsigned int slot)
+void sep_sound_ended(uint8_t *buffer, unsigned int slot)
 {
 	sep_call_lua("onSoundCompleted", "i", slot);
 }
@@ -409,7 +409,7 @@ bool sep_srf32_to_srf8(SDL_Surface *src, SDL_Surface *dst)
 		for (unsigned int uRowIdx = 0; uRowIdx < (unsigned int) src->h; ++uRowIdx)
 		{
 			Uint32 *p32SrcPix = (Uint32 *) pSrcLine;
-			Uint8 *p8DstPix = (Uint8 *) pDstLine;
+			uint8_t *p8DstPix = (uint8_t *) pDstLine;
 
 			// do one line
 			for (unsigned int uColIdx = 0; uColIdx < (unsigned int) src->w; ++uColIdx)
@@ -417,17 +417,17 @@ bool sep_srf32_to_srf8(SDL_Surface *src, SDL_Surface *dst)
 				// get source pixel ...
 				Uint32 u32SrcPix = *p32SrcPix;
 
-				Uint8 u8B = (u32SrcPix & src->format->Bmask) >> src->format->Bshift;
-				Uint8 u8G = (u32SrcPix & src->format->Gmask) >> src->format->Gshift;
-				Uint8 u8R = (u32SrcPix & src->format->Rmask) >> src->format->Rshift;
-				Uint8 u8A = (u32SrcPix & src->format->Amask) >> src->format->Ashift;
+				uint8_t u8B = (u32SrcPix & src->format->Bmask) >> src->format->Bshift;
+				uint8_t u8G = (u32SrcPix & src->format->Gmask) >> src->format->Gshift;
+				uint8_t u8R = (u32SrcPix & src->format->Rmask) >> src->format->Rshift;
+				uint8_t u8A = (u32SrcPix & src->format->Amask) >> src->format->Ashift;
 
 				u8B &= 0xE0;  // blue has 3 bits (8 shades)
 				u8G &= 0xC0;  // green has 2 bits
 				u8R &= 0xE0;  // red has 3 bits
 
 				// compute 8-bit index
-				Uint8 u8Idx = u8R | (u8G >> 3) | (u8B >> 5);
+				uint8_t u8Idx = u8R | (u8G >> 3) | (u8B >> 5);
 
 				// if alpha channel is more opaque, then make it fully opaque
 				if (u8A > 0x7F)
@@ -453,8 +453,8 @@ bool sep_srf32_to_srf8(SDL_Surface *src, SDL_Surface *dst)
 				++p32SrcPix;	// go to the next one ...
 			} // end doing current line
 
-			pSrcLine = ((Uint8 *) pSrcLine) + src->pitch;	// go to the next line
-			pDstLine = ((Uint8 *) pDstLine) + dst->pitch;	// " " "
+			pSrcLine = ((uint8_t *) pSrcLine) + src->pitch;	// go to the next line
+			pDstLine = ((uint8_t *) pDstLine) + dst->pitch;	// " " "
 		} // end doing all rows
 
 		SDL_UnlockSurface(src);

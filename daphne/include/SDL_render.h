@@ -65,7 +65,7 @@ struct SDL_SW_YUVTexture
 	Uint32 format;
 	Uint32 target_format;
 	int w, h;
-	Uint8 *pixels;
+	uint8_t *pixels;
 	int *colortab;
 	Uint32 *rgb_2_pix;
 	void(*Display1X) (int *colortab, Uint32 * rgb_2_pix,
@@ -79,7 +79,7 @@ struct SDL_SW_YUVTexture
 
 	/* These are just so we don't have to allocate them separately */
 	uint16_t pitches[3];
-	Uint8 *planes[3];
+	uint8_t *planes[3];
 
 	/* This is a temporary surface in case we have to stretch copy */
 	SDL_Surface *stretch;
@@ -324,7 +324,7 @@ extern DECLSPEC int SDLCALL SDL_QueryTexture(SDL_Texture * texture,
  *  \sa SDL_GetTextureColorMod()
  */
 extern DECLSPEC int SDLCALL SDL_SetTextureColorMod(SDL_Texture * texture,
-                                                   Uint8 r, Uint8 g, Uint8 b);
+                                                   uint8_t r, uint8_t g, uint8_t b);
 
 
 /**
@@ -340,8 +340,8 @@ extern DECLSPEC int SDLCALL SDL_SetTextureColorMod(SDL_Texture * texture,
  *  \sa SDL_SetTextureColorMod()
  */
 extern DECLSPEC int SDLCALL SDL_GetTextureColorMod(SDL_Texture * texture,
-                                                   Uint8 * r, Uint8 * g,
-                                                   Uint8 * b);
+                                                   uint8_t * r, uint8_t * g,
+                                                   uint8_t * b);
 
 /**
  *  \brief Set an additional alpha value used in render copy operations.
@@ -355,7 +355,7 @@ extern DECLSPEC int SDLCALL SDL_GetTextureColorMod(SDL_Texture * texture,
  *  \sa SDL_GetTextureAlphaMod()
  */
 extern DECLSPEC int SDLCALL SDL_SetTextureAlphaMod(SDL_Texture * texture,
-                                                   Uint8 alpha);
+                                                   uint8_t alpha);
 
 /**
  *  \brief Get the additional alpha value used in render copy operations.
@@ -368,7 +368,7 @@ extern DECLSPEC int SDLCALL SDL_SetTextureAlphaMod(SDL_Texture * texture,
  *  \sa SDL_SetTextureAlphaMod()
  */
 extern DECLSPEC int SDLCALL SDL_GetTextureAlphaMod(SDL_Texture * texture,
-                                                   Uint8 * alpha);
+                                                   uint8_t * alpha);
 
 /**
  *  \brief Set the blend mode used for texture copy operations.
@@ -438,9 +438,9 @@ extern DECLSPEC int SDLCALL SDL_UpdateTexture(SDL_Texture * texture,
  */
 extern DECLSPEC int SDLCALL SDL_UpdateYUVTexture(SDL_Texture * texture,
                                                  const SDL_Rect * rect,
-                                                 const Uint8 *Yplane, int Ypitch,
-                                                 const Uint8 *Uplane, int Upitch,
-                                                 const Uint8 *Vplane, int Vpitch);
+                                                 const uint8_t *Yplane, int Ypitch,
+                                                 const uint8_t *Uplane, int Upitch,
+                                                 const uint8_t *Vplane, int Vpitch);
 
 /**
  *  \brief Lock a portion of the texture for write-only pixel access.
@@ -667,8 +667,8 @@ extern DECLSPEC void SDLCALL SDL_RenderGetScale(SDL_Renderer * renderer,
  *  \return 0 on success, or -1 on error
  */
 extern DECLSPEC int SDLCALL SDL_SetRenderDrawColor(SDL_Renderer * renderer,
-                                           Uint8 r, Uint8 g, Uint8 b,
-                                           Uint8 a);
+                                           uint8_t r, uint8_t g, uint8_t b,
+                                           uint8_t a);
 
 /**
  *  \brief Get the color used for drawing operations (Rect, Line and Clear).
@@ -683,8 +683,8 @@ extern DECLSPEC int SDLCALL SDL_SetRenderDrawColor(SDL_Renderer * renderer,
  *  \return 0 on success, or -1 on error
  */
 extern DECLSPEC int SDLCALL SDL_GetRenderDrawColor(SDL_Renderer * renderer,
-                                           Uint8 * r, Uint8 * g, Uint8 * b,
-                                           Uint8 * a);
+                                           uint8_t * r, uint8_t * g, uint8_t * b,
+                                           uint8_t * a);
 
 /**
  *  \brief Set the blend mode used for drawing operations (Fill and Line).

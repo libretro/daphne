@@ -162,12 +162,12 @@ void singe::shutdown()
 {
 }
 
-void singe::input_enable(Uint8 input)
+void singe::input_enable(uint8_t input)
 {
 	g_pSingeOut->sep_call_lua("onInputPressed", "i", input);
 }
 
-void singe::input_disable(Uint8 input)
+void singe::input_disable(uint8_t input)
 {
 	g_pSingeOut->sep_call_lua("onInputReleased", "i", input);
 }

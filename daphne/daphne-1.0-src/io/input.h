@@ -64,7 +64,7 @@ enum
 struct coin_input
 {
 	bool coin_enabled;	//	whether the coin was enabled or disabled
-	Uint8 coin_val;	// either SWITCH_COIN1 or SWITCH_COIN2
+	uint8_t coin_val;	// either SWITCH_COIN1 or SWITCH_COIN2
 	uint64_t cycles_when_to_enable;	// the cycle count that we must have surpassed in order to be able to enable the coin
 };
 
@@ -77,8 +77,8 @@ void SDL_check_input();
 void input_invert_controls(bool fInvert);
 bool input_isinverted();
 bool input_pause(bool fPaused);
-void input_enable(Uint8);
-void input_disable(Uint8);
+void input_enable(uint8_t);
+void input_disable(uint8_t);
 void reset_idle(void); // added by JFA
 
 #endif // INPUT_H

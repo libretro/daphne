@@ -313,9 +313,9 @@ void set_vb_rendering_done(int vb_ndx)
 
 
 struct yuv_buf g_blank_yuv_buf;	// this will contain a blank YUV overlay suitable for search/seek blanking
-Uint8 *g_line_buf = NULL;	// temp sys RAM for doing calculations so we can do fastest copies to slow video RAM
-Uint8 *g_line_buf2 = NULL;	// 2nd buf
-Uint8 *g_line_buf3 = NULL;	// 3rd buf
+uint8_t *g_line_buf = NULL;	// temp sys RAM for doing calculations so we can do fastest copies to slow video RAM
+uint8_t *g_line_buf2 = NULL;	// 2nd buf
+uint8_t *g_line_buf3 = NULL;	// 3rd buf
 
 ////////////////////////////////////////
 
@@ -1834,14 +1834,14 @@ int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 
 		if (nPitch == 0) nPitch = gamevid->w * SDL_BYTESPERPIXEL(gamevid->format->format);
 
-		Uint8 * gamevid_pixels = (Uint8 *)gamevid->pixels;
+		uint8_t * gamevid_pixels = (uint8_t *)gamevid->pixels;
 
 		if ((gamevid->w << 1) == g_hw_overlay_rect.w)
 		{
 			// adjust for vertical offset
 			// We use _half_ of the requested vertical offset because the mpeg video is twice
 			// the size of the overlay
-			gamevid_pixels = (Uint8 *) gamevid_pixels - (gamevid->w * (g_vertical_offset - g_vertical_stretch));
+			gamevid_pixels = (uint8_t *) gamevid_pixels - (gamevid->w * (g_vertical_offset - g_vertical_stretch));
 			
 			unsigned int row = 0;
 			unsigned int col = 0;
@@ -1852,13 +1852,13 @@ int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 			t_yuv_color* yuv_palette = get_yuv_palette();
 			unsigned int channel0_pitch = nPitch;	// this val gets used a lot so we put it into a var
 
-			Uint8 *dst_ptr;
-			dst_ptr = (Uint8 *)g_hw_overlay_pixels;
+			uint8_t *dst_ptr;
+			dst_ptr = (uint8_t *)g_hw_overlay_pixels;
 
-			Uint8 *Y	= (Uint8 *) src->Y;
-			Uint8 *Y2	= (Uint8 *) src->Y + g_hw_overlay_rect.w;
-			Uint8 *U	= (Uint8 *) src->U;
-			Uint8 *V	= (Uint8 *) src->V;
+			uint8_t *Y	= (uint8_t *) src->Y;
+			uint8_t *Y2	= (uint8_t *) src->Y + g_hw_overlay_rect.w;
+			uint8_t *U	= (uint8_t *) src->U;
+			uint8_t *V	= (uint8_t *) src->V;
 
 			// if letterbox removal is active, shift video down to compensate
 			for (unsigned int skip = 0; skip < g_vertical_stretch; skip += 2)
@@ -2033,7 +2033,7 @@ int prepare_frame_callback_without_overlay(struct yuv_buf *buf)
 		overlay_h = sw_overlay->h;
 		overlay_w = sw_overlay->w;
 
-		buf2overlay_YUY2((Uint8 *)g_hw_overlay_pixels, nPitch, overlay_h, overlay_w, buf);
+		buf2overlay_YUY2((uint8_t *)g_hw_overlay_pixels, nPitch, overlay_h, overlay_w, buf);
 
 		result = VLDP_TRUE;
 	}
@@ -2092,7 +2092,7 @@ void display_frame_callback(struct yuv_buf *buf)
 // assumes destination overlay is locked and *IMPORTANT* assumes src and dst are the same resolution
 // RJS CHANGE - Convert SDL_Overlay
 // void buf2overlay_YUY2(SDL_Overlay *dst, struct yuv_buf *src)
-void buf2overlay_YUY2(Uint8 *out_pixels, uint16_t in_pitch, int in_h, int in_w, struct yuv_buf *src)
+void buf2overlay_YUY2(uint8_t *out_pixels, uint16_t in_pitch, int in_h, int in_w, struct yuv_buf *src)
 {
 	// RJS START - from overlays to textures, remember this assumes an already locked texture
 	SDL1_Overlay dst_mem;
@@ -2105,11 +2105,11 @@ void buf2overlay_YUY2(Uint8 *out_pixels, uint16_t in_pitch, int in_h, int in_w, 
 	// RJS END
 		
 	unsigned int channel0_pitch = dst->pitches;
-	Uint8 *dst_ptr = dst->pixels;			
-	Uint8 *Y = (Uint8 *) src->Y;
-	Uint8 *Y2 = ((Uint8 *) src->Y) + dst->w;
-	Uint8 *U = (Uint8 *) src->U;
-	Uint8 *V = (Uint8 *) src->V;
+	uint8_t *dst_ptr = dst->pixels;			
+	uint8_t *Y = (uint8_t *) src->Y;
+	uint8_t *Y2 = ((uint8_t *) src->Y) + dst->w;
+	uint8_t *U = (uint8_t *) src->U;
+	uint8_t *V = (uint8_t *) src->V;
 	int col, row;
 	
 	// do 2 rows at a time
@@ -2252,8 +2252,8 @@ void update_parse_meter()
 
          // go from full red (hardly complete) to full green (fully complete)
          SDL_FillRect(screen, &clip, SDL_MapRGB(screen->format,
-                  (Uint8)(255 * (1.0 - g_dPercentComplete01)),
-                  (Uint8)(255 * g_dPercentComplete01),
+                  (uint8_t)(255 * (1.0 - g_dPercentComplete01)),
+                  (uint8_t)(255 * g_dPercentComplete01),
                   0));
       }
    }

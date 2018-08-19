@@ -23,9 +23,11 @@
 #ifndef GISOUND_H
 #define GISOUND_H
 
+#include <stdint.h>
+
 int gisound_initialize(Uint32 core_frequency);
 void gisound_writedata(Uint32, Uint32, int index);
-void gisound_stream(Uint8* stream, int length, int index);
+void gisound_stream(uint8_t* stream, int length, int index);
 void gisound_shutdown(int index);
 
 enum {
@@ -59,7 +61,7 @@ struct gi_sound_chip {
    Uint32 core_clock;
 
    // Registers
-   Uint8 register_set[16];
+   uint8_t register_set[16];
 
    int chan_a_bytes_per_switch;
    int chan_b_bytes_per_switch;
@@ -67,7 +69,7 @@ struct gi_sound_chip {
    int chan_a_bytes_to_go;
    int chan_b_bytes_to_go;
    int chan_c_bytes_to_go;
-   Uint8 noise_period;
+   uint8_t noise_period;
    int noise_bytes_per_switch;
    int noise_bytes_to_go;
    int noise_flip;
@@ -79,26 +81,26 @@ struct gi_sound_chip {
    bool tone_c;
    bool tone_b;
    bool tone_a;
-   Uint8 chan_a_amplitude;
+   uint8_t chan_a_amplitude;
    int chan_a_flip;
    bool chan_a_amplitude_mode;
-   Uint8 chan_b_amplitude;
+   uint8_t chan_b_amplitude;
    int chan_b_flip;
    bool chan_b_amplitude_mode;
-   Uint8 chan_c_amplitude;
+   uint8_t chan_c_amplitude;
    int chan_c_flip;
    bool chan_c_amplitude_mode;
    int envelope_period;
    bool envelope_cycle_complete;
-   Uint8 envelope_amplitude;
+   uint8_t envelope_amplitude;
    int envelope_bytes_to_go;
-   Uint8 envelope_step;
+   uint8_t envelope_step;
    bool envelope_shape_cycle_cont;
    bool envelope_shape_cycle_att;
    bool envelope_shape_cycle_alt;
    bool envelope_shape_cycle_hold;
-   Uint8 port_a_data_store;
-   Uint8 port_b_data_store;
+   uint8_t port_a_data_store;
+   uint8_t port_b_data_store;
    Uint32 random_seed;
 };
 

@@ -29,7 +29,7 @@ struct singe_in_info
 	void (*draw_string)(const char*, int, int, SDL_Surface*);
 	
 	// From sound/samples.h
-	int (*samples_play_sample)(Uint8 *pu8Buf, unsigned int uLength, unsigned int uChannels, int iSlot, void (*finishedCallback)(Uint8 *pu8Buf, unsigned int uSlot));
+	int (*samples_play_sample)(uint8_t *pu8Buf, unsigned int uLength, unsigned int uChannels, int iSlot, void (*finishedCallback)(uint8_t *pu8Buf, unsigned int uSlot));
 
 	// Laserdisc Control Functions
 	void (*enable_audio1)();

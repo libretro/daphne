@@ -33,10 +33,11 @@
 // SSI-263 "emulation" interface
 // by Garry Jordan
 // Uses the (heavily modified) "rsynth" voice synthesis engine.
-#ifdef WIN32
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <string.h>
 #include "tqsynth.h"
 #include "samples.h"
@@ -69,7 +70,7 @@ void ssi263_say_phones(char *phonemes, int len);
 // Duration/Phoneme
 // Working theory: top 2 bits are for duration, the rest is for the phoneme
 // A duration of 0x0 is the slowest, 0x03 (both bits set) is the fastest
-void ssi263_reg0(unsigned char value, Uint8 *irq_status)
+void ssi263_reg0(unsigned char value, uint8_t *irq_status)
 {
     static char phones_text[SSI_PHRASE_BUF_LEN];  // Holds rsynth phonemes.
     static int phones_len = 0;
@@ -412,7 +413,7 @@ void ssi263_say_phones(char *phonemes, int len)
 }
 
 // gets called when sample has finished playing
-void ssi263_finished_callback(Uint8 *pu8Buf, unsigned int uSlot)
+void ssi263_finished_callback(uint8_t *pu8Buf, unsigned int uSlot)
 {
 	g_bSamplePlaying = false;
 	tqsynth_free_chunk(pu8Buf);

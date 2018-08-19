@@ -26,20 +26,15 @@
 //
 //----------------------------------------------------------------------------
 
+#include <stdint.h>
 //#include <stdlib.h>
 #include "SDL.h"
 //#include "common.hpp"
 //#include "logger.hpp"
 #include "tms9919.hpp"
 
-//DBG_REGISTER ( __FILE__ );
-
-//#define m_clock_frequency         2500000
-
 cTMS9919::cTMS9919 ()
 {
-//    FUNCTION_ENTRY ( this, "cTMS9919 ctor", true );
-
     m_pSpeechSynthesizer = NULL;
 
     m_LastData = 0;
@@ -105,7 +100,7 @@ int cTMS9919::SetSpeechSynthesizer ( cTMS5220 *speech )
     return -1;
 }
 
-void cTMS9919::WriteData ( Uint8 data )
+void cTMS9919::WriteData ( uint8_t data )
 {
 //    FUNCTION_ENTRY ( this, "cTMS9919::WriteData", true );
 
@@ -127,7 +122,7 @@ void cTMS9919::WriteData ( Uint8 data )
                 // Handle Noise control
                 SetNoise (( data & 0x04 ) ? NOISE_WHITE : NOISE_PERIODIC, ( data & 0x03 ));
             } else {
-                m_LastData = 0xFF00 | ( Uint8 ) data;
+                m_LastData = 0xFF00 | ( uint8_t ) data;
             }
         }
     }

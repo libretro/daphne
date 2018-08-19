@@ -291,7 +291,7 @@ void thayers::do_nmi()
 }
 
 // reads a byte from the cpu's memory
-Uint8 thayers::cpu_mem_read(uint16_t addr)
+uint8_t thayers::cpu_mem_read(uint16_t addr)
 {
 	if (addr == 0xbe17) // CHEAT - We need this since the CPU isn't recieving status from the COP420
 		return 0x01;
@@ -300,15 +300,15 @@ Uint8 thayers::cpu_mem_read(uint16_t addr)
 }
 
 // writes a byte to the cpu's memory
-void thayers::cpu_mem_write(uint16_t addr, Uint8 value)
+void thayers::cpu_mem_write(uint16_t addr, uint8_t value)
 {
 	m_cpumem[addr] = value;
 }
 
 // reads a byte from the cpu's port
-Uint8 thayers::port_read(uint16_t port)
+uint8_t thayers::port_read(uint16_t port)
 {
-	Uint8 result = 0;
+	uint8_t result = 0;
 
 	port &= 0xFF;	// strip off high byte
 
@@ -366,7 +366,7 @@ Uint8 thayers::port_read(uint16_t port)
 }
 
 // writes a byte to the cpu's port
-void thayers::port_write(uint16_t port, Uint8 value)
+void thayers::port_write(uint16_t port, uint8_t value)
 {
 	char s[81] = { 0 };
 
@@ -424,10 +424,10 @@ void thayers::port_write(uint16_t port, Uint8 value)
 	case 0xf5:	// Latch, only bits 4-7 are used, bit 4 coin counter, bit 5 enable writes to LDP, bit 6 LD Enter, bit 7 INT/EXT(LD-V1000)
 		break;
 	case 0xf6:	// DEN 1 - To scoreboard
-		write_scoreboard(static_cast<Uint8>((value & 0x70) >> 4), static_cast<Uint8>(value & 0x0f), 0);
+		write_scoreboard(static_cast<uint8_t>((value & 0x70) >> 4), static_cast<uint8_t>(value & 0x0f), 0);
 		break;
 	case 0xf7:	// DEN 2 - To scoreboard
-		write_scoreboard(static_cast<Uint8>((value & 0x70) >> 4), static_cast<Uint8>(value & 0x0f), 1);
+		write_scoreboard(static_cast<uint8_t>((value & 0x70) >> 4), static_cast<uint8_t>(value & 0x0f), 1);
 		break;
 	default:
 		sprintf(s, "ERROR: CPU port %x write requested (value %x) at pc %x", port, value, Z80_GET_PC);
@@ -588,7 +588,7 @@ void thayers::process_keydown(SDL_Keycode key)
 	// if shift or caps lock is enabled)
 	if (key >= SDLK_a && key <= SDLK_z)
 	{
-		cop_write_latch = static_cast<Uint8>(key - SDLK_SPACE);	// convert lowercase keys to uppercase
+		cop_write_latch = static_cast<uint8_t>(key - SDLK_SPACE);	// convert lowercase keys to uppercase
 		m_irq_status &= ~0x20;
 		thayers_irq();
 	}
@@ -596,7 +596,7 @@ void thayers::process_keydown(SDL_Keycode key)
 	// check to see if key is a number on the top row of the keyboard (not keypad)
 	else if (key >= SDLK_0 && key <= SDLK_9)
 	{
-		cop_write_latch = static_cast<Uint8>(key);
+		cop_write_latch = static_cast<uint8_t>(key);
 		m_irq_status &= ~0x20;
 		thayers_irq();
 	}
@@ -750,7 +750,7 @@ bool thayers::set_bank(unsigned char which_bank, unsigned char value)
 }
 
 // Thayer's uses the scoreboard a little different than DL/SA so we need to unpack the data
-void thayers::write_scoreboard(Uint8 address, Uint8 data, int den)
+void thayers::write_scoreboard(uint8_t address, uint8_t data, int den)
 {
 	if (address <= 5)
 	{

@@ -59,10 +59,10 @@
 
 #define DEFINE_SSE_FILLRECT(bpp, type) \
 static void \
-SDL_FillRect##bpp##SSE(Uint8 *pixels, int pitch, Uint32 color, int w, int h) \
+SDL_FillRect##bpp##SSE(uint8_t *pixels, int pitch, Uint32 color, int w, int h) \
 { \
     int i, n; \
-    Uint8 *p = NULL; \
+    uint8_t *p = NULL; \
  \
     SSE_BEGIN; \
  \
@@ -97,13 +97,13 @@ SDL_FillRect##bpp##SSE(Uint8 *pixels, int pitch, Uint32 color, int w, int h) \
 }
 
 static void
-SDL_FillRect1SSE(Uint8 *pixels, int pitch, Uint32 color, int w, int h)
+SDL_FillRect1SSE(uint8_t *pixels, int pitch, Uint32 color, int w, int h)
 {
     int i, n;
 
     SSE_BEGIN;
     while (h--) {
-        Uint8 *p = pixels;
+        uint8_t *p = pixels;
         n = w;
 
         if (n > 63) {
@@ -124,7 +124,7 @@ SDL_FillRect1SSE(Uint8 *pixels, int pitch, Uint32 color, int w, int h)
 
     SSE_END;
 }
-/* DEFINE_SSE_FILLRECT(1, Uint8) */
+/* DEFINE_SSE_FILLRECT(1, uint8_t) */
 DEFINE_SSE_FILLRECT(2, uint16_t)
 DEFINE_SSE_FILLRECT(4, Uint32)
 
@@ -132,10 +132,10 @@ DEFINE_SSE_FILLRECT(4, Uint32)
 #endif /* __SSE__ */
 
 static void
-SDL_FillRect1(Uint8 * pixels, int pitch, Uint32 color, int w, int h)
+SDL_FillRect1(uint8_t * pixels, int pitch, Uint32 color, int w, int h)
 {
     int n;
-    Uint8 *p = NULL;
+    uint8_t *p = NULL;
     
     while (h--) {
         n = w;
@@ -144,13 +144,13 @@ SDL_FillRect1(Uint8 * pixels, int pitch, Uint32 color, int w, int h)
         if (n > 3) {
             switch ((uintptr_t) p & 3) {
             case 1:
-                *p++ = (Uint8) color;
+                *p++ = (uint8_t) color;
                 --n;
             case 2:
-                *p++ = (Uint8) color;
+                *p++ = (uint8_t) color;
                 --n;
             case 3:
-                *p++ = (Uint8) color;
+                *p++ = (uint8_t) color;
                 --n;
             }
             SDL_memset4(p, color, (n >> 2));
@@ -159,11 +159,11 @@ SDL_FillRect1(Uint8 * pixels, int pitch, Uint32 color, int w, int h)
             p += (n & ~3);
             switch (n & 3) {
             case 3:
-                *p++ = (Uint8) color;
+                *p++ = (uint8_t) color;
             case 2:
-                *p++ = (Uint8) color;
+                *p++ = (uint8_t) color;
             case 1:
-                *p++ = (Uint8) color;
+                *p++ = (uint8_t) color;
             }
         }
         pixels += pitch;
@@ -171,7 +171,7 @@ SDL_FillRect1(Uint8 * pixels, int pitch, Uint32 color, int w, int h)
 }
 
 static void
-SDL_FillRect2(Uint8 * pixels, int pitch, Uint32 color, int w, int h)
+SDL_FillRect2(uint8_t * pixels, int pitch, Uint32 color, int w, int h)
 {
     int n;
     uint16_t *p = NULL;
@@ -195,19 +195,19 @@ SDL_FillRect2(Uint8 * pixels, int pitch, Uint32 color, int w, int h)
 }
 
 static void
-SDL_FillRect3(Uint8 * pixels, int pitch, Uint32 color, int w, int h)
+SDL_FillRect3(uint8_t * pixels, int pitch, Uint32 color, int w, int h)
 {
 #ifndef MSB_FIRST
-    Uint8 b1 = (Uint8) (color & 0xFF);
-    Uint8 b2 = (Uint8) ((color >> 8) & 0xFF);
-    Uint8 b3 = (Uint8) ((color >> 16) & 0xFF);
+    uint8_t b1 = (uint8_t) (color & 0xFF);
+    uint8_t b2 = (uint8_t) ((color >> 8) & 0xFF);
+    uint8_t b3 = (uint8_t) ((color >> 16) & 0xFF);
 #else
-    Uint8 b1 = (Uint8) ((color >> 16) & 0xFF);
-    Uint8 b2 = (Uint8) ((color >> 8) & 0xFF);
-    Uint8 b3 = (Uint8) (color & 0xFF);
+    uint8_t b1 = (uint8_t) ((color >> 16) & 0xFF);
+    uint8_t b2 = (uint8_t) ((color >> 8) & 0xFF);
+    uint8_t b3 = (uint8_t) (color & 0xFF);
 #endif
     int n;
-    Uint8 *p = NULL;
+    uint8_t *p = NULL;
 
     while (h--) {
         n = w;
@@ -223,7 +223,7 @@ SDL_FillRect3(Uint8 * pixels, int pitch, Uint32 color, int w, int h)
 }
 
 static void
-SDL_FillRect4(Uint8 * pixels, int pitch, Uint32 color, int w, int h)
+SDL_FillRect4(uint8_t * pixels, int pitch, Uint32 color, int w, int h)
 {
     while (h--) {
         SDL_memset4(pixels, color, w);
@@ -238,7 +238,7 @@ int
 SDL_FillRect(SDL_Surface * dst, const SDL_Rect * rect, Uint32 color)
 {
     SDL_Rect clipped;
-    Uint8 *pixels;
+    uint8_t *pixels;
 
     if (!dst) {
         return SDL_SetError("Passed NULL destination surface");
@@ -269,7 +269,7 @@ SDL_FillRect(SDL_Surface * dst, const SDL_Rect * rect, Uint32 color)
         return SDL_SetError("SDL_FillRect(): You must lock the surface");
     }
 
-    pixels = (Uint8 *) dst->pixels + rect->y * dst->pitch +
+    pixels = (uint8_t *) dst->pixels + rect->y * dst->pitch +
                                      rect->x * dst->format->BytesPerPixel;
 
     switch (dst->format->BytesPerPixel) {

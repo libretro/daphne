@@ -176,12 +176,12 @@ int prepare_frame_callback_without_overlay(struct yuv_buf *buf);
 void display_frame_callback(struct yuv_buf *buf);
 void set_blend_fields(bool val);
 void buf2overlay(SDL_Texture *dst, struct yuv_buf *src);
-void buf2overlay_YUY2(Uint8 *out_pixels, uint16_t in_pitch, int in_h, int in_w, struct yuv_buf *src);
+void buf2overlay_YUY2(uint8_t *out_pixels, uint16_t in_pitch, int in_h, int in_w, struct yuv_buf *src);
 void update_parse_meter();
 void report_parse_progress_callback(double percent_complete);
 void report_mpeg_dimensions_callback(int, int);
 void free_yuv_overlay();
 void blank_overlay();
-void ldp_vldp_audio_callback(Uint8 *stream, int len, int unused);	// declaration for callback in other function
+void ldp_vldp_audio_callback(uint8_t *stream, int len, int unused);	// declaration for callback in other function
 
 #endif

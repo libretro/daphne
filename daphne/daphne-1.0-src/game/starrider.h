@@ -37,10 +37,10 @@ public:
 	void do_nmi();		// does an NMI tick
 	void do_irq();		// does an IRQ tick
 	void do_firq();		// does a FIRQ tick
-	Uint8 cpu_mem_read(uint16_t addr);			// memory read routine
-	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
-	void input_enable(Uint8);
-	void input_disable(Uint8);
+	uint8_t cpu_mem_read(uint16_t addr);			// memory read routine
+	void cpu_mem_write(uint16_t addr, uint8_t value);		// memory write routine
+	void input_enable(uint8_t);
+	void input_disable(uint8_t);
 	bool set_bank(unsigned char, unsigned char);
 	void palette_calculate();
 	void video_repaint();	// function to repaint video
@@ -52,11 +52,11 @@ private:
 	bool firq_on;
 	bool irq_on;
 	bool nmi_on;
-	Uint8 character[0x2000];		
-	Uint8 rombank1[0xa000];		
-	Uint8 rombank2[0x4000];		
+	uint8_t character[0x2000];		
+	uint8_t rombank1[0xa000];		
+	uint8_t rombank2[0x4000];		
 //	SDL_Color colors[16];	// color palette
-	Uint8 banks[3];				// starrider's banks
+	uint8_t banks[3];				// starrider's banks
 		// bank 1 is switches
 		// bank 2 is dip switch 1
 		// bank 3 is dip switch 2

@@ -29,6 +29,8 @@
 #ifndef _TMS9919_SDL_HPP_
 #define _TMS9919_SDL_HPP_
 
+#include <stdint.h>
+
 #if ! defined ( _TMS9919_HPP_ )
     #error You must include tms9919.hpp before tms9919-sdl.hpp
 #endif
@@ -41,7 +43,7 @@ class cSdlTMS9919 : public cTMS9919 {
         float  period;
         float  toggle;
         int    setting;
-        Uint8 *buffer;
+        uint8_t *buffer;
     };	     
 
     int                 m_VolumeTable [16];
@@ -53,9 +55,9 @@ class cSdlTMS9919 : public cTMS9919 {
     sVoiceInfo          m_Info [4];
     int                 m_ShiftRegister;
     int                 m_NoiseGenerator;
-    Uint8              *m_MixBuffer;
+    uint8_t              *m_MixBuffer;
 
-    static void _AudioCallback ( void *, Uint8 *, int );
+    static void _AudioCallback ( void *, uint8_t *, int );
  
     virtual void SetNoise ( NOISE_COLOR_E, int );
     virtual void SetFrequency ( int, int );
@@ -68,7 +70,7 @@ public:
 
     virtual int SetSpeechSynthesizer ( cTMS5220 * );
 
-    void AudioCallback ( Uint8 *, int );
+    void AudioCallback ( uint8_t *, int );
     int  GetMasterVolume () const		{ return m_MasterVolume; }
     void SetMasterVolume ( int );
 

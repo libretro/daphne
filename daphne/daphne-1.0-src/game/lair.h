@@ -43,10 +43,10 @@ public:
 	void shutdown();
 	void do_irq(unsigned int);
 	void do_nmi();
-	Uint8 cpu_mem_read(uint16_t addr);
-	void cpu_mem_write(uint16_t addr, Uint8 value);
-	void input_enable(Uint8);
-	void input_disable(Uint8);
+	uint8_t cpu_mem_read(uint16_t addr);
+	void cpu_mem_write(uint16_t addr, uint8_t value);
+	void input_enable(uint8_t);
+	void input_disable(uint8_t);
 	void OnVblank();
 	void OnLDV1000LineChange(bool bIsStatus, bool bIsEnabled);
 	void video_repaint();
@@ -59,12 +59,12 @@ public:
 	void set_version(int);
 
 	// what follows are functions specific to this class
-	Uint8 read_C010();
+	uint8_t read_C010();
 	void patch_roms();
 
 protected:
-   Uint8 m_soundchip_id;
-   Uint8 m_soundchip_address_latch;
+   uint8_t m_soundchip_id;
+   uint8_t m_soundchip_address_latch;
 	uint64_t m_status_strobe_timer;			// indicates when the last status strobe occurred
 	unsigned char m_switchA;			// dip switch bank A (enabled low)
 	unsigned char m_switchB;			// dip switch bank B (enabled low)

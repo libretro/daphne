@@ -140,10 +140,10 @@ void lgp::do_nmi()
 }
 
 // reads a byte from the cpu's memory
-Uint8 lgp::cpu_mem_read(uint16_t addr)
+uint8_t lgp::cpu_mem_read(uint16_t addr)
 {
 	
-   Uint8 result = 0;
+   uint8_t result = 0;
 	char s[81] = { 0 };
 	
 	switch (cpu_getactivecpu())
@@ -223,7 +223,7 @@ Uint8 lgp::cpu_mem_read(uint16_t addr)
 }
 
 // writes a byte to the cpu's memory
-void lgp::cpu_mem_write(uint16_t addr, Uint8 value)
+void lgp::cpu_mem_write(uint16_t addr, uint8_t value)
 {
 	char s[81] = { 0 };
 
@@ -339,7 +339,7 @@ void lgp::cpu_mem_write(uint16_t addr, Uint8 value)
 }
 
 // reads a byte from the cpu's port
-Uint8 lgp::port_read(uint16_t port)
+uint8_t lgp::port_read(uint16_t port)
 {
 //	char s[81] = { 0 };
 
@@ -359,7 +359,7 @@ Uint8 lgp::port_read(uint16_t port)
 }
 
 // writes a byte to the cpu's port
-void lgp::port_write(uint16_t port, Uint8 value)
+void lgp::port_write(uint16_t port, uint8_t value)
 {
 //	char s[81] = { 0 };
 
@@ -395,31 +395,31 @@ void lgp::video_repaint()
 
 void lgp::draw_8x8(int character_number, int xcoord, int ycoord)
 {
-	Uint8 pixel[8] = {0};
+	uint8_t pixel[8] = {0};
 	
 	for (int y = 0; y < 8; y++)
 	{
 		if ((y + ycoord) < LGP_OVERLAY_H)
 		{
-			Uint8 byte1 = m_character[character_number*8+y];
-			Uint8 byte2 = m_character[character_number*8+y+0x2000];
-			Uint8 byte3 = m_character[character_number*8+y+0x4000];
-			Uint8 byte4 = m_character[character_number*8+y+0x6000];
+			uint8_t byte1 = m_character[character_number*8+y];
+			uint8_t byte2 = m_character[character_number*8+y+0x2000];
+			uint8_t byte3 = m_character[character_number*8+y+0x4000];
+			uint8_t byte4 = m_character[character_number*8+y+0x6000];
 
-			pixel[0] = static_cast<Uint8>(((byte4 & 0x80) >> 4) | ((byte3 & 0x80) >> 5) | ((byte2 & 0x80) >> 6) | ((byte1 & 0x80) >> 7));
-			pixel[1] = static_cast<Uint8>(((byte4 & 0x40) >> 3) | ((byte3 & 0x40) >> 4) | ((byte2 & 0x40) >> 5) | ((byte1 & 0x40) >> 6));
-			pixel[2] = static_cast<Uint8>(((byte4 & 0x20) >> 2) | ((byte3 & 0x20) >> 3) | ((byte2 & 0x20) >> 4) | ((byte1 & 0x20) >> 5));
-			pixel[3] = static_cast<Uint8>(((byte4 & 0x10) >> 1) | ((byte3 & 0x10) >> 2) | ((byte2 & 0x10) >> 3) | ((byte1 & 0x10) >> 4));
-			pixel[4] = static_cast<Uint8>(((byte4 & 0x08) >> 0) | ((byte3 & 0x08) >> 1) | ((byte2 & 0x08) >> 2) | ((byte1 & 0x08) >> 3));
-			pixel[5] = static_cast<Uint8>(((byte4 & 0x04) << 1) | ((byte3 & 0x04) << 0) | ((byte2 & 0x04) >> 1) | ((byte1 & 0x04) >> 2));
-			pixel[6] = static_cast<Uint8>(((byte4 & 0x02) << 2) | ((byte3 & 0x02) << 1) | ((byte2 & 0x02) << 0) | ((byte1 & 0x02) >> 1));
-			pixel[7] = static_cast<Uint8>(((byte4 & 0x01) << 3) | ((byte3 & 0x01) << 2) | ((byte2 & 0x01) << 1) | ((byte1 & 0x01) << 0));
+			pixel[0] = static_cast<uint8_t>(((byte4 & 0x80) >> 4) | ((byte3 & 0x80) >> 5) | ((byte2 & 0x80) >> 6) | ((byte1 & 0x80) >> 7));
+			pixel[1] = static_cast<uint8_t>(((byte4 & 0x40) >> 3) | ((byte3 & 0x40) >> 4) | ((byte2 & 0x40) >> 5) | ((byte1 & 0x40) >> 6));
+			pixel[2] = static_cast<uint8_t>(((byte4 & 0x20) >> 2) | ((byte3 & 0x20) >> 3) | ((byte2 & 0x20) >> 4) | ((byte1 & 0x20) >> 5));
+			pixel[3] = static_cast<uint8_t>(((byte4 & 0x10) >> 1) | ((byte3 & 0x10) >> 2) | ((byte2 & 0x10) >> 3) | ((byte1 & 0x10) >> 4));
+			pixel[4] = static_cast<uint8_t>(((byte4 & 0x08) >> 0) | ((byte3 & 0x08) >> 1) | ((byte2 & 0x08) >> 2) | ((byte1 & 0x08) >> 3));
+			pixel[5] = static_cast<uint8_t>(((byte4 & 0x04) << 1) | ((byte3 & 0x04) << 0) | ((byte2 & 0x04) >> 1) | ((byte1 & 0x04) >> 2));
+			pixel[6] = static_cast<uint8_t>(((byte4 & 0x02) << 2) | ((byte3 & 0x02) << 1) | ((byte2 & 0x02) << 0) | ((byte1 & 0x02) >> 1));
+			pixel[7] = static_cast<uint8_t>(((byte4 & 0x01) << 3) | ((byte3 & 0x01) << 2) | ((byte2 & 0x01) << 1) | ((byte1 & 0x01) << 0));
 
 			for (int x = 0; x < 8; x++)
 			{
 				if ((pixel[x]) && ((x + xcoord) < LGP_OVERLAY_W))
 				{
-					*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + ((ycoord + y) * LGP_OVERLAY_W) + (xcoord + x)) = ((Uint8) pixel[x]);
+					*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + ((ycoord + y) * LGP_OVERLAY_W) + (xcoord + x)) = ((uint8_t) pixel[x]);
 				}
 			}
 		}
@@ -432,9 +432,9 @@ void lgp::recalc_palette()
 	//Convert palette rom into a useable palette
 	for (int i = 0; i < LGP_COLOR_COUNT; i++)
 	{
-		temp_color.r = static_cast<Uint8>((i * 23) % 256);
-		temp_color.g = static_cast<Uint8>((i * 100) % 256);
-		temp_color.b = static_cast<Uint8>((i * 34) % 256);
+		temp_color.r = static_cast<uint8_t>((i * 23) % 256);
+		temp_color.g = static_cast<uint8_t>((i * 100) % 256);
+		temp_color.b = static_cast<uint8_t>((i * 34) % 256);
 		palette_set_color(i, temp_color);
 	}
    palette_finalize();
@@ -443,7 +443,7 @@ void lgp::recalc_palette()
 }
 
 // this gets called when the user presses a key or moves the joystick
-void lgp::input_enable(Uint8 move)
+void lgp::input_enable(uint8_t move)
 {
 	switch (move)
 	{
@@ -477,7 +477,7 @@ void lgp::input_enable(Uint8 move)
 }  
 
 // this gets called when the user releases a key or moves the joystick back to center position
-void lgp::input_disable(Uint8 move)
+void lgp::input_disable(uint8_t move)
 {
 	switch (move)
 	{
@@ -510,17 +510,17 @@ void lgp::input_disable(Uint8 move)
 }
 
 // used to set dip switch values
-bool lgp::set_bank(Uint8 which_bank, Uint8 value)
+bool lgp::set_bank(uint8_t which_bank, uint8_t value)
 {
 	bool result = true;
 	
 	switch (which_bank)
 	{
 	case 0:	// bank A
-		banks[3] = (Uint8) (value ^ 0xFF);	// dip switches are active low
+		banks[3] = (uint8_t) (value ^ 0xFF);	// dip switches are active low
 		break;
 	case 1:	// bank B
-		banks[4] = (Uint8) (value ^ 0xFF);	// switches are active low
+		banks[4] = (uint8_t) (value ^ 0xFF);	// switches are active low
 		break;
 	default:
 		printline("ERROR: Bank specified is out of range!");

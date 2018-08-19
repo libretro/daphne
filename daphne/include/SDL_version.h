@@ -28,6 +28,7 @@
 #ifndef _SDL_version_h
 #define _SDL_version_h
 
+#include <stdint.h>
 #include "SDL_stdinc.h"
 
 #include "begin_code.h"
@@ -50,9 +51,9 @@ extern "C" {
  */
 typedef struct SDL_version
 {
-    Uint8 major;        /**< major version */
-    Uint8 minor;        /**< minor version */
-    Uint8 patch;        /**< update version */
+    uint8_t major;        /**< major version */
+    uint8_t minor;        /**< minor version */
+    uint8_t patch;        /**< update version */
 } SDL_version;
 
 /* Printable format: "%d.%d.%d", MAJOR, MINOR, PATCHLEVEL

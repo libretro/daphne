@@ -39,10 +39,10 @@ public:
 	void do_nmi();		// does an NMI tick
 	void do_irq(unsigned int);		// does an IRQ tick
 	void do_firq();		// does a FIRQ tick
-	Uint8 cpu_mem_read(uint16_t addr);			// memory read routine
-	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
-	void input_enable(Uint8);
-	void input_disable(Uint8);
+	uint8_t cpu_mem_read(uint16_t addr);			// memory read routine
+	void cpu_mem_write(uint16_t addr, uint8_t value);		// memory write routine
+	void input_enable(uint8_t);
+	void input_disable(uint8_t);
 	void OnVblank();
    unsigned get_libretro_button_map(unsigned id);
    const char *get_libretro_button_name(unsigned id);
@@ -56,9 +56,9 @@ protected:
 	void recalc_palette(void);
 	int current_bank;
 	void display_update();
-	Uint8 character[0x2000];		
-	Uint8 rombank[0x10000];
-	Uint8 banks[6];				// firefox's banks
+	uint8_t character[0x2000];		
+	uint8_t rombank[0x10000];
+	uint8_t banks[6];				// firefox's banks
 		// bank 0 is RDIN0
 		// bank 1 is RDIN1
 		// bank 2 is dip switch 1
@@ -67,7 +67,7 @@ protected:
 		// bank 5 is a/d channel 1
 
 	// buffer that holds byte to be sent to LDP (8-bits)
-	Uint8 m_u8DskLatch;
+	uint8_t m_u8DskLatch;
 
 	// true = FIRQ is enabled
 	bool m_bFIRQLatch;

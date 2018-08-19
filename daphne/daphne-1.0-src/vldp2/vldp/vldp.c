@@ -45,7 +45,7 @@ SDL_Thread *private_thread = NULL;
 
 int p_initialized = 0;	// whether VLDP has been initialized
 
-Uint8 g_req_cmdORcount = CMDORCOUNT_INITIAL;	// the current command parent thread requests of the child thread
+uint8_t g_req_cmdORcount = CMDORCOUNT_INITIAL;	// the current command parent thread requests of the child thread
 unsigned int g_ack_count = ACK_COUNT_INITIAL;	// the result returned by the internal child thread
 char g_req_file[STRSIZE];	// requested mpeg filename
 Uint32 g_req_timer = 0;	// requests timer value to be used for mpeg playback
@@ -68,7 +68,7 @@ int vldp_cmd(int cmd)
 {
 	int result = 0;
 	Uint32 cur_time = g_in_info->GetTicksFunc();
-	Uint8 tmp = g_req_cmdORcount;	// we want to replace the real value atomically so we use a tmp variable first
+	uint8_t tmp = g_req_cmdORcount;	// we want to replace the real value atomically so we use a tmp variable first
 	static unsigned int old_ack_count = ACK_COUNT_INITIAL;
 
 	tmp++;	// increment the counter so child thread knows we're issuing a new command

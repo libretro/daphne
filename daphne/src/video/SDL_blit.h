@@ -29,7 +29,7 @@
 #include "SDL_surface.h"
 
 /* Table to do pixel byte expansion */
-extern Uint8* SDL_expand_byte[9];
+extern uint8_t* SDL_expand_byte[9];
 
 /* SDL blit copy flags */
 #define SDL_COPY_MODULATE_COLOR     0x00000001
@@ -54,20 +54,20 @@ extern Uint8* SDL_expand_byte[9];
 
 typedef struct
 {
-    Uint8 *src;
+    uint8_t *src;
     int src_w, src_h;
     int src_pitch;
     int src_skip;
-    Uint8 *dst;
+    uint8_t *dst;
     int dst_w, dst_h;
     int dst_pitch;
     int dst_skip;
     SDL_PixelFormat *src_fmt;
     SDL_PixelFormat *dst_fmt;
-    Uint8 *table;
+    uint8_t *table;
     int flags;
     Uint32 colorkey;
-    Uint8 r, g, b, a;
+    uint8_t r, g, b, a;
 } SDL_BlitInfo;
 
 typedef void (SDLCALL * SDL_BlitFunc) (SDL_BlitInfo * info);
@@ -146,7 +146,7 @@ extern SDL_BlitFunc SDL_CalculateBlitA(SDL_Surface * surface);
 do {                                                                    \
     switch (bpp) {                                                      \
         case 1:                                                         \
-            Pixel = *((Uint8 *)(buf));                                  \
+            Pixel = *((uint8_t *)(buf));                                  \
         break;                                                          \
                                                                         \
         case 2:                                                         \
@@ -154,7 +154,7 @@ do {                                                                    \
         break;                                                          \
                                                                         \
         case 3: {                                                       \
-            Uint8 *B = (Uint8 *)(buf);                                  \
+            uint8_t *B = (uint8_t *)(buf);                                  \
             if (SDL_BYTEORDER == SDL_LIL_ENDIAN) {                      \
                 Pixel = B[0] + (B[1] << 8) + (B[2] << 16);              \
             } else {                                                    \
@@ -177,7 +177,7 @@ do {                                                                    \
 do {                                                                    \
     switch (bpp) {                                                      \
         case 1:                                                         \
-            Pixel = *((Uint8 *)(buf));                                  \
+            Pixel = *((uint8_t *)(buf));                                  \
             RGB_FROM_PIXEL(Pixel, fmt, r, g, b);                        \
         break;                                                          \
                                                                         \
@@ -261,10 +261,10 @@ do {                                                                    \
 {                                                                       \
     switch (bpp) {                                                      \
         case 1: {                                                       \
-            Uint8 Pixel;                                                \
+            uint8_t Pixel;                                                \
                                                                         \
             PIXEL_FROM_RGB(Pixel, fmt, r, g, b);                        \
-            *((Uint8 *)(buf)) = Pixel;                                  \
+            *((uint8_t *)(buf)) = Pixel;                                  \
         }                                                               \
         break;                                                          \
                                                                         \
@@ -353,7 +353,7 @@ do {                                                                    \
 do {                                                                    \
     switch (bpp) {                                                      \
         case 1:                                                         \
-            Pixel = *((Uint8 *)(buf));                                  \
+            Pixel = *((uint8_t *)(buf));                                  \
             RGBA_FROM_PIXEL(Pixel, fmt, r, g, b, a);                    \
         break;                                                          \
                                                                         \
@@ -402,10 +402,10 @@ do {                                                                    \
 {                                                                       \
     switch (bpp) {                                                      \
         case 1: {                                                       \
-            Uint8 _pixel;                                               \
+            uint8_t _pixel;                                               \
                                                                         \
             PIXEL_FROM_RGBA(_pixel, fmt, r, g, b, a);                   \
-            *((Uint8 *)(buf)) = _pixel;                                 \
+            *((uint8_t *)(buf)) = _pixel;                                 \
         }                                                               \
         break;                                                          \
                                                                         \

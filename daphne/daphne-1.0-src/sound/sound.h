@@ -68,7 +68,7 @@ struct sample_s
 	unsigned int uLength;
 
 	// the sample's buffer
-	Uint8 *pu8Buf;
+	uint8_t *pu8Buf;
 };
 
 // macro to do 16-bit clipping
@@ -78,10 +78,10 @@ struct sounddef
 {
 	// *** THIS SECTION IS DEFINED INTERNALLY
 	// IMPORTANT: buffer and next_soundchip MUST come first, because they must match
-	Uint8* buffer; // pointer to buffer used by this sound chip
+	uint8_t* buffer; // pointer to buffer used by this sound chip
 	struct sounddef *next_soundchip;	// pointer to the next sound chip in this linked list
 
-	Uint8* buffer_pointer; // pointer to where we are in the buffer
+	uint8_t* buffer_pointer; // pointer to where we are in the buffer
 	Uint32 bytes_left; // number of bytes left in buffer
 	unsigned int id;	// used so game drivers can call audio_writedata (if there are multiple sound chips being used)
 	int internal_id;	// internal ID that the sound chips returns when init_callback is called
@@ -101,15 +101,15 @@ struct sounddef
 	// On success a number >= 0 will be returned. If there is an error, -1 will be returned.
 	int (*init_callback)(Uint32 freq_hz);
 	void (*shutdown_callback)(int internal_id);	// callback to shutdown the sound chip
-	void (*writedata_callback)(Uint8 data, int internal_id);	// callback to write data to the sound chip
+	void (*writedata_callback)(uint8_t data, int internal_id);	// callback to write data to the sound chip
 
 	// optional callback for those sound chips that take a 'ctrl' byte to write 'data' to,
 	//  such as the PC beeper which writes data to specific ports.  It's up to the game driver
 	//  to decide whether to use this callback or not.
-	// NOTE : the arguments are unsigned int's for speed, but they usually will probably be Uint8's
+	// NOTE : the arguments are unsigned int's for speed, but they usually will probably be uint8_t's
 	void (*write_ctrl_data_callback)(unsigned int uCtrl, unsigned int uData, int internal_id);
 
-	void (*stream_callback)(Uint8* stream, int length, int internal_id); // callback to write stream to buffer
+	void (*stream_callback)(uint8_t* stream, int length, int internal_id); // callback to write stream to buffer
 
 	// *** THIS SECTION IS DEFINED WHEN SOUND CHIP IS ADDED
 	int type;	// type of sound chip (See enum's)
@@ -134,28 +134,28 @@ void init_soundchip(); // inits all the sound chips
 
 // Mixing callback
 // USED WHEN : all audio is muted
-void mixMute(Uint8 *stream, int length);
+void mixMute(uint8_t *stream, int length);
 
 // Mixing callback
 // USED WHEN: there is only 1 sound chip, then there is no need to do any mixing
 // (fastest)
-void mixNone(Uint8 *stream, int length);
+void mixNone(uint8_t *stream, int length);
 
 // Mixing callback
 // USED WHEN: there are more than 1 sound chip, but all volumes are maximum
 // (pretty fast)
-void mixWithMaxVolume(Uint8 *stream, int length);
+void mixWithMaxVolume(uint8_t *stream, int length);
 
 // Mixing callback
 // USED WHEN: there are more than 1 sound chip, and volumes are variable
 // (this is the slowest callback, only use it if you must)
-void mixWithMults(Uint8 *stream, int length);
+void mixWithMults(uint8_t *stream, int length);
 
-void audio_callback ( void *, Uint8 *, int); // audio callback for SDLMixer
-void audio_writedata(Uint8, Uint8);
+void audio_callback ( void *, uint8_t *, int); // audio callback for SDLMixer
+void audio_writedata(uint8_t, uint8_t);
 
 // for game driver to send commands to sound chip
-void audio_write_ctrl_data(unsigned int uCtrl, unsigned int uData, Uint8 id);
+void audio_write_ctrl_data(unsigned int uCtrl, unsigned int uData, uint8_t id);
 
 // Used to set the volume of an audio stream. Valid volume values are 0 to AUDIO_MAX_VOLUME.
 // 'id' is the id returned by add_soundchip()
@@ -164,7 +164,7 @@ void audio_write_ctrl_data(unsigned int uCtrl, unsigned int uData, Uint8 id);
 //  performance penalty and should be avoided if there is little benefit to adjusting
 //  the volume.
 // If there is an error, the logfile will be notified and the quitflag may be set :)
-void set_soundchip_volume(Uint8 id, unsigned int uChannel, unsigned int uVolume);
+void set_soundchip_volume(uint8_t id, unsigned int uChannel, unsigned int uVolume);
 
 // helper function for the other set_soundchip_volume
 void set_soundchip_volume(struct sounddef *cur, unsigned int uChannel, unsigned int uVolume);

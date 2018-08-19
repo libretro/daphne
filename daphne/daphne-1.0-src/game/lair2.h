@@ -67,11 +67,11 @@ public:
 	lair2();
 	bool init();
 	void do_irq(unsigned int);
-	void cpu_mem_write(Uint32 addr, Uint8 value);
-	Uint8 port_read(uint16_t);
-	void port_write(uint16_t, Uint8);
-	void input_enable(Uint8);
-	void input_disable(Uint8);
+	void cpu_mem_write(Uint32 addr, uint8_t value);
+	uint8_t port_read(uint16_t);
+	void port_write(uint16_t, uint8_t);
+	void input_enable(uint8_t);
+	void input_disable(uint8_t);
 	bool set_bank(unsigned char, unsigned char);
 	void set_version(int);
 	bool handle_cmdline_arg(const char *arg);
@@ -80,11 +80,11 @@ public:
 	void video_repaint();
    unsigned get_libretro_button_map(unsigned id);
    const char *get_libretro_button_name(unsigned id);
-	void EEPROM_9536_write(Uint8 value);
+	void EEPROM_9536_write(uint8_t value);
 
 protected:
-	Uint8 ldp_status;					// read val from LDP1000
-    Uint8 banks[2];
+	uint8_t ldp_status;					// read val from LDP1000
+    uint8_t banks[2];
 	uint16_t EEPROM_9536[0x80];
 
 private:
@@ -104,7 +104,7 @@ private:
 	int m_soundchip_id;
 
 	// used only to prevent errors
-	Uint8 m_port61_val;
+	uint8_t m_port61_val;
 
 	// holds a record of how many coins are queued up
 	unsigned int m_uCoinCount[NUM_COIN_SLOTS];

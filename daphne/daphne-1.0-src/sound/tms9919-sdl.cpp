@@ -26,6 +26,7 @@
 //
 //----------------------------------------------------------------------------
 
+#include <stdint.h>
 #include <memory.h>
 //#include "common.hpp"
 //#include "logger.hpp"
@@ -92,8 +93,8 @@ cSdlTMS9919::cSdlTMS9919 () :
     } else {
 //        TRACE ( "Using " << m_AudioSpec.format << "-bit " << m_AudioSpec.freq << "Hz Audio" );*/
         m_Initialized = true;
-        m_MixBuffer = new Uint8 [ m_AudioSpec.samples ];
-        memset ( m_MixBuffer, 0, sizeof ( Uint8 ) * m_AudioSpec.samples );
+        m_MixBuffer = new uint8_t [ m_AudioSpec.samples ];
+        memset ( m_MixBuffer, 0, sizeof ( uint8_t ) * m_AudioSpec.samples );
 //        SDL_PauseAudio ( false );
    // }
     
@@ -118,14 +119,14 @@ cSdlTMS9919::~cSdlTMS9919 ()
     delete [] m_MixBuffer;
 }
 
-void cSdlTMS9919::_AudioCallback ( void *data, Uint8 *stream, int length )
+void cSdlTMS9919::_AudioCallback ( void *data, uint8_t *stream, int length )
 {
 //    FUNCTION_ENTRY ( data, "cSdlTMS9919::_AudioCallback", false );
 
     (( cSdlTMS9919 * ) data)->AudioCallback ( stream, length );
 }
 
-void cSdlTMS9919::AudioCallback ( Uint8 *stream, int length )
+void cSdlTMS9919::AudioCallback ( uint8_t *stream, int length )
 {
 //    FUNCTION_ENTRY ( this, "cSdlTMS9919::AudioCallback", false );
 

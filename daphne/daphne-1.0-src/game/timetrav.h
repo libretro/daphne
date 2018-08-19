@@ -35,12 +35,12 @@ class timetrav : public game
 public:
 	timetrav();
 	void do_nmi();
-	Uint8 cpu_mem_read(Uint32 addr);
-	void cpu_mem_write(Uint32 addr, Uint8 value);
-	Uint8 port_read(uint16_t);
-	void port_write(uint16_t, Uint8);
-	void input_enable(Uint8);
-	void input_disable(Uint8);
+	uint8_t cpu_mem_read(Uint32 addr);
+	void cpu_mem_write(Uint32 addr, uint8_t value);
+	uint8_t port_read(uint16_t);
+	void port_write(uint16_t, uint8_t);
+	void input_enable(uint8_t);
+	void input_disable(uint8_t);
 	bool set_bank(unsigned char, unsigned char);
 	void palette_calculate();
    unsigned get_libretro_button_map(unsigned id);

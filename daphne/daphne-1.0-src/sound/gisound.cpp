@@ -169,14 +169,14 @@ void gisound_writedata(Uint32 address, Uint32 data, int index)
 		old_tone_c = g_gi_chips[index]->tone_a;
 
 		// ENABLE is active low
-		g_gi_chips[index]->iob_in  = (Uint8)(~(data >> 7)) & 0x01;
-		g_gi_chips[index]->ioa_in  = (Uint8)(~(data >> 6)) & 0x01;
-		g_gi_chips[index]->noise_c = (Uint8)(~(data >> 5)) & 0x01;
-		g_gi_chips[index]->noise_b = (Uint8)(~(data >> 4)) & 0x01;
-		g_gi_chips[index]->noise_a = (Uint8)(~(data >> 3)) & 0x01;
-		g_gi_chips[index]->tone_c  = (Uint8)(~(data >> TONE_C_ENABLE)) & 0x01;
-		g_gi_chips[index]->tone_b  = (Uint8)(~(data >> TONE_B_ENABLE)) & 0x01;
-		g_gi_chips[index]->tone_a  = (Uint8)(~(data >> TONE_A_ENABLE)) & 0x01;
+		g_gi_chips[index]->iob_in  = (uint8_t)(~(data >> 7)) & 0x01;
+		g_gi_chips[index]->ioa_in  = (uint8_t)(~(data >> 6)) & 0x01;
+		g_gi_chips[index]->noise_c = (uint8_t)(~(data >> 5)) & 0x01;
+		g_gi_chips[index]->noise_b = (uint8_t)(~(data >> 4)) & 0x01;
+		g_gi_chips[index]->noise_a = (uint8_t)(~(data >> 3)) & 0x01;
+		g_gi_chips[index]->tone_c  = (uint8_t)(~(data >> TONE_C_ENABLE)) & 0x01;
+		g_gi_chips[index]->tone_b  = (uint8_t)(~(data >> TONE_B_ENABLE)) & 0x01;
+		g_gi_chips[index]->tone_a  = (uint8_t)(~(data >> TONE_A_ENABLE)) & 0x01;
 		
 		// if these were just enabled reset the counters
 		if (g_gi_chips[index]->tone_a && !old_tone_a)
@@ -258,7 +258,7 @@ void gisound_writedata(Uint32 address, Uint32 data, int index)
    }
 }
 
-void gisound_stream(Uint8* stream, int length, int index)
+void gisound_stream(uint8_t* stream, int length, int index)
 {
 	for (int pos = 0; pos < length; pos += 4)
 	{

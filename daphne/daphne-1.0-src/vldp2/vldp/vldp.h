@@ -33,15 +33,13 @@ extern "C" {
 #include <stdint.h>
 #include <SDL.h>	// only used for threading
 
-// RJS START - hack so I don't have to change an entire routine
 struct SDL1_Overlay
 {
 	int	h;
 	int	w;
 	uint16_t	pitches;
-	Uint8	*pixels;
+	uint8_t	*pixels;
 };
-// RJS END
 
 struct yuv_buf
 {
@@ -173,7 +171,7 @@ struct vldp_out_info
 	// State information for the parent thread's benefit
 	unsigned int uFpks;	// FPKS = frames per kilosecond (FPS = uFpks / 1000.0)
 	unsigned int u2milDivFpks; // (2000000) / uFpks (pre-calculated, used to determine whether to drop frames)
-	Uint8 uses_fields;	// whether the video uses fields or not
+	uint8_t uses_fields;	// whether the video uses fields or not
 	Uint32 w;	// width of the mpeg video
 	Uint32 h;	// height of the mpeg video
 	int status;	// the current status of the VLDP (see STAT_ enum's)

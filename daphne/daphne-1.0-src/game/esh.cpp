@@ -32,9 +32,6 @@
 
 #ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
-#endif
-
-#ifdef _WIN32
 // disable "unreferenced inline function has been removed" warning
 #pragma warning( disable: 4514 )
 #endif
@@ -277,7 +274,7 @@ void esh::do_nmi()
 	Z80_ASSERT_NMI;
 }
 
-void esh::cpu_mem_write(uint16_t addr, Uint8 value)
+void esh::cpu_mem_write(uint16_t addr, uint8_t value)
 {
 	// if program writes to video memory
 //	if (addr > 0xf000 && addr <= 0xf7ff && value!=m_cpumem[addr])  //doesn't seem to be necessary 
@@ -289,10 +286,10 @@ void esh::cpu_mem_write(uint16_t addr, Uint8 value)
 	m_cpumem[addr] = value;	
 }
 
-Uint8 esh::port_read(uint16_t port)
+uint8_t esh::port_read(uint16_t port)
 {
 	char s[81];
-	Uint8 result = 0;
+	uint8_t result = 0;
 
 	switch (port & 0xFF)
 	{
@@ -322,12 +319,12 @@ Uint8 esh::port_read(uint16_t port)
 	return result;
 }
 
-void esh::port_write(uint16_t port, Uint8 value)
+void esh::port_write(uint16_t port, uint8_t value)
 {
 	char s[81];
 	static unsigned int lastbeep = 0;
 
-//	static Uint8 lastmode=1;  //invalid default to guarantee screen updates start right away
+//	static uint8_t lastmode=1;  //invalid default to guarantee screen updates start right away
 		
 	switch (port & 0xFF)
 	{
@@ -393,31 +390,31 @@ void esh::palette_calculate()
 	//Convert palette rom into a useable palette
 	for (int i = 0; i < ESH_COLOR_COUNT; i++)
 	{
-		Uint8 bit0,bit1,bit2;	
+		uint8_t bit0,bit1,bit2;	
 
 		/* red component */
-		bit0 = static_cast<Uint8>((color_prom[i+256] >> 0) & 0x01);
-		bit1 = static_cast<Uint8>((color_prom[i+256] >> 1) & 0x01);
-		bit2 = static_cast<Uint8>((color_prom[i+256] >> 2) & 0x01);
-		temp_color.r = static_cast<Uint8>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
+		bit0 = static_cast<uint8_t>((color_prom[i+256] >> 0) & 0x01);
+		bit1 = static_cast<uint8_t>((color_prom[i+256] >> 1) & 0x01);
+		bit2 = static_cast<uint8_t>((color_prom[i+256] >> 2) & 0x01);
+		temp_color.r = static_cast<uint8_t>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
 			
 		/* green component */
-		bit0 = static_cast<Uint8>(0);
-		bit1 = static_cast<Uint8>((color_prom[i+256] >> 3) & 0x01);
-		bit2 = static_cast<Uint8>((color_prom[i+256] >> 4) & 0x01);
-		temp_color.g = static_cast<Uint8>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
+		bit0 = static_cast<uint8_t>(0);
+		bit1 = static_cast<uint8_t>((color_prom[i+256] >> 3) & 0x01);
+		bit2 = static_cast<uint8_t>((color_prom[i+256] >> 4) & 0x01);
+		temp_color.g = static_cast<uint8_t>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
 				
 		/* blue component */
-		bit0 = static_cast<Uint8>(0);
-		bit1 = static_cast<Uint8>((color_prom[i+256] >> 5) & 0x01);
-		bit2 = static_cast<Uint8>((color_prom[i+256] >> 6) & 0x01);
-		temp_color.b = static_cast<Uint8>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
+		bit0 = static_cast<uint8_t>(0);
+		bit1 = static_cast<uint8_t>((color_prom[i+256] >> 5) & 0x01);
+		bit2 = static_cast<uint8_t>((color_prom[i+256] >> 6) & 0x01);
+		temp_color.b = static_cast<uint8_t>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
 			
 		//apply gamma correction to make colors brighter overall
 		//  Corrected value = 255 * (uncorrected value / 255) ^ (1.0 / gamma)
-		temp_color.r = (Uint8) (255 * pow((static_cast<double>(temp_color.r)) / 255, 1/ESH_GAMMA));
-		temp_color.g = (Uint8) (255 * pow((static_cast<double>(temp_color.g)) / 255, 1/ESH_GAMMA));
-		temp_color.b = (Uint8) (255 * pow((static_cast<double>(temp_color.b)) / 255, 1/ESH_GAMMA));
+		temp_color.r = (uint8_t) (255 * pow((static_cast<double>(temp_color.r)) / 255, 1/ESH_GAMMA));
+		temp_color.g = (uint8_t) (255 * pow((static_cast<double>(temp_color.g)) / 255, 1/ESH_GAMMA));
+		temp_color.b = (uint8_t) (255 * pow((static_cast<double>(temp_color.b)) / 255, 1/ESH_GAMMA));
 
 		palette_set_color(i, temp_color);
 		
@@ -453,7 +450,7 @@ void esh::video_repaint()
 				// bit 6	blink every other line
 				// bit 7	blink the whole character
 					
-				Uint8 pixel[8]; 
+				uint8_t pixel[8]; 
 					
 				int palette = (m_cpumem[(chary << 5) + charx + 0xf400] & 0x0f);
 				int tile_set = ((m_cpumem[(chary << 5) + charx + 0xf400] >> 0x04) & 0x01);
@@ -475,14 +472,14 @@ void esh::video_repaint()
 				{
 					int current_char = (m_cpumem[(chary << 5) + charx + 0xf000] | (0x100 * tile_set));
 						
-					pixel[0] = static_cast<Uint8>(((character[(current_char)*8+y] & 0x80) >> 7) | ((character[(current_char)*8+y+0x1000] & 0x80) >> 6) | ((character[(current_char)*8+y+0x2000] & 0x80) >> 5));
-					pixel[1] = static_cast<Uint8>(((character[(current_char)*8+y] & 0x40) >> 6) | ((character[(current_char)*8+y+0x1000] & 0x40) >> 5) | ((character[(current_char)*8+y+0x2000] & 0x40) >> 4));
-					pixel[2] = static_cast<Uint8>(((character[(current_char)*8+y] & 0x20) >> 5) | ((character[(current_char)*8+y+0x1000] & 0x20) >> 4) | ((character[(current_char)*8+y+0x2000] & 0x20) >> 3));
-					pixel[3] = static_cast<Uint8>(((character[(current_char)*8+y] & 0x10) >> 4) | ((character[(current_char)*8+y+0x1000] & 0x10) >> 3) | ((character[(current_char)*8+y+0x2000] & 0x10) >> 2));
-					pixel[4] = static_cast<Uint8>(((character[(current_char)*8+y] & 0x08) >> 3) | ((character[(current_char)*8+y+0x1000] & 0x08) >> 2) | ((character[(current_char)*8+y+0x2000] & 0x08) >> 1));
-					pixel[5] = static_cast<Uint8>(((character[(current_char)*8+y] & 0x04) >> 2) | ((character[(current_char)*8+y+0x1000] & 0x04) >> 1) | ((character[(current_char)*8+y+0x2000] & 0x04) >> 0));
-					pixel[6] = static_cast<Uint8>(((character[(current_char)*8+y] & 0x02) >> 1) | ((character[(current_char)*8+y+0x1000] & 0x02) >> 0) | ((character[(current_char)*8+y+0x2000] & 0x02) << 1));
-					pixel[7] = static_cast<Uint8>(((character[(current_char)*8+y] & 0x01) >> 0) | ((character[(current_char)*8+y+0x1000] & 0x01) << 1) | ((character[(current_char)*8+y+0x2000] & 0x01) << 2));
+					pixel[0] = static_cast<uint8_t>(((character[(current_char)*8+y] & 0x80) >> 7) | ((character[(current_char)*8+y+0x1000] & 0x80) >> 6) | ((character[(current_char)*8+y+0x2000] & 0x80) >> 5));
+					pixel[1] = static_cast<uint8_t>(((character[(current_char)*8+y] & 0x40) >> 6) | ((character[(current_char)*8+y+0x1000] & 0x40) >> 5) | ((character[(current_char)*8+y+0x2000] & 0x40) >> 4));
+					pixel[2] = static_cast<uint8_t>(((character[(current_char)*8+y] & 0x20) >> 5) | ((character[(current_char)*8+y+0x1000] & 0x20) >> 4) | ((character[(current_char)*8+y+0x2000] & 0x20) >> 3));
+					pixel[3] = static_cast<uint8_t>(((character[(current_char)*8+y] & 0x10) >> 4) | ((character[(current_char)*8+y+0x1000] & 0x10) >> 3) | ((character[(current_char)*8+y+0x2000] & 0x10) >> 2));
+					pixel[4] = static_cast<uint8_t>(((character[(current_char)*8+y] & 0x08) >> 3) | ((character[(current_char)*8+y+0x1000] & 0x08) >> 2) | ((character[(current_char)*8+y+0x2000] & 0x08) >> 1));
+					pixel[5] = static_cast<uint8_t>(((character[(current_char)*8+y] & 0x04) >> 2) | ((character[(current_char)*8+y+0x1000] & 0x04) >> 1) | ((character[(current_char)*8+y+0x2000] & 0x04) >> 0));
+					pixel[6] = static_cast<uint8_t>(((character[(current_char)*8+y] & 0x02) >> 1) | ((character[(current_char)*8+y+0x1000] & 0x02) >> 0) | ((character[(current_char)*8+y+0x2000] & 0x02) << 1));
+					pixel[7] = static_cast<uint8_t>(((character[(current_char)*8+y] & 0x01) >> 0) | ((character[(current_char)*8+y+0x1000] & 0x01) << 1) | ((character[(current_char)*8+y+0x2000] & 0x01) << 2));
 				}
 				else
 				{
@@ -491,7 +488,7 @@ void esh::video_repaint()
 					
 				for (int x = 0; x < 8; x++)
 				{
-					*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary << 3) + y) * ESH_OVERLAY_W) + ((charx << 3) + x)) = static_cast<Uint8>(pixel[x] | (palette << 3) | (palette_high_bit << 7));
+					*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary << 3) + y) * ESH_OVERLAY_W) + ((charx << 3) + x)) = static_cast<uint8_t>(pixel[x] | (palette << 3) | (palette_high_bit << 7));
 				}
 			}
 		}
@@ -502,7 +499,7 @@ void esh::video_repaint()
 //		{
 //			for (int y = 0; y < 512; y++)
 //			{
-//				*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + y * ESH_OVERLAY_W + x) = (x>>4) + ((y & 0xfff0)>>1);
+//				*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + y * ESH_OVERLAY_W + x) = (x>>4) + ((y & 0xfff0)>>1);
 //			}
 //		}
 }
@@ -521,7 +518,7 @@ void esh::patch_roms()
 }
 
 // this gets called when the user presses a key or moves the joystick
-void esh::input_enable(Uint8 move)
+void esh::input_enable(uint8_t move)
 {
 	switch (move)
 	{
@@ -563,7 +560,7 @@ void esh::input_enable(Uint8 move)
 }  
 
 // this gets called when the user releases a key or moves the joystick back to center position
-void esh::input_disable(Uint8 move)
+void esh::input_disable(uint8_t move)
 {
 	switch (move)
 	{

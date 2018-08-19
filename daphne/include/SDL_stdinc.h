@@ -102,10 +102,10 @@
 
 /* Define a four character code as a Uint32 */
 #define SDL_FOURCC(A, B, C, D) \
-    ((SDL_static_cast(Uint32, SDL_static_cast(Uint8, (A))) << 0) | \
-     (SDL_static_cast(Uint32, SDL_static_cast(Uint8, (B))) << 8) | \
-     (SDL_static_cast(Uint32, SDL_static_cast(Uint8, (C))) << 16) | \
-     (SDL_static_cast(Uint32, SDL_static_cast(Uint8, (D))) << 24))
+    ((SDL_static_cast(Uint32, SDL_static_cast(uint8_t, (A))) << 0) | \
+     (SDL_static_cast(Uint32, SDL_static_cast(uint8_t, (B))) << 8) | \
+     (SDL_static_cast(Uint32, SDL_static_cast(uint8_t, (C))) << 16) | \
+     (SDL_static_cast(Uint32, SDL_static_cast(uint8_t, (D))) << 24))
 
 /**
  *  \name Basic data types
@@ -121,7 +121,7 @@ typedef enum
 /**
  * \brief An unsigned 8-bit integer type.
  */
-typedef uint8_t Uint8;
+typedef uint8_t uint8_t;
 /**
  * \brief An unsigned 32-bit integer type.
  */
@@ -223,12 +223,6 @@ typedef uint32_t Uint32;
 
 #define SDL_COMPILE_TIME_ASSERT(name, x)               \
        typedef int SDL_dummy_ ## name[(x) * 2 - 1]
-/** \cond */
-#ifndef DOXYGEN_SHOULD_IGNORE_THIS
-SDL_COMPILE_TIME_ASSERT(uint8, sizeof(Uint8) == 1);
-SDL_COMPILE_TIME_ASSERT(uint32, sizeof(Uint32) == 4);
-#endif /* DOXYGEN_SHOULD_IGNORE_THIS */
-/** \endcond */
 
 /* Check to make sure enums are the size of ints, for structure packing.
    For both Watcom C/C++ and Borland C/C++ the compiler option that makes

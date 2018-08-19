@@ -91,12 +91,12 @@ public:
 	void do_irq(unsigned int);		// does an IRQ tick
 	void do_nmi();		// does an NMI tick
 #ifdef DEBUG
-	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
+	void cpu_mem_write(uint16_t addr, uint8_t value);		// memory write routine
 #endif
-	Uint8 port_read(uint16_t port);		// read from port
-	void port_write(uint16_t port, Uint8 value);		// write to a port
-	void input_enable(Uint8);
-	void input_disable(Uint8);
+	uint8_t port_read(uint16_t port);		// read from port
+	void port_write(uint16_t port, uint8_t value);		// write to a port
+	void input_enable(uint8_t);
+	void input_disable(uint8_t);
 	bool set_bank(unsigned char, unsigned char);
 	void palette_calculate();
 	void video_repaint();	// function to repaint video
@@ -107,7 +107,7 @@ public:
 protected:
 	char m_frame_str[FRAME_ARRAY_SIZE];	// current frame of laserdisc in string form
 	uint16_t m_frame_val;	// current frame of the laserdisc in numerical form (0 means busy/stopped)
-	Uint8 m_banks[CLIFF_BANK_COUNT];
+	uint8_t m_banks[CLIFF_BANK_COUNT];
 
 private:
 	void cliff_do_blip();
@@ -141,7 +141,7 @@ class gtg : public cliff
 public:
 	gtg();
 	//bool load_roms();
-	Uint8 cpu_mem_read(uint16_t addr); //has memory hack for disc side detection
+	uint8_t cpu_mem_read(uint16_t addr); //has memory hack for disc side detection
 	void set_preset(int val);  //gets disc side from command line
 	void reset();
 

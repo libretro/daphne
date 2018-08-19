@@ -209,9 +209,9 @@ void interstellar::do_nmi()
 }
 
 // reads a byte from the cpu's memory
-Uint8 interstellar::cpu_mem_read(uint16_t addr)
+uint8_t interstellar::cpu_mem_read(uint16_t addr)
 {
-	Uint8 result = 0x00;
+	uint8_t result = 0x00;
 	char s[81] = { 0 };
 
 	switch (cpu_getactivecpu())
@@ -278,7 +278,7 @@ Uint8 interstellar::cpu_mem_read(uint16_t addr)
 }
 
 // writes a byte to the cpu's memory
-void interstellar::cpu_mem_write(uint16_t addr, Uint8 value)
+void interstellar::cpu_mem_write(uint16_t addr, uint8_t value)
 {
 	char s[81] = { 0 };	
 	
@@ -350,11 +350,11 @@ void interstellar::cpu_mem_write(uint16_t addr, Uint8 value)
 }
 
 // reads a byte from the cpu's port
-Uint8 interstellar::port_read(uint16_t port)
+uint8_t interstellar::port_read(uint16_t port)
 {
 	char s[81] = { 0 };
-	Uint8 result = 0x00;
-	static Uint8 old1, old2, oldldp;
+	uint8_t result = 0x00;
+	static uint8_t old1, old2, oldldp;
 
 	port &= 0xFF;	// strip off high byte
 
@@ -445,12 +445,12 @@ Uint8 interstellar::port_read(uint16_t port)
 }
 
 // writes a byte to the cpu's port
-void interstellar::port_write(uint16_t port, Uint8 value)
+void interstellar::port_write(uint16_t port, uint8_t value)
 {
 	char s[81] = { 0 };
 
 	port &= 0xFF;
-	static Uint8 old1, old2, oldldp;
+	static uint8_t old1, old2, oldldp;
 	switch (cpu_getactivecpu())
 	{
 	case 0:		
@@ -478,31 +478,31 @@ void interstellar::port_write(uint16_t port, Uint8 value)
 			//Convert palette rom into a useable palette
 			{
 				SDL_Color temp_color = { 0 };
-				Uint8 bit0,bit1,bit2;	
+				uint8_t bit0,bit1,bit2;	
 
 				/* red component */
-				bit0 = static_cast<Uint8>((value >> 0) & 0x01);
-				bit1 = static_cast<Uint8>((value >> 1) & 0x01);
-				bit2 = static_cast<Uint8>((value >> 2) & 0x01);
-				temp_color.r = static_cast<Uint8>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
+				bit0 = static_cast<uint8_t>((value >> 0) & 0x01);
+				bit1 = static_cast<uint8_t>((value >> 1) & 0x01);
+				bit2 = static_cast<uint8_t>((value >> 2) & 0x01);
+				temp_color.r = static_cast<uint8_t>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
 			
 				/* green component */
-				bit0 = static_cast<Uint8>((value >> 3) & 0x01);
-				bit1 = static_cast<Uint8>((value >> 4) & 0x01);
-				bit2 = static_cast<Uint8>((value >> 5) & 0x01);
-				temp_color.g = static_cast<Uint8>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
+				bit0 = static_cast<uint8_t>((value >> 3) & 0x01);
+				bit1 = static_cast<uint8_t>((value >> 4) & 0x01);
+				bit2 = static_cast<uint8_t>((value >> 5) & 0x01);
+				temp_color.g = static_cast<uint8_t>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
 				
 				/* blue component */
-				bit0 = static_cast<Uint8>(0);
-				bit1 = static_cast<Uint8>((value >> 6) & 0x01);
-				bit2 = static_cast<Uint8>((value >> 7) & 0x01);
-				temp_color.b = static_cast<Uint8>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
+				bit0 = static_cast<uint8_t>(0);
+				bit1 = static_cast<uint8_t>((value >> 6) & 0x01);
+				bit2 = static_cast<uint8_t>((value >> 7) & 0x01);
+				temp_color.b = static_cast<uint8_t>((0x21 * bit0) + (0x47 * bit1) + (0x97 * bit2));
 			
 				//apply gamma correction to make colors brighter overall
 				//  Corrected value = 255 * (uncorrected value / 255) ^ (1.0 / gamma)
-//				temp_color.r = (Uint8) (255 * pow((static_cast<double>(temp_color.r)) / 255, 1/ESH_GAMMA));
-//				temp_color.g = (Uint8) (255 * pow((static_cast<double>(temp_color.g)) / 255, 1/ESH_GAMMA));
-//				temp_color.b = (Uint8) (255 * pow((static_cast<double>(temp_color.b)) / 255, 1/ESH_GAMMA));
+//				temp_color.r = (uint8_t) (255 * pow((static_cast<double>(temp_color.r)) / 255, 1/ESH_GAMMA));
+//				temp_color.g = (uint8_t) (255 * pow((static_cast<double>(temp_color.g)) / 255, 1/ESH_GAMMA));
+//				temp_color.b = (uint8_t) (255 * pow((static_cast<double>(temp_color.b)) / 255, 1/ESH_GAMMA));
 
 				palette_set_color(0, temp_color);
 				m_background_color = temp_color;
@@ -597,29 +597,29 @@ void interstellar::palette_calculate()
 	//Convert palette rom into a useable palette
 	for (int i = 0; i < INTERSTELLAR_COLOR_COUNT; i++)
 	{
-		Uint8 bit0,bit1,bit2,bit3;	
+		uint8_t bit0,bit1,bit2,bit3;	
 
 		// TODO: get the real interstellar resistor values
 		/* red component */
-		bit0 = static_cast<Uint8>((color_prom[i+0x000] >> 3) & 0x01);
-		bit1 = static_cast<Uint8>((color_prom[i+0x000] >> 2) & 0x01);
-		bit2 = static_cast<Uint8>((color_prom[i+0x000] >> 1) & 0x01);
-		bit3 = static_cast<Uint8>((color_prom[i+0x000] >> 0) & 0x01);
-		temp_color.r = static_cast<Uint8>((0x8f * bit0) + (0x43 * bit1) + (0x1f * bit2) + (0x0e * bit3));
+		bit0 = static_cast<uint8_t>((color_prom[i+0x000] >> 3) & 0x01);
+		bit1 = static_cast<uint8_t>((color_prom[i+0x000] >> 2) & 0x01);
+		bit2 = static_cast<uint8_t>((color_prom[i+0x000] >> 1) & 0x01);
+		bit3 = static_cast<uint8_t>((color_prom[i+0x000] >> 0) & 0x01);
+		temp_color.r = static_cast<uint8_t>((0x8f * bit0) + (0x43 * bit1) + (0x1f * bit2) + (0x0e * bit3));
 			
 		/* green component */
-		bit0 = static_cast<Uint8>((color_prom[i+0x100] >> 3) & 0x01);
-		bit1 = static_cast<Uint8>((color_prom[i+0x100] >> 2) & 0x01);
-		bit2 = static_cast<Uint8>((color_prom[i+0x100] >> 1) & 0x01);
-		bit3 = static_cast<Uint8>((color_prom[i+0x100] >> 0) & 0x01);
-		temp_color.g = static_cast<Uint8>((0x8f * bit0) + (0x43 * bit1) + (0x1f * bit2) + (0x0e * bit3));
+		bit0 = static_cast<uint8_t>((color_prom[i+0x100] >> 3) & 0x01);
+		bit1 = static_cast<uint8_t>((color_prom[i+0x100] >> 2) & 0x01);
+		bit2 = static_cast<uint8_t>((color_prom[i+0x100] >> 1) & 0x01);
+		bit3 = static_cast<uint8_t>((color_prom[i+0x100] >> 0) & 0x01);
+		temp_color.g = static_cast<uint8_t>((0x8f * bit0) + (0x43 * bit1) + (0x1f * bit2) + (0x0e * bit3));
 				
 		/* blue component */
-		bit0 = static_cast<Uint8>((color_prom[i+0x200] >> 3) & 0x01);
-		bit1 = static_cast<Uint8>((color_prom[i+0x200] >> 2) & 0x01);
-		bit2 = static_cast<Uint8>((color_prom[i+0x200] >> 1) & 0x01);
-		bit3 = static_cast<Uint8>((color_prom[i+0x200] >> 0) & 0x01);
-		temp_color.b = static_cast<Uint8>((0x8f * bit0) + (0x43 * bit1) + (0x1f * bit2) + (0x0e * bit3));
+		bit0 = static_cast<uint8_t>((color_prom[i+0x200] >> 3) & 0x01);
+		bit1 = static_cast<uint8_t>((color_prom[i+0x200] >> 2) & 0x01);
+		bit2 = static_cast<uint8_t>((color_prom[i+0x200] >> 1) & 0x01);
+		bit3 = static_cast<uint8_t>((color_prom[i+0x200] >> 0) & 0x01);
+		temp_color.b = static_cast<uint8_t>((0x8f * bit0) + (0x43 * bit1) + (0x1f * bit2) + (0x0e * bit3));
 
 		palette_set_color(i, temp_color);
 	}
@@ -668,7 +668,7 @@ void interstellar::video_repaint()
 }
 
 // this gets called when the user presses a key or moves the joystick
-void interstellar::input_enable(Uint8 move)
+void interstellar::input_enable(uint8_t move)
 {
 	switch (move)
 	{
@@ -719,7 +719,7 @@ void interstellar::input_enable(Uint8 move)
 }  
 
 // this gets called when the user releases a key or moves the joystick back to center position
-void interstellar::input_disable(Uint8 move)
+void interstellar::input_disable(uint8_t move)
 {
 	switch (move)
 	{
@@ -760,18 +760,18 @@ void interstellar::input_disable(Uint8 move)
 }
 
 // used to set dip switch values
-bool interstellar::set_bank(Uint8 which_bank, Uint8 value)
+bool interstellar::set_bank(uint8_t which_bank, uint8_t value)
 {
 	bool result = true;
 	
 	switch (which_bank)
 	{
 	case 0:	// bank A
-		banks[1] |= (Uint8) (value & 0x3f);	
+		banks[1] |= (uint8_t) (value & 0x3f);	
 		break;
 	case 1:	// bank B
-		banks[1] |= (Uint8) ((value << 6) & 0xc0);
-		banks[2] |= (Uint8) ((value >> 2) & 0x07);
+		banks[1] |= (uint8_t) ((value << 6) & 0xc0);
+		banks[2] |= (uint8_t) ((value >> 2) & 0x07);
 		break;
 	default:
 		printline("ERROR: Bank specified is out of range!");
@@ -784,30 +784,30 @@ bool interstellar::set_bank(Uint8 which_bank, Uint8 value)
 
 void interstellar::draw_8x8(int character_number, int xcoord, int ycoord, int xflip, int yflip, int palette)
 {
-	Uint8 pixel[8] = {0};
+	uint8_t pixel[8] = {0};
 
 	for (int y = 0; y < 8; y++)
 	{
 		if ((y + ycoord) < INTERSTELLAR_OVERLAY_H)
 		{
-			Uint8 byte3 = character[character_number*8+y];
-			Uint8 byte2 = character[character_number*8+y+0x2000];
-			Uint8 byte1 = character[character_number*8+y+0x4000];
+			uint8_t byte3 = character[character_number*8+y];
+			uint8_t byte2 = character[character_number*8+y+0x2000];
+			uint8_t byte1 = character[character_number*8+y+0x4000];
 
-			pixel[0] = static_cast<Uint8>(((byte1 & 0x80) >> 5) | ((byte2 & 0x80) >> 6) | ((byte3 & 0x80) >> 7));
-			pixel[1] = static_cast<Uint8>(((byte1 & 0x40) >> 4) | ((byte2 & 0x40) >> 5) | ((byte3 & 0x40) >> 6));
-			pixel[2] = static_cast<Uint8>(((byte1 & 0x20) >> 3) | ((byte2 & 0x20) >> 4) | ((byte3 & 0x20) >> 5));
-			pixel[3] = static_cast<Uint8>(((byte1 & 0x10) >> 2) | ((byte2 & 0x10) >> 3) | ((byte3 & 0x10) >> 4));
-			pixel[4] = static_cast<Uint8>(((byte1 & 0x08) >> 1) | ((byte2 & 0x08) >> 2) | ((byte3 & 0x08) >> 3));
-			pixel[5] = static_cast<Uint8>(((byte1 & 0x04) << 0) | ((byte2 & 0x04) >> 1) | ((byte3 & 0x04) >> 2));
-			pixel[6] = static_cast<Uint8>(((byte1 & 0x02) << 1) | ((byte2 & 0x02) << 0) | ((byte3 & 0x02) >> 1));
-			pixel[7] = static_cast<Uint8>(((byte1 & 0x01) << 2) | ((byte2 & 0x01) << 1) | ((byte3 & 0x01) << 0));
+			pixel[0] = static_cast<uint8_t>(((byte1 & 0x80) >> 5) | ((byte2 & 0x80) >> 6) | ((byte3 & 0x80) >> 7));
+			pixel[1] = static_cast<uint8_t>(((byte1 & 0x40) >> 4) | ((byte2 & 0x40) >> 5) | ((byte3 & 0x40) >> 6));
+			pixel[2] = static_cast<uint8_t>(((byte1 & 0x20) >> 3) | ((byte2 & 0x20) >> 4) | ((byte3 & 0x20) >> 5));
+			pixel[3] = static_cast<uint8_t>(((byte1 & 0x10) >> 2) | ((byte2 & 0x10) >> 3) | ((byte3 & 0x10) >> 4));
+			pixel[4] = static_cast<uint8_t>(((byte1 & 0x08) >> 1) | ((byte2 & 0x08) >> 2) | ((byte3 & 0x08) >> 3));
+			pixel[5] = static_cast<uint8_t>(((byte1 & 0x04) << 0) | ((byte2 & 0x04) >> 1) | ((byte3 & 0x04) >> 2));
+			pixel[6] = static_cast<uint8_t>(((byte1 & 0x02) << 1) | ((byte2 & 0x02) << 0) | ((byte3 & 0x02) >> 1));
+			pixel[7] = static_cast<uint8_t>(((byte1 & 0x01) << 2) | ((byte2 & 0x01) << 1) | ((byte3 & 0x01) << 0));
 
 			for (int x = 0; x < 8; x++)
 			{
 				if ((pixel[x]) && ((x + xcoord) < INTERSTELLAR_OVERLAY_W))
 				{
-					*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + ((ycoord + (yflip ? (7-y) : y)) * INTERSTELLAR_OVERLAY_W) + (xcoord + (xflip ? (7-x) : x))) = (Uint8) (pixel[x] | (palette << 3));
+					*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + ((ycoord + (yflip ? (7-y) : y)) * INTERSTELLAR_OVERLAY_W) + (xcoord + (xflip ? (7-x) : x))) = (uint8_t) (pixel[x] | (palette << 3));
 				}
 			}
 		}

@@ -29,7 +29,7 @@
 
 int tonegen_initialize(Uint32);
 void tonegen_writedata(Uint32, Uint32, int index);
-void tonegen_stream(Uint8* stream, int length, int index);
+void tonegen_stream(uint8_t* stream, int length, int index);
 
 struct tonegen
 {

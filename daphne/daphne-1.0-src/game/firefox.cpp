@@ -231,11 +231,11 @@ void firefox::do_firq()
 	m_bFIRQLatch = true;
 }
 
-Uint8 firefox::cpu_mem_read(uint16_t addr)
+uint8_t firefox::cpu_mem_read(uint16_t addr)
 {
 //	char s[81] = {0};
 
-	Uint8 result = m_cpumem[addr];
+	uint8_t result = m_cpumem[addr];
 
 	// Program RAM
 	if (addr <= 0x0fff)
@@ -361,7 +361,7 @@ Uint8 firefox::cpu_mem_read(uint16_t addr)
 	return result;
 }
 
-void firefox::cpu_mem_write(uint16_t addr, Uint8 value)
+void firefox::cpu_mem_write(uint16_t addr, uint8_t value)
 {
 	char s[81] = {0};
 
@@ -605,16 +605,16 @@ void firefox::video_repaint()
 			{
 				for (int y = 0; y < 8; y++)
 				{
-					Uint8 left_pixel = static_cast<Uint8>((character[m_cpumem[chary * 64 + charx + 0x1000]*32+x+4*y] & 0xf0) >> 4);
-					Uint8 right_pixel = static_cast<Uint8>((character[m_cpumem[chary * 64 + charx + 0x1000]*32+x+4*y] & 0x0f));
+					uint8_t left_pixel = static_cast<uint8_t>((character[m_cpumem[chary * 64 + charx + 0x1000]*32+x+4*y] & 0xf0) >> 4);
+					uint8_t right_pixel = static_cast<uint8_t>((character[m_cpumem[chary * 64 + charx + 0x1000]*32+x+4*y] & 0x0f));
 
-					*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary) * 8 + y) * FIREFOX_OVERLAY_W) + ((charx) * 8 + x * 2)) = left_pixel;
-					*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary) * 8 + y) * FIREFOX_OVERLAY_W) + ((charx) * 8 + x * 2 + 1)) = right_pixel;
+					*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary) * 8 + y) * FIREFOX_OVERLAY_W) + ((charx) * 8 + x * 2)) = left_pixel;
+					*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary) * 8 + y) * FIREFOX_OVERLAY_W) + ((charx) * 8 + x * 2 + 1)) = right_pixel;
 
-//						*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary) * 8 + y) * FIREFOX_OVERLAY_W) + ((charx - 10) * 16 + x * 4 + 0)) = left_pixel;
-//						*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary) * 8 + y) * FIREFOX_OVERLAY_W) + ((charx - 10) * 16 + x * 4 + 1)) = left_pixel;
-//						*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary) * 8 + y) * FIREFOX_OVERLAY_W) + ((charx - 10) * 16 + x * 4 + 2)) = right_pixel;
-//						*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + (((chary) * 8 + y) * FIREFOX_OVERLAY_W) + ((charx - 10) * 16 + x * 4 + 3)) = right_pixel;
+//						*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary) * 8 + y) * FIREFOX_OVERLAY_W) + ((charx - 10) * 16 + x * 4 + 0)) = left_pixel;
+//						*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary) * 8 + y) * FIREFOX_OVERLAY_W) + ((charx - 10) * 16 + x * 4 + 1)) = left_pixel;
+//						*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary) * 8 + y) * FIREFOX_OVERLAY_W) + ((charx - 10) * 16 + x * 4 + 2)) = right_pixel;
+//						*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + (((chary) * 8 + y) * FIREFOX_OVERLAY_W) + ((charx - 10) * 16 + x * 4 + 3)) = right_pixel;
 				}
 			}
 		}
@@ -622,7 +622,7 @@ void firefox::video_repaint()
 }
 
 // this gets called when the user presses a key or moves the joystick
-void firefox::input_enable(Uint8 move)
+void firefox::input_enable(uint8_t move)
 {
 	switch (move)
 	{
@@ -666,7 +666,7 @@ void firefox::input_enable(Uint8 move)
 }  
 
 // this gets called when the user releases a key or moves the joystick back to center position
-void firefox::input_disable(Uint8 move)
+void firefox::input_disable(uint8_t move)
 {
 	switch (move)
 	{

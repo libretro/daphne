@@ -26,6 +26,7 @@
 #ifndef BLEND_H
 #define BLEND_H
 
+#include <stdint.h>
 #include <SDL.h>	// for datatype defs
 
 // TO USE THE BLEND FUNCTIONS:
@@ -39,9 +40,9 @@
 // we always want this function defined for the purpose of testing (releasetest.cpp)
 void blend_c();
 
-extern Uint8 *g_blend_line1;
-extern Uint8 *g_blend_line2;
-extern Uint8 *g_blend_dest;
+extern uint8_t *g_blend_line1;
+extern uint8_t *g_blend_line2;
+extern uint8_t *g_blend_dest;
 extern Uint32 g_blend_iterations;
 #define g_blend_func blend_c
 

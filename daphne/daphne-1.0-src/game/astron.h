@@ -64,38 +64,38 @@ public:
 	astron();
 	void do_irq(unsigned int);		// does an IRQ tick
 	void do_nmi();		// does an NMI tick
-	Uint8 cpu_mem_read(uint16_t addr);			// memory read routine
-	void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
-	Uint8 port_read(uint16_t port);		// read from port
-	void port_write(uint16_t port, Uint8 value);		// write to a port
-	virtual void input_enable(Uint8);
-	virtual void input_disable(Uint8);
+	uint8_t cpu_mem_read(uint16_t addr);			// memory read routine
+	void cpu_mem_write(uint16_t addr, uint8_t value);		// memory write routine
+	uint8_t port_read(uint16_t port);		// read from port
+	void port_write(uint16_t port, uint8_t value);		// write to a port
+	virtual void input_enable(uint8_t);
+	virtual void input_disable(uint8_t);
 	void video_repaint();	// function to repaint video
 	void palette_calculate();
-	bool set_bank(Uint8, Uint8);
-	virtual void write_ldp(Uint8, uint16_t);
-	virtual Uint8 read_ldp(uint16_t);
+	bool set_bank(uint8_t, uint8_t);
+	virtual void write_ldp(uint8_t, uint16_t);
+	virtual uint8_t read_ldp(uint16_t);
    unsigned get_libretro_button_map(unsigned id);
    const char *get_libretro_button_name(unsigned id);
 protected:
 	int current_bank;
 	void recalc_palette();
 	void draw_sprite(int);
-	Uint8 rombank[0x8000];	
-	Uint8 character[0x1000];	
-	Uint8 sprite[0x10000];	
-	Uint8 bankprom[0x200];
-	Uint8 miscprom[0x240];
+	uint8_t rombank[0x8000];	
+	uint8_t character[0x1000];	
+	uint8_t sprite[0x10000];	
+	uint8_t bankprom[0x200];
+	uint8_t miscprom[0x240];
 	SDL_Color palette_lookup[4096];		// all possible color entries
-	Uint8 m_transparent_color;	// which color is to be transparent
+	uint8_t m_transparent_color;	// which color is to be transparent
 	bool palette_modified;		// has our palette been modified?
 	bool compress_palette; // can we compress the palette into one 8 bit surface?
 	bool used_sprite_color[256];
-	Uint8 mapped_tile_color[256];
-	Uint8 ldp_output_latch;	// holds data to be sent to the LDV1000
-	Uint8 ldp_input_latch;	// holds data that was retrieved from the LDV1000
+	uint8_t mapped_tile_color[256];
+	uint8_t ldp_output_latch;	// holds data to be sent to the LDV1000
+	uint8_t ldp_input_latch;	// holds data that was retrieved from the LDV1000
 
-	Uint8 banks[4];				// astron's banks
+	uint8_t banks[4];				// astron's banks
 		// bank 1 is switches
 		// bank 2 is switches
 		// bank 3 is dip switch 1
@@ -108,13 +108,13 @@ public:
 	astronh();
 	void astronh_nmi();		// clocks the 8251
 	void do_nmi();		// does an NMI tick
-	void write_ldp(Uint8, uint16_t);
-	Uint8 read_ldp(uint16_t);
+	void write_ldp(uint8_t, uint16_t);
+	uint8_t read_ldp(uint16_t);
 private:
-	void write_8251_data(Uint8);
-	Uint8 read_8251_data(void);
-	void write_8251_control(Uint8);
-	Uint8 read_8251_status(void);
+	void write_8251_data(uint8_t);
+	uint8_t read_8251_data(void);
+	void write_8251_control(uint8_t);
+	uint8_t read_8251_status(void);
 	bool transmit_enable;
 	bool recieve_enable;
 	void clock_8251(void);
@@ -144,8 +144,8 @@ class cobraab : public astronh
 {
 public:
 	cobraab();
-	void input_enable(Uint8);
-	void input_disable(Uint8);
+	void input_enable(uint8_t);
+	void input_disable(uint8_t);
 	void patch_roms();
 };
 

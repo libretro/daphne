@@ -33,7 +33,7 @@ static int ReadChunk(SDL_RWops * src, Chunk * chunk);
 
 struct MS_ADPCM_decodestate
 {
-    Uint8 hPredictor;
+    uint8_t hPredictor;
     uint16_t iDelta;
     int16_t iSamp1;
     int16_t iSamp2;
@@ -51,7 +51,7 @@ static struct MS_ADPCM_decoder
 static int
 InitMS_ADPCM(WaveFMT * format)
 {
-    Uint8 *rogue_feel;
+    uint8_t *rogue_feel;
     int i;
 
     /* Set the rogue pointer to the MS_ADPCM specific data */
@@ -62,7 +62,7 @@ InitMS_ADPCM(WaveFMT * format)
     MS_ADPCM_state.wavefmt.blockalign = SDL_SwapLE16(format->blockalign);
     MS_ADPCM_state.wavefmt.bitspersample =
         SDL_SwapLE16(format->bitspersample);
-    rogue_feel = (Uint8 *) format + sizeof(*format);
+    rogue_feel = (uint8_t *) format + sizeof(*format);
     if (sizeof(*format) == 16) {
         /* const uint16_t extra_info = ((rogue_feel[1] << 8) | rogue_feel[0]); */
         rogue_feel += sizeof(uint16_t);
@@ -86,7 +86,7 @@ InitMS_ADPCM(WaveFMT * format)
 
 static int32_t
 MS_ADPCM_nibble(struct MS_ADPCM_decodestate *state,
-                Uint8 nybble, int16_t * coeff)
+                uint8_t nybble, int16_t * coeff)
 {
     const int32_t max_audioval = ((1 << (16 - 1)) - 1);
     const int32_t min_audioval = -(1 << (16 - 1));
@@ -119,13 +119,13 @@ MS_ADPCM_nibble(struct MS_ADPCM_decodestate *state,
 }
 
 static int
-MS_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
+MS_ADPCM_decode(uint8_t ** audio_buf, Uint32 * audio_len)
 {
     struct MS_ADPCM_decodestate *state[2];
-    Uint8 *freeable, *encoded, *decoded;
+    uint8_t *freeable, *encoded, *decoded;
     int32_t encoded_len, samplesleft;
     int8_t nybble;
-    Uint8 stereo;
+    uint8_t stereo;
     int16_t *coeff[2];
     int32_t new_sample;
 
@@ -136,7 +136,7 @@ MS_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
     *audio_len = (encoded_len / MS_ADPCM_state.wavefmt.blockalign) *
         MS_ADPCM_state.wSamplesPerBlock *
         MS_ADPCM_state.wavefmt.channels * sizeof(int16_t);
-    *audio_buf = (Uint8 *)malloc(*audio_len);
+    *audio_buf = (uint8_t *)malloc(*audio_len);
     if (*audio_buf == NULL) {
         return SDL_OutOfMemory();
     }
@@ -234,7 +234,7 @@ static struct IMA_ADPCM_decoder
 static int
 InitIMA_ADPCM(WaveFMT * format)
 {
-    Uint8 *rogue_feel;
+    uint8_t *rogue_feel;
 
     /* Set the rogue pointer to the IMA_ADPCM specific data */
     IMA_ADPCM_state.wavefmt.encoding = SDL_SwapLE16(format->encoding);
@@ -244,7 +244,7 @@ InitIMA_ADPCM(WaveFMT * format)
     IMA_ADPCM_state.wavefmt.blockalign = SDL_SwapLE16(format->blockalign);
     IMA_ADPCM_state.wavefmt.bitspersample =
         SDL_SwapLE16(format->bitspersample);
-    rogue_feel = (Uint8 *) format + sizeof(*format);
+    rogue_feel = (uint8_t *) format + sizeof(*format);
     if (sizeof(*format) == 16) {
         /* const uint16_t extra_info = ((rogue_feel[1] << 8) | rogue_feel[0]); */
         rogue_feel += sizeof(uint16_t);
@@ -254,7 +254,7 @@ InitIMA_ADPCM(WaveFMT * format)
 }
 
 static int32_t
-IMA_ADPCM_nibble(struct IMA_ADPCM_decodestate *state, Uint8 nybble)
+IMA_ADPCM_nibble(struct IMA_ADPCM_decodestate *state, uint8_t nybble)
 {
     const int32_t max_audioval = ((1 << (16 - 1)) - 1);
     const int32_t min_audioval = -(1 << (16 - 1));
@@ -309,7 +309,7 @@ IMA_ADPCM_nibble(struct IMA_ADPCM_decodestate *state, Uint8 nybble)
 
 /* Fill the decode buffer with a channel block of data (8 samples) */
 static void
-Fill_IMA_ADPCM_block(Uint8 * decoded, Uint8 * encoded,
+Fill_IMA_ADPCM_block(uint8_t * decoded, uint8_t * encoded,
                      int channel, int numchannels,
                      struct IMA_ADPCM_decodestate *state)
 {
@@ -338,10 +338,10 @@ Fill_IMA_ADPCM_block(Uint8 * decoded, Uint8 * encoded,
 }
 
 static int
-IMA_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
+IMA_ADPCM_decode(uint8_t ** audio_buf, Uint32 * audio_len)
 {
     struct IMA_ADPCM_decodestate *state;
-    Uint8 *freeable, *encoded, *decoded;
+    uint8_t *freeable, *encoded, *decoded;
     int32_t encoded_len, samplesleft;
     unsigned int c, channels;
 
@@ -361,7 +361,7 @@ IMA_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
     *audio_len = (encoded_len / IMA_ADPCM_state.wavefmt.blockalign) *
         IMA_ADPCM_state.wSamplesPerBlock *
         IMA_ADPCM_state.wavefmt.channels * sizeof(int16_t);
-    *audio_buf = (Uint8 *)malloc(*audio_len);
+    *audio_buf = (uint8_t *)malloc(*audio_len);
     if (*audio_buf == NULL) {
         return SDL_OutOfMemory();
     }
@@ -384,8 +384,8 @@ IMA_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
             }
 
             /* Store the initial sample we start with */
-            decoded[0] = (Uint8) (state[c].sample & 0xFF);
-            decoded[1] = (Uint8) (state[c].sample >> 8);
+            decoded[0] = (uint8_t) (state[c].sample & 0xFF);
+            decoded[1] = (uint8_t) (state[c].sample >> 8);
             decoded += 2;
         }
 
@@ -408,7 +408,7 @@ IMA_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
 
 SDL_AudioSpec *
 SDL_LoadWAV_RW(SDL_RWops * src, int freesrc,
-               SDL_AudioSpec * spec, Uint8 ** audio_buf, Uint32 * audio_len)
+               SDL_AudioSpec * spec, uint8_t ** audio_buf, Uint32 * audio_len)
 {
     int was_error;
     Chunk chunk;
@@ -545,7 +545,7 @@ SDL_LoadWAV_RW(SDL_RWops * src, int freesrc,
                      SDL_SwapLE16(format->bitspersample));
         goto done;
     }
-    spec->channels = (Uint8) SDL_SwapLE16(format->channels);
+    spec->channels = (uint8_t) SDL_SwapLE16(format->channels);
 	spec->samples = 4096;       /* Good default buffer size */
 
     /* Read the audio data chunk */
@@ -602,7 +602,7 @@ SDL_LoadWAV_RW(SDL_RWops * src, int freesrc,
    be freed here.  (Necessary under Win32, VC++)
  */
 void
-SDL_FreeWAV(Uint8 * audio_buf)
+SDL_FreeWAV(uint8_t * audio_buf)
 {
     free(audio_buf);
 }
@@ -612,7 +612,7 @@ ReadChunk(SDL_RWops * src, Chunk * chunk)
 {
     chunk->magic = SDL_ReadLE32(src);
     chunk->length = SDL_ReadLE32(src);
-    chunk->data = (Uint8 *)malloc(chunk->length);
+    chunk->data = (uint8_t *)malloc(chunk->length);
     if (chunk->data == NULL) {
         return SDL_OutOfMemory();
     }

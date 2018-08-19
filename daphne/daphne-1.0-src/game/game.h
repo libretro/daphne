@@ -75,7 +75,7 @@ struct rom_def
 {
 	const char *filename;	// name of the rom to be loaded
 	const char *dir;	// name of the subdirectory where rom is (NULL means to use m_shortgamename)
-	Uint8 *buf;	// where in memory to load the rom
+	uint8_t *buf;	// where in memory to load the rom
 	unsigned int size;	// expected size of the rom
 	unsigned int crc32;	// CRC32 of the ROM
 };
@@ -98,15 +98,15 @@ public:
 	virtual void reset();
 	virtual void do_irq(unsigned int);		// does an IRQ tick
 	virtual void do_nmi();		// does an NMI tick
-	virtual Uint8 cpu_mem_read(uint16_t addr);	// 16-bit addressing memory read routine
-	virtual Uint8 cpu_mem_read(Uint32 addr);	// 32-bit addressing memory read routine
-	virtual void cpu_mem_write(uint16_t addr, Uint8 value);		// memory write routine
-	virtual void cpu_mem_write(Uint32 addr, Uint8 value);	// 32-bit addressing memory write routine
-	virtual Uint8 port_read(uint16_t port);		// read from port
-	virtual void port_write(uint16_t port, Uint8 value);		// write to a port
+	virtual uint8_t cpu_mem_read(uint16_t addr);	// 16-bit addressing memory read routine
+	virtual uint8_t cpu_mem_read(Uint32 addr);	// 32-bit addressing memory read routine
+	virtual void cpu_mem_write(uint16_t addr, uint8_t value);		// memory write routine
+	virtual void cpu_mem_write(Uint32 addr, uint8_t value);	// 32-bit addressing memory write routine
+	virtual uint8_t port_read(uint16_t port);		// read from port
+	virtual void port_write(uint16_t port, uint8_t value);		// write to a port
 	virtual void update_pc(Uint32 new_pc);		// update the PC
-	virtual void input_enable(Uint8);
-	virtual void input_disable(Uint8);
+	virtual void input_enable(uint8_t);
+	virtual void input_disable(uint8_t);
 	virtual void OnMouseMotion(uint16_t x, uint16_t y, int16_t xrel, int16_t yrel);  // Added by ScottD
 	virtual void OnVblank();	// this gets called by the ldp class every vblank (since many games use vblank for their interrupt)
    virtual unsigned get_libretro_button_map(unsigned id);
@@ -178,7 +178,7 @@ public:
 	unsigned int get_disc_fpks();	// return # of frames per kilosecond (to avoid using gp2x-unfriendly floats)
 //	double get_disc_fps();	// return FPS of the laserdisc
 //	double get_disc_ms_per_frame();
-	Uint8 get_game_type();
+	uint8_t get_game_type();
 	Uint32 get_num_sounds();
 	const char *get_sound_name(int);
 	const char *get_issues();	// does the game have any performance issues the user should know about?
@@ -202,11 +202,11 @@ protected:
 	bool m_game_paused;	// whether the game is paused or not
 	const char *m_shortgamename;	// a one-word name for this game (ie "lair" "ace" "dle", etc)
 	const struct rom_def *m_rom_list;	// pointer to a null-terminated array of roms to be loaded
-	Uint8 m_cpumem[CPU_MEM_SIZE];	// generic buffer that most 16-bit addressing cpu's can use
+	uint8_t m_cpumem[CPU_MEM_SIZE];	// generic buffer that most 16-bit addressing cpu's can use
 	unsigned int m_uDiscFPKS;	// frames per kilosecond of the game's laserdisc (to avoid using gp2x-unfriendly float)
 	double m_disc_fps;	// frames per second of the game's laserdisc; (only used initially since it is expensive on gp2x)
 //	double m_disc_ms_per_frame;	// how many ms per frame of the game's laserdisc (same value as fps, just re-arranged)
-	Uint8 m_game_type;	// which game it is
+	uint8_t m_game_type;	// which game it is
 	Uint32 m_num_sounds;	// how many samples the game has to load
 	const char *m_sound_name[MAX_NUM_SOUNDS];	// names for each sound file
 	const char *m_game_issues;	// description of any issues the game has (NULL if no issues)
@@ -216,7 +216,7 @@ protected:
 	bool m_fastboot;
 	
 	const char *m_nvram_filename; // filename for nvram (only for DL2/SA91 for now)
-	Uint8 *m_nvram_begin;  // points to where our nvram begins
+	uint8_t *m_nvram_begin;  // points to where our nvram begins
 	uint16_t *m_EEPROM_9536_begin;  // points to the 9536 EEPROM for DL2/SA91
 	bool m_EEPROM_9536;
 	Uint32 m_nvram_size;	// how big the nvram area is (if this is 0, nvram is not loaded/saved)
@@ -270,9 +270,9 @@ protected:
 #endif
 
 private:
-	bool load_rom(const char *filename, Uint8 *buf, Uint32 size);
-	bool load_rom(const char *filename, const char *directory, Uint8 *bif, Uint32 size);
-	bool load_compressed_rom(const char *filename, unzFile opened_zip_file, Uint8 *buf, Uint32 size);
+	bool load_rom(const char *filename, uint8_t *buf, Uint32 size);
+	bool load_rom(const char *filename, const char *directory, uint8_t *bif, Uint32 size);
+	bool load_compressed_rom(const char *filename, unzFile opened_zip_file, uint8_t *buf, Uint32 size);
 
 };
 

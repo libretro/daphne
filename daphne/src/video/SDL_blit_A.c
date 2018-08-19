@@ -32,11 +32,11 @@ BlitNto1SurfaceAlpha(SDL_BlitInfo * info)
 {
     int width = info->dst_w;
     int height = info->dst_h;
-    Uint8 *src = info->src;
+    uint8_t *src = info->src;
     int srcskip = info->src_skip;
-    Uint8 *dst = info->dst;
+    uint8_t *dst = info->dst;
     int dstskip = info->dst_skip;
-    Uint8 *palmap = info->table;
+    uint8_t *palmap = info->table;
     SDL_PixelFormat *srcfmt = info->src_fmt;
     SDL_PixelFormat *dstfmt = info->dst_fmt;
     int srcbpp = srcfmt->BytesPerPixel;
@@ -79,11 +79,11 @@ BlitNto1PixelAlpha(SDL_BlitInfo * info)
 {
     int width = info->dst_w;
     int height = info->dst_h;
-    Uint8 *src = info->src;
+    uint8_t *src = info->src;
     int srcskip = info->src_skip;
-    Uint8 *dst = info->dst;
+    uint8_t *dst = info->dst;
     int dstskip = info->dst_skip;
-    Uint8 *palmap = info->table;
+    uint8_t *palmap = info->table;
     SDL_PixelFormat *srcfmt = info->src_fmt;
     SDL_PixelFormat *dstfmt = info->dst_fmt;
     int srcbpp = srcfmt->BytesPerPixel;
@@ -125,11 +125,11 @@ BlitNto1SurfaceAlphaKey(SDL_BlitInfo * info)
 {
     int width = info->dst_w;
     int height = info->dst_h;
-    Uint8 *src = info->src;
+    uint8_t *src = info->src;
     int srcskip = info->src_skip;
-    Uint8 *dst = info->dst;
+    uint8_t *dst = info->dst;
     int dstskip = info->dst_skip;
-    Uint8 *palmap = info->table;
+    uint8_t *palmap = info->table;
     SDL_PixelFormat *srcfmt = info->src_fmt;
     SDL_PixelFormat *dstfmt = info->dst_fmt;
     int srcbpp = srcfmt->BytesPerPixel;
@@ -576,9 +576,9 @@ BlitNtoNSurfaceAlpha(SDL_BlitInfo * info)
 {
     int width = info->dst_w;
     int height = info->dst_h;
-    Uint8 *src = info->src;
+    uint8_t *src = info->src;
     int srcskip = info->src_skip;
-    Uint8 *dst = info->dst;
+    uint8_t *dst = info->dst;
     int dstskip = info->dst_skip;
     SDL_PixelFormat *srcfmt = info->src_fmt;
     SDL_PixelFormat *dstfmt = info->dst_fmt;
@@ -615,9 +615,9 @@ BlitNtoNSurfaceAlphaKey(SDL_BlitInfo * info)
 {
     int width = info->dst_w;
     int height = info->dst_h;
-    Uint8 *src = info->src;
+    uint8_t *src = info->src;
     int srcskip = info->src_skip;
-    Uint8 *dst = info->dst;
+    uint8_t *dst = info->dst;
     int dstskip = info->dst_skip;
     SDL_PixelFormat *srcfmt = info->src_fmt;
     SDL_PixelFormat *dstfmt = info->dst_fmt;
@@ -656,9 +656,9 @@ BlitNtoNPixelAlpha(SDL_BlitInfo * info)
 {
     int width = info->dst_w;
     int height = info->dst_h;
-    Uint8 *src = info->src;
+    uint8_t *src = info->src;
     int srcskip = info->src_skip;
-    Uint8 *dst = info->dst;
+    uint8_t *dst = info->dst;
     int dstskip = info->dst_skip;
     SDL_PixelFormat *srcfmt = info->src_fmt;
     SDL_PixelFormat *dstfmt = info->dst_fmt;

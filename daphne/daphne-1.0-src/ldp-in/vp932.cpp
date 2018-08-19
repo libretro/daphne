@@ -44,16 +44,16 @@ using namespace std;
 
 #define MAX_COMMAND_SIZE 31 
 
-Uint8 vp932_command[MAX_COMMAND_SIZE + 1];
+uint8_t vp932_command[MAX_COMMAND_SIZE + 1];
 int vp932_command_pointer = 0;
-queue <Uint8> vp932_status_queue;
+queue <uint8_t> vp932_status_queue;
 bool g_vp932_search_pending = false;
 bool g_vp932_play_pending = false;
 bool gAudioLeftEn = true;
 bool gAudioRightEn = true;
 
 // write a byte to the vp932
-void vp932_write(Uint8 data)
+void vp932_write(uint8_t data)
 {
 	// check if the current character is a carrage return
 	// this signifies that we have a complete command
@@ -73,9 +73,9 @@ void vp932_write(Uint8 data)
 }
 
 // read a byte from the vp932
-Uint8 vp932_read()
+uint8_t vp932_read()
 {	
-   Uint8 temp = 0;
+   uint8_t temp = 0;
 	if (!vp932_status_queue.empty())
 	{
       temp = vp932_status_queue.front();

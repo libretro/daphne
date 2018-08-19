@@ -24,6 +24,7 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
+#include <stdint.h>
 #include <SDL.h>
 #include "SDL_DrawText.h"
 #include "tms9128nl.h"
@@ -565,12 +566,12 @@ void tms9128nl_drawchar(unsigned char ch, int col, int row)
 			// if rightmost bit is 1, it means draw the pixel
 			if (line & 1)
 			{
-				*((Uint8 *) g_vidbuf + ((y+i+TMS_VERTICAL_OFFSET) * TMS9128NL_OVERLAY_W) + (x+j)) = TMS_FG_COLOR;
+				*((uint8_t *) g_vidbuf + ((y+i+TMS_VERTICAL_OFFSET) * TMS9128NL_OVERLAY_W) + (x+j)) = TMS_FG_COLOR;
 			}
 			// else draw the background
 			else
 			{
-				*((Uint8 *) g_vidbuf + ((y+i+TMS_VERTICAL_OFFSET) * TMS9128NL_OVERLAY_W) + (x+j)) = background_color;
+				*((uint8_t *) g_vidbuf + ((y+i+TMS_VERTICAL_OFFSET) * TMS9128NL_OVERLAY_W) + (x+j)) = background_color;
 			}
 			line = (unsigned char) (line >> 1);
 		}
@@ -581,7 +582,7 @@ void tms9128nl_drawchar(unsigned char ch, int col, int row)
 	if ((g_transparency_latch) && (ch != 0) && (ch != 0xFF))
 	{
 			int row, col;
-			Uint8 *ptr = ((Uint8 *) g_vidbuf) + ((y + TMS_VERTICAL_OFFSET) * TMS9128NL_OVERLAY_W) + x + CHAR_WIDTH;
+			uint8_t *ptr = ((uint8_t *) g_vidbuf) + ((y + TMS_VERTICAL_OFFSET) * TMS9128NL_OVERLAY_W) + x + CHAR_WIDTH;
 			for (row = 0; row < CHAR_HEIGHT; row++)
 			{
 				for (col = 0; col < CHAR_WIDTH; col++)
@@ -668,7 +669,7 @@ void tms9128nl_video_repaint()
 	{
 	int i = 0; 	 
 
-		Uint8 *ptr = (Uint8 *) g_vidbuf + (TMS9128NL_OVERLAY_W * TMS_VERTICAL_OFFSET);
+		uint8_t *ptr = (uint8_t *) g_vidbuf + (TMS9128NL_OVERLAY_W * TMS_VERTICAL_OFFSET);
 
 		// I don't believe we want to do the stretched overlay here
 
@@ -721,8 +722,8 @@ void tms9128nl_video_repaint_stretched()
 	int x256 = 0;
 	int y = 0;
 
-	Uint8 *ptr256 = (Uint8 *) g_vidbuf;	// source ...
-	Uint8 *ptr320 = (Uint8 *) g_game->get_active_video_overlay()->pixels;	// destination ...
+	uint8_t *ptr256 = (uint8_t *) g_vidbuf;	// source ...
+	uint8_t *ptr320 = (uint8_t *) g_game->get_active_video_overlay()->pixels;	// destination ...
 
 	// these values correspond to colors in the color palette	
 	unsigned char blend[4][2] = 
@@ -775,11 +776,11 @@ void tms9128nl_video_repaint_stretched()
 
 void tms9128nl_clear_overlay()
 {
-	Uint8 clear_color = TMS_BG_COLOR;
+	uint8_t clear_color = TMS_BG_COLOR;
 
 	int i = 0;
 
-	Uint8 *ptr = g_vidbuf;
+	uint8_t *ptr = g_vidbuf;
 	
 //	printf("Overlay is being cleared, transparency is %d, latch is %d\n", g_transparency_enabled, g_transparency_latch);
 	

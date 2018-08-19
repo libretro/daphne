@@ -66,7 +66,7 @@ OggVorbis_File s_ogg;
 
 Uint32 g_audio_filesize = 0;	// total size of the audio stream
 Uint32 g_audio_filepos = 0;	// the position in the file of our audio stream
-Uint8 *g_big_buf = NULL;	// holds entire Ogg stream in RAM :)
+uint8_t *g_big_buf = NULL;	// holds entire Ogg stream in RAM :)
 bool g_audio_ready = false;	// whether audio is ready to be parsed
 bool g_audio_playing = false;	// whether the audio is to be playing or not
 Uint32 g_playing_timer = 0;	// the time at which we began playing audio
@@ -86,7 +86,7 @@ void mmreset()
 size_t mmread (void *ptr, size_t size, size_t nmemb, void *datasource)
 {
 	size_t bytes_to_read = size * nmemb;	// how many bytes to be read
-	Uint8 *src = ((Uint8 *) datasource) + g_audio_filepos;	// where to get the data from
+	uint8_t *src = ((uint8_t *) datasource) + g_audio_filepos;	// where to get the data from
 
 //	printf("mmread being called.. size is %d, nmemb is %d, bytes_to_read is %d\n", size, nmemb, bytes_to_read);
 	
@@ -462,11 +462,11 @@ void ldp_vldp::audio_pause()
 ////////////////////////////////////////////////////////////////////////////////////////
 
 char g_small_buf[AUDIO_BUF_CHUNK] = { 0 };
-Uint8 g_leftover_buf[AUDIO_BUF_CHUNK] = { 0 };
+uint8_t g_leftover_buf[AUDIO_BUF_CHUNK] = { 0 };
 int g_leftover_samples = 0;
 
 // our audio callback
-void ldp_vldp_audio_callback(Uint8 *stream, int len, int unused)
+void ldp_vldp_audio_callback(uint8_t *stream, int len, int unused)
 {
 	OGG_LOCK;	// make sure nothing changes with any ogg stuff while we decode
 

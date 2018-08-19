@@ -407,10 +407,10 @@ void mach3::do_irq(unsigned int which)
 	}
 }
 
-Uint8 mach3::cpu_mem_read(Uint32 addr)
+uint8_t mach3::cpu_mem_read(Uint32 addr)
 {
 	unsigned int which_cpu = cpu_getactivecpu();
-	Uint8 result = 0;
+	uint8_t result = 0;
 
 	if (which_cpu == 0)
 	{
@@ -479,7 +479,7 @@ Uint8 mach3::cpu_mem_read(Uint32 addr)
 
 				cur_frame = pr8210_get_current_frame();
 
-				result = (Uint8) (cur_frame / 10000); // upper single digit, frame cannot reasonably exceed 16-bit border
+				result = (uint8_t) (cur_frame / 10000); // upper single digit, frame cannot reasonably exceed 16-bit border
 
 				// if the current frame is too small (before audio data begins on disc), or if we're simulating
 				//  a loss of signal due to a recent seek
@@ -529,7 +529,7 @@ Uint8 mach3::cpu_mem_read(Uint32 addr)
 	return (result);
 }
 
-void mach3::cpu_mem_write(Uint32 Addr, Uint8 Value)
+void mach3::cpu_mem_write(Uint32 Addr, uint8_t Value)
 {
 	char s[80];
 
@@ -641,7 +641,7 @@ void mach3::cpu_mem_write(Uint32 Addr, Uint8 Value)
 		// 0x24 is a pause command, which will trigger the audio break-in-transission (BOT) detector
 		// (all commands are sent twice, so the repeat must be ignored)
 		// BOT causes the audio buffer to reset
-		static Uint8 prev_cmd = 0;
+		static uint8_t prev_cmd = 0;
 		if ((Value == 0x24) && (prev_cmd != 0x24) && (pr8210_get_current_frame() > 53 * 44))
 		{
 			m_audio_ready_bit = 1;
@@ -680,10 +680,10 @@ void mach3::cpu_mem_write(Uint32 Addr, Uint8 Value)
 }
 
 // only the 6502's use this read handler since the I86 uses 20 bit addressing
-Uint8 mach3::cpu_mem_read(uint16_t addr)
+uint8_t mach3::cpu_mem_read(uint16_t addr)
 {
 //	char s[80];	
-	Uint8 result = 0;
+	uint8_t result = 0;
 
 	switch (cpu_getactivecpu())
 	{
@@ -756,7 +756,7 @@ Uint8 mach3::cpu_mem_read(uint16_t addr)
 }
 
 // only the 6502's use this write handler since the I86 uses 20 bit addressing
-void mach3::cpu_mem_write(uint16_t Addr, Uint8 Value)
+void mach3::cpu_mem_write(uint16_t Addr, uint8_t Value)
 {
 //	char s[80];
 
@@ -865,7 +865,7 @@ void mach3::cpu_mem_write(uint16_t Addr, Uint8 Value)
 }
 
 // mack3 hardware doesn't appear to use ports
-void mach3::port_write(uint16_t port, Uint8 value)
+void mach3::port_write(uint16_t port, uint8_t value)
 {
 	char s[80];
 
@@ -875,7 +875,7 @@ void mach3::port_write(uint16_t port, Uint8 value)
 
 // mack3 hardware doesn't appear to use ports
 
-Uint8 mach3::port_read(uint16_t port)
+uint8_t mach3::port_read(uint16_t port)
 {
 	char s[80];
 
@@ -918,7 +918,7 @@ bool mach3::set_bank(unsigned char which_bank, unsigned char value)
 	return result;
 }
 
-void mach3::input_disable(Uint8 move)
+void mach3::input_disable(uint8_t move)
 {
 	// if ((strncmp(m_shortgamename, "uvt", 4) == 0) ||
 	//	(strncmp(m_shortgamename, "mach3", 6) == 0) ||
@@ -926,7 +926,7 @@ void mach3::input_disable(Uint8 move)
 	// {
 		if (input_isinverted())
 		{
-			Uint8 newmove = move;
+			uint8_t newmove = move;
 			if (move == SWITCH_UP)		newmove = SWITCH_DOWN;
 			if (move == SWITCH_DOWN)	newmove = SWITCH_UP;
 			move = newmove;
@@ -991,7 +991,7 @@ void mach3::input_disable(Uint8 move)
 	}
 }
 
-void mach3::input_enable(Uint8 move)
+void mach3::input_enable(uint8_t move)
 {
 	// FIXME:   don't allow up/down or left/right to be pressed at the same time
 	//   (MACH3 reacts badly to this -- displays the wrong sprites for the plane)
@@ -1002,7 +1002,7 @@ void mach3::input_enable(Uint8 move)
 	// {
 		if (input_isinverted())
 		{
-			Uint8 newmove = move;
+			uint8_t newmove = move;
 			if (move == SWITCH_UP)		newmove = SWITCH_DOWN;
 			if (move == SWITCH_DOWN)	newmove = SWITCH_UP;
 			move = newmove;
@@ -1083,44 +1083,44 @@ void mach3::palette_calculate()
 	//Convert palette rom into a useable palette
 	for (int i = 0; i < MACH3_COLOR_COUNT; i++)
 	{
-		Uint8 bit0, bit1, bit2, bit3;
-		Uint8 paletteval;
+		uint8_t bit0, bit1, bit2, bit3;
+		uint8_t paletteval;
 
 		paletteval = (m_cpumem[0x5000 + i * 2]);
 
 		/* blue component */
-		bit0 = static_cast<Uint8>((paletteval >> 0) & 0x01);
-		bit1 = static_cast<Uint8>((paletteval >> 1) & 0x01);
-		bit2 = static_cast<Uint8>((paletteval >> 2) & 0x01); 
-		bit3 = static_cast<Uint8>((paletteval >> 3) & 0x01); 
-		temp_color.b = static_cast<Uint8>((0x10 * bit0) + (0x21 * bit1) + (0x47 * bit2) + (0x87 * bit3));
+		bit0 = static_cast<uint8_t>((paletteval >> 0) & 0x01);
+		bit1 = static_cast<uint8_t>((paletteval >> 1) & 0x01);
+		bit2 = static_cast<uint8_t>((paletteval >> 2) & 0x01); 
+		bit3 = static_cast<uint8_t>((paletteval >> 3) & 0x01); 
+		temp_color.b = static_cast<uint8_t>((0x10 * bit0) + (0x21 * bit1) + (0x47 * bit2) + (0x87 * bit3));
 
 		/* green component */
-		bit0 = static_cast<Uint8>((paletteval >> 4) & 0x01);
-		bit1 = static_cast<Uint8>((paletteval >> 5) & 0x01);
-		bit2 = static_cast<Uint8>((paletteval >> 6) & 0x01); 
-		bit3 = static_cast<Uint8>((paletteval >> 7) & 0x01); 
-		temp_color.g = static_cast<Uint8>((0x10 * bit0) + (0x21 * bit1) + (0x47 * bit2) + (0x87 * bit3));
+		bit0 = static_cast<uint8_t>((paletteval >> 4) & 0x01);
+		bit1 = static_cast<uint8_t>((paletteval >> 5) & 0x01);
+		bit2 = static_cast<uint8_t>((paletteval >> 6) & 0x01); 
+		bit3 = static_cast<uint8_t>((paletteval >> 7) & 0x01); 
+		temp_color.g = static_cast<uint8_t>((0x10 * bit0) + (0x21 * bit1) + (0x47 * bit2) + (0x87 * bit3));
 
 		paletteval = (m_cpumem[0x5001 + i * 2]);
 
 		/* red component */
-		bit0 = static_cast<Uint8>((paletteval >> 0) & 0x01);
-		bit1 = static_cast<Uint8>((paletteval >> 1) & 0x01);
-		bit2 = static_cast<Uint8>((paletteval >> 2) & 0x01); 
-		bit3 = static_cast<Uint8>((paletteval >> 3) & 0x01); 
-		temp_color.r = static_cast<Uint8>((0x10 * bit0) + (0x21 * bit1) + (0x47 * bit2) + (0x87 * bit3));
+		bit0 = static_cast<uint8_t>((paletteval >> 0) & 0x01);
+		bit1 = static_cast<uint8_t>((paletteval >> 1) & 0x01);
+		bit2 = static_cast<uint8_t>((paletteval >> 2) & 0x01); 
+		bit3 = static_cast<uint8_t>((paletteval >> 3) & 0x01); 
+		temp_color.r = static_cast<uint8_t>((0x10 * bit0) + (0x21 * bit1) + (0x47 * bit2) + (0x87 * bit3));
 
 		//alternatively, we could just shift the four bits into the upper half of the 8-bit output color value:
-		//temp_color.b = static_cast<Uint8>((m_cpumem[0x5000 + i * 2] & 0x0F) << 4);
-		//temp_color.g = static_cast<Uint8>((m_cpumem[0x5000 + i * 2] & 0xF0));
-		//temp_color.r = static_cast<Uint8>((m_cpumem[0x5001 + i * 2] & 0x0F) << 4);
+		//temp_color.b = static_cast<uint8_t>((m_cpumem[0x5000 + i * 2] & 0x0F) << 4);
+		//temp_color.g = static_cast<uint8_t>((m_cpumem[0x5000 + i * 2] & 0xF0));
+		//temp_color.r = static_cast<uint8_t>((m_cpumem[0x5001 + i * 2] & 0x0F) << 4);
 
 		////apply gamma correction to make colors more or less bright overall
 		//Corrected value = 255 * (uncorrected value / 255) ^ (1.0 / gamma)
-		//temp_color.r = (Uint8) (255 * pow((static_cast<double>(temp_color.r)) / 255, 1/MACH3_GAMMA));
-		//temp_color.g = (Uint8) (255 * pow((static_cast<double>(temp_color.g)) / 255, 1/MACH3_GAMMA));
-		//temp_color.b = (Uint8) (255 * pow((static_cast<double>(temp_color.b)) / 255, 1/MACH3_GAMMA));
+		//temp_color.r = (uint8_t) (255 * pow((static_cast<double>(temp_color.r)) / 255, 1/MACH3_GAMMA));
+		//temp_color.g = (uint8_t) (255 * pow((static_cast<double>(temp_color.g)) / 255, 1/MACH3_GAMMA));
+		//temp_color.b = (uint8_t) (255 * pow((static_cast<double>(temp_color.b)) / 255, 1/MACH3_GAMMA));
 
 		palette_set_color(i, temp_color);
 	}
@@ -1172,12 +1172,12 @@ void mach3::draw_sprites()
 	if ((m_cpumem[0x5803] & 0x02))  //bank select bit
 		offset = 0x2000;
 
-	Uint8 * spritebank = (Uint8 *)&sprite[offset];
+	uint8_t * spritebank = (uint8_t *)&sprite[offset];
 
 	//docs say 63 sprites, each 16x16
 	for (int spritenum = 0; spritenum < 62; spritenum++)  
 	{
-		Uint8 *pSpriteInfo = &m_cpumem[0x3000 + spritenum * 4];
+		uint8_t *pSpriteInfo = &m_cpumem[0x3000 + spritenum * 4];
 
 		// force little-endian memory load
 		unsigned int uSpriteInfo = LOAD_LIL_UINT32(pSpriteInfo);
@@ -1191,16 +1191,16 @@ void mach3::draw_sprites()
 			// character number  //256 characters available for sprites (in each bank)
 			// unknown (priority? - manual has a vague reference to having 63 planes/priorities)
 
-			Uint8 ypos = static_cast<Uint8>((uSpriteInfo & 0x000000FF) >> 0);
-			Uint8 xpos = static_cast<Uint8>((uSpriteInfo & 0x0000FF00) >> 8);
+			uint8_t ypos = static_cast<uint8_t>((uSpriteInfo & 0x000000FF) >> 0);
+			uint8_t xpos = static_cast<uint8_t>((uSpriteInfo & 0x0000FF00) >> 8);
 			//WDO: not sure why characters need to be accessed in reverse order
-			Uint8 current_character = 255 - static_cast<Uint8>((uSpriteInfo & 0x00FF0000) >> 16);
+			uint8_t current_character = 255 - static_cast<uint8_t>((uSpriteInfo & 0x00FF0000) >> 16);
 			draw_16x16(current_character, spritebank, xpos, ypos);
 		}
 	}  
 
 	//hack to show all sprites
-	/*	static Uint8 snum = 0;
+	/*	static uint8_t snum = 0;
 	for (int x = 0; x < 256; x+=16)
 	{
 	for (int y = 0; y < 256; y+=16)
@@ -1210,40 +1210,40 @@ void mach3::draw_sprites()
 	} */
 }
 
-void mach3::draw_8x8(Uint8 character_number, Uint8 *character_set, Uint8 xcoord, Uint8 ycoord)
+void mach3::draw_8x8(uint8_t character_number, uint8_t *character_set, uint8_t xcoord, uint8_t ycoord)
 {
-	Uint8 pixel[8] = {0};
+	uint8_t pixel[8] = {0};
 
-	//	static Uint8 tmpchar = 0;  // test hack to show the whole character set
+	//	static uint8_t tmpchar = 0;  // test hack to show the whole character set
 	//  character_number =  tmpchar++;
 
 	for (int y = 0; y < 8; y++)
 	{
 		//characters are contiguous blocks of 4-bpp values (32 bytes total for each 8x8 char)
-		pixel[0] = static_cast<Uint8>((character_set[(character_number * 32) + 0 + (y * 4)] & 0xF0) >> 4  );
-		pixel[1] = static_cast<Uint8>((character_set[(character_number * 32) + 0 + (y * 4)] & 0x0F) >> 0  );
-		pixel[2] = static_cast<Uint8>((character_set[(character_number * 32) + 1 + (y * 4)] & 0xF0) >> 4  );
-		pixel[3] = static_cast<Uint8>((character_set[(character_number * 32) + 1 + (y * 4)] & 0x0F) >> 0  );
-		pixel[4] = static_cast<Uint8>((character_set[(character_number * 32) + 2 + (y * 4)] & 0xF0) >> 4  );
-		pixel[5] = static_cast<Uint8>((character_set[(character_number * 32) + 2 + (y * 4)] & 0x0F) >> 0  );
-		pixel[6] = static_cast<Uint8>((character_set[(character_number * 32) + 3 + (y * 4)] & 0xF0) >> 4  );
-		pixel[7] = static_cast<Uint8>((character_set[(character_number * 32) + 3 + (y * 4)] & 0x0F) >> 0  );
+		pixel[0] = static_cast<uint8_t>((character_set[(character_number * 32) + 0 + (y * 4)] & 0xF0) >> 4  );
+		pixel[1] = static_cast<uint8_t>((character_set[(character_number * 32) + 0 + (y * 4)] & 0x0F) >> 0  );
+		pixel[2] = static_cast<uint8_t>((character_set[(character_number * 32) + 1 + (y * 4)] & 0xF0) >> 4  );
+		pixel[3] = static_cast<uint8_t>((character_set[(character_number * 32) + 1 + (y * 4)] & 0x0F) >> 0  );
+		pixel[4] = static_cast<uint8_t>((character_set[(character_number * 32) + 2 + (y * 4)] & 0xF0) >> 4  );
+		pixel[5] = static_cast<uint8_t>((character_set[(character_number * 32) + 2 + (y * 4)] & 0x0F) >> 0  );
+		pixel[6] = static_cast<uint8_t>((character_set[(character_number * 32) + 3 + (y * 4)] & 0xF0) >> 4  );
+		pixel[7] = static_cast<uint8_t>((character_set[(character_number * 32) + 3 + (y * 4)] & 0x0F) >> 0  );
 
 		for (int x = 0; x < 8; x++)
 		{
 			if (pixel[x])
 			{
-				*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + ((ycoord + y) * MACH3_OVERLAY_W) + (xcoord + x)) = pixel[x];
+				*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + ((ycoord + y) * MACH3_OVERLAY_W) + (xcoord + x)) = pixel[x];
 			}
 		}
 	}
 }
 
-void mach3::draw_16x16(Uint8 character_number, Uint8 *character_set, Uint8 xpos, Uint8 ypos)
+void mach3::draw_16x16(uint8_t character_number, uint8_t *character_set, uint8_t xpos, uint8_t ypos)
 {
-	Uint8 pixel[16] = {0};
+	uint8_t pixel[16] = {0};
 
-	Uint8 xmin = 0, xmax = 16,  ymin = 0, ymax = 16;
+	uint8_t xmin = 0, xmax = 16,  ymin = 0, ymax = 16;
 
 	int ycoord = ypos - 13;   // sprites are offset from tiles (so they can be partially off-screen)
 	int xcoord = xpos - 4;	// used cobram3 ROM to align - cockpit has tiles and sprites that should line up
@@ -1284,18 +1284,18 @@ void mach3::draw_16x16(Uint8 character_number, Uint8 *character_set, Uint8 xpos,
 	for (int y = ymin; y < ymax; y++)
 	{
 
-		Uint8 *current_line = &character_set[character_number * 32 + (y * 2)];
+		uint8_t *current_line = &character_set[character_number * 32 + (y * 2)];
 
 		//characters are in blocks of 16-pixel lines x 16 rows, across 4 bitplanes (32 bytes in each bitplane for each 16x16 char)
 		for (int i = 7; i >= 0; i--)
 		{
-			pixel[15 - (i + 8)] = static_cast<Uint8>(
+			pixel[15 - (i + 8)] = static_cast<uint8_t>(
 				(((*(current_line + 0 + 0x0000) >> (i) ) & 0x01) << 3) +
 				(((*(current_line + 0 + 0x4000) >> (i) ) & 0x01) << 2) +
 				(((*(current_line + 0 + 0x8000) >> (i) ) & 0x01) << 1) +
 				(((*(current_line + 0 + 0xC000) >> (i) ) & 0x01) << 0));
 
-			pixel[15 - i] = static_cast<Uint8>(
+			pixel[15 - i] = static_cast<uint8_t>(
 				(((*(current_line + 1 + 0x0000) >> (i) ) & 0x01) << 3) +
 				(((*(current_line + 1 + 0x4000) >> (i) ) & 0x01) << 2) +
 				(((*(current_line + 1 + 0x8000) >> (i) ) & 0x01) << 1) +
@@ -1306,7 +1306,7 @@ void mach3::draw_16x16(Uint8 character_number, Uint8 *character_set, Uint8 xpos,
 		{
 			if (pixel[x])
 			{
-				*((Uint8 *) m_video_overlay[m_active_video_overlay]->pixels + ((ycoord + y) * MACH3_OVERLAY_W) + (xcoord + x)) = pixel[x];
+				*((uint8_t *) m_video_overlay[m_active_video_overlay]->pixels + ((ycoord + y) * MACH3_OVERLAY_W) + (xcoord + x)) = pixel[x];
 			}
 		}
 	}

@@ -39,7 +39,7 @@
 
 /* The initialized subsystems */
 static SDL_bool SDL_bInMainQuit = SDL_FALSE;
-static Uint8 SDL_SubsystemRefCount[ 32 ];
+static uint8_t SDL_SubsystemRefCount[ 32 ];
 
 /* Private helper to increment a subsystem's ref counter. */
 static void

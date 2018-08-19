@@ -184,7 +184,7 @@ uint16_t sony::get_current_frame()
 }
 */
 
-bool sony::receive_status (Uint8 expected_code)
+bool sony::receive_status (uint8_t expected_code)
 //pass the status code that the player is expected to return
 //return true if the code was found, false represents failure
 {

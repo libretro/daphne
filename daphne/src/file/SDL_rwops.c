@@ -369,7 +369,7 @@ mem_size(SDL_RWops * context)
 static int64_t SDLCALL
 mem_seek(SDL_RWops * context, int64_t offset, int whence)
 {
-    Uint8 *newpos;
+    uint8_t *newpos;
 
     switch (whence) {
     case RW_SEEK_SET:
@@ -523,7 +523,7 @@ SDL_RWFromMem(void *mem, int size)
         rwops->read = mem_read;
         rwops->write = mem_write;
         rwops->close = mem_close;
-        rwops->hidden.mem.base = (Uint8 *) mem;
+        rwops->hidden.mem.base = (uint8_t *) mem;
         rwops->hidden.mem.here = rwops->hidden.mem.base;
         rwops->hidden.mem.stop = rwops->hidden.mem.base + size;
         rwops->type = SDL_RWOPS_MEMORY;
@@ -551,7 +551,7 @@ SDL_RWFromConstMem(const void *mem, int size)
         rwops->read = mem_read;
         rwops->write = mem_writeconst;
         rwops->close = mem_close;
-        rwops->hidden.mem.base = (Uint8 *) mem;
+        rwops->hidden.mem.base = (uint8_t *) mem;
         rwops->hidden.mem.here = rwops->hidden.mem.base;
         rwops->hidden.mem.stop = rwops->hidden.mem.base + size;
         rwops->type = SDL_RWOPS_MEMORY_RO;

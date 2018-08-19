@@ -53,18 +53,18 @@ static void name(type *src, int src_w, type *dst, int dst_w)    \
     }                                       \
 }
 /* *INDENT-OFF* */
-DEFINE_COPY_ROW(copy_row1, Uint8)
+DEFINE_COPY_ROW(copy_row1, uint8_t)
 DEFINE_COPY_ROW(copy_row2, uint16_t)
 DEFINE_COPY_ROW(copy_row4, Uint32)
 /* *INDENT-ON* */
 
 /* The ASM code doesn't handle 24-bpp stretch blits */
 static void
-copy_row3(Uint8 * src, int src_w, Uint8 * dst, int dst_w)
+copy_row3(uint8_t * src, int src_w, uint8_t * dst, int dst_w)
 {
     int i;
     int pos, inc;
-    Uint8 pixel[3] = { 0, 0, 0 };
+    uint8_t pixel[3] = { 0, 0, 0 };
 
     pos = 0x10000;
     inc = (src_w << 16) / dst_w;
@@ -94,8 +94,8 @@ SDL_SoftStretch(SDL_Surface * src, const SDL_Rect * srcrect,
     int pos, inc;
     int dst_maxrow;
     int src_row, dst_row;
-    Uint8 *srcp = NULL;
-    Uint8 *dstp;
+    uint8_t *srcp = NULL;
+    uint8_t *dstp;
     SDL_Rect full_src;
     SDL_Rect full_dst;
     const int bpp = dst->format->BytesPerPixel;
@@ -160,10 +160,10 @@ SDL_SoftStretch(SDL_Surface * src, const SDL_Rect * srcrect,
 
     /* Perform the stretch blit */
     for (dst_maxrow = dst_row + dstrect->h; dst_row < dst_maxrow; ++dst_row) {
-        dstp = (Uint8 *) dst->pixels + (dst_row * dst->pitch)
+        dstp = (uint8_t *) dst->pixels + (dst_row * dst->pitch)
             + (dstrect->x * bpp);
         while (pos >= 0x10000L) {
-            srcp = (Uint8 *) src->pixels + (src_row * src->pitch)
+            srcp = (uint8_t *) src->pixels + (src_row * src->pitch)
                 + (srcrect->x * bpp);
             ++src_row;
             pos -= 0x10000L;

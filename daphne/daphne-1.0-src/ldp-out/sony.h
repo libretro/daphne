@@ -45,7 +45,7 @@ public:
 	void disable_audio2();
 //	uint16_t get_current_frame();
 
-	bool receive_status(Uint8);
+	bool receive_status(uint8_t);
 	void searchforframe(char *);
 	void resetplayer();
 };

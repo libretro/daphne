@@ -340,7 +340,7 @@ static void vo_null_open (void)
 
 // NOTICE : these variables should only be used by the private thread !!!!!!!!!!!!
 
-Uint8 s_old_req_cmdORcount = CMDORCOUNT_INITIAL;	// the last value of the command byte we received
+uint8_t s_old_req_cmdORcount = CMDORCOUNT_INITIAL;	// the last value of the command byte we received
 int s_paused = 0;	// whether the video is to be paused
 int s_step_forward = 0;	// whether to step 1 frame forward
 int s_blanked = 0;	// whether the mpeg video is to be blanked
@@ -385,10 +385,10 @@ static Uint32 g_frame_position[MAX_LDP_FRAMES] = { 0 };	// the file position of 
 static uint16_t g_totalframes = 0;	// total # of frames in the current mpeg
 
 #define BUFFER_SIZE 262144
-static Uint8 g_buffer[BUFFER_SIZE];	// buffer to hold mpeg2 file as we read it in
+static uint8_t g_buffer[BUFFER_SIZE];	// buffer to hold mpeg2 file as we read it in
 
 #define HEADER_BUF_SIZE 200
-static Uint8 g_header_buf[HEADER_BUF_SIZE];
+static uint8_t g_header_buf[HEADER_BUF_SIZE];
 static unsigned int g_header_buf_size = 0;	// size of the header buffer
 
 // how many frames we will stall after beginning playback (should be 1, because presumably before we start playing,
@@ -629,7 +629,7 @@ void play_handler()
 }
 
 // sets the framerate inside our info structure based upon the framerate code received
-void ivldp_set_framerate(Uint8 frame_rate_code)
+void ivldp_set_framerate(uint8_t frame_rate_code)
 {
 	// now to compute the framerate
 
@@ -830,7 +830,7 @@ void idle_handler_open()
 	//  check to make sure it's a video stream and also get framerate
 	if (bSuccess)
 	{
-		Uint8 small_buf[8];
+		uint8_t small_buf[8];
 		io_read(small_buf, sizeof(small_buf));	// 1st 8 bytes reveal much
 		
 		// if we find the proper mpeg2 video header at the beginning of the file
@@ -1024,7 +1024,7 @@ void ivldp_respond_req_speedchange()
 // This function can be used to do both still frames and moving video.  Play and search both use this function.
 void ivldp_render()
 {
-    Uint8 *end = NULL;
+    uint8_t *end = NULL;
 	int render_finished = 0;
 
 	s_skip_all = 0;	// default value, don't skip frames unless the play or paused handler orders it

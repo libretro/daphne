@@ -32,6 +32,6 @@ int beeper_init(Uint32 unused);
 void beeper_ctrl_data(unsigned int uPort, unsigned int uByte, int internal_id);
 
 // called from sound mixer to get audio stream
-void beeper_get_stream(Uint8 *stream, int length, int internal_id);
+void beeper_get_stream(uint8_t *stream, int length, int internal_id);
 
 #endif // PC_BEEPER_H

@@ -18,6 +18,7 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include <stdint.h>
 #include "../SDL_internal.h"
 
 #include "SDL_video.h"
@@ -28,7 +29,7 @@
 #ifdef __SSE__
 /* This assumes 16-byte aligned src and dst */
 static SDL_INLINE void
-memcpySSE(Uint8 * dst, const Uint8 * src, int len)
+memcpySSE(uint8_t * dst, const uint8_t * src, int len)
 {
     int i;
 
@@ -56,7 +57,7 @@ void
 SDL_BlitCopy(SDL_BlitInfo * info)
 {
     SDL_bool overlap;
-    Uint8 *src, *dst;
+    uint8_t *src, *dst;
     int w, h;
     int srcskip, dstskip;
 

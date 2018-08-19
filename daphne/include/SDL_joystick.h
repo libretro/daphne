@@ -39,6 +39,7 @@
 #ifndef _SDL_joystick_h
 #define _SDL_joystick_h
 
+#include <stdint.h>
 #include "SDL_stdinc.h"
 #include "SDL_error.h"
 
@@ -66,7 +67,7 @@ typedef struct _SDL_Joystick SDL_Joystick;
 
 /* A structure that encodes the stable unique id for a joystick device */
 typedef struct {
-    Uint8 data[16];
+    uint8_t data[16];
 } SDL_JoystickGUID;
 
 typedef int32_t SDL_JoystickID;
@@ -231,7 +232,7 @@ extern DECLSPEC int16_t SDLCALL SDL_JoystickGetAxis(SDL_Joystick * joystick,
  *           - ::SDL_HAT_LEFTUP
  *           - ::SDL_HAT_LEFTDOWN
  */
-extern DECLSPEC Uint8 SDLCALL SDL_JoystickGetHat(SDL_Joystick * joystick,
+extern DECLSPEC uint8_t SDLCALL SDL_JoystickGetHat(SDL_Joystick * joystick,
                                                  int hat);
 
 /**
@@ -249,7 +250,7 @@ extern DECLSPEC int SDLCALL SDL_JoystickGetBall(SDL_Joystick * joystick,
  *
  *  The button indices start at index 0.
  */
-extern DECLSPEC Uint8 SDLCALL SDL_JoystickGetButton(SDL_Joystick * joystick,
+extern DECLSPEC uint8_t SDLCALL SDL_JoystickGetButton(SDL_Joystick * joystick,
                                                     int button);
 
 /**
