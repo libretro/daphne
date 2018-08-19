@@ -421,12 +421,9 @@ static unsigned int g_header_buf_size = 0;	// size of the header buffer
 
 ////////////////////////////////////////////////
 
-// RJS HERE - video thread
 // this is our video thread which gets called
 int idle_handler(void *surface)
 {
-	// 2017.02.06 - RJS ADD - Logging.
-
 	int done = 0;
 
 	vo_null_open();	// open 'null' driver (we just pass decoded frames to parent thread)
@@ -440,12 +437,25 @@ int idle_handler(void *surface)
 		// (so we don't go to sleep on skips)
 		while (ivldp_got_new_command() && !done)
 		{
-			// 2017.02.13 - RJS ADD - Logging.
 			// examine the actual command (strip off the count)
 			switch(g_req_cmdORcount & 0xF0)
 			{
 			case VLDP_REQ_QUIT:
 				done = 1;
+            io_close();
+
+            g_out_info.status = STAT_ERROR;
+            mpeg2_close(g_mpeg_data);	// shutdown libmpeg2
+            vo_null_close();		// shutdown null driver
+
+            // de-allocate any files that have been precached
+            while (s_uPreCacheIdxCount > 0)
+            {
+               --s_uPreCacheIdxCount;
+               free(s_sPreCacheEntries[s_uPreCacheIdxCount].ptrBuf);
+            }
+
+            ivldp_ack_command();	// acknowledge quit command
 				break;
 			case VLDP_REQ_OPEN:
 				idle_handler_open();
@@ -464,7 +474,6 @@ int idle_handler(void *surface)
 				break;
 			case VLDP_REQ_PAUSE:	// pause command while we're already idle?  this is an error
 			case VLDP_REQ_STOP:	// stop command while we're already idle? this is an error
-				// 2017.02.13 - RJS ADD - Logging.
 				g_out_info.status = STAT_ERROR;
 				ivldp_ack_command();
 				break;
@@ -488,29 +497,6 @@ int idle_handler(void *surface)
 
 	} // end while we have not received a quit command
 
-	io_close();
-	/*
-	// if we have a file open, close it
-	if (g_mpeg_handle)
-	{
-		fclose(g_mpeg_handle);
-		g_mpeg_handle = 0;
-	}
-	*/
-
-	// 2017.02.13 - RJS ADD - Logging.
-	g_out_info.status = STAT_ERROR;
-	mpeg2_close(g_mpeg_data);	// shutdown libmpeg2
-	vo_null_close();		// shutdown null driver
-
-	// de-allocate any files that have been precached
-	while (s_uPreCacheIdxCount > 0)
-	{
-		--s_uPreCacheIdxCount;
-		free(s_sPreCacheEntries[s_uPreCacheIdxCount].ptrBuf);
-	}
-
-	ivldp_ack_command();	// acknowledge quit command
 	return 0;
 }
 
