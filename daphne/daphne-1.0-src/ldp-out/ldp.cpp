@@ -1024,12 +1024,6 @@ bool ldp::handle_cmdline_arg(const char *arg)
 	return false;
 }
 
-void ldp::get_bug_log(list<string> &log)
-{
-	log = m_bug_log;
-	m_bug_log.clear();
-}
-
 void ldp::print_frame_info()
 {
 	string s = "Current frame is " + numstr::ToStr(m_uCurrentFrame);

@@ -214,10 +214,6 @@ public:
 	// handles LDP-specific command-line arguments
 	virtual bool handle_cmdline_arg(const char *arg);
 	
-	// Copies m_bug_log into 'log' and clears m_bug_log.
-	// Used by releasetest.
-	void get_bug_log(list<string> &log);
-
 	// debug function used by the cpu debugger
 	void print_frame_info();
 
