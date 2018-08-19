@@ -153,16 +153,15 @@ SDL_SW_YUVTexture * get_vb_next_usable(int * vb_ndx)
 	for (int i = 0; i < VIDEO_BUFFER_AMOUNT; i++)
 	{
 		if (g_hw_overlay[i].buffer_state == VB_STATE_RENDERING_DONE)
-		{
 			g_hw_overlay[i].buffer_state = VB_STATE_USEABLE;
-		}
 	}
 
 	// Crawl all buffers looking for a STATE_USABLE buffer.
 	int vb_next;
 	for (vb_next = 0; vb_next < VIDEO_BUFFER_AMOUNT; vb_next++)
 	{
-		if (g_hw_overlay[vb_next].buffer_state == VB_STATE_USEABLE) break;
+		if (g_hw_overlay[vb_next].buffer_state == VB_STATE_USEABLE)
+         break;
 	}
 
 	// We could consider a stall and wait for a usable video buffer as one should be in the 
@@ -375,7 +374,6 @@ ldp_vldp::~ldp_vldp()
 // called when daphne starts up
 bool ldp_vldp::init_player()
 {
-
 	bool result = false;
 	bool need_to_parse = false;	// whether we need to parse all video
 
@@ -384,7 +382,6 @@ bool ldp_vldp::init_player()
    // try to read in the framefile
    if (read_frame_conversions())
    {
-
       // just a sanity check to make sure their frame file is correct
       if (first_video_file_exists())
       {				
@@ -472,35 +469,24 @@ bool ldp_vldp::init_player()
                      result = true;
                   }
                   else
-                  {
                      printline("LDP-VLDP ERROR : first video file could not be opened!");
-                  }
                } // end if it's ok to proceed
                // else precaching failed
                else
-               {
                   printerror("LDP-VLDP ERROR : precaching failed");
-               }
 
             } // end if reading the frame conversion file worked
             else
-            {
                printline("LDP-VLDP ERROR : vldp_init returned NULL (which shouldn't ever happen)");
-            }
          } // if audio init succeeded
          else
          {
             // only report an audio problem if there is one
             if (!get_quitflag())
-            {
                printline("Could not initialize VLDP audio!");
-            }
-
             // otherwise report that they quit
             else
-            {
                printline("VLDP : Quit requested, shutting down!");
-            }
          } // end if audio init failed or if user opted to quit instead of parse
       } // end if first file was present (sanity check)
       // else if first file was not found, we do just quit because an error is printed elsewhere
@@ -515,9 +501,7 @@ bool ldp_vldp::init_player()
 	
 	// if init didn't completely finish, then we need to shutdown everything
 	if (!result)
-	{
 		shutdown_player();
-	}
 
 	return result;
 }
@@ -560,9 +544,7 @@ bool ldp_vldp::open_and_block(const string &strFilename)
 	{
 		bResult = wait_for_status(STAT_STOPPED);
 		if (bResult)
-		{
 			m_cur_mpeg_filename = strFilename;
-		}
 	}
 
 	blitting_allowed = false;
@@ -580,9 +562,7 @@ bool ldp_vldp::precache_and_block(const string &strFilename)
 	blitting_allowed = true;
 
 	if (g_vldp_info->precache((m_mpeg_path + strFilename).c_str()))
-	{
 		bResult = wait_for_status(STAT_STOPPED);
-	}
 
 	blitting_allowed = false;
 
@@ -591,8 +571,6 @@ bool ldp_vldp::precache_and_block(const string &strFilename)
 
 bool ldp_vldp::wait_for_status(unsigned int uStatus)
 {
-	bool bResult = false;
-
 	while (g_vldp_info->status == STAT_BUSY)
 	{
 		// if we got a parse update, then show it ...
@@ -612,11 +590,9 @@ bool ldp_vldp::wait_for_status(unsigned int uStatus)
 
 	// if opening succeeded
 	if ((unsigned int) g_vldp_info->status == uStatus)
-	{
-		bResult = true;
-	}
+		return true;
 
-	return bResult;
+	return false;
 }
 
 bool ldp_vldp::nonblocking_search(char *frame)
@@ -751,23 +727,16 @@ bool ldp_vldp::nonblocking_search(char *frame)
 // it should be safe to assume that if this function is getting called, that we have not yet got a result from the search
 int ldp_vldp::get_search_result()
 {
-	int result = SEARCH_BUSY;	// default to no change
-	
 	// if search is finished and has succeeded
 	if (g_vldp_info->status == STAT_PAUSED)
-	{
-		result = SEARCH_SUCCESS;
-	}
+		return SEARCH_SUCCESS;
 	
 	// if the search failed
 	else if (g_vldp_info->status == STAT_ERROR)
-	{
-		result = SEARCH_FAIL;
-	}
+		return SEARCH_FAIL;
 	
 	// else it's busy so we just wait ...
-	
-	return result;
+	return SEARCH_BUSY;
 }
 
 unsigned int ldp_vldp::play()
@@ -783,7 +752,6 @@ unsigned int ldp_vldp::play()
 		if (bOK)
 		{
 			// this is done inside open_and_block now ...
-			//m_cur_mpeg_filename = m_mpeginfo[0].name;
 			
 			// if sound is enabled, try to load an audio stream to go with video stream ...
 			if (is_sound_enabled())
@@ -806,9 +774,7 @@ unsigned int ldp_vldp::play()
 	{
 		audio_play(0);
 		if (g_vldp_info->play(0))
-		{
 			result = GET_TICKS();
-		}
 	}
 
 	if (!result)
@@ -849,9 +815,7 @@ bool ldp_vldp::skip_forward(uint16_t frames_to_skip, uint16_t target_frame)
 	
 				// seek and play if seeking was successful
 				if (seek_audio(u64AudioTargetPos))
-				{
 					audio_play(m_uElapsedMsSincePlay);
-				}
 			}
 			// else we have no audio file open, but that's ok ...
 	
@@ -882,13 +846,9 @@ void ldp_vldp::pause()
 
 bool ldp_vldp::change_speed(unsigned int uNumerator, unsigned int uDenominator)
 {
-	bool bResult = false;
-
 	// if we aren't doing 1X, then stop the audio (this can be enhanced later)
 	if ((uNumerator != 1) || (uDenominator != 1))
-	{
 		audio_pause();
-	}
 	// else the audio should be played at the correct location
 	else
 	{
@@ -906,11 +866,9 @@ bool ldp_vldp::change_speed(unsigned int uNumerator, unsigned int uDenominator)
 	}
 
 	if (g_vldp_info->speedchange(m_uFramesToSkipPerFrame, m_uFramesToStallPerFrame))
-	{
-		bResult = true;
-	}
+      return true;
 
-	return bResult;
+	return false;
 }
 
 void ldp_vldp::think()
@@ -952,10 +910,7 @@ unsigned int ldp_vldp::get_current_frame()
 		// FIXME : THIS CODE HAS BUGS IN IT, I HAVEN'T TRACKED THEM DOWN YET HEHE
 		// if the mpeg's FPS and the disc's FPS differ, we need to adjust the frame that we return
 		if (g_game->get_disc_fpks() != uFPKS)
-		{
 			return m_uCurrentFrame;
-			//result = (result * g_game->get_disc_fpks()) / uFPKS;
-		}
 	}
 
 	// if there's even a slight mismatch, report it ...
@@ -1050,34 +1005,24 @@ void ldp_vldp::test_helper(unsigned uIterations)
 
 	// make a certain # of milliseconds elapse ....
 	for (unsigned int u = 0; u < uIterations; u++)
-	{
 		pre_think();
-	}
 
 }
 
 // handles VLDP-specific command line args
 bool ldp_vldp::handle_cmdline_arg(const char *arg)
 {
-	bool result = true;
-	
 	if (strcasecmp(arg, "-blend")==0)
-	{
 		g_filter_type |= FILTER_BLEND;
-	}
 	else if (strcasecmp(arg, "-scanlines")==0)
-	{
 		g_filter_type |= FILTER_SCANLINES;
-	}
 	// should we run a few VLDP tests when the player is initialized?
 	else if (strcasecmp(arg, "-vldptest")==0)
 	{
 	}
 	// should we precache all video streams to RAM?
 	else if (strcasecmp(arg, "-precache")==0)
-	{
 		m_bPreCache = true;
-	}
 	// even if we don't have enough RAM, should we still precache all video streams to RAM?
 	else if (strcasecmp(arg, "-precache_force")==0)
 	{
@@ -1087,11 +1032,9 @@ bool ldp_vldp::handle_cmdline_arg(const char *arg)
 	
 	// else it's unknown
 	else
-	{
-		result = false;
-	}
+      return false;
 	
-	return result;
+	return true;
 }
 
 
@@ -1188,9 +1131,7 @@ bool ldp_vldp::first_video_file_exists()
 		full_path = m_mpeg_path;
 		full_path += m_mpeginfo[0].name;
 		if (mpo_file_exists(full_path.c_str()))
-		{
 			result = true;
-		}
 		else
 		{
 			full_path = "Could not open file : " + full_path;	// keep using full_path just because it's convenient
@@ -1342,16 +1283,12 @@ uint64_t ldp_vldp::get_audio_sample_position(unsigned int uTargetMpegFrame)
 	uint64_t u64AudioTargetPos = 0;
 
 	if (!need_frame_conversion())
-	{
 		u64AudioTargetPos = (((uint64_t) uTargetMpegFrame) * FREQ1000) / g_game->get_disc_fpks();
 		// # of samples to seek to in the audio stream
-	}
 	// If we are already doing a frame conversion elsewhere, we don't want to do it here again twice
 	//  but we do need to set the audio to the correct time
 	else
-	{
 		u64AudioTargetPos = (((uint64_t) uTargetMpegFrame) * FREQ1000) / get_frame_conversion_fpks();
-	}
 
 	return u64AudioTargetPos;
 }
@@ -1371,9 +1308,7 @@ uint16_t ldp_vldp::mpeg_info (string &filename, uint16_t ld_frame)
 	
 	// find the mpeg file that has the LD frame inside of it
 	while ((index+1 < m_file_index) && (ld_frame >= m_mpeginfo[index+1].frame))
-	{
 		index = index + 1;
-	}
 
 	// make sure that the frame they've requested comes after the first frame in our framefile
 	if (ld_frame >= m_mpeginfo[index].frame)
@@ -1407,9 +1342,7 @@ bool ldp_vldp::lock_overlay(uint32_t timeout)
 	bool bRes = false;
 
 	if (g_vldp_info)
-	{
 		bRes = g_vldp_info->lock(timeout) == VLDP_TRUE;
-	}
 	// else g_vldp_info is NULL which means the init function hasn't been called yet probably
 
 	return bRes;
@@ -1440,9 +1373,7 @@ bool ldp_vldp::parse_framefile(const char *pszInBuf, const char *pszFramefileFul
 	{
 		// if there is at least 1 line
 		if (sMpegPath.size() > 0)
-		{
 			err_msg = "Framefile only has 1 line in it. Framefiles must have at least 2 lines in it.";
-		}
 		else err_msg = "Framefile appears to be empty. Framefile must have at least 2 lines in it.";
 		return false;	// normally I only like to have 1 return per function, but this is a good spot to return..
 	}
@@ -1527,9 +1458,7 @@ bool ldp_vldp::parse_framefile(const char *pszInBuf, const char *pszFramefileFul
 					numstr::ToStr(line_number) + ", found this: " + s + "(";
 				// print hex values of bad string to make troubleshooting easier
 				for (size_t idx = 0; idx < s.size(); idx++)
-				{
 					err_msg += "0x" + numstr::ToStr(s[idx], 16) + " ";
-				}
 				
 				err_msg += ")";
 				result = false;
@@ -1555,8 +1484,6 @@ bool ldp_vldp::parse_framefile(const char *pszInBuf, const char *pszFramefileFul
 
 int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 {
-	int result = VLDP_FALSE;
-	
 	void * g_hw_overlay_pixels	= NULL;
 	SDL_Rect g_hw_overlay_rect	= { 0, 0, 0, 0 };
 	// v0.01 int nPitch = DAPHNE_VIDEO_W * DAPHNE_VIDEO_ByPP;
@@ -1579,9 +1506,10 @@ int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 
 		SDL_Surface *gamevid = g_game->get_finished_video_overlay();	// This could change at any time (double buffering, for example)
 		if (gamevid == NULL)
-			return result;
+			return VLDP_FALSE;
 
-		if (nPitch == 0) nPitch = gamevid->w * SDL_BYTESPERPIXEL(gamevid->format->format);
+		if (nPitch == 0)
+         nPitch = gamevid->w * SDL_BYTESPERPIXEL(gamevid->format->format);
 
 		uint8_t * gamevid_pixels = (uint8_t *)gamevid->pixels;
 
@@ -1702,9 +1630,7 @@ int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 				{
 					// do a black YUY2 line (the first line should be black to workaround nvidia bug)
 					for (int i = 0; i < (g_hw_overlay_rect.w << 1); i += 4)
-					{
 						*((uint32_t *) (dst_ptr + i)) = YUY2_BLACK;	// this value is black in YUY2 mode
-					}
 					
 					if (g_filter_type & FILTER_BLEND)
 					{
@@ -1713,9 +1639,7 @@ int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 						memcpy(dst_ptr + channel0_pitch, g_line_buf3, (g_hw_overlay_rect.w << 1));
 					}
 					else
-					{
 						memcpy(dst_ptr + channel0_pitch, g_line_buf, (g_hw_overlay_rect.w << 1));	// this could be g_line_buf2 also
-					}
 				}
 
 				dst_ptr += (channel0_pitch << 1);	// we've done 2 rows, so skip a row
@@ -1747,18 +1671,16 @@ int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 				warned = true;
 			}
 			
+         // MPEG size has changed, so drop a hint to any game
+         // that resizes dynamically.
 			if (g_game->is_overlay_size_dynamic())
-			{
-				// MPEG size has changed, so drop a hint to any game
-				// that resizes dynamically.
 				g_game->set_video_overlay_needs_update(true);
-			}
 		} // end sanity check
 		
-		result = VLDP_TRUE;	// we were successful (we return successful even if overlay part failed because we want to render _something_)
 	} // end if locking the overlay was successful
 	
-	return result;
+   // we were successful (we return successful even if overlay part failed because we want to render _something_)
+	return VLDP_TRUE;
 }
 
 
