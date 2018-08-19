@@ -503,15 +503,11 @@ int idle_handler(void *surface)
 // returns 1 if there is a new command waiting for us or 0 otherwise
 static int ivldp_got_new_command(void)
 {
-	int result = 0;
-
 	// if they are no longer equal	
 	if (g_req_cmdORcount != s_old_req_cmdORcount)
-	{
-		result = 1;
-	}
+		return 1;
 	
-	return result;
+	return 0;
 }
 
 // acknowledges a command sent by the parent thread
