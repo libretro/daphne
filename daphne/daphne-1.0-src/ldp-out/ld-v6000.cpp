@@ -401,7 +401,7 @@ bool v6000::wait_for_finished()
 // timeout is how many ms to wait before giving up
 // watchquit is whether to abort if the quitflag is set (set it to true if you aren't sure)
 // returns false if it could not get the result code
-bool v6000::getstring(char *s, Uint32 timeout, bool watchquit)
+bool v6000::getstring(char *s, uint32_t timeout, bool watchquit)
 {
 	int index = 0;
 	unsigned int cur_time = refresh_ms_time();

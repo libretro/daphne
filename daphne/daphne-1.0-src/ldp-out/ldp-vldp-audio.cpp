@@ -64,13 +64,13 @@ SDL_mutex *g_ogg_mutex = NULL;
 mpo_io *g_pIOAudioHandle = NULL;
 OggVorbis_File s_ogg;
 
-Uint32 g_audio_filesize = 0;	// total size of the audio stream
-Uint32 g_audio_filepos = 0;	// the position in the file of our audio stream
+uint32_t g_audio_filesize = 0;	// total size of the audio stream
+uint32_t g_audio_filepos = 0;	// the position in the file of our audio stream
 uint8_t *g_big_buf = NULL;	// holds entire Ogg stream in RAM :)
 bool g_audio_ready = false;	// whether audio is ready to be parsed
 bool g_audio_playing = false;	// whether the audio is to be playing or not
-Uint32 g_playing_timer = 0;	// the time at which we began playing audio
-Uint32 g_samples_played = 0;	// how many samples have played since we've been timing
+uint32_t g_playing_timer = 0;	// the time at which we began playing audio
+uint32_t g_samples_played = 0;	// how many samples have played since we've been timing
 bool g_audio_left_muted = false;	// left audio channel enabled
 bool g_audio_right_muted = false;	// right audio channel enabled
 
@@ -128,7 +128,7 @@ int mmseek (void *datasource, int64_t offset, int whence)
 			// make sure offset is positive so we don't get into trouble
 			if (offset >= 0)
 			{
-				g_audio_filepos = (Uint32) offset;
+				g_audio_filepos = (uint32_t) offset;
 			}
 			else
 			{
@@ -145,7 +145,7 @@ int mmseek (void *datasource, int64_t offset, int whence)
 		}
 		break;
 	case SEEK_END:
-//		printf("SEEK_END being called, offset is %x, whence is %d!\n", (Uint32) offset, whence);
+//		printf("SEEK_END being called, offset is %x, whence is %d!\n", (uint32_t) offset, whence);
 		if (g_audio_filesize + offset <= g_audio_filesize)
 		{
 			g_audio_filepos = (unsigned int) (g_audio_filesize + offset);
@@ -178,7 +178,7 @@ int mmclose (void *datasource)
 
 long mmtell (void *datasource)
 {
-//	printf("mmtell being called, filepos is %x\n", (Uint32) g_audio_filepos);
+//	printf("mmtell being called, filepos is %x\n", (uint32_t) g_audio_filepos);
 
 	if (datasource)
 	{
@@ -227,7 +227,7 @@ static void *audiocopy_mute(void *dest, const void *src, size_t bytes_to_copy)
 // copies left-channel audio data to right-channel
 static void *audiocopy_left_only(void *dest, const void *src, size_t bytes_to_copy)
 {
-	Uint32 *dst32 = (Uint32 *) dest;
+	uint32_t *dst32 = (uint32_t *) dest;
 	uint16_t *src16_L = (uint16_t *) src;	// point to first bit of left-channel data
 
 	bytes_to_copy >>= 2;	// divide by 4 because we will be advancing 4 bytes per iteration
@@ -243,7 +243,7 @@ static void *audiocopy_left_only(void *dest, const void *src, size_t bytes_to_co
 // copies right-channel audio data to left-channel
 static void *audiocopy_right_only(void *dest, const void *src, size_t bytes_to_copy)
 {
-	Uint32 *dst32 = (Uint32 *) dest;
+	uint32_t *dst32 = (uint32_t *) dest;
 	uint16_t *src16_R = (uint16_t *) src + 1;	// point to the first bit of data that occurs on the right channel
 
 	bytes_to_copy >>= 2;	// divide by 4 because we will be advancing 4 bytes per iteration
@@ -442,7 +442,7 @@ bool ldp_vldp::seek_audio(uint64_t u64Samples)
 }
 
 // starts playing the audio
-void ldp_vldp::audio_play(Uint32 timer)
+void ldp_vldp::audio_play(uint32_t timer)
 {
 	OGG_LOCK;
 	g_playing_timer = timer;
@@ -483,8 +483,8 @@ void ldp_vldp_audio_callback(uint8_t *stream, int len, int unused)
 		{
 			long samples_read = 0;
 			int samples_copied = 0;
-			Uint32 bytes_to_read = 0;
-			Uint32 correct_samples = 0;	// how many samples we should have played up to this point
+			uint32_t bytes_to_read = 0;
+			uint32_t correct_samples = 0;	// how many samples we should have played up to this point
 			int nop;
 			
 			// if we have some samples from last time for the audio stream
@@ -518,7 +518,7 @@ void ldp_vldp_audio_callback(uint8_t *stream, int len, int unused)
 				
 					// if we have more space to fill than samples available, then we only want to read
 					// as many samples as we have available
-					if (bytes_to_read > (Uint32) samples_read)
+					if (bytes_to_read > (uint32_t) samples_read)
 					{
 						bytes_to_read = samples_read;
 					}

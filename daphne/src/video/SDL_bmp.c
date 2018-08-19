@@ -89,10 +89,10 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
     int bmpPitch;
     int i, pad;
     SDL_Surface *surface;
-    Uint32 Rmask = 0;
-    Uint32 Gmask = 0;
-    Uint32 Bmask = 0;
-    Uint32 Amask = 0;
+    uint32_t Rmask = 0;
+    uint32_t Gmask = 0;
+    uint32_t Bmask = 0;
+    uint32_t Amask = 0;
     SDL_Palette *palette;
     uint8_t *bits;
     uint8_t *top, *end;
@@ -104,23 +104,23 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
 
     /* The Win32 BMP file header (14 bytes) */
     char magic[2];
-    /* Uint32 bfSize = 0; */
+    /* uint32_t bfSize = 0; */
     /* uint16_t bfReserved1 = 0; */
     /* uint16_t bfReserved2 = 0; */
-    Uint32 bfOffBits = 0;
+    uint32_t bfOffBits = 0;
 
     /* The Win32 BITMAPINFOHEADER struct (40 bytes) */
-    Uint32 biSize = 0;
+    uint32_t biSize = 0;
     int32_t biWidth = 0;
     int32_t biHeight = 0;
     /* uint16_t biPlanes = 0; */
     uint16_t biBitCount = 0;
-    Uint32 biCompression = 0;
-    /* Uint32 biSizeImage = 0; */
+    uint32_t biCompression = 0;
+    /* uint32_t biSizeImage = 0; */
     /* int32_t biXPelsPerMeter = 0; */
     /* int32_t biYPelsPerMeter = 0; */
-    Uint32 biClrUsed = 0;
-    /* Uint32 biClrImportant = 0; */
+    uint32_t biClrUsed = 0;
+    /* uint32_t biClrImportant = 0; */
 
     /* Make sure we are passed a valid data source */
     surface = NULL;
@@ -151,13 +151,13 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
     /* Read the Win32 BITMAPINFOHEADER */
     biSize = SDL_ReadLE32(src);
     if (biSize == 12) {   /* really old BITMAPCOREHEADER */
-        biWidth = (Uint32) SDL_ReadLE16(src);
-        biHeight = (Uint32) SDL_ReadLE16(src);
+        biWidth = (uint32_t) SDL_ReadLE16(src);
+        biHeight = (uint32_t) SDL_ReadLE16(src);
         /* biPlanes = */ SDL_ReadLE16(src);
         biBitCount = SDL_ReadLE16(src);
         biCompression = BI_RGB;
     } else if (biSize >= 40) {  /* some version of BITMAPINFOHEADER */
-        Uint32 headerSize;
+        uint32_t headerSize;
         biWidth = SDL_ReadLE32(src);
         biHeight = SDL_ReadLE32(src);
         /* biPlanes = */ SDL_ReadLE16(src);
@@ -216,7 +216,7 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
         }
 
         /* skip any header bytes we didn't handle... */
-        headerSize = (Uint32) (SDL_RWtell(src) - (fp_offset + 14));
+        headerSize = (uint32_t) (SDL_RWtell(src) - (fp_offset + 14));
         if (biSize > headerSize) {
             SDL_RWseek(src, (biSize - headerSize), RW_SEEK_CUR);
         }
@@ -415,7 +415,7 @@ SDL_LoadBMP_RW(SDL_RWops * src, int freesrc)
                 }
 
             case 32:{
-                    Uint32 *pix = (Uint32 *) bits;
+                    uint32_t *pix = (uint32_t *) bits;
                     for (i = 0; i < surface->w; i++)
                         pix[i] = SDL_Swap32(pix[i]);
                     break;

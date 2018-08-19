@@ -22,6 +22,7 @@
 
 // This code is to interface the Daphne sound system with tms9919-sdl.cpp
 
+#include <stdint.h>
 #include "../io/conout.h"
 #include "sound.h"
 #include "tms9919.hpp"
@@ -37,7 +38,7 @@ int g_uTMS9919Index = 0;
 
 // returns the internal index of the sound chip that has just been created
 //  (so that it can be referenced quickly)
-int tms9919_initialize(Uint32 core_frequency)
+int tms9919_initialize(uint32_t core_frequency)
 {
 	int result = -1;
 

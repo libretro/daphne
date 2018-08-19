@@ -304,7 +304,7 @@ typedef struct SDL_Palette
 {
     int ncolors;
     SDL_Color *colors;
-    Uint32 version;
+    uint32_t version;
     int refcount;
 } SDL_Palette;
 
@@ -313,15 +313,15 @@ typedef struct SDL_Palette
  */
 typedef struct SDL_PixelFormat
 {
-    Uint32 format;
+    uint32_t format;
     SDL_Palette *palette;
     uint8_t BitsPerPixel;
     uint8_t BytesPerPixel;
     uint8_t padding[2];
-    Uint32 Rmask;
-    Uint32 Gmask;
-    Uint32 Bmask;
-    Uint32 Amask;
+    uint32_t Rmask;
+    uint32_t Gmask;
+    uint32_t Bmask;
+    uint32_t Amask;
     uint8_t Rloss;
     uint8_t Gloss;
     uint8_t Bloss;
@@ -337,7 +337,7 @@ typedef struct SDL_PixelFormat
 /**
  * \brief Get the human readable name of a pixel format
  */
-extern DECLSPEC const char* SDLCALL SDL_GetPixelFormatName(Uint32 format);
+extern DECLSPEC const char* SDLCALL SDL_GetPixelFormatName(uint32_t format);
 
 /**
  *  \brief Convert one of the enumerated pixel formats to a bpp and RGBA masks.
@@ -346,12 +346,12 @@ extern DECLSPEC const char* SDLCALL SDL_GetPixelFormatName(Uint32 format);
  *
  *  \sa SDL_MasksToPixelFormatEnum()
  */
-extern DECLSPEC SDL_bool SDLCALL SDL_PixelFormatEnumToMasks(Uint32 format,
+extern DECLSPEC SDL_bool SDLCALL SDL_PixelFormatEnumToMasks(uint32_t format,
                                                             int *bpp,
-                                                            Uint32 * Rmask,
-                                                            Uint32 * Gmask,
-                                                            Uint32 * Bmask,
-                                                            Uint32 * Amask);
+                                                            uint32_t * Rmask,
+                                                            uint32_t * Gmask,
+                                                            uint32_t * Bmask,
+                                                            uint32_t * Amask);
 
 /**
  *  \brief Convert a bpp and RGBA masks to an enumerated pixel format.
@@ -361,16 +361,16 @@ extern DECLSPEC SDL_bool SDLCALL SDL_PixelFormatEnumToMasks(Uint32 format,
  *
  *  \sa SDL_PixelFormatEnumToMasks()
  */
-extern DECLSPEC Uint32 SDLCALL SDL_MasksToPixelFormatEnum(int bpp,
-                                                          Uint32 Rmask,
-                                                          Uint32 Gmask,
-                                                          Uint32 Bmask,
-                                                          Uint32 Amask);
+extern DECLSPEC uint32_t SDLCALL SDL_MasksToPixelFormatEnum(int bpp,
+                                                          uint32_t Rmask,
+                                                          uint32_t Gmask,
+                                                          uint32_t Bmask,
+                                                          uint32_t Amask);
 
 /**
  *  \brief Create an SDL_PixelFormat structure from a pixel format enum.
  */
-extern DECLSPEC SDL_PixelFormat * SDLCALL SDL_AllocFormat(Uint32 pixel_format);
+extern DECLSPEC SDL_PixelFormat * SDLCALL SDL_AllocFormat(uint32_t pixel_format);
 
 /**
  *  \brief Free an SDL_PixelFormat structure.
@@ -421,7 +421,7 @@ extern DECLSPEC void SDLCALL SDL_FreePalette(SDL_Palette * palette);
  *
  *  \sa SDL_MapRGBA
  */
-extern DECLSPEC Uint32 SDLCALL SDL_MapRGB(const SDL_PixelFormat * format,
+extern DECLSPEC uint32_t SDLCALL SDL_MapRGB(const SDL_PixelFormat * format,
                                           uint8_t r, uint8_t g, uint8_t b);
 
 /**
@@ -429,7 +429,7 @@ extern DECLSPEC Uint32 SDLCALL SDL_MapRGB(const SDL_PixelFormat * format,
  *
  *  \sa SDL_MapRGB
  */
-extern DECLSPEC Uint32 SDLCALL SDL_MapRGBA(const SDL_PixelFormat * format,
+extern DECLSPEC uint32_t SDLCALL SDL_MapRGBA(const SDL_PixelFormat * format,
                                            uint8_t r, uint8_t g, uint8_t b,
                                            uint8_t a);
 
@@ -438,7 +438,7 @@ extern DECLSPEC Uint32 SDLCALL SDL_MapRGBA(const SDL_PixelFormat * format,
  *
  *  \sa SDL_GetRGBA
  */
-extern DECLSPEC void SDLCALL SDL_GetRGB(Uint32 pixel,
+extern DECLSPEC void SDLCALL SDL_GetRGB(uint32_t pixel,
                                         const SDL_PixelFormat * format,
                                         uint8_t * r, uint8_t * g, uint8_t * b);
 
@@ -447,7 +447,7 @@ extern DECLSPEC void SDLCALL SDL_GetRGB(Uint32 pixel,
  *
  *  \sa SDL_GetRGB
  */
-extern DECLSPEC void SDLCALL SDL_GetRGBA(Uint32 pixel,
+extern DECLSPEC void SDLCALL SDL_GetRGBA(uint32_t pixel,
                                          const SDL_PixelFormat * format,
                                          uint8_t * r, uint8_t * g, uint8_t * b,
                                          uint8_t * a);

@@ -75,7 +75,7 @@ unsigned char g_ldv1000_output = 0xFC;	// LD-V1000 is PARK'd and READY
 
 bool g_ldv1000_search_pending = false;	// whether the LD-V1000 is currently in the middle of a search operation or not (NOT USED WITH BLOCKING SEEKING)
 uint64_t g_ldv1000_search_begin_cycles = 0;	// the current cycle count when LD-V1000 began searching (used to force it to be busy for a certain period of time)
-Uint32 g_ldv1000_cycles_per_search = 0;	// how many cycles a read operation should last (some games require a simulated delay)
+uint32_t g_ldv1000_cycles_per_search = 0;	// how many cycles a read operation should last (some games require a simulated delay)
 double g_ldv1000_seconds_per_search = 0.5;	// minimum # of seconds that a search operation should last
 
 ///////////////////////////////////////////
@@ -92,7 +92,7 @@ unsigned char read_ldv1000()
 		if (g_ldv1000_search_pending)
 		{
 			// using uint32 because this number should never get big enough to hit the uint64 range
-			Uint32 elapsed_cycles = (Uint32) (get_total_cycles_executed(0) - g_ldv1000_search_begin_cycles);
+			uint32_t elapsed_cycles = (uint32_t) (get_total_cycles_executed(0) - g_ldv1000_search_begin_cycles);
 
 			g_ldv1000_output = 0x50;	// default to being busy searching
 
@@ -590,11 +590,11 @@ void clear(void)
 // Then you can query the other two strobe functions and always get the status of the strobe
 
 //uint64_t g_ldv1000_vsync_timer = 0;
-Uint32 g_ldv1000_until_vsync_end = 0;	// # of cpu cycles until vsync ends
-Uint32 g_ldv1000_until_status_start = 0;	// # of cpu cycles until status strobe begins
-Uint32 g_ldv1000_until_status_end = 0;	// # of cpu cycles u ntil status strobe ends
-Uint32 g_ldv1000_until_command_start = 0;	// # of cpu cycles until command strobe begins
-Uint32 g_ldv1000_until_command_end = 0;	// # of cpu cycles until command strobe ends
+uint32_t g_ldv1000_until_vsync_end = 0;	// # of cpu cycles until vsync ends
+uint32_t g_ldv1000_until_status_start = 0;	// # of cpu cycles until status strobe begins
+uint32_t g_ldv1000_until_status_end = 0;	// # of cpu cycles u ntil status strobe ends
+uint32_t g_ldv1000_until_command_start = 0;	// # of cpu cycles until command strobe begins
+uint32_t g_ldv1000_until_command_end = 0;	// # of cpu cycles until command strobe ends
 
 const unsigned int LDV1000_EVENT_VSYNC_START = 0;	// when vsync starts
 const unsigned int LDV1000_EVENT_VSYNC_END = 1;
@@ -671,7 +671,7 @@ bool ldv1000_is_command_strobe_active()
 void reset_ldv1000()
 {
 	clear();
-	Uint32 cpu_hz = get_cpu_hz(0);
+	uint32_t cpu_hz = get_cpu_hz(0);
 	double dCyclesPerUs = cpu_hz / 1000000.0;	// cycles per microsecond
 
 	// anything else?
@@ -681,13 +681,13 @@ void reset_ldv1000()
 	g_ldv1000_output = 0xFC;	// LD-V1000 is PARK'd and READY
 
 	// do these expensive calculations once
-	g_ldv1000_until_vsync_end = (Uint32) ((dCyclesPerUs * 27.1) + 0.5);	// 27.1 uS, length of vsync (according to warren)
-	g_ldv1000_until_status_start = (Uint32) ((dCyclesPerUs * 500.0) + 0.5);	// 500-650uS from the time vsync starts until the time status strobe starts
-	g_ldv1000_until_status_end = (Uint32) ((dCyclesPerUs * 26.0) + 0.5);	// status strobe lasts 26 uS
-	g_ldv1000_until_command_start = (Uint32) ((dCyclesPerUs * 54.0) + 0.5);	// 54 uS between status end and command begin
-	g_ldv1000_until_command_end = (Uint32) ((dCyclesPerUs * 25.0) + 0.5);	// cmd strobe lasts 25 uS
+	g_ldv1000_until_vsync_end = (uint32_t) ((dCyclesPerUs * 27.1) + 0.5);	// 27.1 uS, length of vsync (according to warren)
+	g_ldv1000_until_status_start = (uint32_t) ((dCyclesPerUs * 500.0) + 0.5);	// 500-650uS from the time vsync starts until the time status strobe starts
+	g_ldv1000_until_status_end = (uint32_t) ((dCyclesPerUs * 26.0) + 0.5);	// status strobe lasts 26 uS
+	g_ldv1000_until_command_start = (uint32_t) ((dCyclesPerUs * 54.0) + 0.5);	// 54 uS between status end and command begin
+	g_ldv1000_until_command_end = (uint32_t) ((dCyclesPerUs * 25.0) + 0.5);	// cmd strobe lasts 25 uS
 
-	g_ldv1000_cycles_per_search = (Uint32) (get_cpu_hz(0) * g_ldv1000_seconds_per_search);
+	g_ldv1000_cycles_per_search = (uint32_t) (get_cpu_hz(0) * g_ldv1000_seconds_per_search);
 
 }
 

@@ -536,8 +536,8 @@ void thayers::video_repaint()
 	//  g_ldp->lock_overlay will get called before VLDP has been initialized which is not good.
 	if (m_game_uses_video_overlay)
 	{
-		Uint32 cur_w = g_ldp->get_discvideo_width() >> 1;	// width our overlay should be
-		Uint32 cur_h = g_ldp->get_discvideo_height() >> 1;	// height our overlay should be
+		uint32_t cur_w = g_ldp->get_discvideo_width() >> 1;	// width our overlay should be
+		uint32_t cur_h = g_ldp->get_discvideo_height() >> 1;	// height our overlay should be
 
 		// If the width or height of the mpeg video has changed since we last were
 		// here (ie, opening a new mpeg) then reallocate the video overlay buffer.

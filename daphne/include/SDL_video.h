@@ -54,7 +54,7 @@ extern "C" {
  */
 typedef struct
 {
-    Uint32 format;              /**< pixel format */
+    uint32_t format;              /**< pixel format */
     int w;                      /**< width, in screen coordinates */
     int h;                      /**< height, in screen coordinates */
     int refresh_rate;           /**< refresh rate (or zero for unspecified) */
@@ -378,7 +378,7 @@ extern DECLSPEC int SDLCALL SDL_GetWindowDisplayMode(SDL_Window * window,
 /**
  *  \brief Get the pixel format associated with the window.
  */
-extern DECLSPEC Uint32 SDLCALL SDL_GetWindowPixelFormat(SDL_Window * window);
+extern DECLSPEC uint32_t SDLCALL SDL_GetWindowPixelFormat(SDL_Window * window);
 
 /**
  *  \brief Create a window with the specified position, dimensions, and flags.
@@ -409,7 +409,7 @@ extern DECLSPEC Uint32 SDLCALL SDL_GetWindowPixelFormat(SDL_Window * window);
  */
 extern DECLSPEC SDL_Window * SDLCALL SDL_CreateWindow(const char *title,
                                                       int x, int y, int w,
-                                                      int h, Uint32 flags);
+                                                      int h, uint32_t flags);
 
 /**
  *  \brief Create an SDL window from an existing native window.
@@ -425,17 +425,17 @@ extern DECLSPEC SDL_Window * SDLCALL SDL_CreateWindowFrom(const void *data);
 /**
  *  \brief Get the numeric ID of a window, for logging purposes.
  */
-extern DECLSPEC Uint32 SDLCALL SDL_GetWindowID(SDL_Window * window);
+extern DECLSPEC uint32_t SDLCALL SDL_GetWindowID(SDL_Window * window);
 
 /**
  *  \brief Get a window from a stored ID, or NULL if it doesn't exist.
  */
-extern DECLSPEC SDL_Window * SDLCALL SDL_GetWindowFromID(Uint32 id);
+extern DECLSPEC SDL_Window * SDLCALL SDL_GetWindowFromID(uint32_t id);
 
 /**
  *  \brief Get the window flags.
  */
-extern DECLSPEC Uint32 SDLCALL SDL_GetWindowFlags(SDL_Window * window);
+extern DECLSPEC uint32_t SDLCALL SDL_GetWindowFlags(SDL_Window * window);
 
 /**
  *  \brief Set the title of a window, in UTF-8 format.
@@ -721,7 +721,7 @@ extern DECLSPEC void SDLCALL SDL_RestoreWindow(SDL_Window * window);
  *  \sa SDL_GetWindowDisplayMode()
  */
 extern DECLSPEC int SDLCALL SDL_SetWindowFullscreen(SDL_Window * window,
-                                                    Uint32 flags);
+                                                    uint32_t flags);
 
 /**
  *  \brief Get the SDL surface associated with the window.

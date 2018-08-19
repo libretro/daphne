@@ -56,8 +56,8 @@
 #define STRSIZE 320
 
 extern uint16_t g_req_frame;	// which frame to seek to
-extern Uint32 g_req_min_seek_ms;	// minimum # of milliseconds that this seek can take
-extern Uint32 g_req_timer;
+extern uint32_t g_req_min_seek_ms;	// minimum # of milliseconds that this seek can take
+extern uint32_t g_req_timer;
 extern unsigned int g_req_idx;	// multipurpose index
 extern unsigned int g_req_precache;
 extern char g_req_file[];	// which file to open

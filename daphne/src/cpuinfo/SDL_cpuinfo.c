@@ -287,9 +287,9 @@ CPU_haveSSE42(void)
     return 0;
 }
 
-static Uint32 SDL_CPUFeatures = 0xFFFFFFFF;
+static uint32_t SDL_CPUFeatures = 0xFFFFFFFF;
 
-static Uint32
+static uint32_t
 SDL_GetCPUFeatures(void)
 {
     if (SDL_CPUFeatures == 0xFFFFFFFF) {

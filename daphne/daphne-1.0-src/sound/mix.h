@@ -45,7 +45,7 @@ void mix_c();
 
 extern mix_s *g_pMixBufs;
 extern uint8_t *g_pSampleDst;
-extern Uint32 g_uBytesToMix;
+extern uint32_t g_uBytesToMix;
 #define g_mix_func mix_c
 
 /////////////////////////////

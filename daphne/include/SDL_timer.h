@@ -43,13 +43,13 @@ extern "C" {
  *
  * \note This value wraps if the program runs for more than ~49 days.
  */
-extern DECLSPEC Uint32 SDLCALL SDL_GetTicks(void);
+extern DECLSPEC uint32_t SDLCALL SDL_GetTicks(void);
 
 /**
  * \brief Compare SDL ticks values, and return true if A has passed B
  *
  * e.g. if you want to wait 100 ms, you could do this:
- *  Uint32 timeout = SDL_GetTicks() + 100;
+ *  uint32_t timeout = SDL_GetTicks() + 100;
  *  while (!SDL_TICKS_PASSED(SDL_GetTicks(), timeout)) {
  *      ... do work until timeout has elapsed
  *  }
@@ -69,7 +69,7 @@ extern DECLSPEC uint64_t SDLCALL SDL_GetPerformanceFrequency(void);
 /**
  * \brief Wait a specified number of milliseconds before returning.
  */
-extern DECLSPEC void SDLCALL SDL_Delay(Uint32 ms);
+extern DECLSPEC void SDLCALL SDL_Delay(uint32_t ms);
 
 /**
  *  Function prototype for the timer callback function.
@@ -79,7 +79,7 @@ extern DECLSPEC void SDLCALL SDL_Delay(Uint32 ms);
  *  passed in, the periodic alarm continues, otherwise a new alarm is
  *  scheduled.  If the callback returns 0, the periodic alarm is cancelled.
  */
-typedef Uint32 (SDLCALL * SDL_TimerCallback) (Uint32 interval, void *param);
+typedef uint32_t (SDLCALL * SDL_TimerCallback) (uint32_t interval, void *param);
 
 /**
  * Definition of the timer ID type.
@@ -91,7 +91,7 @@ typedef int SDL_TimerID;
  *
  * \return A timer ID, or 0 when an error occurs.
  */
-extern DECLSPEC SDL_TimerID SDLCALL SDL_AddTimer(Uint32 interval,
+extern DECLSPEC SDL_TimerID SDLCALL SDL_AddTimer(uint32_t interval,
                                                  SDL_TimerCallback callback,
                                                  void *param);
 

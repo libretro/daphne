@@ -407,7 +407,7 @@ void mach3::do_irq(unsigned int which)
 	}
 }
 
-uint8_t mach3::cpu_mem_read(Uint32 addr)
+uint8_t mach3::cpu_mem_read(uint32_t addr)
 {
 	unsigned int which_cpu = cpu_getactivecpu();
 	uint8_t result = 0;
@@ -529,7 +529,7 @@ uint8_t mach3::cpu_mem_read(Uint32 addr)
 	return (result);
 }
 
-void mach3::cpu_mem_write(Uint32 Addr, uint8_t Value)
+void mach3::cpu_mem_write(uint32_t Addr, uint8_t Value)
 {
 	char s[80];
 

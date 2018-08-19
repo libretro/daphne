@@ -55,7 +55,7 @@ static void name(type *src, int src_w, type *dst, int dst_w)    \
 /* *INDENT-OFF* */
 DEFINE_COPY_ROW(copy_row1, uint8_t)
 DEFINE_COPY_ROW(copy_row2, uint16_t)
-DEFINE_COPY_ROW(copy_row4, Uint32)
+DEFINE_COPY_ROW(copy_row4, uint32_t)
 /* *INDENT-ON* */
 
 /* The ASM code doesn't handle 24-bpp stretch blits */
@@ -180,8 +180,8 @@ SDL_SoftStretch(SDL_Surface * src, const SDL_Rect * srcrect,
                 copy_row3(srcp, srcrect->w, dstp, dstrect->w);
                 break;
             case 4:
-                copy_row4((Uint32 *) srcp, srcrect->w,
-                          (Uint32 *) dstp, dstrect->w);
+                copy_row4((uint32_t *) srcp, srcrect->w,
+                          (uint32_t *) dstp, dstrect->w);
                 break;
             }
         pos += inc;

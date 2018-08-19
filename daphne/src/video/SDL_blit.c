@@ -100,11 +100,11 @@ SDL_SoftBlit(SDL_Surface * src, SDL_Rect * srcrect,
 }
 
 static SDL_BlitFunc
-SDL_ChooseBlitFunc(Uint32 src_format, Uint32 dst_format, int flags,
+SDL_ChooseBlitFunc(uint32_t src_format, uint32_t dst_format, int flags,
                    SDL_BlitFuncEntry * entries)
 {
     int i, flagcheck;
-    static Uint32 features = 0xffffffff;
+    static uint32_t features = 0xffffffff;
 
     /* Get the available CPU features */
     if (features == 0xffffffff) {
@@ -204,8 +204,8 @@ SDL_CalculateBlit(SDL_Surface * surface)
         blit = SDL_CalculateBlitN(surface);
     }
     if (blit == NULL) {
-        Uint32 src_format = surface->format->format;
-        Uint32 dst_format = dst->format->format;
+        uint32_t src_format = surface->format->format;
+        uint32_t dst_format = dst->format->format;
 
         blit =
             SDL_ChooseBlitFunc(src_format, dst_format, map->info.flags,
@@ -215,8 +215,8 @@ SDL_CalculateBlit(SDL_Surface * surface)
     if (blit == NULL)
 #endif
     {
-        Uint32 src_format = surface->format->format;
-        Uint32 dst_format = dst->format->format;
+        uint32_t src_format = surface->format->format;
+        uint32_t dst_format = dst->format->format;
 
         if (!SDL_ISPIXELFORMAT_INDEXED(src_format) &&
             !SDL_ISPIXELFORMAT_FOURCC(src_format) &&

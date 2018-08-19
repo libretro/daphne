@@ -34,7 +34,7 @@
 tonegen g_tonegen;
 bool g_tonegen_init = false;
 
-int tonegen_initialize(Uint32 unused)
+int tonegen_initialize(uint32_t unused)
 {
 	int result = -1;
 	if (!g_tonegen_init)
@@ -57,7 +57,7 @@ int tonegen_initialize(Uint32 unused)
 	return result;
 }
 
-void tonegen_writedata(Uint32 channel, Uint32 frequency, int index)
+void tonegen_writedata(uint32_t channel, uint32_t frequency, int index)
 {
 	g_tonegen.bytes_per_switch[channel] = frequency?(int) ((AUDIO_FREQ / frequency * 4 / 2) + .5):0;
 }

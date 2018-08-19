@@ -922,8 +922,8 @@ void lair::video_repaint()
 	// if there is an overlay (for overlay scoreboard)
 	if (m_video_overlay[m_active_video_overlay])
 	{
-		Uint32 cur_w = g_ldp->get_discvideo_width() >> 1;	// width overlay should be
-		Uint32 cur_h = g_ldp->get_discvideo_height() >> 1;	// height overlay should be
+		uint32_t cur_w = g_ldp->get_discvideo_width() >> 1;	// width overlay should be
+		uint32_t cur_h = g_ldp->get_discvideo_height() >> 1;	// height overlay should be
 		char s[128] = {0};
 
 		// if the width or height of the mpeg video has changed since we last were here (ie, opening a new mpeg)

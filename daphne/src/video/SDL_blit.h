@@ -66,7 +66,7 @@ typedef struct
     SDL_PixelFormat *dst_fmt;
     uint8_t *table;
     int flags;
-    Uint32 colorkey;
+    uint32_t colorkey;
     uint8_t r, g, b, a;
 } SDL_BlitInfo;
 
@@ -74,8 +74,8 @@ typedef void (SDLCALL * SDL_BlitFunc) (SDL_BlitInfo * info);
 
 typedef struct
 {
-    Uint32 src_format;
-    Uint32 dst_format;
+    uint32_t src_format;
+    uint32_t dst_format;
     int flags;
     int cpu;
     SDL_BlitFunc func;
@@ -92,8 +92,8 @@ typedef struct SDL_BlitMap
 
     /* the version count matches the destination; mismatch indicates
        an invalid mapping */
-    Uint32 dst_palette_version;
-    Uint32 src_palette_version;
+    uint32_t dst_palette_version;
+    uint32_t src_palette_version;
 } SDL_BlitMap;
 
 /* Functions found in SDL_blit.c */
@@ -164,7 +164,7 @@ do {                                                                    \
         break;                                                          \
                                                                         \
         case 4:                                                         \
-            Pixel = *((Uint32 *)(buf));                                 \
+            Pixel = *((uint32_t *)(buf));                                 \
         break;                                                          \
                                                                         \
         default:                                                        \
@@ -201,7 +201,7 @@ do {                                                                    \
         break;                                                          \
                                                                         \
         case 4:                                                         \
-            Pixel = *((Uint32 *)(buf));                                 \
+            Pixel = *((uint32_t *)(buf));                                 \
             RGB_FROM_PIXEL(Pixel, fmt, r, g, b);                        \
         break;                                                          \
                                                                         \
@@ -290,10 +290,10 @@ do {                                                                    \
         break;                                                          \
                                                                         \
         case 4: {                                                       \
-            Uint32 Pixel;                                               \
+            uint32_t Pixel;                                               \
                                                                         \
             PIXEL_FROM_RGB(Pixel, fmt, r, g, b);                        \
-            *((Uint32 *)(buf)) = Pixel;                                 \
+            *((uint32_t *)(buf)) = Pixel;                                 \
         }                                                               \
         break;                                                          \
     }                                                                   \
@@ -378,7 +378,7 @@ do {                                                                    \
         break;                                                          \
                                                                         \
         case 4:                                                         \
-            Pixel = *((Uint32 *)(buf));                                 \
+            Pixel = *((uint32_t *)(buf));                                 \
             RGBA_FROM_PIXEL(Pixel, fmt, r, g, b, a);                    \
         break;                                                          \
                                                                         \
@@ -431,10 +431,10 @@ do {                                                                    \
         break;                                                          \
                                                                         \
         case 4: {                                                       \
-            Uint32 _pixel;                                              \
+            uint32_t _pixel;                                              \
                                                                         \
             PIXEL_FROM_RGBA(_pixel, fmt, r, g, b, a);                   \
-            *((Uint32 *)(buf)) = _pixel;                                \
+            *((uint32_t *)(buf)) = _pixel;                                \
         }                                                               \
         break;                                                          \
     }                                                                   \

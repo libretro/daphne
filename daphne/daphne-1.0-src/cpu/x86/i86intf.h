@@ -23,6 +23,7 @@
 #ifndef __I86INTRF_H_
 #define __I86INTRF_H_
 
+#include <stdint.h>
 #include "../mamewrap.h"	// MPO
 
 #include "memory.h"
@@ -45,7 +46,7 @@ extern void i86_reset(void);
 extern void i86_exit(void);
 unsigned int i86_get_pc();	// MPO
 void i86_set_pc (unsigned int value);	// PAULB
-extern unsigned int i86_execute(unsigned int cycles);	// MPO, got rid of Uint32
+extern unsigned int i86_execute(unsigned int cycles);	// MPO, got rid of uint32_t
 extern unsigned i86_get_context(void *dst);
 extern void i86_set_context(void *src);
 extern unsigned i86_get_reg(int regnum);

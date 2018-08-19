@@ -74,10 +74,10 @@ bool init_display()
 {
 	bool result = false;	// whether video initialization is successful or not
 	bool abnormalscreensize = true; // assume abnormal
-	Uint32 sdl_flags = 0;	// the default for this depends on whether we are using HW accelerated YUV overlays or not
+	uint32_t sdl_flags = 0;	// the default for this depends on whether we are using HW accelerated YUV overlays or not
 	
 	char s[250] = { 0 };
-	Uint32 x = 0;	// temporary index
+	uint32_t x = 0;	// temporary index
 
 	// if we were able to initialize the video properly
 	{

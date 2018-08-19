@@ -589,10 +589,10 @@ uint16_t SDL_ReadLE16(SDL_RWops * src)
     return SDL_SwapLE16(value);
 }
 
-Uint32
+uint32_t
 SDL_ReadLE32(SDL_RWops * src)
 {
-    Uint32 value = 0;
+    uint32_t value = 0;
 
     SDL_RWread(src, &value, sizeof (value), 1);
     return SDL_SwapLE32(value);

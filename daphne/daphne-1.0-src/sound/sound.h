@@ -82,7 +82,7 @@ struct sounddef
 	struct sounddef *next_soundchip;	// pointer to the next sound chip in this linked list
 
 	uint8_t* buffer_pointer; // pointer to where we are in the buffer
-	Uint32 bytes_left; // number of bytes left in buffer
+	uint32_t bytes_left; // number of bytes left in buffer
 	unsigned int id;	// used so game drivers can call audio_writedata (if there are multiple sound chips being used)
 	int internal_id;	// internal ID that the sound chips returns when init_callback is called
 	unsigned int uVolume[AUDIO_CHANNELS];	// don't modify this value directly, use set_soundchip_volume() to do it ...
@@ -99,7 +99,7 @@ struct sounddef
 	// The callback returns an internal ID which is used in all the other callbacks to
 	//  refer to the sound chip that has been created.
 	// On success a number >= 0 will be returned. If there is an error, -1 will be returned.
-	int (*init_callback)(Uint32 freq_hz);
+	int (*init_callback)(uint32_t freq_hz);
 	void (*shutdown_callback)(int internal_id);	// callback to shutdown the sound chip
 	void (*writedata_callback)(uint8_t data, int internal_id);	// callback to write data to the sound chip
 
@@ -113,7 +113,7 @@ struct sounddef
 
 	// *** THIS SECTION IS DEFINED WHEN SOUND CHIP IS ADDED
 	int type;	// type of sound chip (See enum's)
-	Uint32 hz;	// speed of sound chip in Hz
+	uint32_t hz;	// speed of sound chip in Hz
 
 	// Should be true if sound quality of chip is better the more often it is updated.
 	//  An example is Super Don's sound chip.
@@ -184,7 +184,7 @@ void update_soundbuffer(); // update the sound buffers with 1 ms worth of data
 void set_soundbuf_size(uint16_t newbufsize);
 bool sound_init();
 void sound_shutdown();
-bool sound_play(Uint32 whichone);
+bool sound_play(uint32_t whichone);
 bool sound_play_saveme();
 int load_waves();
 void free_waves();

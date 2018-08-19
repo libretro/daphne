@@ -250,7 +250,7 @@ void hitachi::pause()
 
 // waits 'timeout' ms for 'expected_code' from the player
 // if it receives it within that time, it returns 'true', otherwise 'false'
-bool hitachi::receive_status (uint8_t expected_code, Uint32 timeout)
+bool hitachi::receive_status (uint8_t expected_code, uint32_t timeout)
 {
 	unsigned int cur_time = refresh_ms_time();	// current time
 	bool result = false;

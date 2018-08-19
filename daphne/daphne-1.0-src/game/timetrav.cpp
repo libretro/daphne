@@ -73,7 +73,7 @@ void timetrav::do_nmi()
 {
 }
 
-uint8_t timetrav::cpu_mem_read(Uint32 addr)
+uint8_t timetrav::cpu_mem_read(uint32_t addr)
 {
 	char s[80];
 	uint8_t result = m_cpumem[addr];
@@ -94,7 +94,7 @@ uint8_t timetrav::cpu_mem_read(Uint32 addr)
 	return (result);
 }
 
-void timetrav::cpu_mem_write(Uint32 addr, uint8_t value)
+void timetrav::cpu_mem_write(uint32_t addr, uint8_t value)
 {
 	char s[80];
 

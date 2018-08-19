@@ -78,7 +78,7 @@ extern "C" {
 /**
  *  This function initializes  the subsystems specified by \c flags
  */
-extern DECLSPEC int SDLCALL SDL_Init(Uint32 flags);
+extern DECLSPEC int SDLCALL SDL_Init(uint32_t flags);
 
 /**
  *  This function initializes specific SDL subsystems
@@ -89,12 +89,12 @@ extern DECLSPEC int SDLCALL SDL_Init(Uint32 flags);
  *  If a subsystem is already loaded then this call will
  *  increase the ref-count and return.
  */
-extern DECLSPEC int SDLCALL SDL_InitSubSystem(Uint32 flags);
+extern DECLSPEC int SDLCALL SDL_InitSubSystem(uint32_t flags);
 
 /**
  *  This function cleans up specific SDL subsystems
  */
-extern DECLSPEC void SDLCALL SDL_QuitSubSystem(Uint32 flags);
+extern DECLSPEC void SDLCALL SDL_QuitSubSystem(uint32_t flags);
 
 /**
  *  This function cleans up all initialized subsystems. You should

@@ -25,8 +25,8 @@
 
 #include <stdint.h>
 
-int gisound_initialize(Uint32 core_frequency);
-void gisound_writedata(Uint32, Uint32, int index);
+int gisound_initialize(uint32_t core_frequency);
+void gisound_writedata(uint32_t, uint32_t, int index);
 void gisound_stream(uint8_t* stream, int length, int index);
 void gisound_shutdown(int index);
 
@@ -58,7 +58,7 @@ struct gi_sound_chip;
 
 struct gi_sound_chip {
    // Properties
-   Uint32 core_clock;
+   uint32_t core_clock;
 
    // Registers
    uint8_t register_set[16];
@@ -101,7 +101,7 @@ struct gi_sound_chip {
    bool envelope_shape_cycle_hold;
    uint8_t port_a_data_store;
    uint8_t port_b_data_store;
-   Uint32 random_seed;
+   uint32_t random_seed;
 };
 
 #endif

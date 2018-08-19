@@ -100,12 +100,12 @@
 #endif
 /* @} *//* Cast operators */
 
-/* Define a four character code as a Uint32 */
+/* Define a four character code as a uint32_t */
 #define SDL_FOURCC(A, B, C, D) \
-    ((SDL_static_cast(Uint32, SDL_static_cast(uint8_t, (A))) << 0) | \
-     (SDL_static_cast(Uint32, SDL_static_cast(uint8_t, (B))) << 8) | \
-     (SDL_static_cast(Uint32, SDL_static_cast(uint8_t, (C))) << 16) | \
-     (SDL_static_cast(Uint32, SDL_static_cast(uint8_t, (D))) << 24))
+    ((SDL_static_cast(uint32_t, SDL_static_cast(uint8_t, (A))) << 0) | \
+     (SDL_static_cast(uint32_t, SDL_static_cast(uint8_t, (B))) << 8) | \
+     (SDL_static_cast(uint32_t, SDL_static_cast(uint8_t, (C))) << 16) | \
+     (SDL_static_cast(uint32_t, SDL_static_cast(uint8_t, (D))) << 24))
 
 /**
  *  \name Basic data types
@@ -122,10 +122,6 @@ typedef enum
  * \brief An unsigned 8-bit integer type.
  */
 typedef uint8_t uint8_t;
-/**
- * \brief An unsigned 32-bit integer type.
- */
-typedef uint32_t Uint32;
 
 /* @} *//* Basic data types */
 
@@ -254,7 +250,7 @@ extern DECLSPEC int SDLCALL SDL_abs(int x);
 #define SDL_zerop(x) memset((x), 0, sizeof(*(x)))
 
 /* Note that memset() is a byte assignment and this is a 32-bit assignment, so they're not directly equivalent. */
-SDL_FORCE_INLINE void SDL_memset4(void *dst, Uint32 val, size_t dwords)
+SDL_FORCE_INLINE void SDL_memset4(void *dst, uint32_t val, size_t dwords)
 {
 #if defined(__GNUC__) && defined(i386)
     int u0, u1, u2;
@@ -262,13 +258,13 @@ SDL_FORCE_INLINE void SDL_memset4(void *dst, Uint32 val, size_t dwords)
         "cld \n\t"
         "rep ; stosl \n\t"
         : "=&D" (u0), "=&a" (u1), "=&c" (u2)
-        : "0" (dst), "1" (val), "2" (SDL_static_cast(Uint32, dwords))
+        : "0" (dst), "1" (val), "2" (SDL_static_cast(uint32_t, dwords))
         : "memory"
     );
 #else
     size_t _n = (dwords + 3) / 4;
-    Uint32 *_p = SDL_static_cast(Uint32 *, dst);
-    Uint32 _val = (val);
+    uint32_t *_p = SDL_static_cast(uint32_t *, dst);
+    uint32_t _val = (val);
     if (dwords == 0)
         return;
     switch (dwords % 4)
@@ -320,7 +316,7 @@ extern DECLSPEC char *SDLCALL SDL_iconv_string(const char *tocode,
                                                size_t inbytesleft);
 #define SDL_iconv_utf8_locale(S)    SDL_iconv_string("", "UTF-8", S, strlen(S)+1)
 #define SDL_iconv_utf8_ucs2(S)      (uint16_t *)SDL_iconv_string("UCS-2-INTERNAL", "UTF-8", S, strlen(S)+1)
-#define SDL_iconv_utf8_ucs4(S)      (Uint32 *)SDL_iconv_string("UCS-4-INTERNAL", "UTF-8", S, strlen(S)+1)
+#define SDL_iconv_utf8_ucs4(S)      (uint32_t *)SDL_iconv_string("UCS-4-INTERNAL", "UTF-8", S, strlen(S)+1)
 
 /* force builds using Clang's static analysis tools to use literal C runtime
    here, since there are possibly tests that are ineffective otherwise. */

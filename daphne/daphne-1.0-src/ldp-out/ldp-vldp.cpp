@@ -65,7 +65,7 @@
 #include "SDL_surface.h"
 
 extern "C" {
-	extern DECLSPEC SDL_SW_YUVTexture * SDLCALL SDL_RJS_SW_CreateYUVBuffer(Uint32 format, Uint32 target_format, int w, int h);
+	extern DECLSPEC SDL_SW_YUVTexture * SDLCALL SDL_RJS_SW_CreateYUVBuffer(uint32_t format, uint32_t target_format, int w, int h);
 	extern DECLSPEC void SDLCALL SDL_SW_DestroyYUVTexture(SDL_SW_YUVTexture * swdata);
 }
 
@@ -112,7 +112,7 @@ int g_vb_waiting_queue[VIDEO_BUFFER_AMOUNT] = { -1, -1, -1, -1 };
 
 VIDEO_BUFFER g_hw_overlay[VIDEO_BUFFER_AMOUNT] = { { VB_STATE_USEABLE, NULL }, { VB_STATE_USEABLE, NULL }, { VB_STATE_USEABLE, NULL }, { VB_STATE_USEABLE, NULL } };
 
-bool initialize_vb(Uint32 format, Uint32 target_format, int w, int h)
+bool initialize_vb(uint32_t format, uint32_t target_format, int w, int h)
 {
 	for (int i = 0; i < VIDEO_BUFFER_AMOUNT; i++)
 	{
@@ -1630,7 +1630,7 @@ uint16_t ldp_vldp::mpeg_info (string &filename, uint16_t ld_frame)
 // This is necessary if the gamevid ever becomes invalid for a period of time (ie it gets free'd and re-allocated in seektest)
 // timeout is how many ms to wait before giving up
 // returns true if it got the lock or false if it couldn't get a lock
-bool ldp_vldp::lock_overlay(Uint32 timeout)
+bool ldp_vldp::lock_overlay(uint32_t timeout)
 {
 	bool bRes = false;
 
@@ -1644,10 +1644,10 @@ bool ldp_vldp::lock_overlay(Uint32 timeout)
 }
 
 // releases the yuv_callback from its blocking state
-bool ldp_vldp::unlock_overlay(Uint32 timeout)
+bool ldp_vldp::unlock_overlay(uint32_t timeout)
 {
 /*
-	Uint32 time = refresh_ms_time();
+	uint32_t time = refresh_ms_time();
 	
 	mutex_lock_request = false;
 	
@@ -1844,8 +1844,8 @@ int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 			unsigned int row = 0;
 			unsigned int col = 0;
 
-			Uint32 w_double = g_hw_overlay_rect.w << 1;	// twice the overlay width, to avoid calculating this more than once
-			Uint32 h_half = g_hw_overlay_rect.h >> 1;	// half of the overlay height, to avoid calculating this more than once
+			uint32_t w_double = g_hw_overlay_rect.w << 1;	// twice the overlay width, to avoid calculating this more than once
+			uint32_t h_half = g_hw_overlay_rect.h >> 1;	// half of the overlay height, to avoid calculating this more than once
 			
 			t_yuv_color* yuv_palette = get_yuv_palette();
 			unsigned int channel0_pitch = nPitch;	// this val gets used a lot so we put it into a var
@@ -1893,15 +1893,15 @@ int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 						
 #ifndef MSB_FIRST
 						//Little-Endian (Intel)
-						*((Uint32 *) (g_line_buf + col)) = (Y_chunk & 0xFF) | (U_chunk << 8) |
+						*((uint32_t *) (g_line_buf + col)) = (Y_chunk & 0xFF) | (U_chunk << 8) |
 							((Y_chunk & 0xFF00) << 8) | (V_chunk << 24);
-						*((Uint32 *) (g_line_buf2 + col)) = (Y2_chunk & 0xFF) | (U_chunk << 8) |
+						*((uint32_t *) (g_line_buf2 + col)) = (Y2_chunk & 0xFF) | (U_chunk << 8) |
 							((Y2_chunk & 0xFF00) << 8) | (V_chunk << 24);
 #else						
 						//Big-Endian (Mac)			
-						*((Uint32 *) (g_line_buf + col)) = ((Y_chunk & 0xFF00) << 16) | ((U_chunk) << 16) |
+						*((uint32_t *) (g_line_buf + col)) = ((Y_chunk & 0xFF00) << 16) | ((U_chunk) << 16) |
 							((Y_chunk & 0xFF) << 8) | (V_chunk);
-						*((Uint32 *) (g_line_buf2 + col)) = ((Y2_chunk & 0xFF00) << 16) | ((U_chunk) << 16) |
+						*((uint32_t *) (g_line_buf2 + col)) = ((Y2_chunk & 0xFF00) << 16) | ((U_chunk) << 16) |
 							((Y2_chunk & 0xFF) << 8) | (V_chunk);												
 #endif
 					}
@@ -1911,13 +1911,13 @@ int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 					{
 #ifndef MSB_FIRST
 						//Little-Endian (Intel)
-						*((Uint32 *) (g_line_buf + col)) = 
-							*((Uint32 *) (g_line_buf2 + col)) = palette->y | (palette->u << 8)
+						*((uint32_t *) (g_line_buf + col)) = 
+							*((uint32_t *) (g_line_buf2 + col)) = palette->y | (palette->u << 8)
 							| (palette->y << 16) | (palette->v << 24);						
 #else					
 						//Big-Endian (Mac)
-						*((Uint32 *) (g_line_buf + col)) = 
-							*((Uint32 *) (g_line_buf2 + col)) = (palette->y << 24) | (palette->u << 16)
+						*((uint32_t *) (g_line_buf + col)) = 
+							*((uint32_t *) (g_line_buf2 + col)) = (palette->y << 24) | (palette->u << 16)
 							| (palette->y << 8) | (palette->v);
 #endif
 						
@@ -1952,7 +1952,7 @@ int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 					// do a black YUY2 line (the first line should be black to workaround nvidia bug)
 					for (int i = 0; i < (g_hw_overlay_rect.w << 1); i += 4)
 					{
-						*((Uint32 *) (dst_ptr + i)) = YUY2_BLACK;	// this value is black in YUY2 mode
+						*((uint32_t *) (dst_ptr + i)) = YUY2_BLACK;	// this value is black in YUY2 mode
 					}
 					
 					if (g_filter_type & FILTER_BLEND)
@@ -2042,7 +2042,7 @@ int prepare_frame_callback_without_overlay(struct yuv_buf *buf)
 // displays the frame as fast as possible
 // RJS NOTE - *** video frames ***
 extern "C" {
-	extern DECLSPEC int SDLCALL SDL_RJS_SW_CopyYUVToRGB(SDL_SW_YUVTexture * swdata, const SDL_Rect * srcrect, Uint32 target_format, int w, int h, void *pixels, int pitch);
+	extern DECLSPEC int SDLCALL SDL_RJS_SW_CopyYUVToRGB(SDL_SW_YUVTexture * swdata, const SDL_Rect * srcrect, uint32_t target_format, int w, int h, void *pixels, int pitch);
 }
 // extern jboolean retro_run_once;
 
@@ -2124,17 +2124,17 @@ void buf2overlay_YUY2(uint8_t *out_pixels, uint16_t in_pitch, int in_h, int in_w
 #ifndef MSB_FIRST
 			
 			//Little-Endian (PC)
-			*((Uint32 *) (g_line_buf + col)) = (Y_chunk & 0xFF) | (U_chunk << 8) |
+			*((uint32_t *) (g_line_buf + col)) = (Y_chunk & 0xFF) | (U_chunk << 8) |
 				((Y_chunk & 0xFF00) << 8) | (V_chunk << 24);
-			*((Uint32 *) (g_line_buf2 + col)) = (Y2_chunk & 0xFF) | (U_chunk << 8) |
+			*((uint32_t *) (g_line_buf2 + col)) = (Y2_chunk & 0xFF) | (U_chunk << 8) |
 				((Y2_chunk & 0xFF00) << 8) | (V_chunk << 24);
 			
 #else
 			
 			//Big-Endian (Mac)
-			*((Uint32 *) (g_line_buf + col)) = ((Y_chunk & 0xFF00) << 16) | ((U_chunk) << 16) |
+			*((uint32_t *) (g_line_buf + col)) = ((Y_chunk & 0xFF00) << 16) | ((U_chunk) << 16) |
 				((Y_chunk & 0xFF) << 8) | (V_chunk);
-			*((Uint32 *) (g_line_buf2 + col)) = ((Y2_chunk & 0xFF00) << 16) | ((U_chunk) << 16) |
+			*((uint32_t *) (g_line_buf2 + col)) = ((Y2_chunk & 0xFF00) << 16) | ((U_chunk) << 16) |
 				((Y2_chunk & 0xFF) << 8) | (V_chunk);	
 			
 #endif
@@ -2170,7 +2170,7 @@ void buf2overlay_YUY2(uint8_t *out_pixels, uint16_t in_pitch, int in_h, int in_w
 			// (on nvidia it makes the top line too bright if the black line doesn't come first!)
 			for (int i = 0; i < (dst->w << 1); i+=4)
 			{
-				*((Uint32 *) (dst_ptr + i)) = YUY2_BLACK;	// this value is black in YUY2 mode
+				*((uint32_t *) (dst_ptr + i)) = YUY2_BLACK;	// this value is black in YUY2 mode
 			}
 			
 			if (g_filter_type & FILTER_BLEND)
@@ -2193,7 +2193,7 @@ void buf2overlay_YUY2(uint8_t *out_pixels, uint16_t in_pitch, int in_h, int in_w
 
 ///////////////////
 
-Uint32 g_parse_start_time = 0;	// when mpeg parsing began approximately ...
+uint32_t g_parse_start_time = 0;	// when mpeg parsing began approximately ...
 double g_parse_start_percentage = 0.0;	// the first percentage report we received ...
 bool g_parsed = false;	// whether we've received any data at all ...
 

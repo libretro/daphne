@@ -175,7 +175,7 @@ typedef struct SDL_AudioSpec
     uint8_t silence;              /**< Audio buffer silence value (calculated) */
     uint16_t samples;             /**< Audio buffer size in samples (power of 2) */
     uint16_t padding;             /**< Necessary for some compile environments */
-    Uint32 size;                /**< Audio buffer size in bytes (calculated) */
+    uint32_t size;                /**< Audio buffer size in bytes (calculated) */
     SDL_AudioCallback callback; /**< Callback that feeds the audio device (NULL to use SDL_QueueAudio()). */
     void *userdata;             /**< Userdata passed to callback (ignored for NULL callbacks). */
 } SDL_AudioSpec;
@@ -303,7 +303,7 @@ extern DECLSPEC int SDLCALL SDL_OpenAudio(SDL_AudioSpec * desired,
  *  for backwards compatibility and when you don't care about multiple,
  *  specific, or capture devices.
  */
-typedef Uint32 SDL_AudioDeviceID;
+typedef uint32_t SDL_AudioDeviceID;
 
 /**
  *  Get the number of available devices exposed by the current driver.
@@ -418,7 +418,7 @@ extern DECLSPEC SDL_AudioSpec *SDLCALL SDL_LoadWAV_RW(SDL_RWops * src,
                                                       int freesrc,
                                                       SDL_AudioSpec * spec,
                                                       uint8_t ** audio_buf,
-                                                      Uint32 * audio_len);
+                                                      uint32_t * audio_len);
 
 /**
  *  Loads a WAV from a file.

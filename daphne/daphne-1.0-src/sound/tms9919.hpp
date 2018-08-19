@@ -54,7 +54,7 @@ protected:
     virtual void SetNoise ( NOISE_COLOR_E, int );
     virtual void SetFrequency ( int, int );
     virtual void SetAttenuation ( int, int );
-    Uint32 m_clock_frequency;
+    uint32_t m_clock_frequency;
 
 public:
 
@@ -64,7 +64,7 @@ public:
     virtual int SetSpeechSynthesizer ( cTMS5220 * );
 
     void WriteData ( uint8_t data );
-    void set_core_frequency (Uint32);
+    void set_core_frequency (uint32_t);
 
 };
 

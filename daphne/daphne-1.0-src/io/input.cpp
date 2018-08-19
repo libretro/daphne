@@ -58,7 +58,7 @@ bool g_invert_joystick = false;
 unsigned int idle_timer; // added by JFA for -idleexit
 
 const double STICKY_COIN_SECONDS = 0.125;	// how many seconds a coin acceptor is forced to be "depressed" and how many seconds it is forced to be "released"
-Uint32 g_sticky_coin_cycles = 0;	// STICKY_COIN_SECONDS * get_cpu_hz(0), cannot be calculated statically
+uint32_t g_sticky_coin_cycles = 0;	// STICKY_COIN_SECONDS * get_cpu_hz(0), cannot be calculated statically
 queue<struct coin_input> g_coin_queue;	// keeps track of coin input to guarantee that coins don't get missed if the cpu is busy (during seeks for example)
 uint64_t g_last_coin_cycle_used = 0;	// the cycle value that our last coin press used
 
@@ -743,7 +743,7 @@ int SDL_input_init()
 	{
 		g_coin_queue.pop();
 	}
-	g_sticky_coin_cycles = (Uint32) (STICKY_COIN_SECONDS * get_cpu_hz(0));	// only needs to be calculated once
+	g_sticky_coin_cycles = (uint32_t) (STICKY_COIN_SECONDS * get_cpu_hz(0));	// only needs to be calculated once
 
    CFG_Keys();	// NOTE : for some freak reason, this should not be done BEFORE the joystick is initialized, I don't know why!
    result = 1;

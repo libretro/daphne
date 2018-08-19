@@ -1294,16 +1294,16 @@ static void SDLCALL
 SDL_Convert_S32LSB_to_U8(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    const Uint32 *src;
+    const uint32_t *src;
     uint8_t *dst;
 
 #if DEBUG_CONVERT
     fprintf(stderr, "Converting AUDIO_S32LSB to AUDIO_U8.\n");
 #endif
 
-    src = (const Uint32 *) cvt->buf;
+    src = (const uint32_t *) cvt->buf;
     dst = (uint8_t *) cvt->buf;
-    for (i = cvt->len_cvt / sizeof (Uint32); i; --i, ++src, ++dst) {
+    for (i = cvt->len_cvt / sizeof (uint32_t); i; --i, ++src, ++dst) {
         const uint8_t val = ((uint8_t) (((((int32_t) SDL_SwapLE32(*src))) ^ 0x80000000) >> 24));
         *dst = val;
     }
@@ -1318,16 +1318,16 @@ static void SDLCALL
 SDL_Convert_S32LSB_to_S8(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    const Uint32 *src;
+    const uint32_t *src;
     int8_t *dst;
 
 #if DEBUG_CONVERT
     fprintf(stderr, "Converting AUDIO_S32LSB to AUDIO_S8.\n");
 #endif
 
-    src = (const Uint32 *) cvt->buf;
+    src = (const uint32_t *) cvt->buf;
     dst = (int8_t *) cvt->buf;
-    for (i = cvt->len_cvt / sizeof (Uint32); i; --i, ++src, ++dst) {
+    for (i = cvt->len_cvt / sizeof (uint32_t); i; --i, ++src, ++dst) {
         const int8_t val = ((int8_t) (((int32_t) SDL_SwapLE32(*src)) >> 24));
         *dst = ((int8_t) val);
     }
@@ -1342,16 +1342,16 @@ static void SDLCALL
 SDL_Convert_S32LSB_to_U16LSB(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    const Uint32 *src;
+    const uint32_t *src;
     uint16_t *dst;
 
 #if DEBUG_CONVERT
     fprintf(stderr, "Converting AUDIO_S32LSB to AUDIO_U16LSB.\n");
 #endif
 
-    src = (const Uint32 *) cvt->buf;
+    src = (const uint32_t *) cvt->buf;
     dst = (uint16_t *) cvt->buf;
-    for (i = cvt->len_cvt / sizeof (Uint32); i; --i, ++src, ++dst) {
+    for (i = cvt->len_cvt / sizeof (uint32_t); i; --i, ++src, ++dst) {
         const uint16_t val = ((uint16_t) (((((int32_t) SDL_SwapLE32(*src))) ^ 0x80000000) >> 16));
         *dst = SDL_SwapLE16(val);
     }
@@ -1366,16 +1366,16 @@ static void SDLCALL
 SDL_Convert_S32LSB_to_S16LSB(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    const Uint32 *src;
+    const uint32_t *src;
     int16_t *dst;
 
 #if DEBUG_CONVERT
     fprintf(stderr, "Converting AUDIO_S32LSB to AUDIO_S16LSB.\n");
 #endif
 
-    src = (const Uint32 *) cvt->buf;
+    src = (const uint32_t *) cvt->buf;
     dst = (int16_t *) cvt->buf;
-    for (i = cvt->len_cvt / sizeof (Uint32); i; --i, ++src, ++dst) {
+    for (i = cvt->len_cvt / sizeof (uint32_t); i; --i, ++src, ++dst) {
         const int16_t val = ((int16_t) (((int32_t) SDL_SwapLE32(*src)) >> 16));
         *dst = ((int16_t) SDL_SwapLE16(val));
     }
@@ -1390,16 +1390,16 @@ static void SDLCALL
 SDL_Convert_S32LSB_to_U16MSB(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    const Uint32 *src;
+    const uint32_t *src;
     uint16_t *dst;
 
 #if DEBUG_CONVERT
     fprintf(stderr, "Converting AUDIO_S32LSB to AUDIO_U16MSB.\n");
 #endif
 
-    src = (const Uint32 *) cvt->buf;
+    src = (const uint32_t *) cvt->buf;
     dst = (uint16_t *) cvt->buf;
-    for (i = cvt->len_cvt / sizeof (Uint32); i; --i, ++src, ++dst) {
+    for (i = cvt->len_cvt / sizeof (uint32_t); i; --i, ++src, ++dst) {
         const uint16_t val = ((uint16_t) (((((int32_t) SDL_SwapLE32(*src))) ^ 0x80000000) >> 16));
         *dst = SDL_SwapBE16(val);
     }
@@ -1414,16 +1414,16 @@ static void SDLCALL
 SDL_Convert_S32LSB_to_S16MSB(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    const Uint32 *src;
+    const uint32_t *src;
     int16_t *dst;
 
 #if DEBUG_CONVERT
     fprintf(stderr, "Converting AUDIO_S32LSB to AUDIO_S16MSB.\n");
 #endif
 
-    src = (const Uint32 *) cvt->buf;
+    src = (const uint32_t *) cvt->buf;
     dst = (int16_t *) cvt->buf;
-    for (i = cvt->len_cvt / sizeof (Uint32); i; --i, ++src, ++dst) {
+    for (i = cvt->len_cvt / sizeof (uint32_t); i; --i, ++src, ++dst) {
         const int16_t val = ((int16_t) (((int32_t) SDL_SwapLE32(*src)) >> 16));
         *dst = ((int16_t) SDL_SwapBE16(val));
     }
@@ -1438,16 +1438,16 @@ static void SDLCALL
 SDL_Convert_S32LSB_to_S32MSB(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    const Uint32 *src;
+    const uint32_t *src;
     int32_t *dst;
 
 #if DEBUG_CONVERT
     fprintf(stderr, "Converting AUDIO_S32LSB to AUDIO_S32MSB.\n");
 #endif
 
-    src = (const Uint32 *) cvt->buf;
+    src = (const uint32_t *) cvt->buf;
     dst = (int32_t *) cvt->buf;
-    for (i = cvt->len_cvt / sizeof (Uint32); i; --i, ++src, ++dst) {
+    for (i = cvt->len_cvt / sizeof (uint32_t); i; --i, ++src, ++dst) {
         const int32_t val = ((int32_t) SDL_SwapLE32(*src));
         *dst = ((int32_t) SDL_SwapBE32(val));
     }
@@ -1461,16 +1461,16 @@ static void SDLCALL
 SDL_Convert_S32LSB_to_F32LSB(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    const Uint32 *src;
+    const uint32_t *src;
     float *dst;
 
 #if DEBUG_CONVERT
     fprintf(stderr, "Converting AUDIO_S32LSB to AUDIO_F32LSB.\n");
 #endif
 
-    src = (const Uint32 *) cvt->buf;
+    src = (const uint32_t *) cvt->buf;
     dst = (float *) cvt->buf;
-    for (i = cvt->len_cvt / sizeof (Uint32); i; --i, ++src, ++dst) {
+    for (i = cvt->len_cvt / sizeof (uint32_t); i; --i, ++src, ++dst) {
         const float val = (((float) ((int32_t) SDL_SwapLE32(*src))) * DIVBY2147483647);
         *dst = SDL_SwapFloatLE(val);
     }
@@ -1484,16 +1484,16 @@ static void SDLCALL
 SDL_Convert_S32LSB_to_F32MSB(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    const Uint32 *src;
+    const uint32_t *src;
     float *dst;
 
 #if DEBUG_CONVERT
     fprintf(stderr, "Converting AUDIO_S32LSB to AUDIO_F32MSB.\n");
 #endif
 
-    src = (const Uint32 *) cvt->buf;
+    src = (const uint32_t *) cvt->buf;
     dst = (float *) cvt->buf;
-    for (i = cvt->len_cvt / sizeof (Uint32); i; --i, ++src, ++dst) {
+    for (i = cvt->len_cvt / sizeof (uint32_t); i; --i, ++src, ++dst) {
         const float val = (((float) ((int32_t) SDL_SwapLE32(*src))) * DIVBY2147483647);
         *dst = SDL_SwapFloatBE(val);
     }
@@ -1507,16 +1507,16 @@ static void SDLCALL
 SDL_Convert_S32MSB_to_U8(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    const Uint32 *src;
+    const uint32_t *src;
     uint8_t *dst;
 
 #if DEBUG_CONVERT
     fprintf(stderr, "Converting AUDIO_S32MSB to AUDIO_U8.\n");
 #endif
 
-    src = (const Uint32 *) cvt->buf;
+    src = (const uint32_t *) cvt->buf;
     dst = (uint8_t *) cvt->buf;
-    for (i = cvt->len_cvt / sizeof (Uint32); i; --i, ++src, ++dst) {
+    for (i = cvt->len_cvt / sizeof (uint32_t); i; --i, ++src, ++dst) {
         const uint8_t val = ((uint8_t) (((((int32_t) SDL_SwapBE32(*src))) ^ 0x80000000) >> 24));
         *dst = val;
     }
@@ -1531,16 +1531,16 @@ static void SDLCALL
 SDL_Convert_S32MSB_to_S8(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    const Uint32 *src;
+    const uint32_t *src;
     int8_t *dst;
 
 #if DEBUG_CONVERT
     fprintf(stderr, "Converting AUDIO_S32MSB to AUDIO_S8.\n");
 #endif
 
-    src = (const Uint32 *) cvt->buf;
+    src = (const uint32_t *) cvt->buf;
     dst = (int8_t *) cvt->buf;
-    for (i = cvt->len_cvt / sizeof (Uint32); i; --i, ++src, ++dst) {
+    for (i = cvt->len_cvt / sizeof (uint32_t); i; --i, ++src, ++dst) {
         const int8_t val = ((int8_t) (((int32_t) SDL_SwapBE32(*src)) >> 24));
         *dst = ((int8_t) val);
     }
@@ -1555,16 +1555,16 @@ static void SDLCALL
 SDL_Convert_S32MSB_to_U16LSB(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    const Uint32 *src;
+    const uint32_t *src;
     uint16_t *dst;
 
 #if DEBUG_CONVERT
     fprintf(stderr, "Converting AUDIO_S32MSB to AUDIO_U16LSB.\n");
 #endif
 
-    src = (const Uint32 *) cvt->buf;
+    src = (const uint32_t *) cvt->buf;
     dst = (uint16_t *) cvt->buf;
-    for (i = cvt->len_cvt / sizeof (Uint32); i; --i, ++src, ++dst) {
+    for (i = cvt->len_cvt / sizeof (uint32_t); i; --i, ++src, ++dst) {
         const uint16_t val = ((uint16_t) (((((int32_t) SDL_SwapBE32(*src))) ^ 0x80000000) >> 16));
         *dst = SDL_SwapLE16(val);
     }
@@ -1579,16 +1579,16 @@ static void SDLCALL
 SDL_Convert_S32MSB_to_S16LSB(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    const Uint32 *src;
+    const uint32_t *src;
     int16_t *dst;
 
 #if DEBUG_CONVERT
     fprintf(stderr, "Converting AUDIO_S32MSB to AUDIO_S16LSB.\n");
 #endif
 
-    src = (const Uint32 *) cvt->buf;
+    src = (const uint32_t *) cvt->buf;
     dst = (int16_t *) cvt->buf;
-    for (i = cvt->len_cvt / sizeof (Uint32); i; --i, ++src, ++dst) {
+    for (i = cvt->len_cvt / sizeof (uint32_t); i; --i, ++src, ++dst) {
         const int16_t val = ((int16_t) (((int32_t) SDL_SwapBE32(*src)) >> 16));
         *dst = ((int16_t) SDL_SwapLE16(val));
     }
@@ -1603,16 +1603,16 @@ static void SDLCALL
 SDL_Convert_S32MSB_to_U16MSB(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    const Uint32 *src;
+    const uint32_t *src;
     uint16_t *dst;
 
 #if DEBUG_CONVERT
     fprintf(stderr, "Converting AUDIO_S32MSB to AUDIO_U16MSB.\n");
 #endif
 
-    src = (const Uint32 *) cvt->buf;
+    src = (const uint32_t *) cvt->buf;
     dst = (uint16_t *) cvt->buf;
-    for (i = cvt->len_cvt / sizeof (Uint32); i; --i, ++src, ++dst) {
+    for (i = cvt->len_cvt / sizeof (uint32_t); i; --i, ++src, ++dst) {
         const uint16_t val = ((uint16_t) (((((int32_t) SDL_SwapBE32(*src))) ^ 0x80000000) >> 16));
         *dst = SDL_SwapBE16(val);
     }
@@ -1627,16 +1627,16 @@ static void SDLCALL
 SDL_Convert_S32MSB_to_S16MSB(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    const Uint32 *src;
+    const uint32_t *src;
     int16_t *dst;
 
 #if DEBUG_CONVERT
     fprintf(stderr, "Converting AUDIO_S32MSB to AUDIO_S16MSB.\n");
 #endif
 
-    src = (const Uint32 *) cvt->buf;
+    src = (const uint32_t *) cvt->buf;
     dst = (int16_t *) cvt->buf;
-    for (i = cvt->len_cvt / sizeof (Uint32); i; --i, ++src, ++dst) {
+    for (i = cvt->len_cvt / sizeof (uint32_t); i; --i, ++src, ++dst) {
         const int16_t val = ((int16_t) (((int32_t) SDL_SwapBE32(*src)) >> 16));
         *dst = ((int16_t) SDL_SwapBE16(val));
     }
@@ -1651,16 +1651,16 @@ static void SDLCALL
 SDL_Convert_S32MSB_to_S32LSB(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    const Uint32 *src;
+    const uint32_t *src;
     int32_t *dst;
 
 #if DEBUG_CONVERT
     fprintf(stderr, "Converting AUDIO_S32MSB to AUDIO_S32LSB.\n");
 #endif
 
-    src = (const Uint32 *) cvt->buf;
+    src = (const uint32_t *) cvt->buf;
     dst = (int32_t *) cvt->buf;
-    for (i = cvt->len_cvt / sizeof (Uint32); i; --i, ++src, ++dst) {
+    for (i = cvt->len_cvt / sizeof (uint32_t); i; --i, ++src, ++dst) {
         const int32_t val = ((int32_t) SDL_SwapBE32(*src));
         *dst = ((int32_t) SDL_SwapLE32(val));
     }
@@ -1674,16 +1674,16 @@ static void SDLCALL
 SDL_Convert_S32MSB_to_F32LSB(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    const Uint32 *src;
+    const uint32_t *src;
     float *dst;
 
 #if DEBUG_CONVERT
     fprintf(stderr, "Converting AUDIO_S32MSB to AUDIO_F32LSB.\n");
 #endif
 
-    src = (const Uint32 *) cvt->buf;
+    src = (const uint32_t *) cvt->buf;
     dst = (float *) cvt->buf;
-    for (i = cvt->len_cvt / sizeof (Uint32); i; --i, ++src, ++dst) {
+    for (i = cvt->len_cvt / sizeof (uint32_t); i; --i, ++src, ++dst) {
         const float val = (((float) ((int32_t) SDL_SwapBE32(*src))) * DIVBY2147483647);
         *dst = SDL_SwapFloatLE(val);
     }
@@ -1697,16 +1697,16 @@ static void SDLCALL
 SDL_Convert_S32MSB_to_F32MSB(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 {
     int i;
-    const Uint32 *src;
+    const uint32_t *src;
     float *dst;
 
 #if DEBUG_CONVERT
     fprintf(stderr, "Converting AUDIO_S32MSB to AUDIO_F32MSB.\n");
 #endif
 
-    src = (const Uint32 *) cvt->buf;
+    src = (const uint32_t *) cvt->buf;
     dst = (float *) cvt->buf;
-    for (i = cvt->len_cvt / sizeof (Uint32); i; --i, ++src, ++dst) {
+    for (i = cvt->len_cvt / sizeof (uint32_t); i; --i, ++src, ++dst) {
         const float val = (((float) ((int32_t) SDL_SwapBE32(*src))) * DIVBY2147483647);
         *dst = SDL_SwapFloatBE(val);
     }

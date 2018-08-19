@@ -91,7 +91,7 @@ typedef struct SDL_RWops
      */
     int (SDLCALL * close) (struct SDL_RWops * context);
 
-    Uint32 type;
+    uint32_t type;
     union
     {
 #if defined(__WIN32__)
@@ -178,7 +178,7 @@ extern DECLSPEC void SDLCALL SDL_FreeRW(SDL_RWops * area);
  */
 /* @{ */
 extern DECLSPEC uint16_t SDLCALL SDL_ReadLE16(SDL_RWops * src);
-extern DECLSPEC Uint32 SDLCALL SDL_ReadLE32(SDL_RWops * src);
+extern DECLSPEC uint32_t SDLCALL SDL_ReadLE32(SDL_RWops * src);
 extern DECLSPEC uint64_t SDLCALL SDL_ReadLE64(SDL_RWops * src);
 /* @} *//* Read endian functions */
 

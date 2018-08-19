@@ -33,7 +33,7 @@ using namespace std;
 // Structures used by Singe to track various internal data
 typedef struct g_soundType {
 	SDL_AudioSpec  audioSpec;
-	Uint32         length;
+	uint32_t         length;
 	uint8_t         *buffer;
 } g_soundT;
 
@@ -408,14 +408,14 @@ bool sep_srf32_to_srf8(SDL_Surface *src, SDL_Surface *dst)
 		void *pDstLine = dst->pixels;
 		for (unsigned int uRowIdx = 0; uRowIdx < (unsigned int) src->h; ++uRowIdx)
 		{
-			Uint32 *p32SrcPix = (Uint32 *) pSrcLine;
+			uint32_t *p32SrcPix = (uint32_t *) pSrcLine;
 			uint8_t *p8DstPix = (uint8_t *) pDstLine;
 
 			// do one line
 			for (unsigned int uColIdx = 0; uColIdx < (unsigned int) src->w; ++uColIdx)
 			{
 				// get source pixel ...
-				Uint32 u32SrcPix = *p32SrcPix;
+				uint32_t u32SrcPix = *p32SrcPix;
 
 				uint8_t u8B = (u32SrcPix & src->format->Bmask) >> src->format->Bshift;
 				uint8_t u8G = (u32SrcPix & src->format->Gmask) >> src->format->Gshift;

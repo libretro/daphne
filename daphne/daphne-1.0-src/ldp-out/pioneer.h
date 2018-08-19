@@ -48,8 +48,8 @@ public:
 private:
 	bool pioneer_audio1;
 	bool pioneer_audio2;
-	bool check_result(Uint32, bool);
-	bool getstring(char *, int, Uint32,bool);
+	bool check_result(uint32_t, bool);
+	bool getstring(char *, int, uint32_t,bool);
 	void printmodel();
 };
 

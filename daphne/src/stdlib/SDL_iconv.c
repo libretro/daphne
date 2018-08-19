@@ -254,7 +254,7 @@ SDL_iconv(SDL_iconv_t cd,
     const char *src;
     char *dst;
     size_t srclen, dstlen;
-    Uint32 ch = 0;
+    uint32_t ch = 0;
     size_t total;
 
     if (!inbuf || !*inbuf) {
@@ -334,7 +334,7 @@ SDL_iconv(SDL_iconv_t cd,
         if (dstlen < 4) {
             return SDL_ICONV_E2BIG;
         }
-        *(Uint32 *) dst = UNICODE_BOM;
+        *(uint32_t *) dst = UNICODE_BOM;
         dst += 4;
         dstlen -= 4;
         cd->dst_fmt = ENCODING_UTF32NATIVE;
@@ -348,7 +348,7 @@ SDL_iconv(SDL_iconv_t cd,
         case ENCODING_ASCII:
             {
                 uint8_t *p = (uint8_t *) src;
-                ch = (Uint32) (p[0] & 0x7F);
+                ch = (uint32_t) (p[0] & 0x7F);
                 ++src;
                 --srclen;
             }
@@ -356,7 +356,7 @@ SDL_iconv(SDL_iconv_t cd,
         case ENCODING_LATIN1:
             {
                 uint8_t *p = (uint8_t *) src;
-                ch = (Uint32) p[0];
+                ch = (uint32_t) p[0];
                 ++src;
                 --srclen;
             }
@@ -376,7 +376,7 @@ SDL_iconv(SDL_iconv_t cd,
                         if (p[0] == 0xFC && srclen > 1 && (p[1] & 0xFC) == 0x80) {
                             overlong = SDL_TRUE;
                         }
-                        ch = (Uint32) (p[0] & 0x01);
+                        ch = (uint32_t) (p[0] & 0x01);
                         left = 5;
                     }
                 } else if (p[0] >= 0xF8) {
@@ -389,7 +389,7 @@ SDL_iconv(SDL_iconv_t cd,
                         if (p[0] == 0xF8 && srclen > 1 && (p[1] & 0xF8) == 0x80) {
                             overlong = SDL_TRUE;
                         }
-                        ch = (Uint32) (p[0] & 0x03);
+                        ch = (uint32_t) (p[0] & 0x03);
                         left = 4;
                     }
                 } else if (p[0] >= 0xF0) {
@@ -402,7 +402,7 @@ SDL_iconv(SDL_iconv_t cd,
                         if (p[0] == 0xF0 && srclen > 1 && (p[1] & 0xF0) == 0x80) {
                             overlong = SDL_TRUE;
                         }
-                        ch = (Uint32) (p[0] & 0x07);
+                        ch = (uint32_t) (p[0] & 0x07);
                         left = 3;
                     }
                 } else if (p[0] >= 0xE0) {
@@ -415,7 +415,7 @@ SDL_iconv(SDL_iconv_t cd,
                         if (p[0] == 0xE0 && srclen > 1 && (p[1] & 0xE0) == 0x80) {
                             overlong = SDL_TRUE;
                         }
-                        ch = (Uint32) (p[0] & 0x0F);
+                        ch = (uint32_t) (p[0] & 0x0F);
                         left = 2;
                     }
                 } else if (p[0] >= 0xC0) {
@@ -428,7 +428,7 @@ SDL_iconv(SDL_iconv_t cd,
                         if ((p[0] & 0xDE) == 0xC0) {
                             overlong = SDL_TRUE;
                         }
-                        ch = (Uint32) (p[0] & 0x1F);
+                        ch = (uint32_t) (p[0] & 0x1F);
                         left = 1;
                     }
                 } else {
@@ -438,7 +438,7 @@ SDL_iconv(SDL_iconv_t cd,
                          */
                         ch = UNKNOWN_UNICODE;
                     } else {
-                        ch = (Uint32) p[0];
+                        ch = (uint32_t) p[0];
                     }
                 }
                 ++src;
@@ -486,7 +486,7 @@ SDL_iconv(SDL_iconv_t cd,
                 src += 2;
                 srclen -= 2;
                 if (W1 < 0xD800 || W1 > 0xDFFF) {
-                    ch = (Uint32) W1;
+                    ch = (uint32_t) W1;
                     break;
                 }
                 if (W1 > 0xDBFF) {
@@ -510,8 +510,8 @@ SDL_iconv(SDL_iconv_t cd,
                     ch = UNKNOWN_UNICODE;
                     break;
                 }
-                ch = (((Uint32) (W1 & 0x3FF) << 10) |
-                      (Uint32) (W2 & 0x3FF)) + 0x10000;
+                ch = (((uint32_t) (W1 & 0x3FF) << 10) |
+                      (uint32_t) (W2 & 0x3FF)) + 0x10000;
             }
             break;
         case ENCODING_UTF16LE: /* RFC 2781 */
@@ -525,7 +525,7 @@ SDL_iconv(SDL_iconv_t cd,
                 src += 2;
                 srclen -= 2;
                 if (W1 < 0xD800 || W1 > 0xDFFF) {
-                    ch = (Uint32) W1;
+                    ch = (uint32_t) W1;
                     break;
                 }
                 if (W1 > 0xDBFF) {
@@ -549,8 +549,8 @@ SDL_iconv(SDL_iconv_t cd,
                     ch = UNKNOWN_UNICODE;
                     break;
                 }
-                ch = (((Uint32) (W1 & 0x3FF) << 10) |
-                      (Uint32) (W2 & 0x3FF)) + 0x10000;
+                ch = (((uint32_t) (W1 & 0x3FF) << 10) |
+                      (uint32_t) (W2 & 0x3FF)) + 0x10000;
             }
             break;
         case ENCODING_UCS2LE:
@@ -559,7 +559,7 @@ SDL_iconv(SDL_iconv_t cd,
                 if (srclen < 2) {
                     return SDL_ICONV_EINVAL;
                 }
-                ch = ((Uint32) p[1] << 8) | (Uint32) p[0];
+                ch = ((uint32_t) p[1] << 8) | (uint32_t) p[0];
                 src += 2;
                 srclen -= 2;
             }
@@ -570,7 +570,7 @@ SDL_iconv(SDL_iconv_t cd,
                 if (srclen < 2) {
                     return SDL_ICONV_EINVAL;
                 }
-                ch = ((Uint32) p[0] << 8) | (Uint32) p[1];
+                ch = ((uint32_t) p[0] << 8) | (uint32_t) p[1];
                 src += 2;
                 srclen -= 2;
             }
@@ -582,9 +582,9 @@ SDL_iconv(SDL_iconv_t cd,
                 if (srclen < 4) {
                     return SDL_ICONV_EINVAL;
                 }
-                ch = ((Uint32) p[0] << 24) |
-                    ((Uint32) p[1] << 16) |
-                    ((Uint32) p[2] << 8) | (Uint32) p[3];
+                ch = ((uint32_t) p[0] << 24) |
+                    ((uint32_t) p[1] << 16) |
+                    ((uint32_t) p[2] << 8) | (uint32_t) p[3];
                 src += 4;
                 srclen -= 4;
             }
@@ -596,9 +596,9 @@ SDL_iconv(SDL_iconv_t cd,
                 if (srclen < 4) {
                     return SDL_ICONV_EINVAL;
                 }
-                ch = ((Uint32) p[3] << 24) |
-                    ((Uint32) p[2] << 16) |
-                    ((Uint32) p[1] << 8) | (Uint32) p[0];
+                ch = ((uint32_t) p[3] << 24) |
+                    ((uint32_t) p[2] << 16) |
+                    ((uint32_t) p[1] << 8) | (uint32_t) p[0];
                 src += 4;
                 srclen -= 4;
             }

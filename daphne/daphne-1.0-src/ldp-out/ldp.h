@@ -195,14 +195,14 @@ public:
 	void set_blitting_allowed(bool bVal);
 	int get_status();	// returns status of laserdisc player
 	void framenum_to_frame(uint16_t, char *);	// converts int to 5-digit string
-	Uint32 get_search_latency();
+	uint32_t get_search_latency();
 	void set_search_latency(unsigned int);
 	void set_stop_on_quit(bool);	// enables the stop_on_quit bool flag
 
-	Uint32 get_discvideo_height();	// gets the height of the laserdisc video (only meaningful with mpeg)
-	Uint32 get_discvideo_width();	// gets the width of the laserdisc video (only meaningful with mpeg)
-	virtual bool lock_overlay(Uint32);	// prevents yuv callback from being called (only meaningful with mpeg)
-	virtual bool unlock_overlay(Uint32);
+	uint32_t get_discvideo_height();	// gets the height of the laserdisc video (only meaningful with mpeg)
+	uint32_t get_discvideo_width();	// gets the width of the laserdisc video (only meaningful with mpeg)
+	virtual bool lock_overlay(uint32_t);	// prevents yuv callback from being called (only meaningful with mpeg)
+	virtual bool unlock_overlay(uint32_t);
 
 	// sets the value of this boolean
 	void set_use_nonblocking_searching(bool);
@@ -238,19 +238,19 @@ protected:
 	uint16_t m_last_seeked_frame;	// the last frame we successfully seeked to (used with m_play_time to calculate current frame)
 // UPDATE : we aren't using cycles anymore (see pre_think())
 //	uint64_t m_play_cycles;	// # of elapsed cpu cycles from when we last issued a play command
-	Uint32 m_play_time;	// current time when we last issued a play command
+	uint32_t m_play_time;	// current time when we last issued a play command
 	unsigned int m_start_time;	// time when ldp() class was instantiated (only used when not using a cpu)
 	int m_status;	// the current status of the laserdisc player
-	Uint32 search_latency;	// how many ms to stall before searching (to simulate slow laserdisc players)
+	uint32_t search_latency;	// how many ms to stall before searching (to simulate slow laserdisc players)
 	bool m_stop_on_quit;	// should the LDP stop when it quits?
-	Uint32 m_discvideo_width;	// width of laserdisc video (only meaningful with mpeg)
-	Uint32 m_discvideo_height;	// height of laserdisc video (only meaningful with mpeg)
+	uint32_t m_discvideo_width;	// width of laserdisc video (only meaningful with mpeg)
+	uint32_t m_discvideo_height;	// height of laserdisc video (only meaningful with mpeg)
 	bool m_use_nonblocking_searching;	// true if ldp-in drivers should use pre_search in non-blocking mode (as of now, blocking mode is more stable but non-blocking mode is more accurate)
 	bool m_dont_get_search_result;	// if we should not be calling get_search_result()
 	bool m_sram_continuous_update;  // if sram is to be updated on a regular basis
 
 	// timer to be used to simulate search delay when in 'noldp' mode (for debugging)
-	Uint32 m_noldp_timer;
+	uint32_t m_noldp_timer;
 	
 	// used by 'releasetest' to do automatic self-testing
 	list<string> m_bug_log;

@@ -79,7 +79,7 @@ class laireuro : public game
 {
 public:
 	laireuro();
-	void do_irq(Uint32);
+	void do_irq(uint32_t);
 	void do_nmi();
 	uint8_t cpu_mem_read(uint16_t);
 	void cpu_mem_write(uint16_t, uint8_t);

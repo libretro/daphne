@@ -48,7 +48,7 @@ extern "C" {
  *  \return Index of the most significant bit, or -1 if the value is 0.
  */
 SDL_FORCE_INLINE int
-SDL_MostSignificantBitIndex32(Uint32 x)
+SDL_MostSignificantBitIndex32(uint32_t x)
 {
 #if defined(__GNUC__) && __GNUC__ >= 4
     /* Count Leading Zeroes builtin in GCC.
@@ -63,7 +63,7 @@ SDL_MostSignificantBitIndex32(Uint32 x)
      * <seander@cs.stanford.edu>, released in the public domain.
      * http://graphics.stanford.edu/~seander/bithacks.html#IntegerLog
      */
-    const Uint32 b[] = {0x2, 0xC, 0xF0, 0xFF00, 0xFFFF0000};
+    const uint32_t b[] = {0x2, 0xC, 0xF0, 0xFF00, 0xFFFF0000};
     const int    S[] = {1, 2, 4, 8, 16};
 
     int msbIndex = 0;

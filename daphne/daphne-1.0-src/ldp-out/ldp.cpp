@@ -500,7 +500,7 @@ bool ldp::skip_backward(uint16_t frames_to_skip, uint16_t target_frame)
 // prepares to play the disc
 void ldp::pre_play()
 {
-	//	Uint32 cpu_hz;	// used to calculate elapsed cycles
+	//	uint32_t cpu_hz;	// used to calculate elapsed cycles
 
 	// safety check, if they try to play without checking the search result ...
 	// THIS SAFETY CHECK CAN BE REMOVED ONCE ALL LDP DRIVERS HAVE BEEN CONVERTED OVER TO NON-BLOCKING SEEKING
@@ -946,12 +946,12 @@ void ldp::framenum_to_frame(uint16_t num, char *f)
     sprintf(f, "%05d", num);
 }
 
-Uint32 ldp::get_search_latency()
+uint32_t ldp::get_search_latency()
 {
 	return(search_latency);
 }
 
-void ldp::set_search_latency(Uint32 value)
+void ldp::set_search_latency(uint32_t value)
 {
 	search_latency = value;
 }
@@ -1017,25 +1017,25 @@ void ldp::request_screenshot()
 }
 
 // returns the width of the laserdisc video (only meaningful with mpeg)
-Uint32 ldp::get_discvideo_width()
+uint32_t ldp::get_discvideo_width()
 {
 	return m_discvideo_width;
 }
 
 // returns the height of the laserdisc video (only meaningful with mpeg)
-Uint32 ldp::get_discvideo_height()
+uint32_t ldp::get_discvideo_height()
 {
 	return m_discvideo_height;
 }
 
 // ordinarily does nothing unless we're VLDP
-bool ldp::lock_overlay(Uint32 timeout)
+bool ldp::lock_overlay(uint32_t timeout)
 {
 	return true;
 }
 
 // does nothing unless we're VLDP
-bool ldp::unlock_overlay(Uint32 timeout)
+bool ldp::unlock_overlay(uint32_t timeout)
 {
 	return true;
 }

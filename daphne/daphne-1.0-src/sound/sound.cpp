@@ -195,7 +195,7 @@ void sound_shutdown()
 }
 
 // plays a sample, returns true on success
-bool sound_play(Uint32 whichone)
+bool sound_play(uint32_t whichone)
 {	
 	bool result = false;
 	
@@ -229,7 +229,7 @@ bool sound_play_saveme()
 int load_waves()
 {
 	
-	Uint32 i = 0;
+	uint32_t i = 0;
 	int result = 1;
 	string filename = "";
         
@@ -566,7 +566,7 @@ void mixWithMaxVolume(uint8_t *stream, int length)
 		DO_CLIP(mixed_sample_2);
 
 		// note: sample2 needs to be on top because this is little endian, hence LSB
-		Uint32 val_to_store = (((uint16_t) mixed_sample_2) << 16) | (uint16_t) mixed_sample_1;
+		uint32_t val_to_store = (((uint16_t) mixed_sample_2) << 16) | (uint16_t) mixed_sample_1;
 
 		STORE_LIL_UINT32(stream, val_to_store);
 		stream += 4;
@@ -599,7 +599,7 @@ void mixWithMults(uint8_t *stream, int length)
 		DO_CLIP(mixed_sample_1);
 		DO_CLIP(mixed_sample_2);
 
-		Uint32 val_to_store = (((uint16_t) mixed_sample_2) << 16) | (uint16_t) mixed_sample_1;
+		uint32_t val_to_store = (((uint16_t) mixed_sample_2) << 16) | (uint16_t) mixed_sample_1;
 		STORE_LIL_UINT32(stream, val_to_store);
 		stream += 4;
 	}

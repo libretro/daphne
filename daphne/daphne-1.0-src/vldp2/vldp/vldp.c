@@ -48,9 +48,9 @@ int p_initialized = 0;	// whether VLDP has been initialized
 uint8_t g_req_cmdORcount = CMDORCOUNT_INITIAL;	// the current command parent thread requests of the child thread
 unsigned int g_ack_count = ACK_COUNT_INITIAL;	// the result returned by the internal child thread
 char g_req_file[STRSIZE];	// requested mpeg filename
-Uint32 g_req_timer = 0;	// requests timer value to be used for mpeg playback
+uint32_t g_req_timer = 0;	// requests timer value to be used for mpeg playback
 uint16_t g_req_frame = 0;		// requested frame to search to
-Uint32 g_req_min_seek_ms = 0;	// seek must take at least this many milliseconds (simulate laserdisc seek delay)
+uint32_t g_req_min_seek_ms = 0;	// seek must take at least this many milliseconds (simulate laserdisc seek delay)
 unsigned int g_req_precache = VLDP_FALSE;	// whether g_req_idx has any meaning
 unsigned int g_req_idx = 0;	// multipurpose index (used by precaching)
 unsigned int g_req_skip_per_frame = 0;	// how many frames to skip per frame (for playing at 2X for example)
@@ -67,7 +67,7 @@ const struct vldp_in_info *g_in_info;	// contains info from parent thread that V
 int vldp_cmd(int cmd)
 {
 	int result = 0;
-	Uint32 cur_time = g_in_info->GetTicksFunc();
+	uint32_t cur_time = g_in_info->GetTicksFunc();
 	uint8_t tmp = g_req_cmdORcount;	// we want to replace the real value atomically so we use a tmp variable first
 	static unsigned int old_ack_count = ACK_COUNT_INITIAL;
 
@@ -106,7 +106,7 @@ int vldp_wait_for_status(int stat)
 {
 	int result = 0;	// assume error unless we explicitly
 	int done = 0;
-	Uint32 cur_time = g_in_info->GetTicksFunc();
+	uint32_t cur_time = g_in_info->GetTicksFunc();
 	while (!done && ((g_in_info->GetTicksFunc() - cur_time) < VLDP_TIMEOUT))
 	{
 		if (g_out_info.status == stat)
@@ -230,7 +230,7 @@ VLDP_BOOL vldp_precache(const char *filename)
 
 // issues search command and returns immediately to parent thread.
 // Search will not be complete until the VLDP status is STAT_PAUSED
-int vldp_search(uint16_t frame, Uint32 min_seek_ms)
+int vldp_search(uint16_t frame, uint32_t min_seek_ms)
 {
 	int result = 0;
 
@@ -244,7 +244,7 @@ int vldp_search(uint16_t frame, Uint32 min_seek_ms)
 }
 
 // issues search command blocks until search is complete
-int vldp_search_and_block(uint16_t frame, Uint32 min_seek_ms)
+int vldp_search_and_block(uint16_t frame, uint32_t min_seek_ms)
 {
 	int result = 0;
 
@@ -258,7 +258,7 @@ int vldp_search_and_block(uint16_t frame, Uint32 min_seek_ms)
 	return result;
 }
 
-int vldp_play(Uint32 timer)
+int vldp_play(uint32_t timer)
 {
 	int result = 0;
 

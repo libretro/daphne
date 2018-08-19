@@ -119,7 +119,7 @@ MS_ADPCM_nibble(struct MS_ADPCM_decodestate *state,
 }
 
 static int
-MS_ADPCM_decode(uint8_t ** audio_buf, Uint32 * audio_len)
+MS_ADPCM_decode(uint8_t ** audio_buf, uint32_t * audio_len)
 {
     struct MS_ADPCM_decodestate *state[2];
     uint8_t *freeable, *encoded, *decoded;
@@ -338,7 +338,7 @@ Fill_IMA_ADPCM_block(uint8_t * decoded, uint8_t * encoded,
 }
 
 static int
-IMA_ADPCM_decode(uint8_t ** audio_buf, Uint32 * audio_len)
+IMA_ADPCM_decode(uint8_t ** audio_buf, uint32_t * audio_len)
 {
     struct IMA_ADPCM_decodestate *state;
     uint8_t *freeable, *encoded, *decoded;
@@ -408,7 +408,7 @@ IMA_ADPCM_decode(uint8_t ** audio_buf, Uint32 * audio_len)
 
 SDL_AudioSpec *
 SDL_LoadWAV_RW(SDL_RWops * src, int freesrc,
-               SDL_AudioSpec * spec, uint8_t ** audio_buf, Uint32 * audio_len)
+               SDL_AudioSpec * spec, uint8_t ** audio_buf, uint32_t * audio_len)
 {
     int was_error;
     Chunk chunk;
@@ -417,10 +417,10 @@ SDL_LoadWAV_RW(SDL_RWops * src, int freesrc,
     int samplesize;
 
     /* WAV magic header */
-    Uint32 RIFFchunk;
-    Uint32 wavelen = 0;
-    Uint32 WAVEmagic;
-    Uint32 headerDiff = 0;
+    uint32_t RIFFchunk;
+    uint32_t wavelen = 0;
+    uint32_t WAVEmagic;
+    uint32_t headerDiff = 0;
 
     /* FMT chunk */
     WaveFMT *format = NULL;
@@ -449,7 +449,7 @@ SDL_LoadWAV_RW(SDL_RWops * src, int freesrc,
         was_error = 1;
         goto done;
     }
-    headerDiff += sizeof(Uint32);       /* for WAVE */
+    headerDiff += sizeof(uint32_t);       /* for WAVE */
 
     /* Read the audio data format chunk */
     chunk.data = NULL;
@@ -461,8 +461,8 @@ SDL_LoadWAV_RW(SDL_RWops * src, int freesrc,
             was_error = 1;
             goto done;
         }
-        /* 2 Uint32's for chunk header+len, plus the lenread */
-        headerDiff += lenread + 2 * sizeof(Uint32);
+        /* 2 uint32_t's for chunk header+len, plus the lenread */
+        headerDiff += lenread + 2 * sizeof(uint32_t);
     } while ((chunk.magic == FACT) || (chunk.magic == LIST) || (chunk.magic == BEXT) || (chunk.magic == JUNK));
 
     /* Decode the audio data format */
@@ -561,9 +561,9 @@ SDL_LoadWAV_RW(SDL_RWops * src, int freesrc,
         *audio_len = lenread;
         *audio_buf = chunk.data;
         if (chunk.magic != DATA)
-            headerDiff += lenread + 2 * sizeof(Uint32);
+            headerDiff += lenread + 2 * sizeof(uint32_t);
     } while (chunk.magic != DATA);
-    headerDiff += 2 * sizeof(Uint32);   /* for the data chunk and len */
+    headerDiff += 2 * sizeof(uint32_t);   /* for the data chunk and len */
 
     if (MS_ADPCM_encoded) {
         if (MS_ADPCM_decode(audio_buf, audio_len) < 0) {

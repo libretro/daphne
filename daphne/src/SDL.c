@@ -42,7 +42,7 @@ static uint8_t SDL_SubsystemRefCount[ 32 ];
 
 /* Private helper to increment a subsystem's ref counter. */
 static void
-SDL_PrivateSubsystemRefCountIncr(Uint32 subsystem)
+SDL_PrivateSubsystemRefCountIncr(uint32_t subsystem)
 {
     int subsystem_index = SDL_MostSignificantBitIndex32(subsystem);
     assert(SDL_SubsystemRefCount[subsystem_index] < 255);
@@ -51,7 +51,7 @@ SDL_PrivateSubsystemRefCountIncr(Uint32 subsystem)
 
 /* Private helper to decrement a subsystem's ref counter. */
 static void
-SDL_PrivateSubsystemRefCountDecr(Uint32 subsystem)
+SDL_PrivateSubsystemRefCountDecr(uint32_t subsystem)
 {
     int subsystem_index = SDL_MostSignificantBitIndex32(subsystem);
     if (SDL_SubsystemRefCount[subsystem_index] > 0) {
@@ -61,7 +61,7 @@ SDL_PrivateSubsystemRefCountDecr(Uint32 subsystem)
 
 /* Private helper to check if a system needs init. */
 static SDL_bool
-SDL_PrivateShouldInitSubsystem(Uint32 subsystem)
+SDL_PrivateShouldInitSubsystem(uint32_t subsystem)
 {
     int subsystem_index = SDL_MostSignificantBitIndex32(subsystem);
     assert(SDL_SubsystemRefCount[subsystem_index] < 255);
@@ -70,7 +70,7 @@ SDL_PrivateShouldInitSubsystem(Uint32 subsystem)
 
 /* Private helper to check if a system needs to be quit. */
 static SDL_bool
-SDL_PrivateShouldQuitSubsystem(Uint32 subsystem) {
+SDL_PrivateShouldQuitSubsystem(uint32_t subsystem) {
     int subsystem_index = SDL_MostSignificantBitIndex32(subsystem);
     if (SDL_SubsystemRefCount[subsystem_index] == 0) {
       return SDL_FALSE;
@@ -83,7 +83,7 @@ SDL_PrivateShouldQuitSubsystem(Uint32 subsystem) {
 }
 
 int
-SDL_InitSubSystem(Uint32 flags)
+SDL_InitSubSystem(uint32_t flags)
 {
     /* Clear the error message */
     SDL_ClearError();
@@ -116,13 +116,13 @@ SDL_InitSubSystem(Uint32 flags)
 }
 
 int
-SDL_Init(Uint32 flags)
+SDL_Init(uint32_t flags)
 {
     return SDL_InitSubSystem(flags);
 }
 
 void
-SDL_QuitSubSystem(Uint32 flags)
+SDL_QuitSubSystem(uint32_t flags)
 {
 #if !SDL_AUDIO_DISABLED
     if ((flags & SDL_INIT_AUDIO)) {

@@ -93,7 +93,7 @@ void reset_ldp1450_globals()
 // should get called by the cpu emulation before emulation begins to get our cycle delays set up
 void reset_ldp1000()
 {
-	Uint32 cpu_hz = get_cpu_hz(0);
+	uint32_t cpu_hz = get_cpu_hz(0);
 	double dCyclesPerMs = cpu_hz / 1000.0;	// cycles per milisecond
 
 	// Compute how many CPU cycles we must delay before ACK'ing certain commands

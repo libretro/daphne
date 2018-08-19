@@ -134,21 +134,21 @@ SDL_ConvertMono(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 
     case AUDIO_S32:
         {
-            const Uint32 *src = (const Uint32 *) cvt->buf;
-            Uint32 *dst = (Uint32 *) cvt->buf;
+            const uint32_t *src = (const uint32_t *) cvt->buf;
+            uint32_t *dst = (uint32_t *) cvt->buf;
             if (SDL_AUDIO_ISBIGENDIAN(format)) {
                 for (i = cvt->len_cvt / 8; i; --i, src += 2) {
                     const int64_t added =
                         (((int64_t) (int32_t) SDL_SwapBE32(src[0])) +
                          ((int64_t) (int32_t) SDL_SwapBE32(src[1])));
-                    *(dst++) = SDL_SwapBE32((Uint32) ((int32_t) (added / 2)));
+                    *(dst++) = SDL_SwapBE32((uint32_t) ((int32_t) (added / 2)));
                 }
             } else {
                 for (i = cvt->len_cvt / 8; i; --i, src += 2) {
                     const int64_t added =
                         (((int64_t) (int32_t) SDL_SwapLE32(src[0])) +
                          ((int64_t) (int32_t) SDL_SwapLE32(src[1])));
-                    *(dst++) = SDL_SwapLE32((Uint32) ((int32_t) (added / 2)));
+                    *(dst++) = SDL_SwapLE32((uint32_t) ((int32_t) (added / 2)));
                 }
             }
         }
@@ -213,7 +213,7 @@ SDL_ConvertStrip(SDL_AudioCVT * cvt, SDL_AudioFormat format)
         strip_chans_6_to_2(uint16_t);
         break;
     case 32:
-        strip_chans_6_to_2(Uint32);
+        strip_chans_6_to_2(uint32_t);
         break;
     }
 
@@ -255,7 +255,7 @@ SDL_ConvertStrip_2(SDL_AudioCVT * cvt, SDL_AudioFormat format)
         strip_chans_6_to_4(uint16_t);
         break;
     case 32:
-        strip_chans_6_to_4(Uint32);
+        strip_chans_6_to_4(uint32_t);
         break;
     }
 
@@ -294,7 +294,7 @@ SDL_ConvertStereo(SDL_AudioCVT * cvt, SDL_AudioFormat format)
         dup_chans_1_to_2(uint16_t);
         break;
     case 32:
-        dup_chans_1_to_2(Uint32);
+        dup_chans_1_to_2(uint32_t);
         break;
     }
 
@@ -483,8 +483,8 @@ SDL_ConvertSurround(SDL_AudioCVT * cvt, SDL_AudioFormat format)
     case AUDIO_S32:
         {
             int32_t lf, rf, ce;
-            const Uint32 *src = (const Uint32 *) (cvt->buf + cvt->len_cvt);
-            Uint32 *dst = (Uint32 *) (cvt->buf + cvt->len_cvt * 3);
+            const uint32_t *src = (const uint32_t *) (cvt->buf + cvt->len_cvt);
+            uint32_t *dst = (uint32_t *) (cvt->buf + cvt->len_cvt * 3);
 
             if (SDL_AUDIO_ISBIGENDIAN(format)) {
                 for (i = cvt->len_cvt / 8; i; --i) {
@@ -493,12 +493,12 @@ SDL_ConvertSurround(SDL_AudioCVT * cvt, SDL_AudioFormat format)
                     lf = (int32_t) SDL_SwapBE32(src[0]);
                     rf = (int32_t) SDL_SwapBE32(src[1]);
                     ce = (lf / 2) + (rf / 2);
-                    dst[0] = SDL_SwapBE32((Uint32) lf);
-                    dst[1] = SDL_SwapBE32((Uint32) rf);
-                    dst[2] = SDL_SwapBE32((Uint32) (lf - ce));
-                    dst[3] = SDL_SwapBE32((Uint32) (rf - ce));
-                    dst[4] = SDL_SwapBE32((Uint32) ce);
-                    dst[5] = SDL_SwapBE32((Uint32) ce);
+                    dst[0] = SDL_SwapBE32((uint32_t) lf);
+                    dst[1] = SDL_SwapBE32((uint32_t) rf);
+                    dst[2] = SDL_SwapBE32((uint32_t) (lf - ce));
+                    dst[3] = SDL_SwapBE32((uint32_t) (rf - ce));
+                    dst[4] = SDL_SwapBE32((uint32_t) ce);
+                    dst[5] = SDL_SwapBE32((uint32_t) ce);
                 }
             } else {
                 for (i = cvt->len_cvt / 8; i; --i) {
@@ -509,10 +509,10 @@ SDL_ConvertSurround(SDL_AudioCVT * cvt, SDL_AudioFormat format)
                     ce = (lf / 2) + (rf / 2);
                     dst[0] = src[0];
                     dst[1] = src[1];
-                    dst[2] = SDL_SwapLE32((Uint32) (lf - ce));
-                    dst[3] = SDL_SwapLE32((Uint32) (rf - ce));
-                    dst[4] = SDL_SwapLE32((Uint32) ce);
-                    dst[5] = SDL_SwapLE32((Uint32) ce);
+                    dst[2] = SDL_SwapLE32((uint32_t) (lf - ce));
+                    dst[3] = SDL_SwapLE32((uint32_t) (rf - ce));
+                    dst[4] = SDL_SwapLE32((uint32_t) ce);
+                    dst[5] = SDL_SwapLE32((uint32_t) ce);
                 }
             }
         }
@@ -713,8 +713,8 @@ SDL_ConvertSurround_4(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 
     case AUDIO_S32:
         {
-            const Uint32 *src = (const Uint32 *) (cvt->buf + cvt->len_cvt);
-            Uint32 *dst = (Uint32 *) (cvt->buf + cvt->len_cvt * 2);
+            const uint32_t *src = (const uint32_t *) (cvt->buf + cvt->len_cvt);
+            uint32_t *dst = (uint32_t *) (cvt->buf + cvt->len_cvt * 2);
             int32_t lf, rf, ce;
 
             if (SDL_AUDIO_ISBIGENDIAN(format)) {
@@ -726,8 +726,8 @@ SDL_ConvertSurround_4(SDL_AudioCVT * cvt, SDL_AudioFormat format)
                     ce = (lf / 2) + (rf / 2);
                     dst[0] = src[0];
                     dst[1] = src[1];
-                    dst[2] = SDL_SwapBE32((Uint32) (lf - ce));
-                    dst[3] = SDL_SwapBE32((Uint32) (rf - ce));
+                    dst[2] = SDL_SwapBE32((uint32_t) (lf - ce));
+                    dst[3] = SDL_SwapBE32((uint32_t) (rf - ce));
                 }
             } else {
                 for (i = cvt->len_cvt / 8; i; --i) {
@@ -738,8 +738,8 @@ SDL_ConvertSurround_4(SDL_AudioCVT * cvt, SDL_AudioFormat format)
                     ce = (lf / 2) + (rf / 2);
                     dst[0] = src[0];
                     dst[1] = src[1];
-                    dst[2] = SDL_SwapLE32((Uint32) (lf - ce));
-                    dst[3] = SDL_SwapLE32((Uint32) (rf - ce));
+                    dst[2] = SDL_SwapLE32((uint32_t) (lf - ce));
+                    dst[3] = SDL_SwapLE32((uint32_t) (rf - ce));
                 }
             }
         }

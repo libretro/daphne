@@ -253,7 +253,7 @@ unsigned int i86_get_pc()
 // END MPO
 
 // PAULB ADDED FOR CONVENIENCE
-void i86_set_pc (Uint32 value)
+void i86_set_pc (uint32_t value)
 {
 	if (value - I.base[CS] >= 0x10000)
 	{
@@ -348,8 +348,7 @@ void i86_set_irq_callback(int (*callback) (int))
 }
 
 
-
-Uint32 i86_execute(Uint32 num_cycles)
+uint32_t i86_execute(uint32_t num_cycles)
 {
 
 	/* copy over the cycle counts if they're not correct */

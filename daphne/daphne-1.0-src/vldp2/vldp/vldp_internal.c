@@ -352,15 +352,15 @@ int s_skip_all = 0;	// if we are to skip any frame to be displayed (to avoid see
 // (for performance tuning, we want to minimize this number)
 unsigned int s_uSkipAllCount = 0;
 
-Uint32 s_timer = 0;	// FPS timer used by the blitting code to run at the right speed
+uint32_t s_timer = 0;	// FPS timer used by the blitting code to run at the right speed
 
 // any extra delay that null_draw_frame() will use before drawing a frame (intended for laserdisc seek delay simulation)
 // NOTE : this value gets reset to 0 after it has been 'used'
-Uint32 s_extra_delay_ms = 0;
+uint32_t s_extra_delay_ms = 0;
 
 // how many frames must have been displayed (relative to s_timer!!!)
 // before we advance to the next frame
-Uint32 s_uFramesShownSinceTimer = 0;
+uint32_t s_uFramesShownSinceTimer = 0;
 
 // which frame we've skipped to (0 if there is nothing pending)
 unsigned int s_uPendingSkipFrame = 0;
@@ -381,7 +381,7 @@ struct precache_entry_s s_sPreCacheEntries[MAX_PRECACHE_FILES];	// struct array 
 
 static FILE *g_mpeg_handle = NULL;	// mpeg file we currently have open
 static mpeg2dec_t *g_mpeg_data = NULL;	// structure for libmpeg2's state
-static Uint32 g_frame_position[MAX_LDP_FRAMES] = { 0 };	// the file position of each I frame
+static uint32_t g_frame_position[MAX_LDP_FRAMES] = { 0 };	// the file position of each I frame
 static uint16_t g_totalframes = 0;	// total # of frames in the current mpeg
 
 #define BUFFER_SIZE 262144
@@ -748,7 +748,7 @@ static void decode_mpeg2 (uint8_t * current, uint8_t * end)
 // NOTE: this does change the file position
 void vldp_cache_sequence_header()
 {
-	Uint32 val = 0;
+	uint32_t val = 0;
 	unsigned int index = 0;
 
 	io_seek(0);	// start at beginning
@@ -1091,9 +1091,9 @@ void ivldp_render()
 // and not adjust any timers)
 void idle_handler_search(int skip)
 {
-	Uint32 proposed_pos = 0;
+	uint32_t proposed_pos = 0;
 	uint16_t req_frame = g_req_frame; // after we acknowledge the command, g_req_frame could become clobbered
-	Uint32 min_seek_ms = g_req_min_seek_ms;	// g_req_min_seek_ms can be clobbered at any time after we acknowledge command
+	uint32_t min_seek_ms = g_req_min_seek_ms;	// g_req_min_seek_ms can be clobbered at any time after we acknowledge command
 
 	// adjusted req frame is the requested frame with fields taken into account
 	unsigned int uAdjustedReqFrame = 0;
@@ -1339,7 +1339,7 @@ VLDP_BOOL ivldp_get_mpeg_frame_offsets(char *mpeg_name)
 }
 
 
-VLDP_BOOL ivldp_parse_mpeg_frame_offsets(char *datafilename, Uint32 mpeg_size)
+VLDP_BOOL ivldp_parse_mpeg_frame_offsets(char *datafilename, uint32_t mpeg_size)
 {
 	int result = VLDP_TRUE;
 	FILE *data_file = fopen(datafilename, "wb");	// create file
@@ -1348,7 +1348,7 @@ VLDP_BOOL ivldp_parse_mpeg_frame_offsets(char *datafilename, Uint32 mpeg_size)
 	// if we could create the file successfully, then we need to populate it
 	if (data_file)
 	{
-		Uint32 pos = 0;	// position in the file
+		uint32_t pos = 0;	// position in the file
 		int count = 0;
 		int parse_result = 0;
 

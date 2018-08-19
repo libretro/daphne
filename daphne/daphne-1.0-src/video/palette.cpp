@@ -30,7 +30,7 @@ unsigned int g_palette_size = 0;
 SDL_Color *g_rgb_palette = NULL;
 
 // color palette lookup table (to make OpenGL texture conversions faster)
-Uint32 g_uRGBAPalette[256];
+uint32_t g_uRGBAPalette[256];
 
 t_yuv_color *g_yuv_palette = NULL;
 
@@ -185,7 +185,7 @@ t_yuv_color *get_yuv_palette(void)
 	return g_yuv_palette;
 }
 
-Uint32 *get_rgba_palette(void)
+uint32_t *get_rgba_palette(void)
 {
 	return g_uRGBAPalette;
 }

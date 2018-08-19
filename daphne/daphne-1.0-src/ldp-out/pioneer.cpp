@@ -297,7 +297,7 @@ uint16_t pioneer::get_real_current_frame()
 // watchquit is whether or not to abort if a quit signal is requested
 //   (you always want to do this unless you are sending a command
 //    after the quitflag has been enabled, such as 'stop')
-bool pioneer::check_result(Uint32 timeout_val, bool watchquit)
+bool pioneer::check_result(uint32_t timeout_val, bool watchquit)
 {
 
 	char s[81] = { 0 };
@@ -321,7 +321,7 @@ bool pioneer::check_result(Uint32 timeout_val, bool watchquit)
 //  (the only time we don't want to is if we send a stop command which might
 //   be after the quitflag has already been set)
 // returns true if it got a legit string or false if it gave up
-bool pioneer::getstring(char *s, int length, Uint32 timeout, bool watchquit)
+bool pioneer::getstring(char *s, int length, uint32_t timeout, bool watchquit)
 {
 	int index = 0;
 	unsigned int cur_time = refresh_ms_time();

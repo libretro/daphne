@@ -69,7 +69,7 @@ extern "C" {
  */
 typedef struct SDL_Surface
 {
-    Uint32 flags;               /**< Read-only */
+    uint32_t flags;               /**< Read-only */
     SDL_PixelFormat *format;    /**< Read-only */
     int w, h;                   /**< Read-only */
     int pitch;                  /**< Read-only */
@@ -117,19 +117,19 @@ typedef int (*SDL_blit) (struct SDL_Surface * src, SDL_Rect * srcrect,
  *  \param Amask The alpha mask of the surface to create.
  */
 extern DECLSPEC SDL_Surface *SDLCALL SDL_CreateRGBSurface
-    (Uint32 flags, int width, int height, int depth,
-     Uint32 Rmask, Uint32 Gmask, Uint32 Bmask, Uint32 Amask);
+    (uint32_t flags, int width, int height, int depth,
+     uint32_t Rmask, uint32_t Gmask, uint32_t Bmask, uint32_t Amask);
 extern DECLSPEC SDL_Surface *SDLCALL SDL_CreateRGBSurfaceWithFormat
-    (Uint32 flags, int width, int height, int depth, Uint32 format);
+    (uint32_t flags, int width, int height, int depth, uint32_t format);
 extern DECLSPEC SDL_Surface *SDLCALL SDL_CreateRGBSurfaceFrom(void *pixels,
                                                               int width,
                                                               int height,
                                                               int depth,
                                                               int pitch,
-                                                              Uint32 Rmask,
-                                                              Uint32 Gmask,
-                                                              Uint32 Bmask,
-                                                              Uint32 Amask);
+                                                              uint32_t Rmask,
+                                                              uint32_t Gmask,
+                                                              uint32_t Bmask,
+                                                              uint32_t Amask);
 extern DECLSPEC void SDLCALL SDL_FreeSurface(SDL_Surface * surface);
 
 /**
@@ -207,7 +207,7 @@ extern DECLSPEC int SDLCALL SDL_SetSurfaceRLE(SDL_Surface * surface,
  *  You can pass SDL_RLEACCEL to enable RLE accelerated blits.
  */
 extern DECLSPEC int SDLCALL SDL_SetColorKey(SDL_Surface * surface,
-                                            int flag, Uint32 key);
+                                            int flag, uint32_t key);
 
 /**
  *  \brief Gets the color key (transparent pixel) in a blittable surface.
@@ -220,7 +220,7 @@ extern DECLSPEC int SDLCALL SDL_SetColorKey(SDL_Surface * surface,
  *          enabled.
  */
 extern DECLSPEC int SDLCALL SDL_GetColorKey(SDL_Surface * surface,
-                                            Uint32 * key);
+                                            uint32_t * key);
 
 /**
  *  \brief Set an additional color value used in blit operations.
@@ -342,9 +342,9 @@ extern DECLSPEC void SDLCALL SDL_GetClipRect(SDL_Surface * surface,
  *  surface.
  */
 extern DECLSPEC SDL_Surface *SDLCALL SDL_ConvertSurface
-    (SDL_Surface * src, const SDL_PixelFormat * fmt, Uint32 flags);
+    (SDL_Surface * src, const SDL_PixelFormat * fmt, uint32_t flags);
 extern DECLSPEC SDL_Surface *SDLCALL SDL_ConvertSurfaceFormat
-    (SDL_Surface * src, Uint32 pixel_format, Uint32 flags);
+    (SDL_Surface * src, uint32_t pixel_format, uint32_t flags);
 
 /**
  *  Performs a fast fill of the given rectangle with \c color.
@@ -357,9 +357,9 @@ extern DECLSPEC SDL_Surface *SDLCALL SDL_ConvertSurfaceFormat
  *  \return 0 on success, or -1 on error.
  */
 extern DECLSPEC int SDLCALL SDL_FillRect
-    (SDL_Surface * dst, const SDL_Rect * rect, Uint32 color);
+    (SDL_Surface * dst, const SDL_Rect * rect, uint32_t color);
 extern DECLSPEC int SDLCALL SDL_FillRects
-    (SDL_Surface * dst, const SDL_Rect * rects, int count, Uint32 color);
+    (SDL_Surface * dst, const SDL_Rect * rects, int count, uint32_t color);
 
 /**
  *  Performs a fast blit from the source surface to the destination surface.

@@ -30,7 +30,7 @@
 #if SDL_THREADS_DISABLED
 
 SDL_sem *
-SDL_CreateSemaphore(Uint32 initial_value)
+SDL_CreateSemaphore(uint32_t initial_value)
 {
     SDL_SetError("SDL not built with thread support");
     return (SDL_sem *) 0;
@@ -48,7 +48,7 @@ SDL_SemTryWait(SDL_sem * sem)
 }
 
 int
-SDL_SemWaitTimeout(SDL_sem * sem, Uint32 timeout)
+SDL_SemWaitTimeout(SDL_sem * sem, uint32_t timeout)
 {
     return SDL_SetError("SDL not built with thread support");
 }
@@ -59,7 +59,7 @@ SDL_SemWait(SDL_sem * sem)
     return SDL_SetError("SDL not built with thread support");
 }
 
-Uint32
+uint32_t
 SDL_SemValue(SDL_sem * sem)
 {
     return 0;
@@ -75,14 +75,14 @@ SDL_SemPost(SDL_sem * sem)
 
 struct SDL_semaphore
 {
-    Uint32 count;
-    Uint32 waiters_count;
+    uint32_t count;
+    uint32_t waiters_count;
     SDL_mutex *count_lock;
     SDL_cond *count_nonzero;
 };
 
 SDL_sem *
-SDL_CreateSemaphore(Uint32 initial_value)
+SDL_CreateSemaphore(uint32_t initial_value)
 {
     SDL_sem *sem;
 
@@ -147,7 +147,7 @@ SDL_SemTryWait(SDL_sem * sem)
 }
 
 int
-SDL_SemWaitTimeout(SDL_sem * sem, Uint32 timeout)
+SDL_SemWaitTimeout(SDL_sem * sem, uint32_t timeout)
 {
     int retval;
 
@@ -182,10 +182,10 @@ SDL_SemWait(SDL_sem * sem)
     return SDL_SemWaitTimeout(sem, SDL_MUTEX_MAXWAIT);
 }
 
-Uint32
+uint32_t
 SDL_SemValue(SDL_sem * sem)
 {
-    Uint32 value;
+    uint32_t value;
 
     value = 0;
     if (sem) {

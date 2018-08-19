@@ -286,8 +286,8 @@ void singe::palette_calculate()
 // redraws video
 void singe::video_repaint()
 {
-	Uint32 cur_w = g_ldp->get_discvideo_width() >> 1;	// width overlay should be
-	Uint32 cur_h = g_ldp->get_discvideo_height() >> 1;	// height overlay should be
+	uint32_t cur_w = g_ldp->get_discvideo_width() >> 1;	// width overlay should be
+	uint32_t cur_h = g_ldp->get_discvideo_height() >> 1;	// height overlay should be
 
 	// if the width or height of the mpeg video has changed since we last were here (ie, opening a new mpeg)
 	// then reallocate the video overlay buffer

@@ -32,14 +32,14 @@ void
 SDL_Blit_Slow(SDL_BlitInfo * info)
 {
     const int flags = info->flags;
-    const Uint32 modulateR = info->r;
-    const Uint32 modulateG = info->g;
-    const Uint32 modulateB = info->b;
-    const Uint32 modulateA = info->a;
-    Uint32 srcpixel;
-    Uint32 srcR, srcG, srcB, srcA;
-    Uint32 dstpixel;
-    Uint32 dstR, dstG, dstB, dstA;
+    const uint32_t modulateR = info->r;
+    const uint32_t modulateG = info->g;
+    const uint32_t modulateB = info->b;
+    const uint32_t modulateA = info->a;
+    uint32_t srcpixel;
+    uint32_t srcR, srcG, srcB, srcA;
+    uint32_t dstpixel;
+    uint32_t dstR, dstG, dstB, dstA;
     int srcy, srcx;
     int posy, posx;
     int incy, incx;
@@ -47,8 +47,8 @@ SDL_Blit_Slow(SDL_BlitInfo * info)
     SDL_PixelFormat *dst_fmt = info->dst_fmt;
     int srcbpp = src_fmt->BytesPerPixel;
     int dstbpp = dst_fmt->BytesPerPixel;
-    Uint32 rgbmask = ~src_fmt->Amask;
-    Uint32 ckey = info->colorkey & rgbmask;
+    uint32_t rgbmask = ~src_fmt->Amask;
+    uint32_t ckey = info->colorkey & rgbmask;
 
     srcy = 0;
     posy = 0;

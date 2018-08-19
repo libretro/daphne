@@ -26,7 +26,7 @@
 #include <stdint.h>
 
 // init callback
-int beeper_init(Uint32 unused);
+int beeper_init(uint32_t unused);
 
 // should be called from the game driver to control beeper
 void beeper_ctrl_data(unsigned int uPort, unsigned int uByte, int internal_id);

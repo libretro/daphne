@@ -26,7 +26,7 @@
 #include "SDL_blit.h"
 
 /* Pixel format functions */
-extern int SDL_InitFormat(SDL_PixelFormat * format, Uint32 pixel_format);
+extern int SDL_InitFormat(SDL_PixelFormat * format, uint32_t pixel_format);
 
 /* Blit mapping functions */
 extern SDL_BlitMap *SDL_AllocBlitMap(void);

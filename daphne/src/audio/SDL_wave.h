@@ -46,13 +46,13 @@
 typedef struct WaveFMT
 {
 /* Not saved in the chunk we read:
-    Uint32  FMTchunk;
-    Uint32  fmtlen;
+    uint32_t  FMTchunk;
+    uint32_t  fmtlen;
 */
     uint16_t encoding;
     uint16_t channels;            /* 1 = mono, 2 = stereo */
-    Uint32 frequency;           /* One of 11025, 22050, or 44100 Hz */
-    Uint32 byterate;            /* Average bytes per second */
+    uint32_t frequency;           /* One of 11025, 22050, or 44100 Hz */
+    uint32_t byterate;            /* Average bytes per second */
     uint16_t blockalign;          /* Bytes per sample block */
     uint16_t bitspersample;       /* One of 8, 12, 16, or 4 for ADPCM */
 } WaveFMT;
@@ -60,8 +60,8 @@ typedef struct WaveFMT
 /* The general chunk found in the WAVE file */
 typedef struct Chunk
 {
-    Uint32 magic;
-    Uint32 length;
+    uint32_t magic;
+    uint32_t length;
     uint8_t *data;
 } Chunk;
 

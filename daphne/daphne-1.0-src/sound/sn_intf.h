@@ -28,7 +28,7 @@
 
 #include <stdint.h>
 
-int tms9919_initialize(Uint32 core_frequency);
+int tms9919_initialize(uint32_t core_frequency);
 void tms9919_writedata(uint8_t, int index);
 void tms9919_stream(uint8_t* stream, int length, int index);
 void tms9919_shutdown(int index);

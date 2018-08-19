@@ -46,8 +46,8 @@ public:
 	uint16_t get_real_current_frame();
 
 private:
-	bool check_result(const char *, Uint32, bool);
-	bool getstring(char *, int, Uint32,bool);
+	bool check_result(const char *, uint32_t, bool);
+	bool getstring(char *, int, uint32_t,bool);
 };
 
 #endif

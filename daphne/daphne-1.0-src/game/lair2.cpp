@@ -988,7 +988,7 @@ uint8_t lair2::port_read(uint16_t port)
 	return(result);
 }
 
-void lair2::cpu_mem_write(Uint32 Addr, uint8_t Value)
+void lair2::cpu_mem_write(uint32_t Addr, uint8_t Value)
 {
 	m_cpumem[Addr] = Value; // always store to RAM if we write to it
 }
@@ -1088,8 +1088,8 @@ void lair2::input_disable(uint8_t move)
 
 void lair2::video_repaint()
 {
-	Uint32 cur_w = g_ldp->get_discvideo_width() >> 1;	// width our overlay should be
-	Uint32 cur_h = g_ldp->get_discvideo_height() >> 1;	// height our overlay should be
+	uint32_t cur_w = g_ldp->get_discvideo_width() >> 1;	// width our overlay should be
+	uint32_t cur_h = g_ldp->get_discvideo_height() >> 1;	// height our overlay should be
 
 	// If the width or height of the mpeg video has changed since we last were
     // here (ie, opening a new mpeg) then reallocate the video overlay buffer.

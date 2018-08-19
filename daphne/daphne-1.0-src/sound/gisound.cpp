@@ -41,7 +41,7 @@ int g_gisoundchip_count = -1;
 gi_sound_chip *g_gi_chips[MAX_GISOUND_CHIPS] = { NULL };
 int16_t g_volumetable[16];
 
-int gisound_initialize(Uint32 core_frequency)
+int gisound_initialize(uint32_t core_frequency)
 {
    char s[81] = {0};
    sprintf(s, "GI Sound chip initialized at %d Hz", core_frequency);
@@ -88,7 +88,7 @@ int gisound_initialize(Uint32 core_frequency)
    return g_gisoundchip_count;
 }
 
-void gisound_writedata(Uint32 address, Uint32 data, int index)
+void gisound_writedata(uint32_t address, uint32_t data, int index)
 {
    uint16_t chan_a_tone_period;
    uint16_t chan_b_tone_period;

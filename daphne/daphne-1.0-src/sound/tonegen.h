@@ -27,8 +27,8 @@
 
 #define VOICES 4
 
-int tonegen_initialize(Uint32);
-void tonegen_writedata(Uint32, Uint32, int index);
+int tonegen_initialize(uint32_t);
+void tonegen_writedata(uint32_t, uint32_t, int index);
 void tonegen_stream(uint8_t* stream, int length, int index);
 
 struct tonegen

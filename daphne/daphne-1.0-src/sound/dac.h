@@ -26,7 +26,7 @@
 #include <stdint.h>
 
 // init callback
-int dac_init(Uint32 unused);
+int dac_init(uint32_t unused);
 
 // should be called from the game driver
 void dac_ctrl_data(unsigned int uSamplesSinceLastChange, unsigned int uByte, int internal_id);

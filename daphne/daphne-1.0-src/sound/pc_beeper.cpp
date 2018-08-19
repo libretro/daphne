@@ -50,7 +50,7 @@ unsigned int g_uSampleCount = 0;
 unsigned int g_uSamplesPerHalfCycle = 0;
 
 // init callback
-int beeper_init(Uint32 unused)
+int beeper_init(uint32_t unused)
 {
 	// we only support 1 beeper for the time being
 	if (g_uBeeperCount == 0)

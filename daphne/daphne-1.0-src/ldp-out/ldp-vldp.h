@@ -92,8 +92,8 @@ public:
 	void run_tests(list<string> &lstrPassed, list<string> &lstrFailed);
 	
 	bool handle_cmdline_arg(const char *arg);
-	bool lock_overlay(Uint32);
-	bool unlock_overlay(Uint32);
+	bool lock_overlay(uint32_t);
+	bool unlock_overlay(uint32_t);
 	
 	// parses framefile (contained in pszInBuf) and returns the absolute/relative path to the mpegs in 'sMpegPath',
 	//  and populates 'pFrames' until it runs out of data, or hits the 'max_frames' limit.
@@ -166,7 +166,7 @@ private:
 	void close_audio_stream();
 	bool open_audio_stream(const string &strFilename);
 	bool seek_audio(uint64_t u64Samples);
-	void audio_play(Uint32);
+	void audio_play(uint32_t);
 	void audio_pause();
 };
 

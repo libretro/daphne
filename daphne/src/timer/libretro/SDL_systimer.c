@@ -110,7 +110,7 @@ SDL_TicksQuit(void)
     ticks_started = SDL_FALSE;
 }
 
-Uint32
+uint32_t
 SDL_GetTicks(void)
 {
     DWORD now = 0;
@@ -137,7 +137,7 @@ SDL_GetTicks(void)
     return (now - start);
 }
 
-void SDL_Delay(Uint32 ms)
+void SDL_Delay(uint32_t ms)
 {
     /* Sleep() is not publicly available to apps in early versions of WinRT.
      *
@@ -245,10 +245,10 @@ SDL_TicksQuit(void)
     ticks_started = SDL_FALSE;
 }
 
-Uint32
+uint32_t
 SDL_GetTicks(void)
 {
-	Uint32 ticks = 0;
+	uint32_t ticks = 0;
     if (!ticks_started)
         SDL_TicksInit();
 
@@ -260,7 +260,7 @@ SDL_GetTicks(void)
              start_ts.tv_nsec) / 1000000;
 #elif defined(__APPLE__)
        uint64_t now = mach_absolute_time();
-       ticks = (Uint32)((((now - start_mach) * mach_base_info.numer) / mach_base_info.denom) / 1000000);
+       ticks = (uint32_t)((((now - start_mach) * mach_base_info.numer) / mach_base_info.denom) / 1000000);
 #else
        assert(SDL_FALSE);
        ticks = 0;
@@ -269,13 +269,13 @@ SDL_GetTicks(void)
         struct timeval now;
 
 		gettimeofday(&now, NULL);
-		ticks = (Uint32)((now.tv_sec - start_tv.tv_sec) * 1000 + (now.tv_usec - start_tv.tv_usec) / 1000);
+		ticks = (uint32_t)((now.tv_sec - start_tv.tv_sec) * 1000 + (now.tv_usec - start_tv.tv_usec) / 1000);
 	}
 	return (ticks);
 }
 
 void
-SDL_Delay(Uint32 ms)
+SDL_Delay(uint32_t ms)
 {
 	int was_error = 0;
 	struct timespec elapsed, tv;

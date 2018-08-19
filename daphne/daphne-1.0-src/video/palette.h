@@ -46,4 +46,4 @@ void palette_set_color (unsigned int color_num, SDL_Color color_value);
 void palette_finalize ();
 void palette_shutdown (void);
 t_yuv_color *get_yuv_palette(void);
-Uint32 *get_rgba_palette(void);
+uint32_t *get_rgba_palette(void);

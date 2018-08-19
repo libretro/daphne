@@ -38,7 +38,7 @@ struct dat_header
 	uint8_t version;	// which version of the DAT file this is
 	uint8_t finished;	// whether the parse finished parsing or was interrupted
 	uint8_t uses_fields;	// whether the stream uses fields or frames
-	Uint32 length;	// length of the m2v stream
+	uint32_t length;	// length of the m2v stream
 };
 
 struct precache_entry_s
@@ -66,7 +66,7 @@ void ivldp_respond_req_speedchange();
 void ivldp_render();
 void idle_handler_search(int skip);
 VLDP_BOOL ivldp_get_mpeg_frame_offsets(char *mpeg_name);
-VLDP_BOOL ivldp_parse_mpeg_frame_offsets(char *datafilename, Uint32 mpeg_size);
+VLDP_BOOL ivldp_parse_mpeg_frame_offsets(char *datafilename, uint32_t mpeg_size);
 void ivldp_update_progress_indicator(SDL_Surface *indicator, double percentage_completed);
 
 VLDP_BOOL io_open(const char *cpszFilename);
@@ -87,9 +87,9 @@ extern int s_frames_to_skip_with_inc;	// how many frames to skip while increasin
 extern int s_skip_all;	// skip all subsequent frames.  Used to bail out of the middle of libmpeg2, back to vldp
 extern unsigned int s_uSkipAllCount;	// how many frames we've skipped when s_skip_all is enabled.
 extern int s_step_forward;	// if this is set, we step forward 1 frame
-extern Uint32 s_timer;	// FPS timer used by the blitting code to run at the right speed
-extern Uint32 s_extra_delay_ms;	// any extra delay that null_draw_frame() will use before drawing a frame (intended for laserdisc seek delay simulation)
-extern Uint32 s_uFramesShownSinceTimer;	// how many frames should've been rendered (relative to s_timer) before we advance
+extern uint32_t s_timer;	// FPS timer used by the blitting code to run at the right speed
+extern uint32_t s_extra_delay_ms;	// any extra delay that null_draw_frame() will use before drawing a frame (intended for laserdisc seek delay simulation)
+extern uint32_t s_uFramesShownSinceTimer;	// how many frames should've been rendered (relative to s_timer) before we advance
 extern int s_overlay_allocated;	// whether the SDL overlays have been allocated
 
 // Which frame we've skipped to (0 if we haven't skipped)

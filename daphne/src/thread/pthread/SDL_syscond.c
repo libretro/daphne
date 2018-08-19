@@ -105,7 +105,7 @@ SDL_CondBroadcast(SDL_cond * cond)
 }
 
 int
-SDL_CondWaitTimeout(SDL_cond * cond, SDL_mutex * mutex, Uint32 ms)
+SDL_CondWaitTimeout(SDL_cond * cond, SDL_mutex * mutex, uint32_t ms)
 {
     int retval;
 #ifndef HAVE_CLOCK_GETTIME

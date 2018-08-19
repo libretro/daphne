@@ -34,8 +34,8 @@
  * enum SDL_PIXELFORMAT_* format
  */
 SDL_Surface *
-SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
-                               Uint32 format)
+SDL_CreateRGBSurfaceWithFormat(uint32_t flags, int width, int height, int depth,
+                               uint32_t format)
 {
     SDL_Surface *surface;
 
@@ -112,11 +112,11 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
  * Create an empty RGB surface of the appropriate depth
  */
 SDL_Surface *
-SDL_CreateRGBSurface(Uint32 flags,
+SDL_CreateRGBSurface(uint32_t flags,
                      int width, int height, int depth,
-                     Uint32 Rmask, Uint32 Gmask, Uint32 Bmask, Uint32 Amask)
+                     uint32_t Rmask, uint32_t Gmask, uint32_t Bmask, uint32_t Amask)
 {
-    Uint32 format;
+    uint32_t format;
 
     /* Get the pixel format */
     format = SDL_MasksToPixelFormatEnum(depth, Rmask, Gmask, Bmask, Amask);
@@ -134,8 +134,8 @@ SDL_CreateRGBSurface(Uint32 flags,
 SDL_Surface *
 SDL_CreateRGBSurfaceFrom(void *pixels,
                          int width, int height, int depth, int pitch,
-                         Uint32 Rmask, Uint32 Gmask, Uint32 Bmask,
-                         Uint32 Amask)
+                         uint32_t Rmask, uint32_t Gmask, uint32_t Bmask,
+                         uint32_t Amask)
 {
     SDL_Surface *surface;
 
@@ -187,7 +187,7 @@ SDL_SetSurfaceRLE(SDL_Surface * surface, int flag)
 }
 
 int
-SDL_SetColorKey(SDL_Surface * surface, int flag, Uint32 key)
+SDL_SetColorKey(SDL_Surface * surface, int flag, uint32_t key)
 {
     int flags;
 
@@ -195,7 +195,7 @@ SDL_SetColorKey(SDL_Surface * surface, int flag, Uint32 key)
         return SDL_InvalidParamError("surface");
     }
 
-    if (surface->format->palette && key >= ((Uint32) surface->format->palette->ncolors)) {
+    if (surface->format->palette && key >= ((uint32_t) surface->format->palette->ncolors)) {
         return SDL_InvalidParamError("key");
     }
 
@@ -232,7 +232,7 @@ SDL_SetColorKey(SDL_Surface * surface, int flag, Uint32 key)
 }
 
 int
-SDL_GetColorKey(SDL_Surface * surface, Uint32 * key)
+SDL_GetColorKey(SDL_Surface * surface, uint32_t * key)
 {
     if (!surface) {
         return -1;
@@ -292,13 +292,13 @@ SDL_ConvertColorkeyToAlpha(SDL_Surface * surface)
         break;
     case 4:
         {
-            Uint32 *row, *spot;
-            Uint32 ckey = surface->map->info.colorkey;
-            Uint32 mask = ~surface->format->Amask;
+            uint32_t *row, *spot;
+            uint32_t ckey = surface->map->info.colorkey;
+            uint32_t mask = ~surface->format->Amask;
 
             /* Ignore alpha in colorkey comparison */
             ckey &= mask;
-            row = (Uint32 *) surface->pixels;
+            row = (uint32_t *) surface->pixels;
             for (y = surface->h; y--;) {
                 spot = row;
                 for (x = surface->w; x--;) {
@@ -675,10 +675,10 @@ SDL_UnlockSurface(SDL_Surface * surface)
  */
 SDL_Surface *
 SDL_ConvertSurface(SDL_Surface * surface, const SDL_PixelFormat * format,
-                   Uint32 flags)
+                   uint32_t flags)
 {
     SDL_Surface *convert;
-    Uint32 copy_flags;
+    uint32_t copy_flags;
     SDL_Color copy_color;
     SDL_Rect bounds;
 
@@ -798,8 +798,8 @@ SDL_ConvertSurface(SDL_Surface * surface, const SDL_PixelFormat * format,
 }
 
 SDL_Surface *
-SDL_ConvertSurfaceFormat(SDL_Surface * surface, Uint32 pixel_format,
-                         Uint32 flags)
+SDL_ConvertSurfaceFormat(SDL_Surface * surface, uint32_t pixel_format,
+                         uint32_t flags)
 {
     SDL_PixelFormat *fmt;
     SDL_Surface *convert = NULL;

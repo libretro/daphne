@@ -16,7 +16,7 @@ struct sample_data_s
 	uint8_t *pu8Buf;
 
 	// holds audio length
-	Uint32 uLength;
+	uint32_t uLength;
 
 	// how many channels (1=mono, 2=stereo) this sample has
 	unsigned int uChannels;

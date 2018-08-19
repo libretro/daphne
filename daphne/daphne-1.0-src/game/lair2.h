@@ -67,7 +67,7 @@ public:
 	lair2();
 	bool init();
 	void do_irq(unsigned int);
-	void cpu_mem_write(Uint32 addr, uint8_t value);
+	void cpu_mem_write(uint32_t addr, uint8_t value);
 	uint8_t port_read(uint16_t);
 	void port_write(uint16_t, uint8_t);
 	void input_enable(uint8_t);

@@ -117,7 +117,7 @@ aceeuro::aceeuro()
 	m_rom_list = aceeuro_roms;
 }
 
-void laireuro::do_irq(Uint32 which)
+void laireuro::do_irq(uint32_t which)
 {
 	if (g_ctc.channels[which].interrupt)
 	{
@@ -726,7 +726,7 @@ void ctc_update_period(uint8_t channel)
 		}
 		if (channel == 0) // sound
 		{
-			audio_write_ctrl_data(0, (Uint32)(1000 / new_period / 2), g_soundchip_id);
+			audio_write_ctrl_data(0, (uint32_t)(1000 / new_period / 2), g_soundchip_id);
 		}
 #ifdef DEBUG
 		char s[81] = { 0 };

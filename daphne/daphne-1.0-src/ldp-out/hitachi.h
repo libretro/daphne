@@ -50,7 +50,7 @@ public:
 	void disable_audio2();
 	uint16_t get_real_current_frame();
 private:
-	bool receive_status(uint8_t, Uint32);
+	bool receive_status(uint8_t, uint32_t);
 };
 
 #endif

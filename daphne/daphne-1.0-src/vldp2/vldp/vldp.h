@@ -124,21 +124,21 @@ struct vldp_out_info
 	// plays the mpeg that has been previously open.  'timer' is the value relative to uMsTimer that
 	// we should use for the beginning of the first frame that will be displayed
 	// returns 0 on failure, 1 on success, 2 on busy
-	int (*play)(Uint32 timer);
+	int (*play)(uint32_t timer);
 	
 	// searches to a frame relative to the beginning of the mpeg (0 is the first frame)
 	// 'min_seek_ms' is the minimum # of milliseconds that this seek must take
 	//  (for the purpose of simulating laserdisc seek delay)
 	// returns immediately, but search is not complete until 'status' is STAT_PAUSED
 	// returns 1 if command was acknowledged, or 0 if we timed out w/o getting acknowlegement
-	int (*search)(uint16_t frame, Uint32 min_seek_ms);
+	int (*search)(uint16_t frame, uint32_t min_seek_ms);
 	
 	// like search except it blocks until the search is complete
 	// 'min_seek_ms' is the minimum # of milliseconds that this seek must take
 	//  (for the purpose of simulating laserdisc seek delay)
 	// returns 1 if search succeeded, 2 if search is still going, 0 if search failed
 	// (so does not do true blocking, we could change this later)
-	int (*search_and_block)(uint16_t frame, Uint32 min_seek_ms);
+	int (*search_and_block)(uint16_t frame, uint32_t min_seek_ms);
 	
 	// skips to 'frame' and immediately begins playing.
 	// the mpeg is required to be playing before skip is called, because we accept no new timer as reference
@@ -172,8 +172,8 @@ struct vldp_out_info
 	unsigned int uFpks;	// FPKS = frames per kilosecond (FPS = uFpks / 1000.0)
 	unsigned int u2milDivFpks; // (2000000) / uFpks (pre-calculated, used to determine whether to drop frames)
 	uint8_t uses_fields;	// whether the video uses fields or not
-	Uint32 w;	// width of the mpeg video
-	Uint32 h;	// height of the mpeg video
+	uint32_t w;	// width of the mpeg video
+	uint32_t h;	// height of the mpeg video
 	int status;	// the current status of the VLDP (see STAT_ enum's)
 	unsigned int current_frame;	// the current frame of the opened mpeg that we are on
 	unsigned int uLastCachedIndex;	// the index of the file that was last precached (if any)

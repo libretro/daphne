@@ -37,7 +37,7 @@ struct SDL_semaphore
 
 /* Create a semaphore */
 SDL_sem *
-SDL_CreateSemaphore(Uint32 initial_value)
+SDL_CreateSemaphore(uint32_t initial_value)
 {
     SDL_sem *sem;
 
@@ -76,7 +76,7 @@ SDL_DestroySemaphore(SDL_sem * sem)
 }
 
 int
-SDL_SemWaitTimeout(SDL_sem * sem, Uint32 timeout)
+SDL_SemWaitTimeout(SDL_sem * sem, uint32_t timeout)
 {
     int retval;
     DWORD dwMilliseconds;
@@ -122,14 +122,14 @@ SDL_SemWait(SDL_sem * sem)
 }
 
 /* Returns the current count of the semaphore */
-Uint32
+uint32_t
 SDL_SemValue(SDL_sem * sem)
 {
     if (!sem) {
         SDL_SetError("Passed a NULL sem");
         return 0;
     }
-    return (Uint32)sem->count;
+    return (uint32_t)sem->count;
 }
 
 int

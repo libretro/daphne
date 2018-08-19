@@ -38,7 +38,7 @@
 #else
 #define SSE_BEGIN \
     __m128 c128; \
-    DECLARE_ALIGNED(Uint32, cccc[4], 16); \
+    DECLARE_ALIGNED(uint32_t, cccc[4], 16); \
     cccc[0] = color; \
     cccc[1] = color; \
     cccc[2] = color; \
@@ -59,7 +59,7 @@
 
 #define DEFINE_SSE_FILLRECT(bpp, type) \
 static void \
-SDL_FillRect##bpp##SSE(uint8_t *pixels, int pitch, Uint32 color, int w, int h) \
+SDL_FillRect##bpp##SSE(uint8_t *pixels, int pitch, uint32_t color, int w, int h) \
 { \
     int i, n; \
     uint8_t *p = NULL; \
@@ -97,7 +97,7 @@ SDL_FillRect##bpp##SSE(uint8_t *pixels, int pitch, Uint32 color, int w, int h) \
 }
 
 static void
-SDL_FillRect1SSE(uint8_t *pixels, int pitch, Uint32 color, int w, int h)
+SDL_FillRect1SSE(uint8_t *pixels, int pitch, uint32_t color, int w, int h)
 {
     int i, n;
 
@@ -126,13 +126,13 @@ SDL_FillRect1SSE(uint8_t *pixels, int pitch, Uint32 color, int w, int h)
 }
 /* DEFINE_SSE_FILLRECT(1, uint8_t) */
 DEFINE_SSE_FILLRECT(2, uint16_t)
-DEFINE_SSE_FILLRECT(4, Uint32)
+DEFINE_SSE_FILLRECT(4, uint32_t)
 
 /* *INDENT-ON* */
 #endif /* __SSE__ */
 
 static void
-SDL_FillRect1(uint8_t * pixels, int pitch, Uint32 color, int w, int h)
+SDL_FillRect1(uint8_t * pixels, int pitch, uint32_t color, int w, int h)
 {
     int n;
     uint8_t *p = NULL;
@@ -171,7 +171,7 @@ SDL_FillRect1(uint8_t * pixels, int pitch, Uint32 color, int w, int h)
 }
 
 static void
-SDL_FillRect2(uint8_t * pixels, int pitch, Uint32 color, int w, int h)
+SDL_FillRect2(uint8_t * pixels, int pitch, uint32_t color, int w, int h)
 {
     int n;
     uint16_t *p = NULL;
@@ -195,7 +195,7 @@ SDL_FillRect2(uint8_t * pixels, int pitch, Uint32 color, int w, int h)
 }
 
 static void
-SDL_FillRect3(uint8_t * pixels, int pitch, Uint32 color, int w, int h)
+SDL_FillRect3(uint8_t * pixels, int pitch, uint32_t color, int w, int h)
 {
 #ifndef MSB_FIRST
     uint8_t b1 = (uint8_t) (color & 0xFF);
@@ -223,7 +223,7 @@ SDL_FillRect3(uint8_t * pixels, int pitch, Uint32 color, int w, int h)
 }
 
 static void
-SDL_FillRect4(uint8_t * pixels, int pitch, Uint32 color, int w, int h)
+SDL_FillRect4(uint8_t * pixels, int pitch, uint32_t color, int w, int h)
 {
     while (h--) {
         SDL_memset4(pixels, color, w);
@@ -235,7 +235,7 @@ SDL_FillRect4(uint8_t * pixels, int pitch, Uint32 color, int w, int h)
  * This function performs a fast fill of the given rectangle with 'color'
  */
 int
-SDL_FillRect(SDL_Surface * dst, const SDL_Rect * rect, Uint32 color)
+SDL_FillRect(SDL_Surface * dst, const SDL_Rect * rect, uint32_t color)
 {
     SDL_Rect clipped;
     uint8_t *pixels;
@@ -326,7 +326,7 @@ SDL_FillRect(SDL_Surface * dst, const SDL_Rect * rect, Uint32 color)
 
 int
 SDL_FillRects(SDL_Surface * dst, const SDL_Rect * rects, int count,
-              Uint32 color)
+              uint32_t color)
 {
     int i;
     int status = 0;

@@ -52,8 +52,8 @@ public:
 	mach3();
    void do_irq(unsigned int);		// does an IRQ tick
 	void do_nmi();
-	uint8_t cpu_mem_read(Uint32 addr);
-	void cpu_mem_write(Uint32 addr, uint8_t value);
+	uint8_t cpu_mem_read(uint32_t addr);
+	void cpu_mem_write(uint32_t addr, uint8_t value);
 	uint8_t cpu_mem_read(uint16_t addr);
 	void cpu_mem_write(uint16_t addr, uint8_t value);
 	uint8_t port_read(uint16_t);
@@ -71,7 +71,7 @@ public:
    uint8_t m_cpumem2[0x10000]; // memory space for first 6502
    uint8_t m_cpumem3[0x10000]; // memory space for second 6502
 	uint8_t targetdata[0x100000]; 
-	Uint32 m_current_targetdata; //pointer to active buffer within target data
+	uint32_t m_current_targetdata; //pointer to active buffer within target data
 
 protected:
 	uint8_t m_gamecontrols;

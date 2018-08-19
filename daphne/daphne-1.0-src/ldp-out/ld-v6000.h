@@ -46,7 +46,7 @@ public:
 
 private:
 	bool wait_for_finished();
-	bool getstring(char *, Uint32, bool);
+	bool getstring(char *, uint32_t, bool);
 };
 
 #endif

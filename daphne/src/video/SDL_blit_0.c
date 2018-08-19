@@ -162,7 +162,7 @@ BlitBto4(SDL_BlitInfo * info)
 {
     int width, height;
     uint8_t *src;
-    Uint32 *map, *dst;
+    uint32_t *map, *dst;
     int srcskip, dstskip;
     int c;
 
@@ -171,9 +171,9 @@ BlitBto4(SDL_BlitInfo * info)
     height = info->dst_h;
     src = info->src;
     srcskip = info->src_skip;
-    dst = (Uint32 *) info->dst;
+    dst = (uint32_t *) info->dst;
     dstskip = info->dst_skip / 4;
-    map = (Uint32 *) info->table;
+    map = (uint32_t *) info->table;
     srcskip += width - (width + 7) / 8;
 
     while (height--) {
@@ -203,7 +203,7 @@ BlitBto1Key(SDL_BlitInfo * info)
     uint8_t *dst = info->dst;
     int srcskip = info->src_skip;
     int dstskip = info->dst_skip;
-    Uint32 ckey = info->colorkey;
+    uint32_t ckey = info->colorkey;
     uint8_t *palmap = info->table;
     int c;
 
@@ -256,7 +256,7 @@ BlitBto2Key(SDL_BlitInfo * info)
     uint16_t *dstp = (uint16_t *) info->dst;
     int srcskip = info->src_skip;
     int dstskip = info->dst_skip;
-    Uint32 ckey = info->colorkey;
+    uint32_t ckey = info->colorkey;
     uint8_t *palmap = info->table;
     int c;
 
@@ -291,7 +291,7 @@ BlitBto3Key(SDL_BlitInfo * info)
     uint8_t *dst = info->dst;
     int srcskip = info->src_skip;
     int dstskip = info->dst_skip;
-    Uint32 ckey = info->colorkey;
+    uint32_t ckey = info->colorkey;
     uint8_t *palmap = info->table;
     int c;
 
@@ -322,10 +322,10 @@ BlitBto4Key(SDL_BlitInfo * info)
     int width = info->dst_w;
     int height = info->dst_h;
     uint8_t *src = info->src;
-    Uint32 *dstp = (Uint32 *) info->dst;
+    uint32_t *dstp = (uint32_t *) info->dst;
     int srcskip = info->src_skip;
     int dstskip = info->dst_skip;
-    Uint32 ckey = info->colorkey;
+    uint32_t ckey = info->colorkey;
     uint8_t *palmap = info->table;
     int c;
 
@@ -341,7 +341,7 @@ BlitBto4Key(SDL_BlitInfo * info)
             }
             bit = (byte & 0x80) >> 7;
             if (bit != ckey) {
-                *dstp = ((Uint32 *) palmap)[bit];
+                *dstp = ((uint32_t *) palmap)[bit];
             }
             byte <<= 1;
             dstp++;
@@ -364,7 +364,7 @@ BlitBtoNAlpha(SDL_BlitInfo * info)
     SDL_PixelFormat *dstfmt = info->dst_fmt;
     int dstbpp;
     int c;
-    Uint32 pixel;
+    uint32_t pixel;
     unsigned sR, sG, sB;
     unsigned dR, dG, dB, dA;
     const unsigned A = info->a;
@@ -410,11 +410,11 @@ BlitBtoNAlphaKey(SDL_BlitInfo * info)
     const SDL_Color *srcpal = srcfmt->palette->colors;
     int dstbpp;
     int c;
-    Uint32 pixel;
+    uint32_t pixel;
     unsigned sR, sG, sB;
     unsigned dR, dG, dB, dA;
     const unsigned A = info->a;
-    Uint32 ckey = info->colorkey;
+    uint32_t ckey = info->colorkey;
 
     /* Set up some basic variables */
     dstbpp = dstfmt->BytesPerPixel;

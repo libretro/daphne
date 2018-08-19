@@ -262,7 +262,7 @@ uint8_t game::cpu_mem_read(uint16_t addr)
 }
 
 // reads a byte from a 32-bit address space
-uint8_t game::cpu_mem_read(Uint32 addr)
+uint8_t game::cpu_mem_read(uint32_t addr)
 {
 	return m_cpumem[addr];
 }
@@ -274,7 +274,7 @@ void game::cpu_mem_write(uint16_t addr, uint8_t value)
 }
 
 // writes a byte to a 32-bit address space
-void game::cpu_mem_write(Uint32 addr, uint8_t value)
+void game::cpu_mem_write(uint32_t addr, uint8_t value)
 {
 	m_cpumem[addr] = value;
 }
@@ -303,7 +303,7 @@ void game::port_write(uint16_t port, uint8_t value)
 }
 
 // notifies us of the new Program Counter (which most games usually don't care about)
-void game::update_pc(Uint32 new_pc)
+void game::update_pc(uint32_t new_pc)
 {
 	// I put this here to get rid of warnings
 	if (new_pc)
@@ -826,7 +826,7 @@ bool game::load_roms()
 
 // returns true if the file in question exists, and has the proper CRC32
 // 'gamedir' is which rom directory (or .ZIP file) this file is expected to be in
-bool game::verify_required_file(const char *filename, const char *gamedir, Uint32 filecrc32)
+bool game::verify_required_file(const char *filename, const char *gamedir, uint32_t filecrc32)
 {
 	uint8_t *readme_test = NULL;
 	bool passed_test = false;
@@ -907,7 +907,7 @@ bool game::verify_required_file(const char *filename, const char *gamedir, Uint3
 
 // loads size # of bytes from filename into buf
 // returns true if successful, or false if there was an error
-bool game::load_rom(const char *filename, uint8_t *buf, Uint32 size)
+bool game::load_rom(const char *filename, uint8_t *buf, uint32_t size)
 {
 	struct mpo_io *F;
 	MPO_BYTES_READ bytes_read = 0;
@@ -948,7 +948,7 @@ bool game::load_rom(const char *filename, uint8_t *buf, Uint32 size)
 }
 
 // transition function ...
-bool game::load_rom(const char *filename, const char *directory, uint8_t *buf, Uint32 size)
+bool game::load_rom(const char *filename, const char *directory, uint8_t *buf, uint32_t size)
 {
 	string full_path = directory;
 	full_path += "/";
@@ -959,7 +959,7 @@ bool game::load_rom(const char *filename, const char *directory, uint8_t *buf, U
 // similar to load_rom except this function loads a rom image from a .zip file
 // the previously-opened zip file is indicated by 'opened_zip_file'
 // true is returned only if the rom was loaded, and it was the expected length
-bool game::load_compressed_rom(const char *filename, unzFile opened_zip_file, uint8_t *buf, Uint32 size)
+bool game::load_compressed_rom(const char *filename, unzFile opened_zip_file, uint8_t *buf, uint32_t size)
 {
 	bool result = false;
 
@@ -975,7 +975,7 @@ bool game::load_compressed_rom(const char *filename, unzFile opened_zip_file, ui
 		if (unzOpenCurrentFile(opened_zip_file) == UNZ_OK)
 		{
 			// read this file
-			Uint32 bytes_read = (Uint32) unzReadCurrentFile(opened_zip_file, buf, size);
+			uint32_t bytes_read = (uint32_t) unzReadCurrentFile(opened_zip_file, buf, size);
 			unzCloseCurrentFile(opened_zip_file);
 
 			// if we read what we expected to read ...
@@ -1092,7 +1092,7 @@ uint8_t game::get_game_type()
 	return m_game_type;
 }
 
-Uint32 game::get_num_sounds()
+uint32_t game::get_num_sounds()
 {
 	return m_num_sounds;
 }

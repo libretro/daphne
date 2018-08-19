@@ -31,17 +31,17 @@
 #define _SDL_SW_YUVTexture_
 struct SDL_SW_YUVTexture
 {
-    Uint32 format;
-    Uint32 target_format;
+    uint32_t format;
+    uint32_t target_format;
     int w, h;
     uint8_t *pixels;
     int *colortab;
-    Uint32 *rgb_2_pix;
-    void (*Display1X) (int *colortab, Uint32 * rgb_2_pix,
+    uint32_t *rgb_2_pix;
+    void (*Display1X) (int *colortab, uint32_t * rgb_2_pix,
                        unsigned char *lum, unsigned char *cr,
                        unsigned char *cb, unsigned char *out,
                        int rows, int cols, int mod);
-    void (*Display2X) (int *colortab, Uint32 * rgb_2_pix,
+    void (*Display2X) (int *colortab, uint32_t * rgb_2_pix,
                        unsigned char *lum, unsigned char *cr,
                        unsigned char *cb, unsigned char *out,
                        int rows, int cols, int mod);
@@ -57,13 +57,13 @@ struct SDL_SW_YUVTexture
 #endif
 typedef struct SDL_SW_YUVTexture SDL_SW_YUVTexture;
 
-SDL_SW_YUVTexture *SDL_SW_CreateYUVTexture(Uint32 format, int w, int h);
+SDL_SW_YUVTexture *SDL_SW_CreateYUVTexture(uint32_t format, int w, int h);
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern DECLSPEC SDL_SW_YUVTexture * SDLCALL SDL_RJS_SW_CreateYUVBuffer(Uint32 format, Uint32 target_format, int w, int h);
-extern DECLSPEC int SDLCALL SDL_RJS_SW_CopyYUVToRGB(SDL_SW_YUVTexture * swdata, const SDL_Rect * srcrect, Uint32 target_format, int w, int h, void *pixels, int pitch);
+extern DECLSPEC SDL_SW_YUVTexture * SDLCALL SDL_RJS_SW_CreateYUVBuffer(uint32_t format, uint32_t target_format, int w, int h);
+extern DECLSPEC int SDLCALL SDL_RJS_SW_CopyYUVToRGB(SDL_SW_YUVTexture * swdata, const SDL_Rect * srcrect, uint32_t target_format, int w, int h, void *pixels, int pitch);
 #ifdef __cplusplus
 }
 #endif
@@ -80,7 +80,7 @@ int SDL_SW_LockYUVTexture(SDL_SW_YUVTexture * swdata, const SDL_Rect * rect,
                           void **pixels, int *pitch);
 void SDL_SW_UnlockYUVTexture(SDL_SW_YUVTexture * swdata);
 int SDL_SW_CopyYUVToRGB(SDL_SW_YUVTexture * swdata, const SDL_Rect * srcrect,
-                        Uint32 target_format, int w, int h, void *pixels,
+                        uint32_t target_format, int w, int h, void *pixels,
                         int pitch);
 void SDL_SW_DestroyYUVTexture(SDL_SW_YUVTexture * swdata);
 

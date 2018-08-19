@@ -57,7 +57,7 @@ cTMS9919::~cTMS9919 ()
 //    FUNCTION_ENTRY ( this, "cTMS9919 dtor", true );
 }
 
-void cTMS9919::set_core_frequency(Uint32 core_frequency)
+void cTMS9919::set_core_frequency(uint32_t core_frequency)
 {
    m_clock_frequency = core_frequency;
 }

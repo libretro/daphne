@@ -146,7 +146,7 @@ void dac_get_stream(uint8_t *stream, int length, int internal_id)
 			++g_uDACSamplesWOBuf;
 		}
 
-		Uint32 uSample = (Uint32) ((((uint16_t) mono_sample) << 16) | (uint16_t) mono_sample);	// convert to stereo
+		uint32_t uSample = (uint32_t) ((((uint16_t) mono_sample) << 16) | (uint16_t) mono_sample);	// convert to stereo
 
 		STORE_LIL_UINT32(stream + pos, uSample);	// store to audio stream
 		pos += 4;
