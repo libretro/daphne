@@ -71,22 +71,6 @@ unsigned int g_uInterleavePerMs = 1; // number of times the cpus switch in 1 ms
 // So that OpenGL mode knows when to drop frames to get back up to speed (vsync-enabled only)
 unsigned int g_uCPUMsBehind = 0;
 
-// Uncomment this if you want to test the CPUs to make sure they are running at the proper speed
-//#define CPU_DIAG 1
-
-#ifdef CPU_DIAG
-// how many cpu's cpu diag can support (this has nothing to do with how many cpu's daphne can support)
-#define CPU_DIAG_CPUCOUNT 10
-	static unsigned int cd_cycle_count[CPU_DIAG_CPUCOUNT];	// for speed test
-	static unsigned int cd_old_time[CPU_DIAG_CPUCOUNT] = { 0 }; // " " "
-	static unsigned int cd_irq_count[CPU_DIAG_CPUCOUNT][MAX_IRQS] = { { 0 } };
-	static unsigned int cd_nmi_count[CPU_DIAG_CPUCOUNT] = { 0 };
-	static double cd_avg_mhz[CPU_DIAG_CPUCOUNT] = { 0.0 };	// average MHz of current cpu
-	static int cd_report_count[CPU_DIAG_CPUCOUNT] = { 0 };	// how many reports have been given
-	
-	static unsigned int cd_extra_ms = 0;	// how many extra ms we have leftover (so we can calculate resource usage)
-#endif
-
 //////////////////////////////////////////////////////////////////////////////////
 
 // adds a cpu to our linked list.  The data is copied, so you can clobber the original data after this call.
@@ -255,9 +239,7 @@ void cpu_recalc()
 		cpu->uNMIMicroPeriod = (unsigned int) ((cpu->nmi_period * 1000) + 0.5);	// convert to int for faster math on gp2x
 	
 		for (int i = 0; i < MAX_IRQS; i++)
-		{
 			cpu->uIRQMicroPeriod[i] = (unsigned int) ((cpu->irq_period[i] * 1000) + 0.5);	// convert to int for faster math on gp2x
-		}
 
 		cpu = cpu->next_cpu;
 	}
@@ -271,9 +253,6 @@ void cpu_init()
 	while (cur)
 	{
 		g_active_cpu = cur->id;
-#ifdef CPU_DIAG
-      cd_old_time[g_active_cpu] = refresh_ms_time();
-#endif
 
 		cpu_recalc();
 
@@ -469,9 +448,6 @@ void cpu_execute_loop()
 								elapsed_cycles = (cpu->execute_callback)(uCyclesTilEvent);
 								cpu->total_cycles_executed += elapsed_cycles;	// always track how many cycles have elapsed
 	
-#ifdef CPU_DIAG
-								cd_cycle_count[g_active_cpu] += elapsed_cycles;
-#endif // CPU_DIAG
 	
 								cycles_to_execute -= uCyclesTilEvent;	// NOTE : we can't subtract elapsed_cycles because it may be greater than cycles_to_execute
 								cpu->uEventCyclesEnd = 0;	// event has been fired, we're done ...
@@ -500,10 +476,6 @@ void cpu_execute_loop()
 					elapsed_cycles = 0;
 				}
 
-#ifdef CPU_DIAG
-				cd_cycle_count[g_active_cpu] += elapsed_cycles;
-				cd_avg_mhz[g_active_cpu] = (cpu->total_cycles_executed * 0.001) / elapsed_ms_time(g_cpu_timer);
-#endif
 
 				// NOW WE CHECK TO SEE IF IT'S TIME TO DO AN NMI
 
@@ -515,9 +487,6 @@ void cpu_execute_loop()
 						++cpu->pending_nmi_count;
 						++cpu->uNMITickCount;
 						cpu->uNMITickBoundaryMs = (uint32_t) (( ((uint64_t) (cpu->uNMITickCount + 1)) * cpu->uNMIMicroPeriod) / 1000);
-#ifdef CPU_DIAG
-						++cd_nmi_count[cpu->id];
-#endif
 					}
 				}
 
@@ -545,9 +514,6 @@ void cpu_execute_loop()
 							++cpu->uIRQTickCount[i];
 							cpu->uIRQTickBoundaryMs[i] = (uint32_t) (( ((uint64_t) (cpu->uIRQTickCount[i] + 1)) *
 								cpu->uIRQMicroPeriod[i]) / 1000);
-#ifdef CPU_DIAG
-							++cd_irq_count[cpu->id][i];
-#endif
 						}
 					} // end if there is an IRQ timer
 
@@ -568,46 +534,6 @@ void cpu_execute_loop()
 
 				// this chunk of code tests to make sure the CPU is running
 				// at the proper speed.  It should be undef'd unless we are debugging cpu stuff
-
-#ifdef CPU_DIAG
-				char s[160] = { 0 };
-
-#define CPU_DIAG_ACCURACY 24000000
-				// the bigger the #, the more accurate the result
-
-				// if it's time to print some statistics
-				if (cd_cycle_count[g_active_cpu] >= CPU_DIAG_ACCURACY)
-				{
-					uint32_t elapsed_ms = elapsed_ms_time(cd_old_time[g_active_cpu]);
-					double cur_mhz = ((double) cd_cycle_count[g_active_cpu] / (double) elapsed_ms) * 0.001;
-					cd_report_count[g_active_cpu]++;
-
-					sprintf(s,"CPU #%d : cycles = %d, time = %d ms, MHz = %f, avg MHz = %f",
-						g_active_cpu,
-						cd_cycle_count[g_active_cpu], elapsed_ms,
-						cur_mhz, cd_avg_mhz[g_active_cpu]);
-					printline(s);
-					sprintf(s, "         NMI's = %d ", cd_nmi_count[g_active_cpu]);
-					cd_nmi_count[g_active_cpu] = 0;
-					outstr(s);
-					for (int irqi = 0; irqi < MAX_IRQS; irqi++)
-					{
-						sprintf(s, "IRQ%d's = %d ", irqi, cd_irq_count[g_active_cpu][irqi]);
-						outstr(s);
-						cd_irq_count[g_active_cpu][irqi] = 0;
-					}
-					newline();
-					cd_old_time[g_active_cpu] += elapsed_ms;
-					cd_cycle_count[g_active_cpu] -= CPU_DIAG_ACCURACY;
-					
-					sprintf(s, "Resource Usage: %u percent", 100 - ((cd_extra_ms * 100) / elapsed_ms));
-					printline(s);
-					cd_extra_ms = 0;	// reset
-				}
-#endif
-
-
-
 
 				// if we are required to copy the cpu context, then preserve the context for the next time around
 				if (cpu->must_copy_context)
@@ -631,10 +557,6 @@ void cpu_execute_loop()
 		// we have executed 1 ms worth of cpu cycles before this point, so slow down if 1 ms has not passed
 		actual_elapsed_ms = elapsed_ms_time(g_cpu_timer);
 
-#ifdef CPU_DIAG
-		unsigned int uStartMs = actual_elapsed_ms;
-#endif
-
 		// if we're behind, then compute how far behind we are ...
 		if (actual_elapsed_ms > g_expected_elapsed_ms)
 		{
@@ -653,11 +575,6 @@ void cpu_execute_loop()
 			}
 		}
 
-#ifdef CPU_DIAG
-		// track ms that we slept
-		cd_extra_ms += (actual_elapsed_ms - uStartMs);
-#endif
-		
 		// END FORCING CPU TO RUN AT PROPER SPEED
 
 		do
@@ -789,10 +706,6 @@ void cpu_execute_one_cycle()
 								elapsed_cycles = (cpu->execute_callback)(uCyclesTilEvent);
 								cpu->total_cycles_executed += elapsed_cycles;	// always track how many cycles have elapsed
 
-#ifdef CPU_DIAG
-								cd_cycle_count[g_active_cpu] += elapsed_cycles;
-#endif // CPU_DIAG
-
 								cycles_to_execute -= uCyclesTilEvent;	// NOTE : we can't subtract elapsed_cycles because it may be greater than cycles_to_execute
 								cpu->uEventCyclesEnd = 0;	// event has been fired, we're done ...
 
@@ -820,11 +733,6 @@ void cpu_execute_one_cycle()
 					elapsed_cycles = 0;
 				}
 
-#ifdef CPU_DIAG
-				cd_cycle_count[g_active_cpu] += elapsed_cycles;
-				cd_avg_mhz[g_active_cpu] = (cpu->total_cycles_executed * 0.001) / elapsed_ms_time(g_cpu_timer);
-#endif
-
 				// NOW WE CHECK TO SEE IF IT'S TIME TO DO AN NMI
 
 				// if NMI's are enabled
@@ -835,9 +743,6 @@ void cpu_execute_one_cycle()
 						++cpu->pending_nmi_count;
 						++cpu->uNMITickCount;
 						cpu->uNMITickBoundaryMs = (uint32_t)((((uint64_t)(cpu->uNMITickCount + 1)) * cpu->uNMIMicroPeriod) / 1000);
-#ifdef CPU_DIAG
-						++cd_nmi_count[cpu->id];
-#endif
 					}
 				}
 
@@ -865,9 +770,6 @@ void cpu_execute_one_cycle()
 							++cpu->uIRQTickCount[i];
 							cpu->uIRQTickBoundaryMs[i] = (uint32_t)((((uint64_t)(cpu->uIRQTickCount[i] + 1)) *
 								cpu->uIRQMicroPeriod[i]) / 1000);
-#ifdef CPU_DIAG
-							++cd_irq_count[cpu->id][i];
-#endif
 						}
 					} // end if there is an IRQ timer
 
@@ -889,51 +791,11 @@ void cpu_execute_one_cycle()
 				  // this chunk of code tests to make sure the CPU is running
 				  // at the proper speed.  It should be undef'd unless we are debugging cpu stuff
 
-#ifdef CPU_DIAG
-				char s[160] = { 0 };
-
-#define CPU_DIAG_ACCURACY 24000000
-				// the bigger the #, the more accurate the result
-
-				// if it's time to print some statistics
-				if (cd_cycle_count[g_active_cpu] >= CPU_DIAG_ACCURACY)
-				{
-					uint32_t elapsed_ms = elapsed_ms_time(cd_old_time[g_active_cpu]);
-					double cur_mhz = ((double)cd_cycle_count[g_active_cpu] / (double)elapsed_ms) * 0.001;
-					cd_report_count[g_active_cpu]++;
-
-					sprintf(s, "CPU #%d : cycles = %d, time = %d ms, MHz = %f, avg MHz = %f",
-						g_active_cpu,
-						cd_cycle_count[g_active_cpu], elapsed_ms,
-						cur_mhz, cd_avg_mhz[g_active_cpu]);
-					printline(s);
-					sprintf(s, "         NMI's = %d ", cd_nmi_count[g_active_cpu]);
-					cd_nmi_count[g_active_cpu] = 0;
-					outstr(s);
-					for (int irqi = 0; irqi < MAX_IRQS; irqi++)
-					{
-						sprintf(s, "IRQ%d's = %d ", irqi, cd_irq_count[g_active_cpu][irqi]);
-						outstr(s);
-						cd_irq_count[g_active_cpu][irqi] = 0;
-					}
-					newline();
-					cd_old_time[g_active_cpu] += elapsed_ms;
-					cd_cycle_count[g_active_cpu] -= CPU_DIAG_ACCURACY;
-
-					sprintf(s, "Resource Usage: %u percent", 100 - ((cd_extra_ms * 100) / elapsed_ms));
-					printline(s);
-					cd_extra_ms = 0;	// reset
-				}
-#endif
-
-
-
-
-				// if we are required to copy the cpu context, then preserve the context for the next time around
-				if (cpu->must_copy_context)
-				{
-					(cpu->getcontext_callback)(cpu->context);	// preserve registers
-				}
+              // if we are required to copy the cpu context, then preserve the context for the next time around
+            if (cpu->must_copy_context)
+            {
+               (cpu->getcontext_callback)(cpu->context);	// preserve registers
+            }
 
 				cpu = cpu->next_cpu; // go to the next cpu
 
@@ -950,10 +812,6 @@ void cpu_execute_one_cycle()
 
 		// we have executed 1 ms worth of cpu cycles before this point, so slow down if 1 ms has not passed
 		actual_elapsed_ms = elapsed_ms_time(g_cpu_timer);
-
-#ifdef CPU_DIAG
-		unsigned int uStartMs = actual_elapsed_ms;
-#endif
 
 		// if we're behind, then compute how far behind we are ...
 		if (actual_elapsed_ms > g_expected_elapsed_ms)
@@ -972,11 +830,6 @@ void cpu_execute_one_cycle()
 				actual_elapsed_ms = elapsed_ms_time(g_cpu_timer);
 			}
 		}
-
-#ifdef CPU_DIAG
-		// track ms that we slept
-		cd_extra_ms += (actual_elapsed_ms - uStartMs);
-#endif
 
 		// END FORCING CPU TO RUN AT PROPER SPEED
 
@@ -1289,24 +1142,31 @@ const char *generic_6502_info(void *unused, int regnum)
 
 	// find which register they are requesting info about
 	switch( regnum )
-	{
-	case CPU_INFO_REG+0: sprintf(buffer[which], "PC:%04X", context.pc_reg); break;
-	case CPU_INFO_REG+1: sprintf(buffer[which], " A:%02X", context.a_reg); break;
-	case CPU_INFO_REG+2: sprintf(buffer[which], " X:%02X", context.x_reg); break;
-	case CPU_INFO_REG+3: sprintf(buffer[which], " Y:%02X", context.y_reg); break;
-
-	case CPU_INFO_FLAGS:
-		sprintf(buffer[which], "%c%c%c%c%c%c%c%c",
-				context.p_reg & 0x80 ? 'N':'.',
-				context.p_reg & 0x40 ? 'V':'.',
-				context.p_reg & 0x20 ? 'R':'.',
-				context.p_reg & 0x10 ? 'B':'.',
-				context.p_reg & 0x08 ? 'D':'.',
-				context.p_reg & 0x04 ? 'I':'.',
-				context.p_reg & 0x02 ? 'Z':'.',
-				context.p_reg & 0x01 ? 'C':'.');
-		break;
-	}
+   {
+      case CPU_INFO_REG+0:
+         sprintf(buffer[which], "PC:%04X", context.pc_reg);
+         break;
+      case CPU_INFO_REG+1:
+         sprintf(buffer[which], " A:%02X", context.a_reg);
+         break;
+      case CPU_INFO_REG+2:
+         sprintf(buffer[which], " X:%02X", context.x_reg);
+         break;
+      case CPU_INFO_REG+3:
+         sprintf(buffer[which], " Y:%02X", context.y_reg);
+         break;
+      case CPU_INFO_FLAGS:
+         sprintf(buffer[which], "%c%c%c%c%c%c%c%c",
+               context.p_reg & 0x80 ? 'N':'.',
+               context.p_reg & 0x40 ? 'V':'.',
+               context.p_reg & 0x20 ? 'R':'.',
+               context.p_reg & 0x10 ? 'B':'.',
+               context.p_reg & 0x08 ? 'D':'.',
+               context.p_reg & 0x04 ? 'I':'.',
+               context.p_reg & 0x02 ? 'Z':'.',
+               context.p_reg & 0x01 ? 'C':'.');
+         break;
+   }
 
 	return buffer[which];
 }
@@ -1326,9 +1186,7 @@ const char *generic_ascii_info_stub(void *context, int regnum)
 	const char *result = "";
 
 	if (regnum == 0)
-	{
 		result = "<NO INFO FUNCTION AVAILABLE>";
-	}
 	return result;
 }
 
