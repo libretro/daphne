@@ -33,6 +33,7 @@
 #ifndef MPO_FILEIO_H
 #define MPO_FILEIO_H
 
+#include <stdint.h>
 #include <stdio.h>
 
 #ifdef _WIN32

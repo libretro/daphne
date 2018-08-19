@@ -32,7 +32,6 @@
 #include "SDL_bits.h"
 #include "SDL_revision.h"
 #include "events/SDL_events_c.h"
-#include "haptic/SDL_haptic_c.h"
 #include "joystick/SDL_joystick_c.h"
 
 #include "../main_android.h"

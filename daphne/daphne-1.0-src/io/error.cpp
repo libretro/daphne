@@ -28,7 +28,6 @@
 #include <windows.h>
 #endif
 
-#include <SDL.h>
 #include <string.h>
 #include "../daphne.h"
 #include "conout.h"

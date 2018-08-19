@@ -26,7 +26,6 @@
 #define MIX_H
 
 #include <stdint.h>
-#include <SDL.h>	// for datatype defs
 
 struct mix_s
 {

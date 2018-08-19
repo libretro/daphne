@@ -23,7 +23,6 @@
 // PR-8210.h
 
 #include <stdint.h>
-#include <SDL.h>
 
 int get_pr8210_playing();
 void pr8210_command(unsigned int);

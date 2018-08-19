@@ -24,7 +24,6 @@
 #define DAC_H
 
 #include <stdint.h>
-#include <SDL.h>	// for data-type defs
 
 // init callback
 int dac_init(Uint32 unused);

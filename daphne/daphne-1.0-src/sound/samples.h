@@ -23,7 +23,7 @@
 #ifndef SAMPLES_H
 #define SAMPLES_H
 
-#include <SDL.h>	// for data-type defs
+#include <stdint.h>
 
 // init callback
 int samples_init(unsigned int unused);
@@ -43,7 +43,7 @@ void samples_get_stream(uint8_t *stream, int length, int internal_id);
 //  -1 if uChannels or iSlot is out of range, or
 //  -2 if there are no slots available
 int samples_play_sample(uint8_t *pu8Buf, unsigned int uLength, unsigned int uChannels = AUDIO_CHANNELS, int iSlot = -1,
-										 void (*finishedCallback)(uint8_t *pu8Buf, unsigned int uSlot) = NULL);
+      void (*finishedCallback)(uint8_t *pu8Buf, unsigned int uSlot) = NULL);
 
 // returns true if the sample indicated by 'uSlot' is currently playing
 //  or false if the sample isn't playing

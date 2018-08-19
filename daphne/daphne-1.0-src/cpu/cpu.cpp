@@ -27,8 +27,6 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
-#include <SDL.h>
-
 #include "cpu.h"
 #include <stdio.h>	// for stderr
 #include <string.h>	// for memcpy

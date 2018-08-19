@@ -53,8 +53,6 @@ typedef  uint8_t    boolean;
 ** Revision 1.2  2003/01/02 21:05:46  matt
 **
 **
-** made it so the endianness is detected automatically (via SDL.h)
-**
 ** Revision 1.1  2001/10/31 19:26:38  markb
 ** 6502 core from nofrendo
 **

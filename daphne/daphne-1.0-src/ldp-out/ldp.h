@@ -39,7 +39,7 @@ enum
 	SEARCH_BUSY		// search is still taking place, no change yet, my frenid
 };
 
-#include <SDL.h>	// needed for datatypes
+#include <SDL.h>
 
 // for bug logging
 #include <string>

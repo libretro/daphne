@@ -28,7 +28,6 @@ enum { MOD_NONE, MOD_SA91, MOD_PAL_DL, MOD_PAL_SA, MOD_PAL_DL_SC, MOD_PAL_SA_SC 
 //////////////////////////////////////////////
 
 #include <stdint.h>
-#include <SDL.h>	// for data types
 
 bool need_frame_conversion();
 unsigned int get_frame_conversion_fpks();

@@ -28,7 +28,7 @@
 uint8_t *g_blend_line1 = 0;
 uint8_t *g_blend_line2 = 0;
 uint8_t *g_blend_dest = 0;
-unsigned int g_blend_iterations = 0;
+uint32_t g_blend_iterations = 0;
 
 void blend_c()
 {

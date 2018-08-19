@@ -27,7 +27,6 @@
 #define BLEND_H
 
 #include <stdint.h>
-#include <SDL.h>	// for datatype defs
 
 // TO USE THE BLEND FUNCTIONS:
 // 1 - set g_blend_line1 to the first line of bytes to be averaged
@@ -43,7 +42,7 @@ void blend_c();
 extern uint8_t *g_blend_line1;
 extern uint8_t *g_blend_line2;
 extern uint8_t *g_blend_dest;
-extern Uint32 g_blend_iterations;
+extern uint32_t g_blend_iterations;
 #define g_blend_func blend_c
 
 /////////////////////////////
