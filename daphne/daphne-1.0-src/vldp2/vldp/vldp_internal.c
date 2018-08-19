@@ -769,7 +769,7 @@ static void idle_handler_open()
 	ivldp_ack_command();	// acknowledge open command
 
 	// reset libmpeg2 so it is prepared to begin reading from a new m2v file
-	mpeg2_partial_init(g_mpeg_data);
+	mpeg2_reset(g_mpeg_data,0);
 
 	// if we have previously opened an mpeg, we need to close it and reset
 	if (io_is_open())
@@ -1016,7 +1016,7 @@ static void ivldp_render(void)
          render_finished = 1;
 
          // reset libmpeg2 so it is prepared to begin reading from the beginning of the file
-         mpeg2_partial_init(g_mpeg_data);
+         mpeg2_reset(g_mpeg_data,0);
          io_seek(0);	// seek to the beginning of the file
          g_out_info.current_frame = 0;	// set frame # to beginning of file where it belongs
       }
@@ -1084,7 +1084,7 @@ static void idle_handler_search(int skip)
 	ivldp_ack_command();	// acknowledge search/skip command
 
 	// reset libmpeg2 so it is prepared to start from a new spot
-	mpeg2_partial_init(g_mpeg_data);
+	mpeg2_reset(g_mpeg_data,0);
 
 	vldp_process_sequence_header();	// we need to process the sequence header before we can jump around the file for frames
 

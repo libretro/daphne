@@ -418,33 +418,6 @@ void mpeg2_reset (mpeg2dec_t * mpeg2dec, int full_reset)
 }
 
 
-// start MPO
-/* Same as mpeg2_init without the malloc's, so this can be used to reset libmpeg2
-
-void mpeg2_partial_init(mpeg2dec_t *mpeg2dec)
-{
-     uint8_t *tmp = mpeg2dec->chunk_buffer;  // save this since the whole struct is about to get wiped
-
-    memset (mpeg2dec, 0, sizeof (mpeg2dec_t));
-
-    mpeg2dec->chunk_buffer = tmp;
-    mpeg2dec->shift = 0xffffff00;
-    mpeg2dec->action = seek_sequence;
-    mpeg2dec->action = seek_sequence;
-  
-   mpeg2dec->code = 0xb4;
-    mpeg2dec->first_decode_slice = 1;
-    mpeg2dec->nb_decode_slices = 0xb0 - 1;
-    //mpeg2dec->convert_id = NULL;
-    decoder->convert_id;
-    mpeg2dec->action = seek_sequence;
-
-    // initialize substructures 
-//    mpeg2_header_state_init (mpeg2dec);
-}
-// stop MPO
-*/
-
 
 
 
