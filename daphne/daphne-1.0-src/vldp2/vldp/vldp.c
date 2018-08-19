@@ -32,8 +32,6 @@
 #include "vldp.h"
 #include "vldp_common.h"
 
-#define API_VERSION 11
-
 //////////////////////////////////////////////////////////////////////////////////////
 
 int vldp_cmd(int cmd);
@@ -263,21 +261,21 @@ int vldp_skip(uint16_t frame)
 	return 0;
 }
 
-int vldp_pause()
+int vldp_pause(void)
 {
 	if (p_initialized)
 		return vldp_cmd(VLDP_REQ_PAUSE);
 	return 0;
 }
 
-int vldp_step_forward()
+int vldp_step_forward(void)
 {
 	if (p_initialized)
 		return vldp_cmd(VLDP_REQ_STEP_FORWARD);
 	return 0;
 }
 
-int vldp_stop()
+int vldp_stop(void)
 {	
 	return 0;	// this is a useless function which I haven't finished yet anyway, so don't use it :)
 }
