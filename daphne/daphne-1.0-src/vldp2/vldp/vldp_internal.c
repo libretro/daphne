@@ -58,6 +58,9 @@
 struct yuv_buf g_yuv_buf[YUV_BUF_COUNT];
 
 //// forward declarations
+static void paused_handler(void);
+static void play_handler(void);
+static void vldp_process_sequence_header(void);
 static int ivldp_got_new_command(void);
 static void ivldp_ack_command(void);
 static void ivldp_lock_handler(void);
@@ -67,6 +70,9 @@ static void idle_handler_search(int skip);
 static void idle_handler_open(void);
 static void idle_handler_precache(void);
 static void idle_handler_play(void);
+static VLDP_BOOL ivldp_parse_mpeg_frame_offsets(char *datafilename,
+      uint32_t mpeg_size);
+static VLDP_BOOL ivldp_get_mpeg_frame_offsets(char *mpeg_name);
 
 static VLDP_BOOL io_open_precached(unsigned int uIdx);
 static VLDP_BOOL io_open(const char *cpszFilename);
@@ -75,6 +81,8 @@ static unsigned int io_length(void);
 static VLDP_BOOL io_seek(unsigned int uPos);
 static unsigned int io_read(void *buf, unsigned int uBytesToRead);
 static void io_close(void);
+static void ivldp_respond_req_speedchange(void);
+static void ivldp_respond_req_pause_or_step(void);
 
 #pragma warning (push)
 #pragma warning (disable:4018)
@@ -193,9 +201,7 @@ static void vo_null_draw(uint8_t * const * buf, void *id)
 
 			// if the frame is to be paused, then stall
 			if (s_paused)
-			{
 				paused_handler();
-			}
 			// else if we are supposed to be playing
 			else
 			{
@@ -559,7 +565,7 @@ static void ivldp_lock_handler(void)
 
 // the handler we call if we're paused... called from video_out_sdl
 // this function is called from within a while loop
-void paused_handler()
+static void paused_handler(void)
 {
 	// the moment we render the still frame, we need to reset the FPS timer so we don't try to catch-up
 	if (g_out_info.status != STAT_PAUSED)
@@ -608,7 +614,7 @@ void paused_handler()
 
 // the handler we call if we're playing
 // this handler is called from within a while loop
-void play_handler()
+static void play_handler(void)
 {
 	// if we've received a new incoming command
 	if (ivldp_got_new_command())
@@ -789,7 +795,7 @@ void vldp_cache_sequence_header()
 // feeds libmpeg2 the beginning of the file up to the first Group of Picture
 // It needs this info to get setup to play from an arbitrary position in the file that isn't the beginning
 // In other words, this is ONLY used when we are seeking to an arbitrary frame
-void vldp_process_sequence_header()
+static void vldp_process_sequence_header(void)
 {
 	decode_mpeg2 (g_header_buf, g_header_buf + g_header_buf_size);	// decode the pre-cached sequence header
 }
@@ -1000,7 +1006,7 @@ static void ivldp_respond_req_play(void)
 
 // gets called if ivldp_got_new_command() returns true and the new command
 //  is either a pause or a step
-void ivldp_respond_req_pause_or_step()
+static void ivldp_respond_req_pause_or_step(void)
 {
 	// if they've also requested a step forward
 	if ((g_req_cmdORcount & 0xF0) == VLDP_REQ_STEP_FORWARD)
@@ -1014,7 +1020,7 @@ void ivldp_respond_req_pause_or_step()
 
 // gets called if ivldp_got_new_command() returns true and the new command
 //  is a speed change command
-void ivldp_respond_req_speedchange()
+static void ivldp_respond_req_speedchange(void)
 {
 	s_skip_per_frame = g_req_skip_per_frame;
 	s_stall_per_frame = g_req_stall_per_frame;
@@ -1233,7 +1239,7 @@ static void idle_handler_search(int skip)
 }
 
 // parses an mpeg video stream to get its frame offsets, or if the parsing had taken place earlier
-VLDP_BOOL ivldp_get_mpeg_frame_offsets(char *mpeg_name)
+static VLDP_BOOL ivldp_get_mpeg_frame_offsets(char *mpeg_name)
 {
 	struct dat_header header;
 	char datafilename[320]       = { 0 };
@@ -1323,7 +1329,8 @@ VLDP_BOOL ivldp_get_mpeg_frame_offsets(char *mpeg_name)
 }
 
 
-VLDP_BOOL ivldp_parse_mpeg_frame_offsets(char *datafilename, uint32_t mpeg_size)
+static VLDP_BOOL ivldp_parse_mpeg_frame_offsets(char *datafilename,
+      uint32_t mpeg_size)
 {
 	int result = VLDP_TRUE;
 	FILE *data_file = fopen(datafilename, "wb");	// create file

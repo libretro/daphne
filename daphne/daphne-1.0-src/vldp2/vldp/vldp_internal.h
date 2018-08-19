@@ -49,17 +49,8 @@ struct precache_entry_s
 };
 
 int idle_handler(void *surface);
-void paused_handler();
-void play_handler();
-void vldp_process_sequence_header();
-void ivldp_respond_req_pause_or_step();
-void ivldp_respond_req_speedchange();
-VLDP_BOOL ivldp_get_mpeg_frame_offsets(char *mpeg_name);
-VLDP_BOOL ivldp_parse_mpeg_frame_offsets(char *datafilename, uint32_t mpeg_size);
-void ivldp_update_progress_indicator(SDL_Surface *indicator, double percentage_completed);
 
 ///////////////////////////////////////
-
 extern uint8_t s_old_req_cmdORcount;	// the last value of the command byte we received
 extern int s_paused;	// whether the video is to be paused
 extern int s_blanked;	// whether the mpeg video is to be blanked
