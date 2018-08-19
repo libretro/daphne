@@ -112,13 +112,8 @@ int mmseek (void *datasource, int64_t offset, int whence)
 {
 	int result = -1;
 
-//	printf("mmseek being called, whence is %d\n", whence);
+   //	printf("mmseek being called, whence is %d\n", whence);
 
-	// just to get rid of warnings
-	if (datasource)
-	{
-	}
-	
 	switch (whence)
 	{
 	case SEEK_SET:
@@ -127,13 +122,9 @@ int mmseek (void *datasource, int64_t offset, int whence)
 		{
 			// make sure offset is positive so we don't get into trouble
 			if (offset >= 0)
-			{
 				g_audio_filepos = (uint32_t) offset;
-			}
 			else
-			{
 				printline("mmseek, SEEK_SET used with a negative offset!");
-			}
 			result = 0;
 		}
 		break;
@@ -161,9 +152,7 @@ int mmclose (void *datasource)
 {
 	// safety check
 	if (datasource != g_big_buf)
-	{
 		printline("ldp-vldp-audio.cpp: datasource != g_bigbuf, this should never happen!");
-	}
 	
 	printline("Freeing memory used to store audio stream...");
 	//free(datasource);
@@ -178,12 +167,6 @@ int mmclose (void *datasource)
 
 long mmtell (void *datasource)
 {
-//	printf("mmtell being called, filepos is %x\n", (uint32_t) g_audio_filepos);
-
-	if (datasource)
-	{
-	}
-
 	return g_audio_filepos;
 }
 
@@ -263,13 +246,17 @@ void ldp_vldp::set_audiocopy_callback()
 {
 	if (g_audio_left_muted)
 	{
-		if (g_audio_right_muted) paudiocopy = audiocopy_mute;	// both channels are muted
-		else paudiocopy = audiocopy_right_only;	// only right channel is on
+		if (g_audio_right_muted)
+         paudiocopy = audiocopy_mute;	// both channels are muted
+		else
+         paudiocopy = audiocopy_right_only;	// only right channel is on
 	}
 	else
 	{
-		if (g_audio_right_muted) paudiocopy = audiocopy_left_only;	// only left channel is on
-		else paudiocopy = (audiocopyproc) memcpy;	// default, both channels on
+		if (g_audio_right_muted)
+         paudiocopy = audiocopy_left_only;	// only left channel is on
+		else
+         paudiocopy = (audiocopyproc) memcpy;	// default, both channels on
 	}
 }
 
@@ -284,16 +271,12 @@ void ldp_vldp::oggize_path(string &oggpath, string m2vpath)
 // initializes VLDP audio, returns 1 on success or 0 on failure
 bool ldp_vldp::audio_init()
 {
-	bool result = false;
-
 	// create a mutex to prevent threads from interfering
 	g_ogg_mutex = SDL_CreateMutex();
 	if (g_ogg_mutex)
-	{
-		result = true;
-	}
+      return true;
 
-	return result;
+	return false;
 }
 
 // shuts down VLDP audio
@@ -301,9 +284,7 @@ void ldp_vldp::audio_shutdown()
 {
 	// if we have an audio file still open, close it
 	if (g_pIOAudioHandle != 0)
-	{
 		close_audio_stream();
-	}
 
 	// if we successfully created a mutex previously, then destroy it now
 	if (g_ogg_mutex)
@@ -339,9 +320,7 @@ bool ldp_vldp::open_audio_stream(const string &strFilename)
 
 	// if an audio stream is already open, close it first
 	if (g_pIOAudioHandle != 0)
-	{
 		close_audio_stream();
-	}
 
 	mmreset();	// reset the mm wrappers for new use
 
@@ -352,13 +331,10 @@ bool ldp_vldp::open_audio_stream(const string &strFilename)
 		g_audio_filesize = static_cast<unsigned int>(g_pIOAudioHandle->size & 0xFFFFFFFF);
 		g_big_buf = new unsigned char[g_audio_filesize];
 		if (g_big_buf)
-		{
 			mpo_read(g_big_buf, g_audio_filesize, NULL, g_pIOAudioHandle);	// read entire stream into RAM
-		}
 		else
-		{
 			printline("ERROR : out of memory");
-		}
+
 		if (g_big_buf)
 		{
 			int open_result = ov_open_callbacks(g_big_buf, &s_ogg, NULL, 0, mycallbacks);
@@ -432,9 +408,7 @@ bool ldp_vldp::seek_audio(uint64_t u64Samples)
 		result = true;
 	}
 	else
-	{
 		printline("DOH!  OGG stream is not seekable!");
-	}
 	
 	OGG_UNLOCK;
 
@@ -623,5 +597,4 @@ void ldp_vldp_audio_callback(uint8_t *stream, int len, int unused)
 	}
 
 	OGG_UNLOCK;
-
 }

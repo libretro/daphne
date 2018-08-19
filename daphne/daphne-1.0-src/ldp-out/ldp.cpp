@@ -30,12 +30,6 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #endif
 
-#ifdef DEBUG
-#include <assert.h>
-#include "../io/numstr.h"
-#include "../cpu/cpu-debug.h"
-#endif
-
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -164,9 +158,7 @@ void ldp::pre_shutdown()
 	{
 		// if stop on quit has been requested stop the player from playing
 		if (m_stop_on_quit)
-		{
 			pre_stop();
-		}
 		
 		// if serial has been initialized, shut it down now
 		if (serial_initialized)
@@ -238,9 +230,7 @@ bool ldp::pre_search(const char* pszFrame, bool block_until_search_finishes)
 		sprintf(s1, "Search to %d (formerly %d) received", frame_number, unadjusted_frame);
 	}
 	else
-	{
 		sprintf(s1, "Search to %d received", frame_number);
-	}
 
 	outstr(s1);
 
@@ -254,17 +244,11 @@ bool ldp::pre_search(const char* pszFrame, bool block_until_search_finishes)
 	{
 	}
 	else
-	{
 		newline();
-	}
 
 	// If the user requested a delay before seeking, make it now
 	if (search_latency > 0)
 	{
-#ifdef DEBUG
-		// search latency needs to be reworked so that think() is getting called ...
-		assert(false);
-#endif
 //		make_delay(get_search_latency());
 		printline("WARNING : search latency needs to be redesigned, it is currently disabled");
 	}
@@ -565,11 +549,6 @@ void ldp::pre_pause()
 	// some games (Super Don) repeatedly flood with a pause command and this doesn't work well with the Hitachi
 	if (m_status == LDP_PLAYING)
 	{
-#ifdef DEBUG
-		string s = "m_uMsFrameBoundary is " + numstr::ToStr(m_uMsFrameBoundary) + ", elapsed ms is " +
-			numstr::ToStr(m_uElapsedMsSincePlay);
-		printline(s.c_str());
-#endif
 		m_last_seeked_frame = m_uCurrentFrame;
 		m_iSkipOffsetSincePlay = m_uCurrentOffsetFrame = m_uMsFrameBoundary = 0;
 		pause();
@@ -859,11 +838,6 @@ unsigned int ldp::get_current_frame()
 
 unsigned int ldp::get_adjusted_current_frame()
 {
-#ifdef DEBUG
-	// this function assumes that the disc's FPS is in line with vblank
-	assert((g_game->get_disc_fpks() << 1) == VBLANKS_PER_KILOSECOND);
-#endif // DEBUG
-
 	// because get_current_frame() is a virtual function
 	unsigned int uResult = get_current_frame();
 
@@ -905,10 +879,6 @@ int ldp::get_status()
 	// if we are in the middle of a search, find out if the search has completed
 	if (m_status == LDP_SEARCHING)
 	{
-#ifdef DEBUG
-		// verify that get_search_result() is not being called when it ought not be
-		assert(!m_dont_get_search_result);
-#endif
 		int stat = get_search_result();
 
 		// if the search was successful
@@ -922,17 +892,13 @@ int ldp::get_status()
 			//  (so that the DAPHNE can be improperly terminated, if it's inside a cab and powered off, for example)
 			// This is the best place to do this because it's right after a seek which can take a second or two anyway.
 			if (m_sram_continuous_update)
-			{
 				g_game->save_sram();
-			}
 
 		}
 
 		// if the search failed
 		else if (stat == SEARCH_FAIL)
-		{
 			m_status = LDP_ERROR;
-		}
 		// else the search is busy and still going, so we needn't act ...
 	}
 

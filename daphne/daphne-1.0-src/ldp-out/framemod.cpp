@@ -84,14 +84,10 @@ uint16_t do_frame_conversion(int source_frame)
 		{
 			// frames 40 through 75
 			if ((result_frame >= 40) && (result_frame <= 75))
-			{
 				result_frame = 151;
-			}
 			// frames 112 through 139
 			else if ((result_frame >= 112) && (result_frame <= 139))
-			{
 				result_frame = 151;
-			}
 			else
 			{
 				switch ( (int) result_frame)
@@ -205,12 +201,9 @@ uint16_t do_frame_conversion(int source_frame)
 			// Software Corner disc has 79 extra frames than PAL Space Ace
 			// add 0.5 to round to the nearest whole number when truncating
 	}
-
 	// bug catcher
 	else
-	{
-			printline("Bug in framemod.cpp, unknown frame modifier!");
-	}
+      printline("Bug in framemod.cpp, unknown frame modifier!");
 
 	return( (uint16_t) result_frame);
 
