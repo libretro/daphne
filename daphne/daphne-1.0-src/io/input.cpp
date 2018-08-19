@@ -1135,8 +1135,6 @@ void input_enable(uint8_t move)
 		g_game->reset();
 		break;
 	case SWITCH_SCREENSHOT:
-		printline("Screenshot requested!");
-		g_ldp->request_screenshot();
 		break;
 	case SWITCH_PAUSE:
 		g_game->toggle_game_pause();

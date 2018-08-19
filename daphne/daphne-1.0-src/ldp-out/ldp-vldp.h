@@ -77,7 +77,6 @@ public:
 #ifdef DEBUG
 	unsigned int get_current_frame();	// enable for accuracy testing only
 #endif
-	void request_screenshot();
 	void set_search_blanking(bool);
 	void set_skip_blanking(bool);
 	void set_seek_frames_per_ms(double value);
@@ -87,9 +86,6 @@ public:
 	void set_vertical_stretch(unsigned int);
 
 	void test_helper(unsigned uIterations);
-	
-	// runs through a bunch of tests and returns results in 'lstrPassed' and 'lstrFailed'
-	void run_tests(list<string> &lstrPassed, list<string> &lstrFailed);
 	
 	bool handle_cmdline_arg(const char *arg);
 	bool lock_overlay(uint32_t);
@@ -141,7 +137,6 @@ private:
 	unsigned int m_vertical_stretch;  // vertically stretch video (value of 24 to remove letterboxing for Cliffhanger)     
 	double m_seek_frames_per_ms;	// max # of frames that VLDP will seek per millisecond (0 = no limit)
 	unsigned int m_min_seek_delay;	// min # of milliseconds to force seek to last
-	bool m_testing;	// should we do a few simple tests to make sure VLDP is functioning robustly?
 	bool m_bPreCache;	// should we precache all video?
 	bool m_bPreCacheForce;	// should we still precache all video even if we don't have enough RAM?
 

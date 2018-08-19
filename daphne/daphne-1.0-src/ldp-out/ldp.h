@@ -182,7 +182,6 @@ public:
 	virtual void enable_audio2();
 	virtual void disable_audio1();
 	virtual void disable_audio2();
-	virtual void request_screenshot();
 	virtual void set_search_blanking(bool enabled);
 	virtual void set_skip_blanking(bool enabled);
 	virtual void set_seek_frames_per_ms(double value);

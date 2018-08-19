@@ -657,8 +657,7 @@ void thayers::process_keydown(SDL_Keycode key)
             break;
 
         case SDLK_F12:
-    	    // take a screen shot
-	        g_ldp->request_screenshot();
+            // take a screen shot
             break;
 
         case SDLK_PAGEUP:

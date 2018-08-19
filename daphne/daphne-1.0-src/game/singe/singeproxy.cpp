@@ -976,13 +976,6 @@ static int sep_say_font(lua_State *L)
 
 static int sep_screenshot(lua_State *L)
 {
-  int n = lua_gettop(L);
-  
-  if (n == 0)
-  {
-    g_pSingeIn->request_screenshot();
-  }
-	
   return 0;
 }
 

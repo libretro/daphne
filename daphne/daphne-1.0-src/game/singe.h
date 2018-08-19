@@ -61,7 +61,6 @@ public:
 	static void enable_audio2() { g_ldp->enable_audio2(); }
 	static void disable_audio1() { g_ldp->disable_audio1(); }
 	static void disable_audio2() { g_ldp->disable_audio2(); }
-	static void request_screenshot() { g_ldp->request_screenshot(); }
 	static void set_search_blanking(bool enabled) { g_ldp->set_search_blanking(enabled); }
 	static void set_skip_blanking(bool enabled) { g_ldp->set_skip_blanking(enabled); }
 	static bool pre_change_speed(unsigned int uNumerator, unsigned int uDenominator)

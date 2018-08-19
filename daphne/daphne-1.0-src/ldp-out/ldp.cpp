@@ -975,13 +975,6 @@ void ldp::disable_audio2()
 	printline("Audio2 disable received (ignored)");
 }
 
-// asks LDP to take a screenshot if that's possible
-// it's only possible with VLDP as of this time
-void ldp::request_screenshot()
-{
-	printline("NOTE: current laserdisc player does not support taking screenshots, sorry");
-}
-
 // returns the width of the laserdisc video (only meaningful with mpeg)
 uint32_t ldp::get_discvideo_width()
 {

@@ -36,7 +36,6 @@ struct singe_in_info
 	void (*enable_audio2)();
 	void (*disable_audio1)();
 	void (*disable_audio2)();
-	void (*request_screenshot)();
 	void (*set_search_blanking)(bool enabled);
 	void (*set_skip_blanking)(bool enabled);
 	bool (*pre_change_speed)(unsigned int uNumerator, unsigned int uDenominator);

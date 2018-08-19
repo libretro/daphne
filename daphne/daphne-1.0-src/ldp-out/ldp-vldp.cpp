@@ -358,8 +358,6 @@ ldp_vldp::ldp_vldp()
 
 	m_vertical_stretch = 0;
 
-	m_testing = false;	// don't run tests by default
-
 	m_bPreCache = m_bPreCacheForce = false;
 	m_mPreCachedFiles.clear();
 
@@ -406,8 +404,7 @@ bool ldp_vldp::init_player()
 
             // 201x.xx.xx - RJS - since the change of moving the LDP thread to start earlier, the video overlays were not
             // initialized (video_init) yet, however this flag can be
-            // if (g_game->get_active_video_overlay() && !m_testing)
-            if (g_game->does_game_use_video_overlay() && !m_testing)
+            if (g_game->does_game_use_video_overlay())
                g_local_info.prepare_frame = prepare_frame_callback_with_overlay;
             else
             {
@@ -430,16 +427,6 @@ bool ldp_vldp::init_player()
             {
                // this number is used repeatedly, so we calculate it once
                g_vertical_offset = g_game->get_video_row_offset();
-
-               // if testing has been requested then run them ...
-               if (m_testing)
-               {
-                  list<string> lstrPassed, lstrFailed;
-                  run_tests(lstrPassed, lstrFailed);
-                  // run releasetest to see actual results now ...
-                  printline("Run releasetest to see printed results!");
-                  set_quitflag();
-               }
 
                // bPreCacheOK will be true if precaching succeeds or is never attempted
                bool bPreCacheOK = true;
@@ -1018,11 +1005,6 @@ unsigned int ldp_vldp::get_current_frame()
 }
 #endif
 
-// takes a screenshot of the current frame + any video overlay
-void ldp_vldp::request_screenshot()
-{
-}
-
 void ldp_vldp::set_search_blanking(bool enabled)
 {
 	m_blank_on_searches = enabled;
@@ -1074,188 +1056,6 @@ void ldp_vldp::test_helper(unsigned uIterations)
 
 }
 
-void ldp_vldp::run_tests(list<string> &lstrPassed, list<string> &lstrFailed)
-{
-	// these tests just basically stress the VLDP .DLL to make sure it will never crash
-	// under any circumstances
-	string s = "";
-	bool result = false;
-
-	// if we have at least 1 entry in our framefile
-	if (m_file_index > 0)
-	{
-		string path = m_mpeginfo[0].name;	// create full pathname to file
-
-		// TEST #1 : try opening and playing without seeking
-		s = "VLDP TEST #1 (playing and skipping)";
-		if (open_and_block(path) == 1)
-		{
-			g_local_info.uMsTimer = GET_TICKS();
-			if (g_vldp_info->play(g_local_info.uMsTimer) == 1)
-			{
-				test_helper(1000);
-				if (g_vldp_info->skip(5) == 1)
-				{
-					lstrPassed.push_back(s);
-				}
-				else
-				{
-					lstrFailed.push_back(s + " (opened and played, but could not skip)");
-				}
-			}
-			else lstrFailed.push_back(s + " (opened but could not play)");
-		}
-		else lstrFailed.push_back(s);
-
-		// TEST #2 : try opening the file repeatedly
-		// This should not cause any problems
-		s = "VLDP TEST #2 (opening repeatedly)";
-		result = true;
-		for (int i = 0; i < 10; i++)
-		{
-			if (!open_and_block(path))
-			{
-				result = false;
-				break;
-			}
-		}
-		if (result) lstrPassed.push_back(s);
-		else lstrFailed.push_back(s);
-
-		// TEST #3 : try opening the file and seeking to an illegal frame
-		s = "VLDP TEST #3 (seeking to illegal frame)";
-		if (!g_vldp_info->search_and_block(65534, 0))
-		{
-			lstrPassed.push_back(s);
-		}
-		else lstrFailed.push_back(s);
-		
-		// TEST #4 : try seeking to a (hopefully) legitimate frame
-		s = "VLDP TEST #4 (seeking to legit frame)";
-		if (g_vldp_info->search_and_block(50, 0) == 1)
-		{
-			lstrPassed.push_back(s);
-			//test_helper(1000);
-		}
-		else
-		{
-			lstrFailed.push_back(s);
-		}
-		
-		// TEST #5 : play to the end of the file, then try playing again to see what happens
-		s = "VLDP TEST #5 (playing to end of file, then playing again)";
-		if (open_and_block(path) == 1)
-		{
-			g_local_info.uMsTimer = m_uElapsedMsSincePlay = m_uBlockedMsSincePlay = 0;
-
-			if (g_vldp_info->play(g_local_info.uMsTimer) == 1)
-			{
-				// wait for file to end ...
-				while ((g_vldp_info->status == STAT_PLAYING) && (!get_quitflag()))
-				{
-					SDL_check_input();
-					test_helper(250);
-				}
-				
-				if (g_vldp_info->play(g_local_info.uMsTimer) == 1)
-				{
-					lstrPassed.push_back(s);
-					test_helper(1000);
-				}
-				else
-				{
-					lstrFailed.push_back(s + " - the second time around");
-				}
-			}
-			else lstrFailed.push_back(s + "opened file, but failed to play it)");
-		}
-		else lstrFailed.push_back(s);
-
-		// TEST #6 : play to the end of the file, then try seeking to see what happens
-		s = "VLDP TEST #6 (play to end of file, then seek)";
-		if (open_and_block(path) == 1)
-		{
-			g_local_info.uMsTimer = m_uElapsedMsSincePlay = m_uBlockedMsSincePlay = 0;
-
-			if (g_vldp_info->play(g_local_info.uMsTimer) == 1)
-			{
-				// wait for file to end ...
-				while ((g_vldp_info->status == STAT_PLAYING) && (!get_quitflag()))
-				{
-					SDL_check_input();
-					test_helper(250);
-				}
-				
-				if (g_vldp_info->search_and_block(50, 0) == 1)
-				{
-					lstrPassed.push_back(s);
-					test_helper(1000);
-				}
-				else
-				{
-					lstrFailed.push_back(s + "(failed the second time around)");
-				}
-			}
-			else lstrFailed.push_back(s + "(opened file, but failed to play it)");
-		}
-		else lstrFailed.push_back(s);
-
-		// TEST #7 : open, seek, play, all testing timing
-		s = "VLDP TEST #7 (seeking, playing with timing tested)";
-		if (open_and_block(path) == 1)
-		{
-			g_local_info.uMsTimer = m_uElapsedMsSincePlay = m_uBlockedMsSincePlay = 0;
-			
-			// search to beginning frame ...
-			if (g_vldp_info->search_and_block(0, 0) == 1)
-			{
-				test_helper(1);	// make 1 ms elapse ...
-				SDL_Delay(1);	// give VLDP thread a chance to make its own updates ...
-				
-				// make sure that frame is what we expect it to be ...
-				if (g_vldp_info->current_frame == 0)
-				{
-					test_helper(50);	// make 50 ms elapse
-					SDL_Delay(1);	// give VLDP thread a chance to make updates
-
-					// make sure current frame has not changed
-					if (g_vldp_info->current_frame == 0)
-					{
-						g_local_info.uMsTimer = m_uElapsedMsSincePlay = m_uBlockedMsSincePlay = 0;
-						
-						// so now we start playing ...
-						if (g_vldp_info->play(0) == 1)
-						{
-							test_helper(32);	// pause 32 ms (right before frame should change)
-							SDL_Delay(50);	// vldp thread blah blah ...
-
-							// current frame still should not have changed
-							if (g_vldp_info->current_frame == 0)
-							{
-								test_helper(1);	// 1 more ms, frame should change now
-								SDL_Delay(50);	// don't fail simply due to the cpu being overloaded
-								if (g_vldp_info->current_frame == 1)
-								{
-									lstrPassed.push_back(s);
-								}
-								else lstrFailed.push_back(s + " (frame didn't change to 1)");
-							}
-							else lstrFailed.push_back(s + " (frame changed to " + numstr::ToStr(g_vldp_info->current_frame) + " after play)");
-						}
-						else lstrFailed.push_back(s + " (play failed)");
-					}
-					else lstrFailed.push_back(s + " (current frame changed from 0 after seek)");
-				}
-				else lstrFailed.push_back(s + " (opened, but current frame was not 0)");
-			}
-			else lstrFailed.push_back(s + " (opened but could not search)");
-		}
-		else lstrFailed.push_back(s);
-		
-	} // end if there was 1 file in the framefile
-	else lstrFailed.push_back("VLDP TESTS (Framefile had no entries)");
-}
-
 // handles VLDP-specific command line args
 bool ldp_vldp::handle_cmdline_arg(const char *arg)
 {
@@ -1272,7 +1072,6 @@ bool ldp_vldp::handle_cmdline_arg(const char *arg)
 	// should we run a few VLDP tests when the player is initialized?
 	else if (strcasecmp(arg, "-vldptest")==0)
 	{
-		m_testing = true;
 	}
 	// should we precache all video streams to RAM?
 	else if (strcasecmp(arg, "-precache")==0)
