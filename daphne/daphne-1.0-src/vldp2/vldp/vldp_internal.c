@@ -88,199 +88,183 @@ static void ivldp_respond_req_pause_or_step(void);
 #pragma warning (disable:4018)
 static void vo_null_draw(uint8_t * const * buf, void *id)
 {
-    int32_t correct_elapsed_ms = 0;	// we want this signed since we compare against actual_elapsed_ms
-    int32_t actual_elapsed_ms = 0;	// we want this signed because it could be negative
-	unsigned int uStallFrames = 0;	// how many frames we have to stall during the loop (for multi-speed playback)
+   int32_t correct_elapsed_ms = 0;	// we want this signed since we compare against actual_elapsed_ms
+   int32_t actual_elapsed_ms = 0;	// we want this signed because it could be negative
+   unsigned int uStallFrames = 0;	// how many frames we have to stall during the loop (for multi-speed playback)
 
-	// if we don't need to skip any frames
-	if (!(s_frames_to_skip | s_skip_all))
-	{		
-		// loop once, or more than once if we are paused
-		do
-		{
-			VLDP_BOOL bFrameNotShownDueToCmd = VLDP_FALSE;
+   // if we don't need to skip any frames
+   if (!(s_frames_to_skip | s_skip_all))
+   {
+      // loop once, or more than once if we are paused
+      do
+      {
+         VLDP_BOOL bFrameNotShownDueToCmd = VLDP_FALSE;
 
-			// PERFORMANCE WARNING:
-			//  We need to use 64-bit math here because otherwise, we will overflow a little after 2 minutes,
-			//   using 32-bit math.
-			// If you want to assume that you will never be playing video longer than 2 minutes, then you can change this back
-			//  to 32-bit integer math.
-			// Also, you can use floating point math here, but some CPU's (gp2x) don't have floating point units, which drastically
-			//  hurts performance.  On a fast modern PC, you probably won't notice a difference either way.
-			int64_t s64Ms = s_uFramesShownSinceTimer;
-			s64Ms = (s64Ms * 1000000) / g_out_info.uFpks;
+         // PERFORMANCE WARNING:
+         //  We need to use 64-bit math here because otherwise, we will overflow a little after 2 minutes,
+         //   using 32-bit math.
+         // If you want to assume that you will never be playing video longer than 2 minutes, then you can change this back
+         //  to 32-bit integer math.
+         // Also, you can use floating point math here, but some CPU's (gp2x) don't have floating point units, which drastically
+         //  hurts performance.  On a fast modern PC, you probably won't notice a difference either way.
+         int64_t s64Ms = s_uFramesShownSinceTimer;
+         s64Ms = (s64Ms * 1000000) / g_out_info.uFpks;
 
-			// compute how much time ought to have elapsed based on our frame count
-			correct_elapsed_ms = (int32_t) (s64Ms) +
-				// add on any extra delay that has been requested (simulated seek delay)
-				s_extra_delay_ms;
-			actual_elapsed_ms = g_in_info->uMsTimer - s_timer;
+         // compute how much time ought to have elapsed based on our frame count
+         correct_elapsed_ms = (int32_t) (s64Ms) +
+            // add on any extra delay that has been requested (simulated seek delay)
+            s_extra_delay_ms;
+         actual_elapsed_ms = g_in_info->uMsTimer - s_timer;
 
-			// the extra delay should only be 'used' once, so for safety reasons we reset
-			// it here, where we can guarantee that it only will be used once.
-			s_extra_delay_ms = 0;
+         // the extra delay should only be 'used' once, so for safety reasons we reset
+         // it here, where we can guarantee that it only will be used once.
+         s_extra_delay_ms = 0;
 
-			// if we are caught up enough that we don't need to skip any frames, then display the frame
-			if (actual_elapsed_ms < (correct_elapsed_ms + g_out_info.u2milDivFpks))
-			{
-				// this is the potentially expensive callback that gets the hardware overlay
-				// ready to be displayed, so we do this before we sleep
-				// NOTE : if this callback fails, we don't want to display the frame due to double buffering considerations
-				if (g_in_info->prepare_frame(&g_yuv_buf[(int) id]))
-				{
-				
-					// stall if we are playing too quickly and if we don't have a command waiting for us
-					while (((int32_t) (g_in_info->uMsTimer - s_timer) < correct_elapsed_ms)
-						&& (!bFrameNotShownDueToCmd))
-					{
-						// IMPORTANT: this delay should come before the check for ivldp_got_new_command,
-						//  so that if we get a new command, we exit the loop immediately without
-						//  delaying, so that we don't have to check a second time for a new command.
-	    				SDL_Delay(1);	// note, if this is set to 0, we don't get commands as quickly
+         // if we are caught up enough that we don't need to skip any frames, then display the frame
+         if (actual_elapsed_ms < (correct_elapsed_ms + g_out_info.u2milDivFpks))
+         {
+            // this is the potentially expensive callback that gets the hardware overlay
+            // ready to be displayed, so we do this before we sleep
+            // NOTE : if this callback fails, we don't want to display the frame due to double buffering considerations
+            if (g_in_info->prepare_frame(&g_yuv_buf[(int) id]))
+            {
 
-						// Breaking when getting a new commend before our frame has expired
-						//  will shorten 1 frame's length.  However, it could speed skips up,
-						//  so I am leaving it in.
-						// Also, if we get a new command, uMsTimer may not advance until
-						//  we acknowledge the new command.
-						if (ivldp_got_new_command())
-						{
-							// strip off count and examine command
-							switch(g_req_cmdORcount & 0xF0)
-							{
-							case VLDP_REQ_PAUSE:
-							case VLDP_REQ_STEP_FORWARD:
-								ivldp_respond_req_pause_or_step();
-								break;
-							case VLDP_REQ_SPEEDCHANGE:
-								ivldp_respond_req_speedchange();
-								break;
-							case VLDP_REQ_NONE:
-								break;
+               // stall if we are playing too quickly and if we don't have a command waiting for us
+               while (((int32_t) (g_in_info->uMsTimer - s_timer) < correct_elapsed_ms)
+                     && (!bFrameNotShownDueToCmd))
+               {
+                  // IMPORTANT: this delay should come before the check for ivldp_got_new_command,
+                  //  so that if we get a new command, we exit the loop immediately without
+                  //  delaying, so that we don't have to check a second time for a new command.
+                  SDL_Delay(1);	// note, if this is set to 0, we don't get commands as quickly
 
-								// Anything else, we will not show the next frame and will
-								//  immediately exit this loop in order to handle the command
-								//  elsewhere.
-							default:
-								bFrameNotShownDueToCmd = VLDP_TRUE;
-								break;
-							}
-						}
-					}
+                  // Breaking when getting a new commend before our frame has expired
+                  //  will shorten 1 frame's length.  However, it could speed skips up,
+                  //  so I am leaving it in.
+                  // Also, if we get a new command, uMsTimer may not advance until
+                  //  we acknowledge the new command.
+                  if (ivldp_got_new_command())
+                  {
+                     // strip off count and examine command
+                     switch(g_req_cmdORcount & 0xF0)
+                     {
+                        case VLDP_REQ_PAUSE:
+                        case VLDP_REQ_STEP_FORWARD:
+                           ivldp_respond_req_pause_or_step();
+                           break;
+                        case VLDP_REQ_SPEEDCHANGE:
+                           ivldp_respond_req_speedchange();
+                           break;
+                        case VLDP_REQ_NONE:
+                           break;
 
-					// If a command comes in at the last second,
-					//  we don't want to render the next frame that we were going to because it could cause overrun
-					//  so we only display the frame if we haven't received a command
+                           // Anything else, we will not show the next frame and will
+                           //  immediately exit this loop in order to handle the command
+                           //  elsewhere.
+                        default:
+                           bFrameNotShownDueToCmd = VLDP_TRUE;
+                           break;
+                     }
+                  }
+               }
+
+               // If a command comes in at the last second,
+               //  we don't want to render the next frame that we were going to because it could cause overrun
+               //  so we only display the frame if we haven't received a command
                // draw the frame
                // we are using the pointer 'id' as an index, kind of risky, but convenient :)
-					if (!bFrameNotShownDueToCmd)
-						g_in_info->display_frame(&g_yuv_buf[(int) id]);
+               if (!bFrameNotShownDueToCmd)
+                  g_in_info->display_frame(&g_yuv_buf[(int) id]);
                // end if we didn't get a new command to interrupt the frame being displayed
-				} // end if the frame was prepared properly
-				// else maybe we couldn't get a lock on the buffer fast enough, so we'll have to wait ...
+            } // end if the frame was prepared properly
+            // else maybe we couldn't get a lock on the buffer fast enough, so we'll have to wait ...
 
-			} // end if we don't drop any frames
+         } // end if we don't drop any frames
 
-			/*
-			// else we're too far beyond so we're gonna have to drop some this frame to catch up (doh!)
-			else
-			{
-				fprintf(stderr, "NOTE : dropped frame %u!  Expected %u but got %u\n",
-					g_out_info.current_frame, correct_elapsed_ms, actual_elapsed_ms);
-			}
-			*/
+         // if the frame was either displayed or dropped (due to lag) ...
+         if (!bFrameNotShownDueToCmd)
+         {
+            // now that the frame has either been displayed or dropped, we can update the counter to reflect
+            // NOTE : this should come before play_handler() is called, because if we become paused,
+            //  we change the value of s_uFramesShownSinceTimer.
+            ++s_uFramesShownSinceTimer;
+         }
 
-			// if the frame was either displayed or dropped (due to lag) ...
-			if (!bFrameNotShownDueToCmd)
-			{
-				// now that the frame has either been displayed or dropped, we can update the counter to reflect
-				// NOTE : this should come before play_handler() is called, because if we become paused,
-				//  we change the value of s_uFramesShownSinceTimer.
-				++s_uFramesShownSinceTimer;
-			}
+         // if the frame is to be paused, then stall
+         if (s_paused)
+            paused_handler();
+         // else if we are supposed to be playing
+         else
+         {
+            play_handler();
 
-			// if the frame is to be paused, then stall
-			if (s_paused)
-				paused_handler();
-			// else if we are supposed to be playing
-			else
-			{
-				play_handler();
-				
-				// We only want to advance the current frame if we didn't receive a pause request in the play handler.
-				// NOTE : this should come after the handlers in case the state of s_paused changes
-				if (!s_paused)
-				{
-					// If we aren't going to stall on any frames ...
-					// NOTE : I think this should be toward the outside of this loop, because
-					//  if we are skipping while playing at a slower speed, I would think that
-					//  the skip should be slower too.  I could be wrong though ...
-					// We DO want to make sure that if we are stalling, that the current frame
-					//  is not incremented.
-					if (uStallFrames == 0)
-					{
-						// if we have no pending frame, then the frame we've just displayed is the proceeding frame
-						if (s_uPendingSkipFrame == 0)
-						{
-							// only advance frame # if we've displayed/dropped a frame
-							if (!bFrameNotShownDueToCmd)
-							{
-								++g_out_info.current_frame;
+            // We only want to advance the current frame if we didn't receive a pause request in the play handler.
+            // NOTE : this should come after the handlers in case the state of s_paused changes
+            if (!s_paused)
+            {
+               // If we aren't going to stall on any frames ...
+               // NOTE : I think this should be toward the outside of this loop, because
+               //  if we are skipping while playing at a slower speed, I would think that
+               //  the skip should be slower too.  I could be wrong though ...
+               // We DO want to make sure that if we are stalling, that the current frame
+               //  is not incremented.
+               if (uStallFrames == 0)
+               {
+                  // if we have no pending frame, then the frame we've just displayed is the proceeding frame
+                  if (s_uPendingSkipFrame == 0)
+                  {
+                     // only advance frame # if we've displayed/dropped a frame
+                     if (!bFrameNotShownDueToCmd)
+                     {
+                        ++g_out_info.current_frame;
 
-								// if we have to stall one or more frames per frame (multi-speed playback)
-								if (s_stall_per_frame > 0)
-								{
-									uStallFrames = s_stall_per_frame;
-								}
+                        // if we have to stall one or more frames per frame (multi-speed playback)
+                        if (s_stall_per_frame > 0)
+                           uStallFrames = s_stall_per_frame;
 
-								// if we are skipping one or more frames per frame that is displayed
-								// (multi-speed playback)
-								if (s_skip_per_frame > 0)
-								{
-									s_frames_to_skip = s_frames_to_skip_with_inc = s_skip_per_frame;
-								}
-								// else don't adjust the frameskip variables
-							}
-							// else don't advance the frame number
-						}
-						// else we just skipped, so update current frame to reflect that ...
-						else
-						{
-							g_out_info.current_frame = s_uPendingSkipFrame;
-							s_uPendingSkipFrame = 0;
-						}
-					} // end if we aren't going to stall on the currently rendered frame
-					// else don't increment the frame, but decrement the uStallFrames counter
-					else
-					{
-						--uStallFrames;
-					}
-				}
-			}
+                        // if we are skipping one or more frames per frame that is displayed
+                        // (multi-speed playback)
+                        if (s_skip_per_frame > 0)
+                           s_frames_to_skip = s_frames_to_skip_with_inc = s_skip_per_frame;
+                        // else don't adjust the frameskip variables
+                     }
+                     // else don't advance the frame number
+                  }
+                  // else we just skipped, so update current frame to reflect that ...
+                  else
+                  {
+                     g_out_info.current_frame = s_uPendingSkipFrame;
+                     s_uPendingSkipFrame = 0;
+                  }
+               } // end if we aren't going to stall on the currently rendered frame
+               // else don't increment the frame, but decrement the uStallFrames counter
+               else
+                  --uStallFrames;
+            }
+         }
 
-		} while ((s_paused || uStallFrames > 0) && !s_skip_all && !s_step_forward);
-		// loop while we are paused OR while we are stalling so video overlay gets redrawn
+      } while ((s_paused || uStallFrames > 0) && !s_skip_all && !s_step_forward);
+      // loop while we are paused OR while we are stalling so video overlay gets redrawn
 
-		s_step_forward = 0;	// clear this in case it was set (since we have now stepped forward)
+      s_step_forward = 0;	// clear this in case it was set (since we have now stepped forward)
 
-	} // end if we don't have frames to skip
-	
-	// if we have frames to skip
-	else
-	{		
-		// we could skip frames for another reason
-		if (s_frames_to_skip > 0)
-		{
-			--s_frames_to_skip;	// we've skipped a frame, so decrease the count
+   } // end if we don't have frames to skip
+   // if we have frames to skip
+   else
+   {		
+      // we could skip frames for another reason
+      if (s_frames_to_skip > 0)
+      {
+         --s_frames_to_skip;	// we've skipped a frame, so decrease the count
 
-			// if we need to also increase the frame number (multi-speed playback)
-			if (s_frames_to_skip_with_inc > 0)
-			{
-				--s_frames_to_skip_with_inc;
-				++g_out_info.current_frame;
-			}
-		}
-	}
+         // if we need to also increase the frame number (multi-speed playback)
+         if (s_frames_to_skip_with_inc > 0)
+         {
+            --s_frames_to_skip_with_inc;
+            ++g_out_info.current_frame;
+         }
+      }
+   }
 }
 #pragma warning (pop)
 
@@ -301,24 +285,13 @@ static void vo_null_setup_fbuf(uint8_t ** buf, void ** id)
 	// we are operating under a (safe?) assumption that this function is called in sets of YUV_BUF_COUNT
 	// so it should be safe to wraparound ... if our assumption is wrong, major havoc will ensure :)
 	if (buffer_index >= YUV_BUF_COUNT)
-	{
 		buffer_index = 0;
-	}
-
 }
 
 static int vo_null_setup (int width, int height,
 		       vo_setup_result_t * result)
 {
 	int i = 0;
-
-	// UPDATE : I believe these functions are no longer necessary because we do them in
-	// idle_handler_open() now instead.
-	/*	
-	g_in_info->report_mpeg_dimensions(width, height);	// alert parent-thread
-	g_out_info.w = width;
-	g_out_info.h = height;
-	*/
 
 	for (i = 0; i < YUV_BUF_COUNT; i++)
 	{
@@ -734,11 +707,8 @@ static void decode_mpeg2 (uint8_t * current, uint8_t * end)
 		    /* might free frame buffer */
 			// if the init hasn't been called yet, this may fail so we have to put the conditional
 		    if (info->display_fbuf)
-		    {
 				vo_null_draw (info->display_fbuf->buf,
 				      info->display_fbuf->id);
-		    }
-		    
 		    break;
 		} // end switch
     } // end endless for loop
