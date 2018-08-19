@@ -34,7 +34,6 @@
 #include <stdlib.h>
 #include "cmdline.h"
 #include "conout.h"
-#include "network.h"
 #include "numstr.h"
 #include "homedir.h"
 #include "input.h"	// to disable joystick use

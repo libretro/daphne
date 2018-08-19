@@ -63,7 +63,6 @@ using namespace std;
 #include "sound/sound.h"
 #include "io/conout.h"
 #include "io/cmdline.h"
-#include "io/network.h"
 #include "video/video.h"
 #include "video/led.h"
 #include "ldp-out/ldp.h"

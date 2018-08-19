@@ -49,7 +49,6 @@
 #include "../io/fileparse.h"
 #include "../io/mpo_mem.h"
 #include "../io/numstr.h"	// for debug
-#include "../io/network.h"	// to query amount of RAM the system has (get_sys_mem)
 #include "../game/game.h"
 #include "../video/rgb2yuv.h"
 #include "ldp-vldp.h"
@@ -1525,11 +1524,11 @@ bool ldp_vldp::precache_all_video()
 	{
 		const unsigned int uFUDGE = 256;	// how many megs we assume the OS needs in addition to our application running
 		unsigned int uReqMegs = (unsigned int) ((u64TotalBytes / 1048576) + uFUDGE);
-		unsigned int uMegs = get_sys_mem();
+		//unsigned int uMegs = get_sys_mem();
 
 		// if we have enough memory (accounting for OS overhead, which may need to increase in the future)
 		//  OR if the user wants to force precaching despite our check ...
-		if ((uReqMegs < uMegs) || (m_bPreCacheForce))
+		if (/*(uReqMegs < uMegs) || */ (m_bPreCacheForce))
 		{
 			for (i = 0; i < m_file_index; i++)
 			{
@@ -1557,8 +1556,7 @@ bool ldp_vldp::precache_all_video()
 		}
 		else
 		{
-			printline( ((string) "Not enough memory to precache video stream.  You have about " +
-				numstr::ToStr(uMegs) + " but need " +
+			printline( ((string) "Not enough memory to precache video stream.  You need " +
 				numstr::ToStr(uReqMegs)).c_str());
 			bResult = false;
 		}
