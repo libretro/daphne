@@ -408,14 +408,11 @@ bool ldp_vldp::init_player()
             // initialized (video_init) yet, however this flag can be
             // if (g_game->get_active_video_overlay() && !m_testing)
             if (g_game->does_game_use_video_overlay() && !m_testing)
-            {
                g_local_info.prepare_frame = prepare_frame_callback_with_overlay;
-            }
-
-            // otherwise we can draw the frame much faster w/o worrying about
-            // video overlay
             else
             {
+               // otherwise we can draw the frame much faster w/o worrying about
+               // video overlay
                g_local_info.prepare_frame = prepare_frame_callback_without_overlay;
             }
             g_local_info.display_frame = display_frame_callback;
@@ -525,9 +522,7 @@ bool ldp_vldp::init_player()
    {
       // if the user didn't specify a framefile from the command-line, then give them a little hint.
       if (!m_bFramefileSet)
-      {
          printline("You must specify a -framefile argument when using VLDP.");
-      }
       // else the other error messages are more than sufficient
    }
 	
@@ -552,9 +547,7 @@ void ldp_vldp::shutdown_player()
 	if (is_sound_enabled())
 	{
 		if (!delete_soundchip(m_uSoundChipID))
-		{
 			printline("ldp_vldp::shutdown_player WARNING : sound chip could not be deleted");
-		}
 	}
 	audio_shutdown();
 	free_yuv_overlay();	// de-allocate overlay if we have one allocated ...
@@ -749,14 +742,10 @@ bool ldp_vldp::nonblocking_search(char *frame)
 			{
 				// if we have an audio file opened, do an audio seek also
 				if (m_audio_file_opened)
-				{
 					result = seek_audio(u64AudioTargetPos);
-				}
 			}
 			else
-			{
 				printline("LDP-VLDP.CPP : Search failed in video file");
-			}
 		}
 		// else opening the file failed
 	}
@@ -836,9 +825,7 @@ unsigned int ldp_vldp::play()
 	}
 
 	if (!result)
-	{
 		printline("VLDP ERROR : play command failed!");
-	}
 	
 	return result;
 }
@@ -883,18 +870,12 @@ bool ldp_vldp::skip_forward(uint16_t frames_to_skip, uint16_t target_frame)
 	
 			// if VLDP was able to skip successfully
 			if (g_vldp_info->skip(target_frame))
-			{
 				result = true;
-			}
 			else
-			{
 				printline("LDP-VLDP ERROR : video skip failed");
-			}
 		}
 		else
-		{
 			printline("LDP-VLDP ERROR : Skipping not supported with mpegs that use fields (such as this one)");
-		}
 	}
 	else
 	{
@@ -932,13 +913,9 @@ bool ldp_vldp::change_speed(unsigned int uNumerator, unsigned int uDenominator)
 
 		// try to get the audio playing again
 		if (seek_audio(u64AudioTargetPos))
-		{
 			audio_play(m_uElapsedMsSincePlay);
-		}
 		else
-		{
 			printline("WARNING : trying to seek audio after playing at 1X failed");
-		}
 	}
 
 	if (g_vldp_info->speedchange(m_uFramesToSkipPerFrame, m_uFramesToStallPerFrame))
@@ -1435,7 +1412,6 @@ bool ldp_vldp::first_video_file_exists()
 bool ldp_vldp::last_video_file_parsed()
 {
 	string full_path = "";
-	bool result = false;
 	
 	// if we have at least one file
 	if (m_file_index > 0)
@@ -1445,13 +1421,10 @@ bool ldp_vldp::last_video_file_parsed()
 		full_path.replace(full_path.length() - 3, 3, "dat");	// replace pre-existing suffix (which is probably .m2v) with 'dat'
 		
 		if (mpo_file_exists(full_path.c_str()))
-		{
-			result = true;
-		}
+         return true;
 	}
-	// else there is a problem with the frame file so return false
 	
-	return result;
+   return false;
 }
 
 // opens (and closes) all video files, forcing any unparsed video files to get parsed
@@ -1646,27 +1619,6 @@ bool ldp_vldp::lock_overlay(uint32_t timeout)
 // releases the yuv_callback from its blocking state
 bool ldp_vldp::unlock_overlay(uint32_t timeout)
 {
-/*
-	uint32_t time = refresh_ms_time();
-	
-	mutex_lock_request = false;
-	
-	// sleep until the yuv callback acknowledges that it has control once again
-	while (mutex_lock_acknowledge)
-	{
-		SDL_Delay(0);
-		
-		// if we've timed out
-		if (elapsed_ms_time(time) > timeout)
-		{
-			printline("LDP_VLDP : unlock_overlay timed out while trying to unlock");
-			break;
-		}
-	}
-	
-	return (!mutex_lock_acknowledge);
-	*/
-
 	return (g_vldp_info->unlock(timeout) == VLDP_TRUE);
 }
 
@@ -2013,8 +1965,6 @@ int prepare_frame_callback_with_overlay(struct yuv_buf *src)
 
 int prepare_frame_callback_without_overlay(struct yuv_buf *buf)
 {
-	int result = VLDP_FALSE;
-	
 	// if locking the video overlay is successful
 	void * g_hw_overlay_pixels = NULL;
 	int nPitch = 0;
@@ -2033,10 +1983,10 @@ int prepare_frame_callback_without_overlay(struct yuv_buf *buf)
 
 		buf2overlay_YUY2((uint8_t *)g_hw_overlay_pixels, nPitch, overlay_h, overlay_w, buf);
 
-		result = VLDP_TRUE;
+      return VLDP_TRUE;
 	}
 	
-	return result;
+	return VLDP_FALSE;
 }
 
 // displays the frame as fast as possible
