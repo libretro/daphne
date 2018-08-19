@@ -145,13 +145,11 @@ static void vo_null_draw(uint8_t * const * buf, void *id)
 					// If a command comes in at the last second,
 					//  we don't want to render the next frame that we were going to because it could cause overrun
 					//  so we only display the frame if we haven't received a command
+               // draw the frame
+               // we are using the pointer 'id' as an index, kind of risky, but convenient :)
 					if (!bFrameNotShownDueToCmd)
-					{
-						// draw the frame
-						// we are using the pointer 'id' as an index, kind of risky, but convenient :)
-						// RJS HERE - Display frame callback from null driver.
 						g_in_info->display_frame(&g_yuv_buf[(int) id]);
-					} // end if we didn't get a new command to interrupt the frame being displayed
+               // end if we didn't get a new command to interrupt the frame being displayed
 				} // end if the frame was prepared properly
 				// else maybe we couldn't get a lock on the buffer fast enough, so we'll have to wait ...
 
@@ -262,7 +260,7 @@ static void vo_null_draw(uint8_t * const * buf, void *id)
 }
 #pragma warning (pop)
 
-static void vo_null_setup_fbuf (uint8_t ** buf, void ** id)
+static void vo_null_setup_fbuf(uint8_t ** buf, void ** id)
 {
 	static int buffer_index = 0;
 	*id = (int*) buffer_index;
@@ -696,9 +694,7 @@ static void decode_mpeg2 (uint8_t * current, uint8_t * end)
 		    /* might set fbufs */
 		    if (vo_null_setup (info->sequence->width,
 				       info->sequence->height, &setup_result))
-			{
 				fprintf (stderr, "display setup failed\n");	// this should never happen
-		    }
 	
 		    if (setup_result.convert)
 				mpeg2_convert (g_mpeg_data, setup_result.convert, NULL);
@@ -707,11 +703,11 @@ static void decode_mpeg2 (uint8_t * current, uint8_t * end)
 				uint8_t * buf[3];
 				void * id;
 	
-				vo_null_setup_fbuf (buf, &id);
+				vo_null_setup_fbuf(buf, &id);
 				mpeg2_set_buf (g_mpeg_data, buf, id);
-				vo_null_setup_fbuf (buf, &id);
+				vo_null_setup_fbuf(buf, &id);
 				mpeg2_set_buf (g_mpeg_data, buf, id);
-				vo_null_setup_fbuf (buf, &id);
+				vo_null_setup_fbuf(buf, &id);
 				mpeg2_set_buf (g_mpeg_data, buf, id);
 		    }
 		    break;
@@ -817,14 +813,10 @@ void idle_handler_open()
 
 	// if we've been requested to open a real file ...
 	if (!req_precache)
-	{
 		bSuccess = io_open(req_file);
-	}
 	// else we've been requested to open a precached file...
 	else
-	{
 		bSuccess = io_open_precached(req_idx);
-	}
 
 	// If file was opened successfully,
 	//  check to make sure it's a video stream and also get framerate
@@ -922,16 +914,15 @@ void idle_handler_precache()
 						uTotalBytesRead;
 
 					// don't overflow
-					if (uBytesToRead > uBytesLeft) uBytesToRead = uBytesLeft;
+					if (uBytesToRead > uBytesLeft)
+                  uBytesToRead = uBytesLeft;
 
 					uBytesRead = (unsigned int) fread(u8Ptr + uTotalBytesRead, 1, uBytesToRead, F);
 					uTotalBytesRead += uBytesRead;
 
 					// if we're done ...
 					if (uTotalBytesRead >= (unsigned int) filestats.st_size)
-					{
 						break;
-					}
 
 					// update user on our precache progress
 					g_in_info->report_parse_progress((double) uTotalBytesRead /
@@ -951,22 +942,16 @@ void idle_handler_precache()
 			}
 			// else malloc failed
 			else
-			{
 				g_out_info.status = STAT_ERROR;
-			}
 			fclose(F);
 		}
 		// else we couldn't open the file
 		else
-		{
 			g_out_info.status = STAT_ERROR;
-		}
 	}
 	// else we're out of room, so return an error
 	else
-	{
 		g_out_info.status = STAT_ERROR;
-	}
 }
 
 // starts playing the mpeg from the very beginning
@@ -1001,9 +986,7 @@ void ivldp_respond_req_pause_or_step()
 {
 	// if they've also requested a step forward
 	if ((g_req_cmdORcount & 0xF0) == VLDP_REQ_STEP_FORWARD)
-	{
 		s_step_forward = 1;
-	}
 	// NOTE : by design, our status should not change until paused_handler is called, so we leave it at PLAYING for now
 	ivldp_ack_command();
 	//printf("VLDP_REQ_PAUSED received when frame is %u, uMsTimer is %u\n", g_out_info.current_frame, g_in_info->uMsTimer);	// DBG REMOVE ME!@
@@ -1046,11 +1029,9 @@ void ivldp_render()
 		end = g_buffer + io_read(g_buffer, BUFFER_SIZE);
 		
 		// safety check, they could be equal if we were already at EOF before we tried this
+      // read chunk of video stream
 		if (g_buffer != end)
-		{
-			// read chunk of video stream
 			decode_mpeg2 (g_buffer, end);	// display it to the screen
-		}
 		
 		// if we've read to the end of the mpeg2 file, then we can't play anymore, so we pause on last frame
 		if (end != (g_buffer + BUFFER_SIZE))
@@ -1103,11 +1084,12 @@ void idle_handler_search(int skip)
 
 	// status must be changed before acknowledging command, because previous status could be STAT_ERROR, which
 	//  causes problems with *_and_block vldp API commands.
-	if (!skip) g_out_info.status = STAT_BUSY;
-	// else we're skipping
-	// (our status is already STAT_PLAYING so we don't need to set it)
+	if (!skip)
+      g_out_info.status = STAT_BUSY;
 	else
 	{
+      // else we're skipping
+      // (our status is already STAT_PLAYING so we don't need to set it)
 		// Since we're skipping, we must re-calculate s_uFramesShownSinceTimer because it is possible on laggy systems for
 		//  this value to be behind what it ought to be, and we need to be perfectly in sync with the parent thread's
 		//  g_in_info->uMsTimer value in order to display the correct frames.
@@ -1147,9 +1129,7 @@ void idle_handler_search(int skip)
 
 		// if we are to blank during searches ...
 		if (g_in_info->blank_during_searches)
-		{
 			g_in_info->render_blank_frame();
-		}
 	}
 
 	// if we are skipping we are actually in the middle of playback so we don't reset the timer
@@ -1162,9 +1142,7 @@ void idle_handler_search(int skip)
 
 		// if we need to blank frame for skipping
 		if (g_in_info->blank_during_skips)
-		{
 			g_in_info->render_blank_frame();
-		}
 	}
 
 	// adjusted req frame is the requested frame with fields taken into account
@@ -1184,31 +1162,29 @@ void idle_handler_search(int skip)
 
 		// loop until we find which position in the file to seek to
 		for (;;)
-		{
-		  // if the frame we want is not an I frame, go backward until we find an I frame, and increase # of frames to skip forward
-		  while ((proposed_pos == 0xFFFFFFFF) && (actual_frame > 0))
-		  {
-			s_frames_to_skip++;
-			actual_frame--;
-			proposed_pos = g_frame_position[actual_frame];
-		  }
-		  skipped_I++;
+      {
+         // if the frame we want is not an I frame, go backward until we find an I frame, and increase # of frames to skip forward
+         while ((proposed_pos == 0xFFFFFFFF) && (actual_frame > 0))
+         {
+            s_frames_to_skip++;
+            actual_frame--;
+            proposed_pos = g_frame_position[actual_frame];
+         }
+         skipped_I++;
 
-			// if we are only 2 frames away from an I frame, we will get a corrupted image and need to go back to
-			// the I frame before this one
-		  if ((skipped_I < 2) && (s_frames_to_skip < 3) && (actual_frame > 0))
-		  {
-		  	proposed_pos = 0xFFFFFFFF;
-		  }
-		  else
-		  {
-//				printf("We've decided on a position within the file.\n");
-//				printf("skipped_I is %d\n", skipped_I);
-//				printf("s_frames_to_skip is %d\n", s_frames_to_skip);
-//				printf("actual_frame is %d\n", actual_frame);
-		  	break;
-		  }
-		}
+         // if we are only 2 frames away from an I frame, we will get a corrupted image and need to go back to
+         // the I frame before this one
+         if ((skipped_I < 2) && (s_frames_to_skip < 3) && (actual_frame > 0))
+            proposed_pos = 0xFFFFFFFF;
+         else
+         {
+            //				printf("We've decided on a position within the file.\n");
+            //				printf("skipped_I is %d\n", skipped_I);
+            //				printf("s_frames_to_skip is %d\n", s_frames_to_skip);
+            //				printf("actual_frame is %d\n", actual_frame);
+            break;
+         }
+      }
 
 		//printf("frames_to_skip is %d, skipped_I is %d\n", s_frames_to_skip, skipped_I);
 		//printf("position in mpeg2 stream we are seeking to : %x\n", proposed_pos);
@@ -1225,9 +1201,7 @@ void idle_handler_search(int skip)
 		// if we're skipping, we have to leave the current frame alone until it changes, in order
 		//  to be consistent with actual laserdisc behavior.
 		else
-		{
 			s_uPendingSkipFrame = req_frame;
-		}
 
 		s_blanked = 0;	// we want to see the frame
 
@@ -1243,15 +1217,12 @@ void idle_handler_search(int skip)
 // parses an mpeg video stream to get its frame offsets, or if the parsing had taken place earlier
 VLDP_BOOL ivldp_get_mpeg_frame_offsets(char *mpeg_name)
 {
-	char datafilename[320] = { 0 };
-	VLDP_BOOL mpeg_datafile_good = VLDP_FALSE;
-	FILE *data_file = NULL;
-	VLDP_BOOL result = VLDP_TRUE;
-	unsigned int mpeg_size = 0;
 	struct dat_header header;
-
-	// GET LENGTH OF ACTUAL FILE
-	mpeg_size = io_length();
+	char datafilename[320]       = { 0 };
+	VLDP_BOOL mpeg_datafile_good = VLDP_FALSE;
+	FILE *data_file              = NULL;
+	VLDP_BOOL result             = VLDP_TRUE;
+	unsigned int mpeg_size       = io_length();
 
 	// change extension of file to be dat instead of (presumably) m2v
 	SAFE_STRCPY(datafilename, mpeg_name, sizeof(datafilename));
@@ -1266,13 +1237,10 @@ VLDP_BOOL ivldp_get_mpeg_frame_offsets(char *mpeg_name)
 		// If file cannot be opened, try to create it.
 		// Most likely the file cannot be opened because it doesn't
 		// exist.
+      // we could open the file here, but there is no need to
+      // because we will loop back through and open the file anyway			
 		if (!data_file)
-		{
 			result = ivldp_parse_mpeg_frame_offsets(datafilename, mpeg_size);
-			// we could open the file here, but there is no need to
-			// because we will loop back through and open the file anyway			
-		}
-
 		// else if the file has been opened
 		else
 		{
@@ -1331,9 +1299,7 @@ VLDP_BOOL ivldp_get_mpeg_frame_offsets(char *mpeg_name)
 
 	// close any files that are still open
 	if (data_file)
-	{
 		fclose(data_file);
-	}
 	
 	return result;
 }
@@ -1438,7 +1404,8 @@ VLDP_BOOL io_open(const char *cpszFilename)
 	if ((!s_bPreCacheEnabled) && (!g_mpeg_handle))
 	{
 		g_mpeg_handle = fopen(cpszFilename, "rb");
-		if (g_mpeg_handle) bResult = VLDP_TRUE;
+		if (g_mpeg_handle)
+         bResult = VLDP_TRUE;
 	}
 	return bResult;
 }
@@ -1469,20 +1436,16 @@ unsigned int io_read(void *buf, unsigned int uBytesToRead)
 
 	// if we're reading from a file stream
 	if (g_mpeg_handle)
-	{
 		uBytesRead = (unsigned int) fread(buf, 1, uBytesToRead, g_mpeg_handle);
-	}
-	// else we're reading from a precache stream
 	else
 	{
+      // else we're reading from a precache stream
 		struct precache_entry_s *entry = &s_sPreCacheEntries[s_uCurPreCacheIdx];
 		unsigned int uBytesLeft = entry->uLength - entry->uPos;
 
 		// if we're trying to read beyond our means ...
 		if (uBytesToRead > uBytesLeft)
-		{
 			uBytesToRead = uBytesLeft;
-		}
 
 		memcpy(buf, ((unsigned char *) entry->ptrBuf) + entry->uPos, uBytesToRead);
 		uBytesRead = uBytesToRead;
@@ -1499,9 +1462,7 @@ VLDP_BOOL io_seek(unsigned int uPos)
 	if (g_mpeg_handle)
 	{
 		if (fseek(g_mpeg_handle, uPos, SEEK_SET) == 0)
-		{
 			bResult = VLDP_TRUE;
-		}
 	}
 	else
 	{
@@ -1525,9 +1486,8 @@ void io_close()
 		g_mpeg_handle = NULL;
 	}
 	else if (s_bPreCacheEnabled)
-	{
 		s_bPreCacheEnabled = VLDP_FALSE;
-	}
+
 	// else nothing is open ...
 }
 
@@ -1535,9 +1495,7 @@ VLDP_BOOL io_is_open()
 {
 	VLDP_BOOL bResult = VLDP_FALSE;
 	if ((g_mpeg_handle) || (s_bPreCacheEnabled))
-	{
 		bResult = VLDP_TRUE;
-	}
 	return bResult;
 }
 
@@ -1552,9 +1510,7 @@ unsigned int io_length()
 		uResult = the_stat.st_size;
 	}
 	else if (s_bPreCacheEnabled)
-	{
 		uResult = s_sPreCacheEntries[s_uCurPreCacheIdx].uLength;
-	}
 
 	return uResult;
 }
