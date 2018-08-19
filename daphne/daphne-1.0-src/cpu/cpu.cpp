@@ -89,9 +89,7 @@ void add_cpu (struct cpudef *candidate)
 
 		// go to the last cpu in the list
 		while (cur->next_cpu)
-		{
 			cur = cur->next_cpu;
-		}
 
 		cur->next_cpu = new struct cpudef;	// allocate a new cpu at the end of our list
 		cur = cur->next_cpu;	// point to the new cpu so we can populate it with info
@@ -256,9 +254,7 @@ void cpu_init()
 
 		cur->pending_nmi_count = 0;
 		for (int i = 0; i < MAX_IRQS; i++)
-		{
 			cur->pending_irq_count[i] = 0;
-		}
 		cur->total_cycles_executed = 0;
 		cur->uEventCyclesEnd = 0;
 		cur->uEventCyclesExecuted = 0;
@@ -274,9 +270,7 @@ void cpu_init()
 		
 		// if we have a set PC callback defined
 		if (cur->setpc_callback != NULL)
-		{
 			(cur->setpc_callback)(cur->initial_pc);	// set the initial program counter for the cpu
-		}
 
 		// if we are required to copy the cpu context, then get the info now
 		if (cur->must_copy_context)
@@ -372,8 +366,10 @@ void cpu_execute_loop()
 	while (!get_quitflag())
 	{
 		// 2017.11.08 - RJS - Check for a paused retro_run and emit pause if so.
-		if (retro_run_frames == retro_run_frames_previous)	retro_run_frames_delta++;
-		else												retro_run_frames_delta = 0;
+		if (retro_run_frames == retro_run_frames_previous)
+         retro_run_frames_delta++;
+		else
+         retro_run_frames_delta = 0;
       if (retro_run_frames_delta >= RETRO_RUN_FRAMES_PAUSED_THRESHOLD)
          input_pause(true);
 
@@ -434,9 +430,7 @@ void cpu_execute_loop()
 	
 							// if we haven't yet reached our event
 							if (cpu->uEventCyclesEnd > cpu->uEventCyclesExecuted)
-							{
 								uCyclesTilEvent = cpu->uEventCyclesEnd - cpu->uEventCyclesExecuted;
-							}
 							// else we overshot our event so just leave uCyclesTilEvent at 0
 							// (this can happen because the cpu emulator can execute more cycles than we request)
 	
@@ -456,9 +450,7 @@ void cpu_execute_loop()
 							}
 							// else the event isn't in our near future, so proceed as normal
 							else
-							{
 								break;
-							}
 						}
 
 						// get us up to our expected elapsed MS
@@ -470,10 +462,7 @@ void cpu_execute_loop()
 				}
 				// else if we executed too many cycles last time, then we have to just kill time
 				else
-				{
 					elapsed_cycles = 0;
-				}
-
 
 				// NOW WE CHECK TO SEE IF IT'S TIME TO DO AN NMI
 
@@ -535,9 +524,7 @@ void cpu_execute_loop()
 
 				// if we are required to copy the cpu context, then preserve the context for the next time around
 				if (cpu->must_copy_context)
-				{
 					(cpu->getcontext_callback)(cpu->context);	// preserve registers
-				}
 
 				cpu = cpu->next_cpu; // go to the next cpu
 
@@ -557,12 +544,10 @@ void cpu_execute_loop()
 
 		// if we're behind, then compute how far behind we are ...
 		if (actual_elapsed_ms > g_expected_elapsed_ms)
-		{
 			g_uCPUMsBehind = actual_elapsed_ms - g_expected_elapsed_ms;
-		}
-		// else we're caught up or ahead
 		else
 		{
+         // else we're caught up or ahead
 			g_uCPUMsBehind = 0;
 
 			// if not enough time has elapsed, slow down
@@ -588,9 +573,7 @@ void cpu_execute_loop()
 
 			// be nice to cpu if we're looping here ...
 			if (g_cpu_paused)
-			{
 				make_delay(1);
-			}
 		} while (g_cpu_paused && !get_quitflag());	// the only time this should loop is if the user pauses the game
 	} // end while quitflag is not true
 }
@@ -791,9 +774,7 @@ void cpu_execute_one_cycle()
 
               // if we are required to copy the cpu context, then preserve the context for the next time around
             if (cpu->must_copy_context)
-            {
                (cpu->getcontext_callback)(cpu->context);	// preserve registers
-            }
 
 				cpu = cpu->next_cpu; // go to the next cpu
 
@@ -813,12 +794,10 @@ void cpu_execute_one_cycle()
 
 		// if we're behind, then compute how far behind we are ...
 		if (actual_elapsed_ms > g_expected_elapsed_ms)
-		{
 			g_uCPUMsBehind = actual_elapsed_ms - g_expected_elapsed_ms;
-		}
-		// else we're caught up or ahead
 		else
 		{
+         // else we're caught up or ahead
 			g_uCPUMsBehind = 0;
 
 			// if not enough time has elapsed, slow down
@@ -874,15 +853,11 @@ void cpu_reset()
 
 		// if this callback has been defined, then make use of it
 		if (cpu->setpc_callback)
-		{
 			(cpu->setpc_callback)(cpu->initial_pc);	// set the initial program counter
-		}
 		
 		// save the context if we need to
 		if (cpu->must_copy_context)
-		{
 			(cpu->getcontext_callback)(cpu->context);	// preserve registers
-		}
 
 		cpu = cpu->next_cpu;
 	}
@@ -936,9 +911,7 @@ void cpu_unpause()
 
 		// if our pause stack is empty, then we can finally, safely, unpause
 		if (g_cpu_paused_timer.size() == 0)
-		{
 			g_cpu_paused = false;
-		}
 		// else we are still paused because our stack isn't empty
 	}
 	else
@@ -1005,9 +978,7 @@ uint8_t *get_cpu_mem(uint8_t id)
 
 	// if the cpu exists, then we can return its memory	
 	if (cpustruct)
-	{
 		result = cpustruct->mem;
-	}
 	// else the cpu does not exist in which case we return null
 
 	return result;
@@ -1021,9 +992,7 @@ uint32_t get_cpu_hz(uint8_t id)
 
 	// if the cpu exists, then we can return its memory	
 	if (cpustruct)
-	{
 		result = cpustruct->hz;
-	}
 
 	return result;
 }
@@ -1038,9 +1007,7 @@ void cpu_change_nmi(uint8_t id, double new_period)
 		cpu_recalc();
 	}
 	else
-	{
 		fprintf(stderr, "ERROR : Attempted to change nmi period for cpu %d which does not exist\n", id);
-	}
 }
 
 void cpu_generate_nmi(uint8_t cpu_id)
