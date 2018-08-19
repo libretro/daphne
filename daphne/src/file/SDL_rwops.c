@@ -113,7 +113,7 @@ windows_file_open(SDL_RWops * context, const char *filename, const char *mode)
     return 0;                   /* ok */
 }
 
-static Sint64 SDLCALL
+static int64_t SDLCALL
 windows_file_size(SDL_RWops * context)
 {
     LARGE_INTEGER size;
@@ -129,8 +129,8 @@ windows_file_size(SDL_RWops * context)
     return size.QuadPart;
 }
 
-static Sint64 SDLCALL
-windows_file_seek(SDL_RWops * context, Sint64 offset, int whence)
+static int64_t SDLCALL
+windows_file_seek(SDL_RWops * context, int64_t offset, int whence)
 {
     DWORD windowswhence;
     LARGE_INTEGER windowsoffset;
@@ -280,10 +280,10 @@ windows_file_close(SDL_RWops * context)
 
 /* Functions to read/write stdio file pointers */
 
-static Sint64 SDLCALL
+static int64_t SDLCALL
 stdio_size(SDL_RWops * context)
 {
-    Sint64 pos, size;
+    int64_t pos, size;
 
     pos = SDL_RWseek(context, 0, RW_SEEK_CUR);
     if (pos < 0) {
@@ -295,8 +295,8 @@ stdio_size(SDL_RWops * context)
     return size;
 }
 
-static Sint64 SDLCALL
-stdio_seek(SDL_RWops * context, Sint64 offset, int whence)
+static int64_t SDLCALL
+stdio_seek(SDL_RWops * context, int64_t offset, int whence)
 {
 #ifdef HAVE_FSEEKO64
     if (fseeko64(context->hidden.stdio.fp, (off64_t)offset, whence) == 0) {
@@ -360,14 +360,14 @@ stdio_close(SDL_RWops * context)
 
 /* Functions to read/write memory pointers */
 
-static Sint64 SDLCALL
+static int64_t SDLCALL
 mem_size(SDL_RWops * context)
 {
-    return (Sint64)(context->hidden.mem.stop - context->hidden.mem.base);
+    return (int64_t)(context->hidden.mem.stop - context->hidden.mem.base);
 }
 
-static Sint64 SDLCALL
-mem_seek(SDL_RWops * context, Sint64 offset, int whence)
+static int64_t SDLCALL
+mem_seek(SDL_RWops * context, int64_t offset, int whence)
 {
     Uint8 *newpos;
 
@@ -391,7 +391,7 @@ mem_seek(SDL_RWops * context, Sint64 offset, int whence)
         newpos = context->hidden.mem.stop;
     }
     context->hidden.mem.here = newpos;
-    return (Sint64)(context->hidden.mem.here - context->hidden.mem.base);
+    return (int64_t)(context->hidden.mem.here - context->hidden.mem.base);
 }
 
 static size_t SDLCALL

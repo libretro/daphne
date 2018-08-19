@@ -55,7 +55,7 @@ typedef struct SDL_RWops
     /**
      *  Return the size of the file in this rwops, or -1 if unknown
      */
-    Sint64 (SDLCALL * size) (struct SDL_RWops * context);
+    int64_t (SDLCALL * size) (struct SDL_RWops * context);
 
     /**
      *  Seek to \c offset relative to \c whence, one of stdio's whence values:
@@ -63,7 +63,7 @@ typedef struct SDL_RWops
      *
      *  \return the final offset in the data stream, or -1 on error.
      */
-    Sint64 (SDLCALL * seek) (struct SDL_RWops * context, Sint64 offset,
+    int64_t (SDLCALL * seek) (struct SDL_RWops * context, int64_t offset,
                              int whence);
 
     /**

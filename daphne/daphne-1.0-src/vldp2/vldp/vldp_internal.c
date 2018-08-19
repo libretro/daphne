@@ -81,7 +81,7 @@ static void vo_null_draw(uint8_t * const * buf, void *id)
 			//  to 32-bit integer math.
 			// Also, you can use floating point math here, but some CPU's (gp2x) don't have floating point units, which drastically
 			//  hurts performance.  On a fast modern PC, you probably won't notice a difference either way.
-			Sint64 s64Ms = s_uFramesShownSinceTimer;
+			int64_t s64Ms = s_uFramesShownSinceTimer;
 			s64Ms = (s64Ms * 1000000) / g_out_info.uFpks;
 
 			// compute how much time ought to have elapsed based on our frame count

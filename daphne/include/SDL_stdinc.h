@@ -135,11 +135,6 @@ typedef int16_t Sint16;
  */
 typedef uint32_t Uint32;
 
-/**
- * \brief A signed 64-bit integer type.
- */
-typedef int64_t Sint64;
-
 /* @} *//* Basic data types */
 
 /* Make sure we have macros for printing 64 bit values.
@@ -242,7 +237,6 @@ SDL_COMPILE_TIME_ASSERT(uint8, sizeof(Uint8) == 1);
 SDL_COMPILE_TIME_ASSERT(sint8, sizeof(Sint8) == 1);
 SDL_COMPILE_TIME_ASSERT(sint16, sizeof(Sint16) == 2);
 SDL_COMPILE_TIME_ASSERT(uint32, sizeof(Uint32) == 4);
-SDL_COMPILE_TIME_ASSERT(sint64, sizeof(Sint64) == 8);
 #endif /* DOXYGEN_SHOULD_IGNORE_THIS */
 /** \endcond */
 
