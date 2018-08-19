@@ -119,17 +119,9 @@ typedef enum
 } SDL_bool;
 
 /**
- * \brief A signed 8-bit integer type.
- */
-typedef int8_t Sint8;
-/**
  * \brief An unsigned 8-bit integer type.
  */
 typedef uint8_t Uint8;
-/**
- * \brief A signed 16-bit integer type.
- */
-typedef int16_t Sint16;
 /**
  * \brief An unsigned 32-bit integer type.
  */
@@ -234,8 +226,6 @@ typedef uint32_t Uint32;
 /** \cond */
 #ifndef DOXYGEN_SHOULD_IGNORE_THIS
 SDL_COMPILE_TIME_ASSERT(uint8, sizeof(Uint8) == 1);
-SDL_COMPILE_TIME_ASSERT(sint8, sizeof(Sint8) == 1);
-SDL_COMPILE_TIME_ASSERT(sint16, sizeof(Sint16) == 2);
 SDL_COMPILE_TIME_ASSERT(uint32, sizeof(Uint32) == 4);
 #endif /* DOXYGEN_SHOULD_IGNORE_THIS */
 /** \endcond */

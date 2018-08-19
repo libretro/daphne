@@ -288,7 +288,6 @@
 
 /* For BCC, BCS, BEQ, BMI, BNE, BPL, BVC, BVS */
 // RJS CHANGE - macro for 6502 branching, int8 is handled differently in Windows vs Android,
-// changed from int8 to Sint8 which works on both
 #define RELATIVE_BRANCH(condition) \
 { \
    if (condition) \

@@ -35,15 +35,15 @@ struct MS_ADPCM_decodestate
 {
     Uint8 hPredictor;
     uint16_t iDelta;
-    Sint16 iSamp1;
-    Sint16 iSamp2;
+    int16_t iSamp1;
+    int16_t iSamp2;
 };
 static struct MS_ADPCM_decoder
 {
     WaveFMT wavefmt;
     uint16_t wSamplesPerBlock;
     uint16_t wNumCoef;
-    Sint16 aCoeff[7][2];
+    int16_t aCoeff[7][2];
     /* * * */
     struct MS_ADPCM_decodestate state[2];
 } MS_ADPCM_state;
@@ -86,7 +86,7 @@ InitMS_ADPCM(WaveFMT * format)
 
 static int32_t
 MS_ADPCM_nibble(struct MS_ADPCM_decodestate *state,
-                Uint8 nybble, Sint16 * coeff)
+                Uint8 nybble, int16_t * coeff)
 {
     const int32_t max_audioval = ((1 << (16 - 1)) - 1);
     const int32_t min_audioval = -(1 << (16 - 1));
@@ -114,7 +114,7 @@ MS_ADPCM_nibble(struct MS_ADPCM_decodestate *state,
     }
     state->iDelta = (uint16_t) delta;
     state->iSamp2 = state->iSamp1;
-    state->iSamp1 = (Sint16) new_sample;
+    state->iSamp1 = (int16_t) new_sample;
     return (new_sample);
 }
 
@@ -124,9 +124,9 @@ MS_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
     struct MS_ADPCM_decodestate *state[2];
     Uint8 *freeable, *encoded, *decoded;
     int32_t encoded_len, samplesleft;
-    Sint8 nybble;
+    int8_t nybble;
     Uint8 stereo;
-    Sint16 *coeff[2];
+    int16_t *coeff[2];
     int32_t new_sample;
 
     /* Allocate the proper sized output buffer */
@@ -135,7 +135,7 @@ MS_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
     freeable = *audio_buf;
     *audio_len = (encoded_len / MS_ADPCM_state.wavefmt.blockalign) *
         MS_ADPCM_state.wSamplesPerBlock *
-        MS_ADPCM_state.wavefmt.channels * sizeof(Sint16);
+        MS_ADPCM_state.wavefmt.channels * sizeof(int16_t);
     *audio_buf = (Uint8 *)malloc(*audio_len);
     if (*audio_buf == NULL) {
         return SDL_OutOfMemory();
@@ -153,22 +153,22 @@ MS_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
             state[1]->hPredictor = *encoded++;
         }
         state[0]->iDelta = ((encoded[1] << 8) | encoded[0]);
-        encoded += sizeof(Sint16);
+        encoded += sizeof(int16_t);
         if (stereo) {
             state[1]->iDelta = ((encoded[1] << 8) | encoded[0]);
-            encoded += sizeof(Sint16);
+            encoded += sizeof(int16_t);
         }
         state[0]->iSamp1 = ((encoded[1] << 8) | encoded[0]);
-        encoded += sizeof(Sint16);
+        encoded += sizeof(int16_t);
         if (stereo) {
             state[1]->iSamp1 = ((encoded[1] << 8) | encoded[0]);
-            encoded += sizeof(Sint16);
+            encoded += sizeof(int16_t);
         }
         state[0]->iSamp2 = ((encoded[1] << 8) | encoded[0]);
-        encoded += sizeof(Sint16);
+        encoded += sizeof(int16_t);
         if (stereo) {
             state[1]->iSamp2 = ((encoded[1] << 8) | encoded[0]);
-            encoded += sizeof(Sint16);
+            encoded += sizeof(int16_t);
         }
         coeff[0] = MS_ADPCM_state.aCoeff[state[0]->hPredictor];
         coeff[1] = MS_ADPCM_state.aCoeff[state[1]->hPredictor];
@@ -221,7 +221,7 @@ MS_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
 struct IMA_ADPCM_decodestate
 {
     int32_t sample;
-    Sint8 index;
+    int8_t index;
 };
 static struct IMA_ADPCM_decoder
 {
@@ -314,7 +314,7 @@ Fill_IMA_ADPCM_block(Uint8 * decoded, Uint8 * encoded,
                      struct IMA_ADPCM_decodestate *state)
 {
     int i;
-    Sint8 nybble;
+    int8_t nybble;
     int32_t new_sample;
 
     decoded += (channel * 2);
@@ -360,7 +360,7 @@ IMA_ADPCM_decode(Uint8 ** audio_buf, Uint32 * audio_len)
     freeable = *audio_buf;
     *audio_len = (encoded_len / IMA_ADPCM_state.wavefmt.blockalign) *
         IMA_ADPCM_state.wSamplesPerBlock *
-        IMA_ADPCM_state.wavefmt.channels * sizeof(Sint16);
+        IMA_ADPCM_state.wavefmt.channels * sizeof(int16_t);
     *audio_buf = (Uint8 *)malloc(*audio_len);
     if (*audio_buf == NULL) {
         return SDL_OutOfMemory();

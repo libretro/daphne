@@ -55,13 +55,13 @@ SDL_ConvertMono(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 
     case AUDIO_S8:
         {
-            Sint8 *src, *dst;
+            int8_t *src, *dst;
 
-            src = (Sint8 *) cvt->buf;
-            dst = (Sint8 *) cvt->buf;
+            src = (int8_t *) cvt->buf;
+            dst = (int8_t *) cvt->buf;
             for (i = cvt->len_cvt / 2; i; --i) {
                 sample = src[0] + src[1];
-                *dst = (Sint8) (sample / 2);
+                *dst = (int8_t) (sample / 2);
                 src += 2;
                 dst += 1;
             }
@@ -108,8 +108,8 @@ SDL_ConvertMono(SDL_AudioCVT * cvt, SDL_AudioFormat format)
             dst = cvt->buf;
             if (SDL_AUDIO_ISBIGENDIAN(format)) {
                 for (i = cvt->len_cvt / 4; i; --i) {
-                    sample = (Sint16) ((src[0] << 8) | src[1]) +
-                        (Sint16) ((src[2] << 8) | src[3]);
+                    sample = (int16_t) ((src[0] << 8) | src[1]) +
+                        (int16_t) ((src[2] << 8) | src[3]);
                     sample /= 2;
                     dst[1] = (sample & 0xFF);
                     sample >>= 8;
@@ -119,8 +119,8 @@ SDL_ConvertMono(SDL_AudioCVT * cvt, SDL_AudioFormat format)
                 }
             } else {
                 for (i = cvt->len_cvt / 4; i; --i) {
-                    sample = (Sint16) ((src[1] << 8) | src[0]) +
-                        (Sint16) ((src[3] << 8) | src[2]);
+                    sample = (int16_t) ((src[1] << 8) | src[0]) +
+                        (int16_t) ((src[3] << 8) | src[2]);
                     sample /= 2;
                     dst[0] = (sample & 0xFF);
                     sample >>= 8;
@@ -340,10 +340,10 @@ SDL_ConvertSurround(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 
     case AUDIO_S8:
         {
-            Sint8 *src, *dst, lf, rf, ce;
+            int8_t *src, *dst, lf, rf, ce;
 
-            src = (Sint8 *) cvt->buf + cvt->len_cvt;
-            dst = (Sint8 *) cvt->buf + cvt->len_cvt * 3;
+            src = (int8_t *) cvt->buf + cvt->len_cvt;
+            dst = (int8_t *) cvt->buf + cvt->len_cvt * 3;
             for (i = cvt->len_cvt; i; --i) {
                 dst -= 6;
                 src -= 2;
@@ -423,7 +423,7 @@ SDL_ConvertSurround(SDL_AudioCVT * cvt, SDL_AudioFormat format)
     case AUDIO_S16:
         {
             Uint8 *src, *dst;
-            Sint16 lf, rf, ce, lr, rr;
+            int16_t lf, rf, ce, lr, rr;
 
             src = cvt->buf + cvt->len_cvt;
             dst = cvt->buf + cvt->len_cvt * 3;
@@ -432,8 +432,8 @@ SDL_ConvertSurround(SDL_AudioCVT * cvt, SDL_AudioFormat format)
                 for (i = cvt->len_cvt / 4; i; --i) {
                     dst -= 12;
                     src -= 4;
-                    lf = (Sint16) ((src[0] << 8) | src[1]);
-                    rf = (Sint16) ((src[2] << 8) | src[3]);
+                    lf = (int16_t) ((src[0] << 8) | src[1]);
+                    rf = (int16_t) ((src[2] << 8) | src[3]);
                     ce = (lf / 2) + (rf / 2);
                     rr = lf - ce;
                     lr = rf - ce;
@@ -456,8 +456,8 @@ SDL_ConvertSurround(SDL_AudioCVT * cvt, SDL_AudioFormat format)
                 for (i = cvt->len_cvt / 4; i; --i) {
                     dst -= 12;
                     src -= 4;
-                    lf = (Sint16) ((src[1] << 8) | src[0]);
-                    rf = (Sint16) ((src[3] << 8) | src[2]);
+                    lf = (int16_t) ((src[1] << 8) | src[0]);
+                    rf = (int16_t) ((src[3] << 8) | src[2]);
                     ce = (lf / 2) + (rf / 2);
                     rr = lf - ce;
                     lr = rf - ce;
@@ -593,10 +593,10 @@ SDL_ConvertSurround_4(SDL_AudioCVT * cvt, SDL_AudioFormat format)
 
     case AUDIO_S8:
         {
-            Sint8 *src, *dst, lf, rf, ce;
+            int8_t *src, *dst, lf, rf, ce;
 
-            src = (Sint8 *) cvt->buf + cvt->len_cvt;
-            dst = (Sint8 *) cvt->buf + cvt->len_cvt * 2;
+            src = (int8_t *) cvt->buf + cvt->len_cvt;
+            dst = (int8_t *) cvt->buf + cvt->len_cvt * 2;
             for (i = cvt->len_cvt; i; --i) {
                 dst -= 4;
                 src -= 2;
@@ -664,7 +664,7 @@ SDL_ConvertSurround_4(SDL_AudioCVT * cvt, SDL_AudioFormat format)
     case AUDIO_S16:
         {
             Uint8 *src, *dst;
-            Sint16 lf, rf, ce, lr, rr;
+            int16_t lf, rf, ce, lr, rr;
 
             src = cvt->buf + cvt->len_cvt;
             dst = cvt->buf + cvt->len_cvt * 2;
@@ -673,8 +673,8 @@ SDL_ConvertSurround_4(SDL_AudioCVT * cvt, SDL_AudioFormat format)
                 for (i = cvt->len_cvt / 4; i; --i) {
                     dst -= 8;
                     src -= 4;
-                    lf = (Sint16) ((src[0] << 8) | src[1]);
-                    rf = (Sint16) ((src[2] << 8) | src[3]);
+                    lf = (int16_t) ((src[0] << 8) | src[1]);
+                    rf = (int16_t) ((src[2] << 8) | src[3]);
                     ce = (lf / 2) + (rf / 2);
                     rr = lf - ce;
                     lr = rf - ce;
@@ -692,8 +692,8 @@ SDL_ConvertSurround_4(SDL_AudioCVT * cvt, SDL_AudioFormat format)
                 for (i = cvt->len_cvt / 4; i; --i) {
                     dst -= 8;
                     src -= 4;
-                    lf = (Sint16) ((src[1] << 8) | src[0]);
-                    rf = (Sint16) ((src[3] << 8) | src[2]);
+                    lf = (int16_t) ((src[1] << 8) | src[0]);
+                    rf = (int16_t) ((src[3] << 8) | src[2]);
                     ce = (lf / 2) + (rf / 2);
                     rr = lf - ce;
                     lr = rf - ce;

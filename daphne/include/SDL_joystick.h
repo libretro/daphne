@@ -197,7 +197,7 @@ extern DECLSPEC int SDLCALL SDL_JoystickEventState(int state);
  *
  *  The axis indices start at index 0.
  */
-extern DECLSPEC Sint16 SDLCALL SDL_JoystickGetAxis(SDL_Joystick * joystick,
+extern DECLSPEC int16_t SDLCALL SDL_JoystickGetAxis(SDL_Joystick * joystick,
                                                    int axis);
 
 /**

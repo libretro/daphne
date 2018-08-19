@@ -238,7 +238,7 @@ struct m80_context
 	}
 
 // Branch macro
-#define M80_BRANCH_UNCOND(pc_offset) PC = PC + ((Sint8) pc_offset); M80_CHANGE_PC(PC)
+#define M80_BRANCH_UNCOND(pc_offset) PC = PC + ((int8_t) pc_offset); M80_CHANGE_PC(PC)
 // Conditional branch macro that adds the extra cycles
 
 // workaround gcc4 bug (get the offset in a separate instruction before branching)
@@ -907,11 +907,11 @@ struct m80_context
 }
 
 // puts together an IXIY + d and advances PC, useful for most instructions
-#define IXIY_OFFSET(IXIY)	IXIY + ((Sint8) M80_GET_ARG)
+#define IXIY_OFFSET(IXIY)	IXIY + ((int8_t) M80_GET_ARG)
 
 // puts together an IXIY + d but does not advance PC.  Needed for math operations that use this
 // value more than once
-#define IXIY_OFFSET_PEEK(IXIY)	IXIY + ((Sint8) M80_PEEK_ARG)
+#define IXIY_OFFSET_PEEK(IXIY)	IXIY + ((int8_t) M80_PEEK_ARG)
 
 #endif // end M80_INTERNAL_H
 
