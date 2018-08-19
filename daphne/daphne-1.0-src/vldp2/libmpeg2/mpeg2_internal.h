@@ -239,9 +239,6 @@ struct mpeg2dec_s {
 };
 
 typedef struct {
-#ifdef ARCH_PPC
-    uint8_t regv[12*16];
-#endif
     int dummy;
 } cpu_state_t;
 
