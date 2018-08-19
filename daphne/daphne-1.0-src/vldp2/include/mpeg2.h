@@ -1,6 +1,6 @@
 /*
  * mpeg2.h
- * Copyright (C) 2000-2002 Michel Lespinasse <walken@zoy.org>
+ * Copyright (C) 2000-2004 Michel Lespinasse <walken@zoy.org>
  * Copyright (C) 1999-2000 Aaron Holtzman <aholtzma@ess.engr.uvic.ca>
  *
  * This file is part of mpeg2dec, a free MPEG-2 video stream decoder.
@@ -16,13 +16,22 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License along
+ * with mpeg2dec; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef MPEG2_H
-#define MPEG2_H
+#ifndef LIBMPEG2_MPEG2_H
+#define LIBMPEG2_MPEG2_H
+
+/* Set up for C function definitions, even when using C++ */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+#define MPEG2_VERSION(a,b,c) (((a)<<16)|((b)<<8)|(c))
+#define MPEG2_RELEASE MPEG2_VERSION (0, 5, 1)	/* 0.5.1 */
 
 #define SEQ_FLAG_MPEG2 1
 #define SEQ_FLAG_CONSTRAINED_PARAMETERS 2
@@ -38,7 +47,7 @@
 #define SEQ_VIDEO_FORMAT_MAC 0x80
 #define SEQ_VIDEO_FORMAT_UNSPECIFIED 0xa0
 
-typedef struct {
+typedef struct mpeg2_sequence_s {
     unsigned int width, height;
     unsigned int chroma_width, chroma_height;
     unsigned int byte_rate;
@@ -54,7 +63,19 @@ typedef struct {
     uint8_t colour_primaries;
     uint8_t transfer_characteristics;
     uint8_t matrix_coefficients;
-} sequence_t;
+} mpeg2_sequence_t;
+
+#define GOP_FLAG_DROP_FRAME 1
+#define GOP_FLAG_BROKEN_LINK 2
+#define GOP_FLAG_CLOSED_GOP 4
+
+typedef struct mpeg2_gop_s {
+    uint8_t hours;
+    uint8_t minutes;
+    uint8_t seconds;
+    uint8_t pictures;
+    uint32_t flags;
+} mpeg2_gop_t;
 
 #define PIC_MASK_CODING_TYPE 7
 #define PIC_FLAG_CODING_TYPE_I 1
@@ -66,84 +87,128 @@ typedef struct {
 #define PIC_FLAG_PROGRESSIVE_FRAME 16
 #define PIC_FLAG_COMPOSITE_DISPLAY 32
 #define PIC_FLAG_SKIP 64
-#define PIC_FLAG_PTS 128
+#define PIC_FLAG_TAGS 128
+#define PIC_FLAG_REPEAT_FIRST_FIELD 256
 #define PIC_MASK_COMPOSITE_DISPLAY 0xfffff000
 
-typedef struct {
+typedef struct mpeg2_picture_s {
     unsigned int temporal_reference;
     unsigned int nb_fields;
-    uint32_t pts;
+    uint32_t tag, tag2;
     uint32_t flags;
     struct {
 	int x, y;
     } display_offset[3];
-} picture_t;
+} mpeg2_picture_t;
 
-typedef struct {
+typedef struct mpeg2_fbuf_s {
     uint8_t * buf[3];
     void * id;
-} fbuf_t;
+} mpeg2_fbuf_t;
 
-typedef struct {
-    const sequence_t * sequence;
-    const picture_t * current_picture;
-    const picture_t * current_picture_2nd;
-    const fbuf_t * current_fbuf;
-    const picture_t * display_picture;
-    const picture_t * display_picture_2nd;
-    const fbuf_t * display_fbuf;
-    const fbuf_t * discard_fbuf;
+typedef struct mpeg2_info_s {
+    const mpeg2_sequence_t * sequence;
+    const mpeg2_gop_t * gop;
+    const mpeg2_picture_t * current_picture;
+    const mpeg2_picture_t * current_picture_2nd;
+    const mpeg2_fbuf_t * current_fbuf;
+    const mpeg2_picture_t * display_picture;
+    const mpeg2_picture_t * display_picture_2nd;
+    const mpeg2_fbuf_t * display_fbuf;
+    const mpeg2_fbuf_t * discard_fbuf;
     const uint8_t * user_data;
-    int user_data_len;
+    unsigned int user_data_len;
 } mpeg2_info_t;
 
 typedef struct mpeg2dec_s mpeg2dec_t;
-typedef struct decoder_s decoder_t;
 
-#define STATE_SEQUENCE 1
-#define STATE_SEQUENCE_REPEATED 2
-#define STATE_GOP 3
-#define STATE_PICTURE 4
-#define STATE_SLICE_1ST 5
-#define STATE_PICTURE_2ND 6
-#define STATE_SLICE 7
-#define STATE_END 8
-#define STATE_INVALID 9
+typedef enum {
+    STATE_BUFFER = 0,
+    STATE_SEQUENCE = 1,
+    STATE_SEQUENCE_REPEATED = 2,
+    STATE_GOP = 3,
+    STATE_PICTURE = 4,
+    STATE_SLICE_1ST = 5,
+    STATE_PICTURE_2ND = 6,
+    STATE_SLICE = 7,
+    STATE_END = 8,
+    STATE_INVALID = 9,
+    STATE_INVALID_END = 10,
+    STATE_SEQUENCE_MODIFIED = 11
+} mpeg2_state_t;
 
-struct convert_init_s;
-void mpeg2_convert (mpeg2dec_t * mpeg2dec,
-		    void (* convert) (int, int, uint32_t, void *,
-				      struct convert_init_s *), void * arg);
+typedef struct mpeg2_convert_init_s {
+    unsigned int id_size;
+    unsigned int buf_size[3];
+    void (* start) (void * id, const mpeg2_fbuf_t * fbuf,
+		    const mpeg2_picture_t * picture, const mpeg2_gop_t * gop);
+    void (* copy) (void * id, uint8_t * const * src, unsigned int v_offset);
+} mpeg2_convert_init_t;
+typedef enum {
+    MPEG2_CONVERT_SET = 0,
+    MPEG2_CONVERT_STRIDE = 1,
+    MPEG2_CONVERT_START = 2
+} mpeg2_convert_stage_t;
+typedef int mpeg2_convert_t (int stage, void * id,
+			     const mpeg2_sequence_t * sequence, int stride,
+			     uint32_t accel, void * arg,
+			     mpeg2_convert_init_t * result);
+int mpeg2_convert (mpeg2dec_t * mpeg2dec, mpeg2_convert_t convert, void * arg);
+int mpeg2_stride (mpeg2dec_t * mpeg2dec, int stride);
 void mpeg2_set_buf (mpeg2dec_t * mpeg2dec, uint8_t * buf[3], void * id);
 void mpeg2_custom_fbuf (mpeg2dec_t * mpeg2dec, int custom_fbuf);
-void mpeg2_init_fbuf (decoder_t * decoder, uint8_t * current_fbuf[3],
-		      uint8_t * forward_fbuf[3], uint8_t * backward_fbuf[3]);
 
-#ifdef WIN32
-void mpeg2_slice(decoder_t * const decoder, const int code, const uint8_t * const buffer);
-#else
-void mpeg2_slice (decoder_t * decoder, int code, const uint8_t * buffer);
-#endif
-
+#define MPEG2_ACCEL_X86_MMX 1
 #define MPEG2_ACCEL_X86_3DNOW 2
+#define MPEG2_ACCEL_X86_MMXEXT 4
+#define MPEG2_ACCEL_X86_SSE2 8
+#define MPEG2_ACCEL_X86_SSE3 16
 #define MPEG2_ACCEL_PPC_ALTIVEC 1
 #define MPEG2_ACCEL_ALPHA 1
 #define MPEG2_ACCEL_ALPHA_MVI 2
-#define MPEG2_ACCEL_MLIB 0x40000000
+#define MPEG2_ACCEL_SPARC_VIS 1
+#define MPEG2_ACCEL_SPARC_VIS2 2
+#define MPEG2_ACCEL_ARM 1
 #define MPEG2_ACCEL_DETECT 0x80000000
 
 uint32_t mpeg2_accel (uint32_t accel);
 mpeg2dec_t * mpeg2_init (void);
-void mpeg2_partial_init(mpeg2dec_t *);	// MPO added
 const mpeg2_info_t * mpeg2_info (mpeg2dec_t * mpeg2dec);
 void mpeg2_close (mpeg2dec_t * mpeg2dec);
 
 void mpeg2_buffer (mpeg2dec_t * mpeg2dec, uint8_t * start, uint8_t * end);
-int mpeg2_parse (mpeg2dec_t * mpeg2dec);
+int mpeg2_getpos (mpeg2dec_t * mpeg2dec);
+mpeg2_state_t mpeg2_parse (mpeg2dec_t * mpeg2dec);
 
+void mpeg2_reset (mpeg2dec_t * mpeg2dec, int full_reset);
 void mpeg2_skip (mpeg2dec_t * mpeg2dec, int skip);
 void mpeg2_slice_region (mpeg2dec_t * mpeg2dec, int start, int end);
 
-void mpeg2_pts (mpeg2dec_t * mpeg2dec, uint32_t pts);
+void mpeg2_tag_picture (mpeg2dec_t * mpeg2dec, uint32_t tag, uint32_t tag2);
 
-#endif /* MPEG2_H */
+int mpeg2_guess_aspect (const mpeg2_sequence_t * sequence,
+			unsigned int * pixel_width,
+			unsigned int * pixel_height);
+
+typedef enum {
+    MPEG2_ALLOC_MPEG2DEC = 0,
+    MPEG2_ALLOC_CHUNK = 1,
+    MPEG2_ALLOC_YUV = 2,
+    MPEG2_ALLOC_CONVERT_ID = 3,
+    MPEG2_ALLOC_CONVERTED = 4
+} mpeg2_alloc_t;
+
+void * mpeg2_malloc (unsigned size, mpeg2_alloc_t reason);
+void mpeg2_free (void * buf);
+void mpeg2_malloc_hooks (void * malloc (unsigned, mpeg2_alloc_t),
+			 int free (void *));
+
+
+void mpeg2_partial_init(mpeg2dec_t *);
+/* Ends C function definitions when using C++ */
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* LIBMPEG2_MPEG2_H */
+

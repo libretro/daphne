@@ -1,0 +1,6 @@
+libmpeg2convertarch_la-rgb_vis.lo: rgb_vis.c /usr/include/stdc-predef.h \
+ ../../include/config.h
+
+/usr/include/stdc-predef.h:
+
+../../include/config.h:

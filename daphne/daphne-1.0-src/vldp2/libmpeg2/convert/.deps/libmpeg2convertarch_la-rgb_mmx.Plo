@@ -1,0 +1,6 @@
+libmpeg2convertarch_la-rgb_mmx.lo: rgb_mmx.c /usr/include/stdc-predef.h \
+ ../../include/config.h
+
+/usr/include/stdc-predef.h:
+
+../../include/config.h:
