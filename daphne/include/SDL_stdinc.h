@@ -235,11 +235,6 @@ extern "C" {
 #define SDL_stack_alloc(type, count)    (type*)malloc(sizeof(type)*(count))
 
 extern DECLSPEC char *SDLCALL SDL_getenv(const char *name);
-extern DECLSPEC int SDLCALL SDL_setenv(const char *name, const char *value, int overwrite);
-
-extern DECLSPEC void SDLCALL SDL_qsort(void *base, size_t nmemb, size_t size, int (*compare) (const void *, const void *));
-
-extern DECLSPEC int SDLCALL SDL_abs(int x);
 
 /* !!! FIXME: these have side effects. You probably shouldn't use them. */
 /* !!! FIXME: Maybe we do forceinline functions of SDL_mini, SDL_minf, etc? */
