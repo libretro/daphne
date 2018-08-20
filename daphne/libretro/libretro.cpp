@@ -275,7 +275,11 @@ void retro_get_system_info(struct retro_system_info *out_systeminfo)
 {
 	memset(out_systeminfo, 0, sizeof(*out_systeminfo));
     out_systeminfo->library_name		= "Daphne";
-    out_systeminfo->library_version		= "v0.04";
+#ifndef GIT_VERSION
+#define GIT_VERSION ""
+#endif
+
+    out_systeminfo->library_version		= GIT_VERSION;
     out_systeminfo->need_fullpath		= true;
 	out_systeminfo->block_extract		= true;
     out_systeminfo->valid_extensions	= DAPHNE_ROM_EXTENSION;
@@ -1133,12 +1137,13 @@ bool retro_load_game(const struct retro_game_info *in_game)
 		return false;
 	}
 
-	// **************************************************************************************************
-	// * **** Game Notes
-	// * - Sega GP World (gpworld) does work, has hiccups.
-	// * - Thayers Quest (tq) does work but is a bit unstable, can't get a good repro.  Putting that off
-	// *   for right now.  You must have a keyboard attached.
-	// **************************************************************************************************
+	 /**************************************************************************************************
+	 * **** Game Notes
+	 * - Sega GP World (gpworld) does work, has hiccups.
+	 * - Thayers Quest (tq) does work but is a bit unstable, can't get a good repro.  Putting that off
+	 *   for right now.  You must have a keyboard attached.
+	 **************************************************************************************************/
+/*
 	
 	// Arguements to mimic command line.
 	#define DAPHNE_NUM_COMMANDLINE_ARGS	13
