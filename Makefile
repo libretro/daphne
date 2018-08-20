@@ -5,6 +5,13 @@ ifneq ($(SANITIZER),)
    LDFLAGS  := -fsanitize=$(SANITIZER) $(LDFLAGS)
 endif
 
+
+GIT_VERSION ?= " $(shell git rev-parse --short HEAD || echo unknown)"
+ifneq ($(GIT_VERSION)," unknown")
+   CXXFLAGS += -DGIT_VERSION=\"$(GIT_VERSION)\"
+endif
+
+
 ifeq ($(platform),)
 	platform = unix
 	ifeq ($(shell uname -a),)
