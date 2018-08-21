@@ -20,6 +20,7 @@
 */
 #include "../SDL_internal.h"
 
+#define _XOPEN_SOURCE 500
 /* System independent thread management routines for SDL */
 
 #include <assert.h>
