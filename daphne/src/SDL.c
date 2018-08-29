@@ -34,54 +34,6 @@
 #include "events/SDL_events_c.h"
 #include "joystick/SDL_joystick_c.h"
 
-#include "../main_android.h"
-
-/* The initialized subsystems */
-static SDL_bool SDL_bInMainQuit = SDL_FALSE;
-static uint8_t SDL_SubsystemRefCount[ 32 ];
-
-/* Private helper to increment a subsystem's ref counter. */
-static void
-SDL_PrivateSubsystemRefCountIncr(uint32_t subsystem)
-{
-    int subsystem_index = SDL_MostSignificantBitIndex32(subsystem);
-    assert(SDL_SubsystemRefCount[subsystem_index] < 255);
-    ++SDL_SubsystemRefCount[subsystem_index];
-}
-
-/* Private helper to decrement a subsystem's ref counter. */
-static void
-SDL_PrivateSubsystemRefCountDecr(uint32_t subsystem)
-{
-    int subsystem_index = SDL_MostSignificantBitIndex32(subsystem);
-    if (SDL_SubsystemRefCount[subsystem_index] > 0) {
-        --SDL_SubsystemRefCount[subsystem_index];
-    }
-}
-
-/* Private helper to check if a system needs init. */
-static SDL_bool
-SDL_PrivateShouldInitSubsystem(uint32_t subsystem)
-{
-    int subsystem_index = SDL_MostSignificantBitIndex32(subsystem);
-    assert(SDL_SubsystemRefCount[subsystem_index] < 255);
-    return (SDL_SubsystemRefCount[subsystem_index] == 0);
-}
-
-/* Private helper to check if a system needs to be quit. */
-static SDL_bool
-SDL_PrivateShouldQuitSubsystem(uint32_t subsystem) {
-    int subsystem_index = SDL_MostSignificantBitIndex32(subsystem);
-    if (SDL_SubsystemRefCount[subsystem_index] == 0) {
-      return SDL_FALSE;
-    }
-
-    /* If we're in SDL_Quit, we shut down every subsystem, even if refcount
-     * isn't zero.
-     */
-    return SDL_SubsystemRefCount[subsystem_index] == 1 || SDL_bInMainQuit;
-}
-
 int
 SDL_InitSubSystem(uint32_t flags)
 {
@@ -115,20 +67,8 @@ SDL_QuitSubSystem(uint32_t flags)
 void
 SDL_Quit(void)
 {
-    SDL_bInMainQuit = SDL_TRUE;
-
-    /* Quit all subsystems */
-    SDL_QuitSubSystem(SDL_INIT_EVERYTHING);
-
     SDL_ClearHints();
     SDL_AssertionsQuit();
-
-    /* Now that every subsystem has been quit, we reset the subsystem refcount
-     * and the list of initialized subsystems.
-     */
-    memset( SDL_SubsystemRefCount, 0x0, sizeof(SDL_SubsystemRefCount) );
-
-    SDL_bInMainQuit = SDL_FALSE;
 }
 
 /* vi: set sts=4 ts=4 sw=4 expandtab: */
