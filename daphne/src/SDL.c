@@ -98,20 +98,6 @@ SDL_InitSubSystem(uint32_t flags)
         flags |= SDL_INIT_EVENTS;
     }
 
-    /* Initialize the audio subsystem */
-    if ((flags & SDL_INIT_AUDIO)){
-#if !SDL_AUDIO_DISABLED
-        if (SDL_PrivateShouldInitSubsystem(SDL_INIT_AUDIO)) {
-            if (SDL_AudioInit(NULL) < 0) {
-                return (-1);
-            }
-        }
-        SDL_PrivateSubsystemRefCountIncr(SDL_INIT_AUDIO);
-#else
-        return SDL_SetError("SDL not built with audio support");
-#endif
-    }
-
     return (0);
 }
 
@@ -124,14 +110,6 @@ SDL_Init(uint32_t flags)
 void
 SDL_QuitSubSystem(uint32_t flags)
 {
-#if !SDL_AUDIO_DISABLED
-    if ((flags & SDL_INIT_AUDIO)) {
-        if (SDL_PrivateShouldQuitSubsystem(SDL_INIT_AUDIO)) {
-            SDL_AudioQuit();
-        }
-        SDL_PrivateSubsystemRefCountDecr(SDL_INIT_AUDIO);
-    }
-#endif
 }
 
 void
