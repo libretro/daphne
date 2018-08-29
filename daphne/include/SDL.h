@@ -37,7 +37,6 @@
 #include "SDL_endian.h"
 #include "SDL_error.h"
 #include "SDL_joystick.h"
-#include "SDL_loadso.h"
 #include "SDL_mutex.h"
 #include "SDL_render.h"
 #include "SDL_rwops.h"
