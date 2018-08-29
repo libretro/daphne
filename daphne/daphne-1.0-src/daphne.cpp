@@ -292,18 +292,18 @@ int main_daphne_mainloop()
 
 int main_daphne_shutdown()
 {
-	g_game->pre_shutdown();
-
 	int result_code = 0;	// daphne will exit without any errors
-
-	g_ldp->pre_shutdown();
-	g_game->video_shutdown();
-
-	sound_shutdown();
-	shutdown_display();
 
 	if (g_game)
 	{
+		g_game->pre_shutdown();
+
+		g_ldp->pre_shutdown();
+		g_game->video_shutdown();
+
+		sound_shutdown();
+		shutdown_display();
+
 		delete(g_game);
 		g_game = NULL;
 	}
@@ -324,7 +324,6 @@ void set_serial_port(unsigned char i)
 {
 	serial_port = i;
 }
-
 
 unsigned char get_serial_port()
 {
