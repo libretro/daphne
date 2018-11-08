@@ -141,7 +141,7 @@ endif
 # NESC, SNESC, C64 mini 
 else ifeq ($(platform), classic_armv7_a7)
 	TARGET := $(TARGET_NAME)_libretro.so
-	fpic := -fPIC
+	fpic := -fPIC -pthread
     SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
     CFLAGS += -I. -DARM
 	CFLAGS += -Ofast \
@@ -153,8 +153,10 @@ else ifeq ($(platform), classic_armv7_a7)
 	-fmerge-all-constants -fno-math-errno \
 	-marm -mtune=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
 	CXXFLAGS += $(CFLAGS)
+    LDFLAGS += -lpthread
 	HAVE_NEON = 1
 	ARCH = arm
+    LIBS += -lpthread -ldl
 	ifeq ($(shell echo `$(CC) -dumpversion` "< 4.9" | bc -l), 1)
 	  CFLAGS += -march=armv7-a
 	else
