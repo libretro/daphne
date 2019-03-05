@@ -304,9 +304,6 @@ SDL_RunThread(void *data)
 #ifdef SDL_CreateThread
 #undef SDL_CreateThread
 #endif
-#if SDL_DYNAMIC_API
-#define SDL_CreateThread SDL_CreateThread_REAL
-#endif
 
 #ifdef SDL_PASSED_BEGINTHREAD_ENDTHREAD
 static SDL_Thread *
