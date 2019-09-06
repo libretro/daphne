@@ -27,7 +27,7 @@ ifeq ($(platform),)
 	else ifneq ($(findstring win,$(shell uname -a)),)
 		platform = win
 	endif
-endif
+	endif
 
 # system platform
 system_platform = unix
@@ -139,11 +139,11 @@ endif
 
 # (armv7 a7, hard point, neon based) ### 
 # NESC, SNESC, C64 mini 
-else ifeq ($(platform), classic_armv7_a7)
+ifneq (,$(findstring classic_armv7_a7, $(platform)))
 	TARGET := $(TARGET_NAME)_libretro.so
 	fpic := -fPIC -pthread
-    SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
-    CFLAGS += -I. -DARM
+	SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
+	CFLAGS += -I. -DARM
 	CFLAGS += -Ofast \
 	-flto=4 -fwhole-program -fuse-linker-plugin \
 	-fdata-sections -ffunction-sections -Wl,--gc-sections \
@@ -153,10 +153,10 @@ else ifeq ($(platform), classic_armv7_a7)
 	-fmerge-all-constants -fno-math-errno \
 	-marm -mtune=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard
 	CXXFLAGS += $(CFLAGS)
-    LDFLAGS += -lpthread
+	LDFLAGS += -lpthread
 	HAVE_NEON = 1
 	ARCH = arm
-    LIBS += -lpthread -ldl
+ 	LIBS += -lpthread -ldl
 	ifeq ($(shell echo `$(CC) -dumpversion` "< 4.9" | bc -l), 1)
 	  CFLAGS += -march=armv7-a
 	else
@@ -166,15 +166,15 @@ else ifeq ($(platform), classic_armv7_a7)
 	    LDFLAGS += -static-libgcc -static-libstdc++
 	  endif
 	endif
-
+endif
 # (armv8 a35, hard point, neon based) ###
 # Playstation Classic
-else ifeq ($(platform), classic_armv8_a35)
+ifneq (,$(findstring classic_armv8_a35, $(platform)))
 	TARGET := $(TARGET_NAME)_libretro.so
-	fpic := -fPIC -pthread
-    SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
-    CFLAGS += -I. -DARM
-	CFLAGS += -Ofast \
+	fpic := -fPIC
+	LIBS += -lpthread -ldl
+	SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined -lrt
+	CFLAGS += -Ofast -I. -DARM \
 	-flto -fwhole-program -fuse-linker-plugin \
 	-fdata-sections -ffunction-sections -Wl,--gc-sections \
 	-fno-stack-protector -fno-ident -fomit-frame-pointer \
@@ -183,12 +183,11 @@ else ifeq ($(platform), classic_armv8_a35)
 	-fmerge-all-constants -fno-math-errno \
 	-marm -mtune=cortex-a35 -mfpu=neon-fp-armv8 -mfloat-abi=hard
 	CXXFLAGS += $(CFLAGS)
-	LDFLAGS += -lpthread
 	HAVE_NEON = 1
 	ARCH = arm
-	LIBS += -lpthread -ldl
 	CFLAGS += -march=armv8-a
-	    LDFLAGS += -static-libgcc -static-libstdc++
+	LDFLAGS += -static-libgcc -static-libstdc++
+endif
 #######################################
 
 # emscripten
@@ -241,9 +240,8 @@ CFLAGS += -D__LIBRETRO__
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	@echo "** BUILDING $(TARGET) FOR PLATFORM $(platform) **"
+
 	$(CXX) $(fpic) $(SHARED) $(INCLUDES) -o $@ $(OBJECTS) $(LIBS) $(LDFLAGS) -lm
-	@echo "** BUILD SUCCESSFUL! GG NO RE **"
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) $(fpic) -c -o $@ $<
