@@ -84,8 +84,8 @@ ifeq ($(IOSSDK),)
    IOSSDK := $(shell xcodebuild -version -sdk iphoneos Path)
 endif
 
-   DEFINES := -DIOS
-   CXXFLAGS += $(DEFINES)
+   DEFINES := -DIOS  -Wno-error=implicit-function-declaration
+   CXXFLAGS += $(DEFINES) -stdlib=libc++
    CFLAGS   += $(DEFINES)
    CC = cc -arch armv7 -isysroot $(IOSSDK)
    CXX = c++ -arch armv7 -isysroot $(IOSSDK)
@@ -98,6 +98,20 @@ else
 	CXXFLAGS += -miphoneos-version-min=5.0
 	CFLAGS += -miphoneos-version-min=5.0
 endif
+
+else ifeq ($(platform), tvos-arm64)
+   TARGET := $(TARGET_NAME)_libretro_tvos.dylib
+   fpic := -fPIC
+   SHARED := -dynamiclib
+
+ifeq ($(IOSSDK),)
+   IOSSDK := $(shell xcodebuild -version -sdk appletvos Path)
+endif
+
+   DEFINES := -DIOS  -Wno-error=implicit-function-declaration
+   CXXFLAGS += $(DEFINES) -stdlib=libc++
+   CFLAGS   += $(DEFINES)
+
 else ifneq (,$(findstring qnx,$(platform)))
    TARGET := $(TARGET_NAME)_libretro_qnx.so
    fpic := -fPIC
