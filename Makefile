@@ -118,7 +118,7 @@ else ifneq (,$(findstring qnx,$(platform)))
    CC = qcc -Vgcc_ntoarmv7le
    AR = qcc -Vgcc_ntoarmv7le
 else ifneq (,$(findstring armv,$(platform)))
-   CC = gcc
+   CC ?= gcc
    TARGET := $(TARGET_NAME)_libretro.so
    fpic := -fPIC
    SHARED := -shared -Wl,--version-script=link.T -Wl,--no-undefined
@@ -146,6 +146,7 @@ else ifneq (,$(findstring hardfloat,$(platform)))
 endif
    CXXFLAGS += -DARM
    CFLAGS += -DARM
+   LIBS += -lpthread -ldl
 
 # Classic Platforms ####################
 # Platform affix = classic_<ISA>_<µARCH>
