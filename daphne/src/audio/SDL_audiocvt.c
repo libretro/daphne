@@ -19,6 +19,7 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 #include <stdint.h>
+#include <math.h>
 #include "../SDL_internal.h"
 
 /* Functions for audio drivers to perform runtime conversion of audio format */

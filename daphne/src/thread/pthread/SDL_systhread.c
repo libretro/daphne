@@ -19,6 +19,8 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
+#define _GNU_SOURCE
+
 #include "../../SDL_internal.h"
 
 #include <pthread.h>

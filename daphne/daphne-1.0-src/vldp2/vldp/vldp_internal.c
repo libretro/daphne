@@ -25,6 +25,8 @@
 #ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS 1
 #pragma warning (disable:4996)
+#else
+#define _POSIX_C_SOURCE 200809L
 #endif
 
 #include <stdint.h>
